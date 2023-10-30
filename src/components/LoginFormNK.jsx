@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Paper, TextField, Typography, IconButton, InputAdornment } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography, IconButton, InputAdornment, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAuth } from '../routes/AuthContext';
@@ -20,6 +20,7 @@ const BASE_URL = 'http://192.168.12.54:8080';
   const { authenticated, setAuthenticated } = useAuth();
   const { setUserRoleAndAuth } = useAuth();
   const [loading, setLoading] = useState(false)
+  const [openForgotPasswordDialog, setOpenForgotPasswordDialog] = useState(false)
 
   const [credentials, setCredentials] = useState({
     username: '',
@@ -132,6 +133,14 @@ const BASE_URL = 'http://192.168.12.54:8080';
     
   };
 
+  const handleForgotPasswordOpen = () => {
+    setOpenForgotPasswordDialog(true)
+  }
+
+  const handleForgotPasswordClose = () => {
+    setOpenForgotPasswordDialog(false)
+  }
+
   return (
     <Box sx={{
         height: '100vh',
@@ -142,6 +151,7 @@ const BASE_URL = 'http://192.168.12.54:8080';
         <Box sx={{
               position: 'absolute',
               display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               top: '0',
@@ -151,7 +161,7 @@ const BASE_URL = 'http://192.168.12.54:8080';
               bgcolor:'#d9d9d98f',
         }}>
 
-        <Paper elevation={7} sx={{ height: "380px", width: "600px",display:'flex', bgcolor:'#ffffffd8', borderRadius:'15px'}}>
+        <Paper elevation={7} sx={{ height: "400px", width: "600px",display:'flex', bgcolor:'#ffffffd8', borderRadius:'15px'}}>
       <form onSubmit={handleSubmit}
       style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%', }}
       >
@@ -212,8 +222,118 @@ sx={{
         >
             Login
         </Button>
+      <Typography sx={{color:'grey', cursor:'pointer', mt:'1em',     textDecoration: 'none', // Initially, no underline
+    '&:hover': {
+      textDecoration: 'underline', // Underline on hover
+    },}} onClick= {handleForgotPasswordOpen}>Forgot Password</Typography>
       </form>
       </Paper>
+
+      <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+
+      <Dialog 
+      open={openForgotPasswordDialog}
+      //  onClose={handleForgotPasswordClose}
+        PaperProps={{ sx: { mt:'5em', borderRadius:'15px'},}}>
+        <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Update Form</DialogTitle>
+        <DialogContent >
+            <form style={{width:'32.5em'}}>
+              <TextField
+                sx={{ mt: '2%', mb: '2%' }}
+                label="Username"
+                fullWidth
+                // value={editedItem.firstName}
+                inputProps={{ maxLength: 26 }}
+                // onChange={(e) =>
+                //   setEditedItem({ ...editedItem, firstName: e.target.value })
+                // }
+                required
+              />
+              <TextField
+                sx={{ mt: '2%', mb: '2%' }}
+                label="OTP"
+                fullWidth
+                // value={editedItem.lastName}
+                inputProps={{ maxLength: 26 }}
+                // onChange={(e) =>
+                //   setEditedItem({ ...editedItem, lastName: e.target.value })
+                // }
+                required
+              />
+              <TextField
+                sx={{ mt: '2%', mb: '2%' }}
+                label="New Password"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                inputProps={{ maxLength: 16 }}
+                // value={changedItem.newPassword}
+                // onChange={(e) =>
+                //   setChangedItem({ ...changedItem, newPassword: e.target.value })
+                // }
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                          <IconButton
+                              onClick={togglePasswordVisibility}
+                              edge="end"
+                          >
+                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                      </InputAdornment>
+                  ),
+              }}
+              required
+              />
+              <TextField
+                sx={{ mt: '2%', mb: '2%' }}
+                label="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                inputProps={{ maxLength: 16 }}
+                // value={changedItem.confirmPassword}
+                // onChange={(e) =>
+                //   setChangedItem({ ...changedItem, confirmPassword: e.target.value })
+                // }
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                          <IconButton
+                              onClick={togglePasswordVisibility}
+                              edge="end"
+                          >
+                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                      </InputAdornment>
+                  ),
+              }}
+              required
+              />
+
+
+
+            </form>
+        </DialogContent>
+        <DialogActions
+        sx={{display:'flex',justifyContent:'space-between', mr:'1em', mb:'1em',ml:'1em'}}
+        >
+          <Button variant='contained' 
+          onClick={handleForgotPasswordClose} 
+          color="secondary" sx={{width:'6em'}}>
+            Cancel
+          </Button>
+          <Button variant='contained' 
+          // onClick={handleSaveEdit} 
+          color="primary" sx={{width:'6em'}}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
 
         </Box>
 
