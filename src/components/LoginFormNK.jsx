@@ -14,18 +14,27 @@ import Loader from './Loader';
 
 function LoginForm({ }) {
   const navigate = useNavigate(); 
-const BASE_URL = 'http://192.168.12.54:8080';
-// const BASE_URL = 'http://192.168.12.58:8080';
+const BASE_URL = 'http://192.168.12.58:8080';
+const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
 
   const { authenticated, setAuthenticated } = useAuth();
   const { setUserRoleAndAuth } = useAuth();
   const [loading, setLoading] = useState(false)
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] = useState(false)
+  const [isItemVisible1, setItemVisible1] = useState(false);
+  const [isItemVisible2, setItemVisible2] = useState(true);
 
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
+
+  const [updateCreds, setUpdateCreds] = useState ({
+    username:'',
+    otp:'',
+    newPassword:'',
+    confirmPassword:'',
+  })
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -40,6 +49,11 @@ const BASE_URL = 'http://192.168.12.54:8080';
       ...credentials,
       [name]: value,
     });
+
+    setUpdateCreds({
+      ...updateCreds,
+      [name]:value,
+    })
   };
 
   const handleSubmit = async (e) => {
@@ -110,7 +124,7 @@ const BASE_URL = 'http://192.168.12.54:8080';
           theme: "light",
           });
         }       else{
-          toast.error('Something went wrong.', {
+          toast.error('Something went wrong !!!', {
             position: "top-right",
             autoClose: 4000,
             hideProgressBar: false,
@@ -139,6 +153,151 @@ const BASE_URL = 'http://192.168.12.54:8080';
 
   const handleForgotPasswordClose = () => {
     setOpenForgotPasswordDialog(false)
+    setUpdateCreds({
+      username:'',
+      otp:'',
+      newPassword:'',
+      confirmPassword:'',
+    })
+    setTimeout(() => {
+      handleBackToGetOtp()
+    }, 200);
+    
+  }
+
+  const handleGetOTP = async() => {
+    // debugger
+    if (!updateCreds.username){
+
+      toast.warn('Username can\'t be empty.', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
+
+    return
+
+  }
+
+    const getOtpPayload = updateCreds.username
+
+    try {
+      const response = await axios.get(`${BASE_URL2}/getotp?username=${getOtpPayload}`)
+      if(response.status === 200){
+        toast.success('OTP sent successfully. Please check your mail.', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+        console.log("get otp", response)
+        setItemVisible1(true)
+        setItemVisible2(false)
+      } else {
+        toast.error('Something went wrong !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });        
+      }
+    } catch(error){
+      if(error.request.status === 400){
+        toast.error('User not found !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
+       else {
+        toast.error('Something went wrong !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
+    }
+  };
+
+  const handleUpdatePassword = async() => {
+    const updatePasswordPayload = {
+      username: updateCreds.username,
+      otp: updateCreds.otp,
+      newPassword: updateCreds.newPassword,
+    }
+
+    try{
+      const response = await axios.post(`${BASE_URL2}/forgot`, updatePasswordPayload)
+      if(response.status === 200){
+        toast.success('Password updated succesfully.', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      handleForgotPasswordClose()
+      }
+    } catch(error){
+      // console.error('Error Updating Password:', error);
+      if(error.request.status === 400){
+        const errMessage =error.response.data.message;
+        const cleanedMessage = JSON.stringify(errMessage);
+        toast.error(JSON.parse(cleanedMessage)+' !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
+       else {
+        toast.error('Something went wrong !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
+    }
+  }
+
+  const handleBackToGetOtp = () => {
+    setItemVisible1(false)
+    setItemVisible2(true)
   }
 
   return (
@@ -181,6 +340,8 @@ sx={{
     Visitor Management System
     </Typography>
 </Box>
+
+
         <TextField
             id="username"
             name="username"
@@ -238,23 +399,26 @@ sx={{
 
       <Dialog 
       open={openForgotPasswordDialog}
-      //  onClose={handleForgotPasswordClose}
-        PaperProps={{ sx: { mt:'5em', borderRadius:'15px'},}}>
-        <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Update Form</DialogTitle>
+       onClose={handleForgotPasswordClose}
+        PaperProps={{ sx: { borderRadius:'15px'},}}>
+        <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Change Password</DialogTitle>
         <DialogContent >
             <form style={{width:'32.5em'}}>
-              <TextField
-                sx={{ mt: '2%', mb: '2%' }}
-                label="Username"
-                fullWidth
-                // value={editedItem.firstName}
-                inputProps={{ maxLength: 26 }}
-                // onChange={(e) =>
-                //   setEditedItem({ ...editedItem, firstName: e.target.value })
-                // }
-                required
-              />
-              <TextField
+
+              {isItemVisible2 && (
+                              <TextField
+                              sx={{ mt: '2%', mb: '2%' }}
+                              label="Username"
+                              name="username"
+                              fullWidth
+                              value={updateCreds.username}
+                              inputProps={{ maxLength: 10, }}
+                              onChange={handleChange}
+                              required
+                            />
+              )}
+
+              {/* <TextField
                 sx={{ mt: '2%', mb: '2%' }}
                 label="OTP"
                 fullWidth
@@ -264,55 +428,79 @@ sx={{
                 //   setEditedItem({ ...editedItem, lastName: e.target.value })
                 // }
                 required
-              />
-              <TextField
-                sx={{ mt: '2%', mb: '2%' }}
-                label="New Password"
-                type={showPassword ? 'text' : 'password'}
-                fullWidth
-                inputProps={{ maxLength: 16 }}
-                // value={changedItem.newPassword}
-                // onChange={(e) =>
-                //   setChangedItem({ ...changedItem, newPassword: e.target.value })
-                // }
-                InputProps={{
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          <IconButton
-                              onClick={togglePasswordVisibility}
-                              edge="end"
-                          >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                          </IconButton>
-                      </InputAdornment>
-                  ),
-              }}
-              required
-              />
-              <TextField
-                sx={{ mt: '2%', mb: '2%' }}
-                label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
-                fullWidth
-                inputProps={{ maxLength: 16 }}
-                // value={changedItem.confirmPassword}
-                // onChange={(e) =>
-                //   setChangedItem({ ...changedItem, confirmPassword: e.target.value })
-                // }
-                InputProps={{
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          <IconButton
-                              onClick={togglePasswordVisibility}
-                              edge="end"
-                          >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                          </IconButton>
-                      </InputAdornment>
-                  ),
-              }}
-              required
-              />
+              /> */}
+
+{isItemVisible1 && (
+        <TextField
+          sx={{ mt: '2%', mb: '2%' }}
+          label="OTP"
+          name='otp'
+          fullWidth
+          onChange={handleChange}
+          inputProps={{ maxLength: 26 }}
+          required
+        />
+      )}
+
+      {isItemVisible1 && (
+                      <TextField
+                      sx={{ mt: '2%', mb: '2%' }}
+                      label="New Password"
+                      name='newPassword'
+                      type={showPassword ? 'text' : 'password'}
+                      fullWidth
+                      onChange={handleChange}
+                      inputProps={{ maxLength: 16 }}
+                      // value={changedItem.newPassword}
+                      // onChange={(e) =>
+                      //   setChangedItem({ ...changedItem, newPassword: e.target.value })
+                      // }
+                      InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={togglePasswordVisibility}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                    required
+                    />
+      )}
+
+      {isItemVisible1 && (
+                      <TextField
+                      sx={{ mt: '2%', mb: '2%' }}
+                      label="Confirm Password"
+                      name='confirmPassword'
+                      type={showPassword ? 'text' : 'password'}
+                      fullWidth
+                      onChange={handleChange}
+                      inputProps={{ maxLength: 16 }}
+                      // value={changedItem.confirmPassword}
+                      // onChange={(e) =>
+                      //   setChangedItem({ ...changedItem, confirmPassword: e.target.value })
+                      // }
+                      InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={togglePasswordVisibility}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                    required
+                    />
+      )}
+
+
 
 
 
@@ -321,16 +509,40 @@ sx={{
         <DialogActions
         sx={{display:'flex',justifyContent:'space-between', mr:'1em', mb:'1em',ml:'1em'}}
         >
-          <Button variant='contained' 
-          onClick={handleForgotPasswordClose} 
-          color="secondary" sx={{width:'6em'}}>
-            Cancel
-          </Button>
-          <Button variant='contained' 
-          // onClick={handleSaveEdit} 
-          color="primary" sx={{width:'6em'}}>
-            Save
-          </Button>
+          {isItemVisible2 && (
+                      <Button variant='contained' 
+                      onClick={handleForgotPasswordClose} 
+                      color="secondary" sx={{width:'7em'}}>
+                        Cancel
+                      </Button>
+          )}
+
+
+          {isItemVisible1 && (
+                      <Button variant='contained' 
+                      onClick={handleBackToGetOtp} 
+                      color="secondary" sx={{width:'7em'}}>
+                        Back
+                      </Button>
+          )}
+
+          {isItemVisible2 && (
+                      <Button variant='contained' 
+                      onClick={handleGetOTP} 
+                      color="primary" sx={{width:'7em'}}>
+                        Get OTP
+                      </Button>
+          )}
+
+          {isItemVisible1 && (
+                      <Button variant='contained' 
+                      onClick={handleUpdatePassword} 
+                      color="primary" sx={{width:'7em'}}>
+                        Change
+                      </Button>
+          )}
+
+
         </DialogActions>
       </Dialog>
     </Box>
