@@ -20,6 +20,7 @@ import ReceptionistDashboard from './components/company/ReceptionistDashboard';
 import MeetingDetails from './components/company/MeetingDetails';
 import EmpDashboard from './components/EmpDashboard';
 import MeetingNotices from './components/MeetingNotices';
+import Dashboard from './components/Dashboard';
 // HARSHITA ENDS
 
 const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
@@ -48,7 +49,7 @@ function App() {
           <Route path="/" element={<LoginForm setAuthenticated={setAuthenticated} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/loader" element={<Loader />} />
-          <Route path="/meetingupdates" element={<MeetingNotices />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
             <Route path="/userform" element={<PrivateRoute element={<UserForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
             <Route path="/employee" element={<PrivateRoute element={<Employee />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />

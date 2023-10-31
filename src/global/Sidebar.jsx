@@ -122,7 +122,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <DashboardIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Company Table' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Companies' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 

@@ -408,7 +408,16 @@ const CompanyTable = () => {
       }}
       >
         
-        <Header title="Dashboard" subtitle="Welcome to dashboard" />
+        <Header title="Companies" subtitle="Get all updates of the companies here." />
+
+        <Link to="/companyreg">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ margin:'1.2em', height:'3em'}}
+                  >      Add Company
+                  </Button>
+                </Link>
     </Paper>
           </Grid>
         </Grid>
@@ -417,7 +426,7 @@ const CompanyTable = () => {
           <Grid item xs={12}>
             <Item elevation={3} style={{ height: '', margin: '10px' }}>
 
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Link to="/companyreg">
                   <Button
                     variant="contained"
@@ -442,7 +451,7 @@ const CompanyTable = () => {
                   }}
                 />
 
-              </div>
+              </div> */}
               <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
                 <Table aria-label="simple table">
                   <TableHead style={{ backgroundColor: 'aliceblue' }}>
