@@ -14,10 +14,10 @@ import Loader from './Loader';
 
 function LoginForm({ }) {
   const navigate = useNavigate(); 
-const BASE_URL = 'http://192.168.12.58:8080';
+const BASE_URL = 'http://192.168.12.54:8080';
 const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
 
-  const { authenticated, setAuthenticated } = useAuth();
+  const { authenticated, setAuthenticated, logout } = useAuth();
   const { setUserRoleAndAuth } = useAuth();
   const [loading, setLoading] = useState(false)
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] = useState(false)
@@ -187,6 +187,7 @@ const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
     const getOtpPayload = updateCreds.username
 
     try {
+      setLoading(true)
       const response = await axios.get(`${BASE_URL2}/getotp?username=${getOtpPayload}`)
       if(response.status === 200){
         toast.success('OTP sent successfully. Please check your mail.', {
@@ -240,6 +241,7 @@ const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
       });
       }
     }
+    setLoading(false)
   };
 
   const handleUpdatePassword = async() => {
@@ -250,6 +252,7 @@ const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
     }
 
     try{
+      setLoading(true)
       const response = await axios.post(`${BASE_URL2}/forgot`, updatePasswordPayload)
       if(response.status === 200){
         toast.success('Password updated succesfully.', {
@@ -263,6 +266,7 @@ const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
           theme: "light",
       });
       handleForgotPasswordClose()
+      logout()
       }
     } catch(error){
       // console.error('Error Updating Password:', error);
@@ -293,6 +297,7 @@ const BASE_URL2 = 'http://192.168.12.58:8080/api/user';
       });
       }
     }
+    setLoading(false)
   }
 
   const handleBackToGetOtp = () => {
