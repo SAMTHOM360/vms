@@ -37,6 +37,11 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 
 
+import Navbar from '../../global/Navbar';
+import Sidebar from '../../global/Sidebar';
+import Header from '../Header';
+
+
 
 
 //now
@@ -348,18 +353,37 @@ const formatDate = (dateString) => {
     }, []);
 
 
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+
+    const toggleSidebar = () => {
+      setSidebarOpen(!sidebarOpen);
+    };
+
 
     return (
         <>
-
-            <div style={{ display: "flex", justifyContent: "center", flexDirection: "" }}>
-                <div className="one" style={{ backgroundColor: '', width: "86%", border: "1px solid offwhite" }}>
+    <Navbar toggleSidebar={toggleSidebar} />
+       <Box sx={{display:'flex', flexGrow:1, p:3, width:'100%'}}>
+           <Sidebar open={sidebarOpen} />
+            <div style={{ display: "flex", justifyContent: "center", flexDirection: "",flexGrow:1  }}>
+                <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow:1 }}>
                     <Grid container>
                         <Grid container>
                             <Grid item xs={12}>
-                                <Item style={{ height: '50px', margin: '10px', backgroundColor: "" }}>
-                                    <h2 style={{ color: "black", display: "flex", flexDirection: "row" }}>Dashboard</h2>
-                                </Item>
+                            <Paper
+      elevation={5}
+      sx={{
+        display:'flex',
+        justifyContent:'space-between',
+        // width:'100%',
+      height:'4.5em',
+      mt:'3em',
+      mb:'0.5em' 
+      }}
+      >
+        
+        <Header title="Dashboard" subtitle="Welcome to dashboard" />
+    </Paper>
                             </Grid>
 
                         </Grid>
@@ -679,15 +703,10 @@ const formatDate = (dateString) => {
                         </Box>
                     </StyledModal>
 
+                    </div>
 
-
-
-                </div>
-
-            </div>
-
-
-
+</div>
+</Box>
         </>
     )
 }
