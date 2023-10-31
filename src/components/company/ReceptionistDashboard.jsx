@@ -713,7 +713,7 @@ export default function Dashboard() {
 
     function getRoomsOption() {
 
-        const companyId = localStorage.getItem('companyId');
+       
 
         const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
@@ -756,8 +756,11 @@ export default function Dashboard() {
 
 
 
-    function fetchData() {
+    const companyId = localStorage.getItem('companyId');
 
+
+
+    function fetchData() {
 
 
 
@@ -766,6 +769,7 @@ export default function Dashboard() {
             size:rowsPerPage,
             phoneNumber: phoneNumberFilter,
             searchQuery: searchQuery,
+            companyId:companyId
            // status:status,
             // date:'2023-10-18T11:00:00'
 
@@ -800,25 +804,26 @@ export default function Dashboard() {
                 // const approvedCount = responseData.filter(visitor => visitor.status === 'APPROVED').length;
                 // setPendingVisitors(pendingCount);
                 // setApprovedVisitors(approvedCount);
+                setPendingVisitors(response.data.data.totalPending);
+                setApprovedVisitors(response.data.data.totalApproved);
+ 
+
+
+              
 
 
                 //test code
-                setPendingVisitors(totalPendingVisitors);
-                setApprovedVisitors(totalApprovedVisitors);
 
-
-                //test code
-
-                let totalPendingVisitors = 0;
-                let totalApprovedVisitors = 0;
+                // let totalPendingVisitors = 0;
+                // let totalApprovedVisitors = 0;
           
-                responseData.forEach((visitor) => {
-                  if (visitor.status === 'PENDING') {
-                    totalPendingVisitors++;
-                  } else if (visitor.status === 'APPROVED') {
-                    totalApprovedVisitors++;
-                  }
-                });
+                // responseData.forEach((visitor) => {
+                //   if (visitor.status === 'PENDING') {
+                //     totalPendingVisitors++;
+                //   } else if (visitor.status === 'APPROVED') {
+                //     totalApprovedVisitors++;
+                //   }
+                // });
 
 
 
@@ -857,8 +862,6 @@ export default function Dashboard() {
     }
 
 
-
-    ///////
 
 
     const handleDownloadPass = (meetingId,visitorName,visitorPhoneNumber) => {
@@ -999,7 +1002,7 @@ export default function Dashboard() {
                                     backgroundColor: (theme) =>
                                         theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                                 }}>
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                         <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "orange", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                             <GroupsIcon style={{fontSize:"50px"}} />
 
@@ -1091,29 +1094,29 @@ export default function Dashboard() {
                                                 {/* <TableCell>Meeting ID</TableCell>
                                                 <TableCell>Visitor ID</TableCell> */}
                                                 <TableCell>Sl No</TableCell>
-                                                <TableCell align="center">Full Name</TableCell>
+                                                <TableCell align="left">Full Name</TableCell>
 
                                                 {/* <TableCell align="right">Email</TableCell> */}
-                                                <TableCell align="center">Phone No.</TableCell>
-                                                <TableCell align="center">Company Name</TableCell>
-                                                <TableCell align="center">Host Name</TableCell>
+                                                <TableCell align="left">Phone No.</TableCell>
+                                                <TableCell align="left">Company Name</TableCell>
+                                                <TableCell align="left">Host Name</TableCell>
                                                 {/* <TableCell align="right">Remarks</TableCell> */}
-                                                <TableCell align="center">Room</TableCell>
+                                                <TableCell align="left">Room</TableCell>
 
 
 
 
-                                                <TableCell align="center">Meeting Time</TableCell>
+                                                <TableCell align="left">Meeting Time</TableCell>
                                                 {/* <TableCell align="right">End Time</TableCell> */}
 
-                                                <TableCell align="center">Check In</TableCell>
-                                                <TableCell align="center">Check Out</TableCell>
+                                                <TableCell align="left">Check In</TableCell>
+                                                <TableCell align="left">Check Out</TableCell>
                                                
-                                                <TableCell align="center">Status</TableCell>
+                                                <TableCell align="left">Status</TableCell>
 
 
 
-                                                <TableCell align="center"></TableCell>
+                                                <TableCell align="left">Pass</TableCell>
 
                                             </TableRow>
                                         </TableHead>

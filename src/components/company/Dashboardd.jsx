@@ -672,6 +672,8 @@ import Grid from '@mui/material/Grid';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import GroupsIcon from '@mui/icons-material/Groups';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 import Table from '@mui/material/Table';
@@ -925,17 +927,17 @@ export default function Dashboard() {
     // }
 
 
-    const handleAddMeeting =()=>{
+    const handleAddMeeting =(value,status1)=>{
 
         const meetingData = {
 
-                        id: item.id,
-                        status: status,
+                        id: value.id,
+                        status: status1,
                         user: {
                             id: adminId
                         },
                         visitor: {
-                            id: item.visitor.id
+                            id: value.visitor.id
                         },
                         // room: {
                         //     id: selectedRoom
@@ -1156,22 +1158,23 @@ const formatDate = (dateString) => {
                                                 {/* <TableCell>Meeting ID</Tablecenter
                                                 <TableCell>Visitor ID</TableCell> */}
                                                 <TableCell>Sl No</TableCell>
-                                                <TableCell align="center">Full Name</TableCell>
+                                                <TableCell align="left">Full Name</TableCell>
 
-                                                <TableCell align="center">Email</TableCell>
-                                                <TableCell align="center">Phone No.</TableCell>
-                                                <TableCell align="center">Company Name</TableCell>
-
-
-
-                                                <TableCell align="center">Start Time</TableCell>
-                                                <TableCell align="center">End Time</TableCell>
-                                                <TableCell align="center">Remarks</TableCell>
-                                                <TableCell align="center">Status</TableCell>
+                                                <TableCell align="left">Email</TableCell>
+                                                <TableCell align="left">Phone No.</TableCell>
+                                                <TableCell align="left">Company Name</TableCell>
 
 
 
-                                                <TableCell align="center">Actions</TableCell>
+                                                <TableCell align="left">Start Time</TableCell>
+                                                <TableCell align="left">End Time</TableCell>
+                                                <TableCell align="left">Remarks</TableCell>
+                                                <TableCell align="left">Status</TableCell>
+
+
+
+                                                <TableCell align="left">Actions</TableCell>
+                                                
 
                                             </TableRow>
                                         </TableHead>
@@ -1199,13 +1202,41 @@ const formatDate = (dateString) => {
 
 
                                                             {/* <EditIcon onClick={() => handleOpenModal(visitor)} /> */}
-                                                            { visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
+                                                            {/* { visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
                                                                 // Disable the Edit button
                                                                 <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                             ) : (
                                                                 // Enable the Edit button
                                                                 <EditIcon onClick={() => handleOpenModal(visitor)} />
-                                                            )}
+                                                            )} */}
+
+{
+                                                                visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
+                                                                    <>
+                                                                    <div className='status'>
+                                                                    <CheckIcon style={{cursor:"pointer",color:"lightgray",pointerEvents:"none",marginRight:"10px"}}/>
+                                                            <ClearIcon style={{cursor:"pointer",color:"lightgray",pointerEvents:"none"}}/>
+
+                                                                    </div>
+                                                          
+
+                                                                    </>
+
+                                                          
+                                                                    
+                                                                ):( <>
+                                                                    <div className='status'>
+                                                                    <CheckIcon style={{cursor:"pointer",marginRight:"10px"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
+                                                                <ClearIcon style={{cursor:"pointer"}}onClick={()=>handleAddMeeting(visitor,'CANCELLED')}/>
+                                                                        
+                                                                    </div>
+                                                                 
+                                                                </>)
+                                                                
+                                                            }
+
+                                                                 {/* <CheckIcon style={{cursor:"pointer"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
+                                                            <ClearIcon style={{cursor:"pointer"}}onClick={()=>handleAddMeeting(visitor,'CANCELLED')}/> */}
 
 
 
