@@ -197,7 +197,7 @@ export default function Navbar({toggleSidebar}) {
       const cleanedMessage = JSON.stringify(errMessage);
 
       if(error.response.status === 400){
-        toast.warn(JSON.parse(cleanedMessage)+'.', {
+        toast.warn('Old '+JSON.parse(cleanedMessage)+'.', {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
