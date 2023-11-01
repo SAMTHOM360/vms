@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Link from '@mui/material/Link';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Paper, TextField, Typography, IconButton, InputAdornment, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -9,17 +11,19 @@ import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import image1 from "../assets/office2_0.jpg"
-import image2 from "../assets/rapidsoft-technologies_logo.png"
+import image2 from "../assets/rapidsoft+report+colour+logo.png"
 import Loader from './Loader';
 
 function LoginForm({ }) {
   const navigate = useNavigate(); 
 const BASE_URL = 'http://192.168.12.54:8080';
 const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
+const OWNER = 'https://www.rapidsofttechnologies.com/'
 
   const { authenticated, setAuthenticated, logout } = useAuth();
   const { setUserRoleAndAuth } = useAuth();
   const [loading, setLoading] = useState(false)
+  const [btnLoading, setBtnLoading] = useState(false)
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] = useState(false)
   const [isItemVisible1, setItemVisible1] = useState(false);
   const [isItemVisible2, setItemVisible2] = useState(true);
@@ -59,7 +63,7 @@ const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true)
+      setBtnLoading(true)
       const response = await axios.post(`${BASE_URL}/token`, credentials);
 
       if(response.status === 200){
@@ -136,7 +140,7 @@ const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
             });
           }
     }
-    setLoading(false)
+    setBtnLoading(false)
   };
 
   const appStyle = {
@@ -305,6 +309,8 @@ const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
     setItemVisible2(true)
   }
 
+  console.log("loading btn", btnLoading)
+
   return (
     <Box sx={{
         height: '100vh',
@@ -325,34 +331,50 @@ const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
               bgcolor:'#d9d9d98f',
         }}>
 
-        <Paper elevation={7} sx={{ height: "400px", width: "600px",display:'flex', bgcolor:'#ffffffd8', borderRadius:'15px'}}>
+        <Paper elevation={7} sx={{ height: "575px", width: "470px",display:'flex', bgcolor:'#ffffff', borderRadius:'5px'}}>
       <form onSubmit={handleSubmit}
       style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%', }}
       >
 
-<Box display='flex'>
-<img src={image2} alt="Logo" style={{ width: '100px', height: '40px', marginRight:'1.5em', marginTop:'1.2em' }} />
+<Box display='flex' sx={{flexDirection:'column', justifyContent:'center', alignItems:'center', marginTop:'1em'}}>
+<img src={image2} alt="Logo" style={{ width: '280.90px', height: '80px', marginTop:'1.2em' }} />
+<hr style={{width:'100%'}}/>
 
 <Typography 
 variant='h5' 
 sx={{
-    fontSize: "25px",
+    fontSize: "18px",
     fontWeight:'550', 
     color: "#66666", 
-    mt: 2.5,
+    mt: 1.5,
     }}
     >
-    Visitor Management System
+    VISITOR MANAGEMENT SYSTEM
     </Typography>
 </Box>
 
-
+<div style={{width:'80%', display:'flex', justifyContent:'center', marginTop:'2em'}}>
+  <Typography 
+variant='h5' 
+sx={{
+    fontSize: "16px",
+    // fontWeight:'550',
+    fontWeight:'bold', 
+    color: "#66666", 
+    }}
+    >
+    SIGN IN
+    </Typography></div>
         <TextField
             id="username"
             name="username"
             label="Enter Username"
             variant="outlined"
-            sx={{ width: "80%", mt:'3em'  }}
+            size='small'
+            sx={{ 
+              width: "80%",
+              mt:'1em'
+            }}
             value={credentials.username}
             onChange={handleChange}
             required
@@ -364,7 +386,8 @@ sx={{
             label="Enter Password"
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
-            sx={{ width: "80%", mt:'3em'  }}
+            size='small'
+            sx={{ width: "80%", mt:'2em'  }}
             value={credentials.password}
             onChange={handleChange}
             InputProps={{
@@ -381,17 +404,36 @@ sx={{
             }}
             required
         />
+        <div style={{width:'80%',display:'flex', justifyContent:'end', marginTop:'1em'}}>
+        <Typography sx={{color:'grey', cursor:'pointer', fontSize:'15px',textDecoration: 'none', // Initially, no underline
+    '&:hover': {
+      textDecoration: 'underline', // Underline on hover
+    },}} onClick= {handleForgotPasswordOpen}>Forgot Password</Typography>
+        </div>
+
         <Button
             variant="contained"
             sx={{ mt: 4, width: "10em", height:'3em' }}
             type="submit"
-        >
-            Login
+            // color='secondary'
+            disabled={btnLoading} // Disable the button if setBtnLoading is true
+            >
+              {btnLoading ? (
+                <CircularProgress size='2em' />
+                ) : (
+                  "Login"
+                
+              )}
         </Button>
-      <Typography sx={{color:'grey', cursor:'pointer', mt:'1em',     textDecoration: 'none', // Initially, no underline
-    '&:hover': {
-      textDecoration: 'underline', // Underline on hover
-    },}} onClick= {handleForgotPasswordOpen}>Forgot Password</Typography>
+
+
+
+        <Box sx={{width:'80%', display:'flex', justifyContent:'center', mt:'3em'}}>
+          <Typography sx={{fontSize:'14px', color:'#0000008a'}}>
+          Copyright © <Link href={OWNER} color='inherit' underline='hover' target='_blank'>Rapidsoft Technologies Pvt. Ltd</Link>
+          </Typography>
+        </Box>
+
       </form>
       </Paper>
 
@@ -405,7 +447,7 @@ sx={{
       <Dialog 
       open={openForgotPasswordDialog}
        onClose={handleForgotPasswordClose}
-        PaperProps={{ sx: { borderRadius:'15px'},}}>
+        PaperProps={{ sx: { borderRadius:'5px'},}}>
         <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Change Password</DialogTitle>
         <DialogContent >
             <form style={{width:'32.5em'}}>

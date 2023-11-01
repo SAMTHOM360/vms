@@ -384,7 +384,7 @@ export default function Navbar({toggleSidebar}) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
-      <AppBar position="fixed" elevation={4} sx={{ background: '#343741' }}>
+      <AppBar position="fixed" elevation={4} sx={{ background: '#141b2d' }}>
         <Toolbar>
           <IconButton
             size="large"

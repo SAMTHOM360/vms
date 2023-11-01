@@ -1143,7 +1143,7 @@ const formatDate = (dateString) => {
                     </Grid> */}
                     <Grid container style={{ marginTop: "40px" }}>
                         <Grid item xs={12} style={{ backgroundColor: "" }}>
-                            <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
+                            <Item style={{ height: '', margin: '10px', backgroundColor: "" }}>
                                 {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <h1 style={{ textAlign: "left" }}>MEETINGS</h1>
                                     <input
@@ -1166,7 +1166,7 @@ const formatDate = (dateString) => {
 
                                 </div> */}
 
-                                <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
+                                <TableContainer sx={{ width: '100%',  backgroundColor: "" }}>
                                     <Table sx={{}} aria-label="simple table">
                                         <TableHead sx={{ backgroundColor: 'aliceblue', border: "1px solid black" }}>
                                             <TableRow sx={{ border: "1px solid black" }}>

@@ -91,7 +91,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
       open={open}
       PaperProps={{
         sx: {
-          backgroundColor: "#343741",
+          backgroundColor: "#141b2d",
           color: "#ffffff",
         }
       }}
