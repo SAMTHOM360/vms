@@ -1176,6 +1176,7 @@ const formatDate = (dateString) => {
                                                 <TableCell align="center">Full Name</TableCell>
 
                                                 <TableCell align="center">Email</TableCell>
+                                                <TableCell align="center">Meet Type</TableCell>
                                                 <TableCell align="center">Phone No.</TableCell>
                                                 <TableCell align="center">Company Name</TableCell>
 
@@ -1204,6 +1205,7 @@ const formatDate = (dateString) => {
 
                                                         <TableCell align="left">{visitor.visitor.name}</TableCell>
                                                         <TableCell align="left">{visitor.visitor.email}</TableCell>
+                                                        <TableCell align="left">{visitor.context}</TableCell>
                                                         <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
 
                                                         <TableCell align="left">{visitor.visitor.companyName}</TableCell>

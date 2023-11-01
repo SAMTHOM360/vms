@@ -12,6 +12,7 @@ import Diversity2Icon from '@mui/icons-material/Diversity2';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import MeetList from './experimentals/MeetList';
+import MeetBarChart from './experimentals/MeetBarChart';
 
 const EmpDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -138,8 +139,12 @@ const EmpDashboard = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12} lg={7.5}>
-                    <Box sx={{width:'100%', background:'orange', height:'32em'}}>
-                      meeting performance barchart
+                    <Box sx={{width:'100%', background:'#1F2A40', height:'32em', display:'flex',flexDirection:'column',}}>
+                    <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Meeting Performance</Typography>
+                    <Box sx={{width:'100%', height:'100%' }}>
+                      <MeetBarChart />
+                      </Box>
+                      
                     </Box>
                     </Grid>
 
