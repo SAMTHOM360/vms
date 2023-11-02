@@ -13,6 +13,7 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import MeetList from './experimentals/MeetList';
 import MeetBarChart from './experimentals/MeetBarChart';
+import MeetingTimeline from './experimentals/MeetingTimeline';
 
 const EmpDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -140,8 +141,8 @@ const EmpDashboard = () => {
 
                     <Grid item xs={12} md={12} lg={7.5}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'32em', display:'flex',flexDirection:'column',}}>
-                    <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Meeting Performance</Typography>
-                    <Box sx={{width:'100%', height:'100%' }}>
+                    <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Meeting Counts</Typography>
+                    <Box sx={{width:'95%', height:'100%', }}>
                       <MeetBarChart />
                       </Box>
                       
@@ -155,9 +156,10 @@ const EmpDashboard = () => {
                       <Grid item xs={12} md={6} lg={12}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'15.5em', maxHeight:'15.5em', display:'flex',flexDirection:'column', }}>
                       {/* Recent meetings tickets (with explore more dialog) */}
-                      <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Recent Meetings</Typography>
-                      <Box sx={{overflowY:'auto'}}>
-                      <MeetList />
+                      <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Activity Timeline</Typography>
+                      <Box sx={{overflowY:'auto', width:'100%', mb:'1em',}}>
+                      {/* <MeetList /> */}
+                      <MeetingTimeline />
                       </Box>
                       
                     </Box>

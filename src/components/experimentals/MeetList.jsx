@@ -43,7 +43,7 @@ export default function MeetList() {
   return (
     <>
    
-    <List sx={{ width: '100%',  
+    {/* <List sx={{ width: '100%',  
     // bgcolor: '#1F2A40',  
     }}>
       <ListItem onClick={handleClick}>
@@ -77,7 +77,7 @@ export default function MeetList() {
       <Divider variant="inset" component="li"   sx={{
     backgroundColor: 'grey',
   }} />
-    </List>
+    </List> */}
 
 <Accordion   sx={{
     backgroundColor: '#1F2A40',

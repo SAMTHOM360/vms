@@ -16,6 +16,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
+import Groups3Icon from '@mui/icons-material/Groups3';
 
 import BusinessIcon from '@mui/icons-material/Business';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -281,7 +282,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   justifyContent: 'center',
                 }}
               >
-                <DashboardIcon sx={{color:'#ffffff'}} />
+                <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
               <ListItemText primary='Employee Meetings' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
