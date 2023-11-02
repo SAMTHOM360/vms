@@ -17,6 +17,9 @@ import CompanyTable from './components/company/CompanyTable';
 import EditCompanyForm from './components/company/EditCompanyForm';
 import Dashboardd from './components/company/Dashboardd';
 import ReceptionistDashboard from './components/company/ReceptionistDashboard';
+
+
+import DashboardReceptionist from './components/company/DashboardReceptionist';
 import MeetingDetails from './components/company/MeetingDetails';
 import EmpDashboard from './components/EmpDashboard';
 import MeetingNotices from './components/MeetingNotices';
@@ -62,6 +65,11 @@ function App() {
             <Route path="/editcompanyform/:companyId" element={<PrivateRoute element={<EditCompanyForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
             <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
             <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
+
+            {/* mycode */}
+            <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
+
+
             <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
             <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} />
             <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} />
