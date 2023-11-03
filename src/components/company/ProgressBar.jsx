@@ -9,7 +9,7 @@ const ProgressBar = () => {
         const data = {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [{
-                label: 'Weekly Sales',
+                label: 'Weekly Total Meeting Hours',
                 data: [10, 12, 6, 9, 12, 3, 9],
                 borderColor: [
                     'rgba(255, 26, 104, 0.2)',

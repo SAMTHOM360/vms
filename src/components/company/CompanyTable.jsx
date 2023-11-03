@@ -457,19 +457,19 @@ const CompanyTable = () => {
                   <TableHead style={{ backgroundColor: 'aliceblue' }}>
                     <TableRow>
                       <TableCell>ID</TableCell>
-                      <TableCell align="center">Company Name</TableCell>
-                      <TableCell align="center">Email</TableCell>
-                      <TableCell align="center">Phone No.</TableCell>
-                      <TableCell align="center">Address</TableCell>
-                      <TableCell align="center">Logo</TableCell>
-                      <TableCell align="center">Industry</TableCell>
-                      <TableCell align="center">State</TableCell>
-                      <TableCell align="center">City</TableCell>
-                      <TableCell align="center">Pin Code</TableCell>
-                      <TableCell align="center">About Us</TableCell>
-                      <TableCell align="center">Created On</TableCell>
-                      <TableCell align="center">Created By</TableCell>
-                      <TableCell align="center">Actions</TableCell>
+                      <TableCell align="left">Company Name</TableCell>
+                      <TableCell align="left">Email</TableCell>
+                      <TableCell align="left">Phone No.</TableCell>
+                      <TableCell align="left">Address</TableCell>
+                      <TableCell align="left">Logo</TableCell>
+                      <TableCell align="left">Industry</TableCell>
+                      <TableCell align="left">State</TableCell>
+                      <TableCell align="left">City</TableCell>
+                      <TableCell align="left">Pin Code</TableCell>
+                      <TableCell align="left">About Us</TableCell>
+                      <TableCell align="left">Created On</TableCell>
+                      <TableCell align="left">Created By</TableCell>
+                      <TableCell align="left">Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
