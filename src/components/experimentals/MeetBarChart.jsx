@@ -1,69 +1,3 @@
-// import React from "react";
-// import {Bar} from 'react-chartjs-2'
-
-// import {
-//   Chart as ChartJS,
-//   BarElement,
-//   CategoryScale,
-//   LinearScale,
-//   Tooltip,
-//   Legend,
-// }
-// from 'chart.js'
-
-// ChartJS.register(
-//   BarElement,
-//   CategoryScale,
-//   LinearScale,
-//   Tooltip,
-//   Legend
-// )
-
-// const MeetBarChart = () => {
-//   const data = {
-//     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-//     datasets: [
-//       {
-//         label:'Business',
-//         data: [3,6,9],
-//         backgroundColor: '#2EBEA2',
-//       },
-//       {
-//         label:'InterView',
-//         data: [3,6,9],
-//         backgroundColor: '#2E4ABE',
-//       },
-//       {
-//         label:'Casual',
-//         data: [3,6,9],
-//         backgroundColor: '#BE2E4A',
-//       },
-//     ]
-//   }
-
-//   const options = {
-//     scales: {
-//       x: {
-//         stacked: true
-//       },
-//       y:{
-//         stacked: true
-//       }
-//     }
-
-//   }
-
-//   return (
-//     <div style={{marginLeft:'1em', width:'95%', height:'95%'}}>
-//       <Bar data={data} options={options}></Bar>
-//     </div>
-//   )
-// }
-
-// export default MeetBarChart
-
-
-
 // import React, { useEffect, useRef } from 'react';
 // import Chart from 'chart.js/auto';
 
@@ -72,24 +6,22 @@
 
 //   useEffect(() => {
 //     const data = {
-//       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+//       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',],
 //       datasets: [
 //         {
-//           label: 'Daily Sales',
+//           label: 'Business Meeting',
 //           data: [18, 12, 6, 9, 12, 3, 9],
-//           backgroundColor: '#2EBEA2',
-
+//           backgroundColor: '#305BA6',
 //         },
 //         {
-//           label: 'Weekly Sales',
+//           label: 'Casual Meeting',
 //           data: [18, 12, 6, 9, 12, 3, 9],
-//           backgroundColor: '#2E4ABE',
-
+//           backgroundColor: '#54ccd2',
 //         },
 //         {
-//           label: 'Monthly Sales',
+//           label: 'Interview Meeting',
 //           data: [18, 12, 6, 9, 12, 3, 9],
-//           backgroundColor: '#BE2E4A',
+//           backgroundColor: '#d9c9b4',
 //         },
 //       ],
 //     };
@@ -121,7 +53,7 @@
 //             ctx.save();
 //             ctx.font = 'bold 12px sans-serif';
 //             ctx.textAlign = 'center';
-//             ctx.fillStyle = plugins.color || 'black';
+//             ctx.fillStyle = 'white'; // Set the label color to white
 //             ctx.fillText(y.getValueForPixel(value).toFixed(0), dataPoint.x, value - 12);
 //             ctx.restore();
 //           }
@@ -133,11 +65,6 @@
 //       type: 'bar',
 //       data,
 //       options: {
-//         legend: {
-//           labels: {
-//             color: 'white', // Color of the legend labels
-//           },
-//         },        
 //         scales: {
 //           x: {
 //             stacked: true,
@@ -147,16 +74,22 @@
 //             ticks: {
 //               color: 'white', // Color of the X-axis tick labels
 //             },
+//             grid: {
+//               color: '#404E6B', // Color of the grid lines
+//             },
 //           },
 //           y: {
 //             beginAtZero: true,
 //             stacked: true,
 //             grace: 1,
 //             title: {
-//               color: 'white', // Color of the X-axis title
+//               color: 'white', // Color of the Y-axis title
 //             },
 //             ticks: {
-//               color: 'white', // Color of the X-axis tick labels
+//               color: 'white', // Color of the Y-axis tick labels
+//             },
+//             grid: {
+//               color: '#404E6B', // Color of the grid lines
 //             },
 //           },
 //         },
@@ -164,6 +97,19 @@
 //           sumDataLabel: {
 //             color: 'white',
 //           },
+//           legend: {
+//             labels: {
+//               color: 'white', // Color of the legend labels
+//             },
+//           },
+//           zoom: {
+//             pan: {
+//                enabled: true
+//             },
+//             zoom: {
+//                enabled: true
+//             }
+//          },
 //         },
 //       },
 //       plugins: [sumDataLabel],
@@ -176,9 +122,11 @@
 //     };
 //   }, []);
 
+//   console.log("chart ref", chartRef)
+
 //   return (
-//     <div style={{marginLeft:'1em', width:'95%', height:'95%',}}>
-//           <canvas ref={chartRef} id="myChart"></canvas>
+//     <div style={{ marginLeft: '1em', width: '100%', height: '99%', display:'flex',justifyContent:'center'}}>
+//       <canvas ref={chartRef} id="myChart" width='15000'></canvas>
 //     </div>
 //   );
 // };
@@ -190,47 +138,44 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-const MeetBarChart = () => {
+const MeetBarChart = ({ data }) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    const data = {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',],
-      datasets: [
-        {
-          label: 'Business Meeting',
-          data: [18, 12, 6, 9, 12, 3, 9],
-          backgroundColor: '#305BA6',
-        },
-        {
-          label: 'Casual Meeting',
-          data: [18, 12, 6, 9, 12, 3, 9],
-          backgroundColor: '#54ccd2',
-        },
-        {
-          label: 'Interview Meeting',
-          data: [18, 12, 6, 9, 12, 3, 9],
-          backgroundColor: '#d9c9b4',
-        },
-      ],
-    };
+    if (!chartRef.current || !data) return;
 
-    const sumDataLabel = {
+    const dataEntries = Object.entries(data);
+
+    // const dataEntries = unReversed.reverse();
+
+    const labels = dataEntries.map(([date]) => new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }));
+
+    const datasets = [
+      {
+        label: 'Business Meetings',
+        data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
+        backgroundColor: '#305BA6',
+      },
+      {
+        label: 'Casual Meetings',
+        data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
+        backgroundColor: '#54ccd2',
+      },
+      {
+        label: 'Interview Meetings',
+        data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
+        backgroundColor: '#d9c9b4',
+      },
+    ];
+
+
+        const sumDataLabel = {
       id: 'sumDataLabel',
       afterDatasetDraw(chart, args, plugins) {
         const { ctx, scales: { y } } = chart;
@@ -267,19 +212,22 @@ const MeetBarChart = () => {
 
     const config = {
       type: 'bar',
-      data,
+      data: {
+        labels: labels,
+        datasets: datasets,
+      },
       options: {
         scales: {
           x: {
             stacked: true,
             title: {
-              color: 'white', // Color of the X-axis title
+              color: 'white',
             },
             ticks: {
-              color: 'white', // Color of the X-axis tick labels
+              color: 'white',
             },
             grid: {
-              color: '#404E6B', // Color of the grid lines
+              color: '#404E6B',
             },
           },
           y: {
@@ -287,13 +235,13 @@ const MeetBarChart = () => {
             stacked: true,
             grace: 1,
             title: {
-              color: 'white', // Color of the Y-axis title
+              color: 'white',
             },
             ticks: {
-              color: 'white', // Color of the Y-axis tick labels
+              color: 'white',
             },
             grid: {
-              color: '#404E6B', // Color of the grid lines
+              color: '#404E6B',
             },
           },
         },
@@ -324,11 +272,13 @@ const MeetBarChart = () => {
     return () => {
       chartInstance.destroy();
     };
-  }, []);
+  }, [data]);
 
   return (
-    <div style={{ marginLeft: '1em', width: '100%', height: '99%', display:'flex',justifyContent:'center'}}>
-      <canvas ref={chartRef} id="myChart" width='15000'></canvas>
+    <div style={{ marginLeft: '1em', width: '100%', height: '99%', display: 'flex', justifyContent: 'center' }}>
+      <canvas ref={chartRef} id="myChart" 
+      // width='15000'
+      ></canvas>
     </div>
   );
 };

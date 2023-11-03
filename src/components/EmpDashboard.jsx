@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import Navbar from '../global/Navbar';
 import Sidebar from '../global/Sidebar';
 import Grid from '@mui/material/Grid';
-import { Paper, Box, Typography } from '@mui/material';
+import { Paper, Box, Typography, Button } from '@mui/material';
 import Header from './Header';
 import StatBox from './StatBox';
 
@@ -14,13 +14,80 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import MeetList from './experimentals/MeetList';
 import MeetBarChart from './experimentals/MeetBarChart';
 import MeetingTimeline from './experimentals/MeetingTimeline';
+import TimelineDot from '@mui/lab/TimelineDot';
+import axios from 'axios';
 
 const EmpDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [dashboardData, setDashboardData] = useState({
+      totalMeetings: '',
+          completedMeetings: '',
+          pendingMeetings: '' ,
+          totalMeetngHours: '',
+
+    })
+    const [barchartData, setBarchartData] = useState(null)
+    const [timelineData, setTimelineData] = useState(null)
+
+
+
+    const adminId = localStorage.getItem('adminId')
+
+    const BASE_URL1 = 'http://192.168.12.58:8080/api'
+    const BASE_URL = 'http://192.168.12.54:8080/api'
+    
+
 
     const toggleSidebar = () => {
       setSidebarOpen(!sidebarOpen);
     };
+
+    async function fetchData() {
+      try{
+        const dashboardResponse = await axios.get(`${BASE_URL1}/meeting/userdashboard?userId=${adminId}`)
+        const dashboardTimelineResponse = await axios.get(`${BASE_URL1}/meeting/vis?id=${adminId}`)
+        // const userPresentResponse = await axios.get(`${BASE_URL1/user/prese}`)
+
+        const dashboardApiData = dashboardResponse.data.data
+        const timelineApiData = dashboardTimelineResponse.data.data
+        
+        // console.log("DB API DATA", dashboardApiData)
+        // console.log("Timeline API DATA", dashboardTimelineResponse.data.data)
+
+        const transformedData = Object.keys(dashboardApiData.meetingsContextDate).map((date) => ({
+          date: date,
+          ...dashboardApiData[date],
+        }));
+        
+
+        if(dashboardResponse.status === 200) {
+
+        setBarchartData(dashboardApiData.meetingsContextDate)
+        setTimelineData(timelineApiData)
+
+        let hours = dashboardApiData.totalHoursOfMeeting / 3600000
+        let hoursFloat = Math.round(hours * 100) / 100
+
+        setDashboardData({
+          totalMeetings: dashboardApiData.totalMeetings || '',
+          completedMeetings: dashboardApiData.completed || '',
+          pendingMeetings: dashboardApiData.pending || '' ,
+          totalMeetngHours: hoursFloat || '', 
+        })
+        
+        }
+        
+      } catch(error){
+        console.error('Error fetching data:', error);
+      }
+    }
+    // console.log("dashboard data", dashboardData)
+    useEffect(() => {
+      fetchData()
+    },[])
+
+    // console.log("Bar chart Data", barchartData)
+    // console.log("Time Line Data", timelineData)
 
   return (
     <>
@@ -41,6 +108,11 @@ const EmpDashboard = () => {
       }}
       >
         <Header title="Dashboard" subtitle="Welcome to dashboard" />
+        <Button variant="contained"
+        size='small'
+        sx={{margin:'1.2em', height:'3em', bgcolor:'green'}}
+        // onClick={handleAddDialogOpen}
+        >Present</Button>
     </Box>
 
   </Grid>
@@ -85,7 +157,7 @@ const EmpDashboard = () => {
                     <Grid item xs={12} sm={6} md={6} lg={3}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'10em', display:'flex',justifyContent:'center', alignItems:'center'}}>
                     <StatBox
-                      title="12,361"
+                      title={dashboardData.totalMeetings|| '0'}
                       subtitle="Total Meetings"
                       // progress="0.75"
                       // increase="+14%"
@@ -99,7 +171,7 @@ const EmpDashboard = () => {
                     <Grid item xs={12} sm={6} md={6} lg={3}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'10em', display:'flex',justifyContent:'center', alignItems:'center'}}>
                     <StatBox
-                      title="12,361"
+                      title={dashboardData.pendingMeetings || '0'}
                       subtitle="Pending Meetings"
                       // progress="0.75"
                       // increase="+14%"
@@ -113,7 +185,7 @@ const EmpDashboard = () => {
                     <Grid item xs={12} sm={6} md={6} lg={3}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'10em', display:'flex',justifyContent:'center', alignItems:'center'}}>
                     <StatBox
-                      title="12,361"
+                      title={dashboardData.completedMeetings || '0'}
                       subtitle="Completed Meetings"
                       // progress="0.75"
                       // increase="+14%"
@@ -127,7 +199,7 @@ const EmpDashboard = () => {
                     <Grid item xs={12} sm={6} md={6} lg={3}>
                     <Box sx={{width:'100%', background:'#1F2A40', height:'10em', display:'flex',justifyContent:'center', alignItems:'center'}}>
                     <StatBox
-                      title="12,361"
+                      title={dashboardData.totalMeetngHours || '0'}
                       subtitle="Total Meeting Hours"
                       // progress="0.75"
                       // increase="+14%"
@@ -143,7 +215,7 @@ const EmpDashboard = () => {
                     <Box sx={{width:'100%', background:'#1F2A40', height:'32em', display:'flex',flexDirection:'column',}}>
                     <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Meeting Counts</Typography>
                     <Box sx={{width:'95%', height:'100%', }}>
-                      <MeetBarChart />
+                      <MeetBarChart data={barchartData} />
                       </Box>
                       
                     </Box>
@@ -152,13 +224,26 @@ const EmpDashboard = () => {
                     <Grid 
                     item xs={12} md={12} lg={4.5}
                     >
-                      <Grid container spacing={2}>
-                      <Grid item xs={12} md={6} lg={12}>
-                    <Box sx={{width:'100%', background:'#1F2A40', height:'15.5em', maxHeight:'15.5em', display:'flex',flexDirection:'column', }}>
+
+<Box sx={{width:'100%', background:'#1F2A40',height:'32em', display:'flex',flexDirection:'column', }}>
                       {/* Recent meetings tickets (with explore more dialog) */}
+                      <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                       <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Activity Timeline</Typography>
+                      <Box sx={{display:'flex',alignItems:'center', mt:'0.5em',mr:'1em', color:'#C1C1C1', fontSize:'14px'}}>
+                      <span style={{width:'12px', height:'12px', backgroundColor:'#34E60C', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Completed <span style={{width:'10px'}}></span> <span style={{width:'12px', height:'12px', backgroundColor:'red', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Rejected
+                      </Box>
+                      </Box>
                       <Box sx={{overflowY:'auto', width:'100%', mb:'1em',}}>
                       {/* <MeetList /> */}
+                      <MeetingTimeline timelineApiData={timelineData} />
+                      </Box>
+                      
+                    </Box>
+                      {/* <Grid container spacing={2}>
+                      <Grid item xs={12} md={6} lg={12}>
+                    <Box sx={{width:'100%', background:'#1F2A40', height:'15.5em', maxHeight:'15.5em', display:'flex',flexDirection:'column', }}>
+                      <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Activity Timeline</Typography>
+                      <Box sx={{overflowY:'auto', width:'100%', mb:'1em',}}>
                       <MeetingTimeline />
                       </Box>
                       
@@ -170,7 +255,7 @@ const EmpDashboard = () => {
                       Meeting types count PIECHART
                     </Box>
                         </Grid>
-                      </Grid>
+                      </Grid> */}
                         
                     </Grid>
 

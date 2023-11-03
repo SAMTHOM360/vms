@@ -58,7 +58,7 @@ const Employee = () => {
   };
 
   // const BASE_URL = 'http://192.168.12.12:8080/api/user';
-  const BASE_URL = 'http://192.168.12.54:8080/api/user';
+  const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
   const AuthToken = sessionStorage.getItem('token');
 
@@ -285,6 +285,8 @@ toast.success('Selected user is successfully updated.', {
 
       const apiDataArray = response.data;
 
+      console.log("getall data ",response)
+
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
         console.error('API response does not contain the expected array or the array is empty:', apiDataArray);
         return;
@@ -393,8 +395,8 @@ toast.success('Selected user is successfully updated.', {
 <Sidebar open={sidebarOpen} />
 <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
-  <Paper
-      elevation={5}
+  <Box
+      // elevation={5}
       sx={{
         display:'flex',
         justifyContent:'space-between',
@@ -410,7 +412,7 @@ toast.success('Selected user is successfully updated.', {
         sx={{margin:'1.2em', height:'3em'}}
         onClick={handleAddDialogOpen}
         >Add Employee</Button>
-    </Paper>
+    </Box>
 
   </Grid>
   <Grid item xs={12} md={12} lg={12}>
