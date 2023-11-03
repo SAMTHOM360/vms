@@ -8,6 +8,8 @@ import {
 
 import React from 'react';
 import {Doughnut} from 'react-chartjs-2';
+import {useState,useEffect} from 'react';
+import axios from 'axios';
 
 ChartJS.register(
     ArcElement,
@@ -19,13 +21,81 @@ ChartJS.register(
 
 
 
+
+
+
 export default function DoughnutChart(){
+  const[rooms,setRooms] = useState(0);
+
+  const[totalRooms,setTotalRooms] = useState(0);
+  const[availableRooms,setAvailableRooms] = useState(0);
+  const[busyRooms,setBusyRooms] = useState(0);
+
+  const companyId = localStorage.getItem('companyId');
+
+
+
+function fetchRooms(){
+
+
+
+  const payload = {
+    page: 1,
+    size: 1,
+    // phoneNumber: '',
+    // searchQuery: '',
+    companyId: companyId
+    // status:status,
+    // date:'2023-10-18T11:00:00'
+
+}
+const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+axios
+    .post(getVisitorUrl,
+        payload)
+    .then(response => {
+        const responseData = response.data.data;
+
+
+        setRooms(responseData);
+  
+        setTotalRooms(response.data.data.totalRooms);
+        setAvailableRooms(response.data.data.totalAvailableRoom);
+        setBusyRooms(response.data.data.totalBusyRooms);
+
+    
+    
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+
+
+}
+
+
+useEffect(()=>{
+  fetchRooms();
+
+},[])
+
+
+
+
+
+
+
+
+
+
+
+
 
     const data ={
-        labels:['Total','Busy','Available'],
+        labels:['Total','Available','Busy'],
         datasets:[{
             // label:"Poll",
-            data:[9,6,3],
+            data:[totalRooms,availableRooms,busyRooms],
             backgroundColor:['#34aadc','#32577e','#618fbed9'],
             borderColor:['#34aadc','#32577e','#618fbed9']
         }]
@@ -42,7 +112,7 @@ export default function DoughnutChart(){
         },
         layout: {
           padding: {
-            top: 20, // Increase or decrease top padding as needed
+            top: 10, // Increase or decrease top padding as needed
             bottom: 20, // Increase or decrease bottom padding as needed
           },
         },

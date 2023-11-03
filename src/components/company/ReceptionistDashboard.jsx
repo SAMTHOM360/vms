@@ -25,6 +25,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
+import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
@@ -42,6 +43,23 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
 
+//calender
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+
+
+
+
+const StyledModal = styled(Modal)({
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    border: "none"
+})
 
 
 
@@ -69,7 +87,9 @@ export default function Dashboard() {
     const [page, setPage] = useState(0);
     const [visitors, setVisitors] = useState([]);
 
-    const[meetings,setMeetings] = useState([]);
+    const [passVisitors, setPassVisitors] = useState([]);
+
+    const [meetings, setMeetings] = useState([]);
 
 
     const rowsPerPage = 10;//now
@@ -85,10 +105,21 @@ export default function Dashboard() {
 
 
     const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
-    const [searchQuery, setSearchQuery] = useState(''); 
+    const [searchQuery, setSearchQuery] = useState('');
 
 
-    function calculateSerialNumber(page,rowsPerPage,index) {
+    //calender
+    const [selectedDate, setSelectedDate] = useState(null);
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+      };
+
+
+
+    const [roomAdded, setRoomAdded] = useState(false);
+
+
+    function calculateSerialNumber(page, rowsPerPage, index) {
         return page * rowsPerPage + index + 1;
     }
 
@@ -117,26 +148,99 @@ export default function Dashboard() {
         setSelectedRoom(event.target.value);
     };
 
-    // function getRoomsOption() {
+    function getRoomsOption() {
 
-    //     const companyId = localStorage.getItem('companyId');
+        const companyId = localStorage.getItem('companyId');
 
-    //     const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
+        const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
-    //     axios.get(roomUrl, {
-    //         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        axios.get(roomUrl, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 
-    //     }).then(response => {
-    //         const data = response.data.data;
-    //         // console.log(data);
-    //         setRooms(data);
-    //         // console.log("Room Data", data[4].id)
+        }).then(response => {
+            const data = response.data.data;
+            // console.log(data);
+            setRooms(data);
+            // console.log("Room Data", data[4].id)
 
 
-    //     }).catch(error => {
-    //         console.error('Error fetching data:', error);
-    //     });
-    // }
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+
+
+    //  add meeting details  
+    const handleAddMeeting = () => {
+        // if (status === 'APPROVED' && !selectedRoom) {
+        if (status === 'APPROVED') {
+
+            console.log("APPROVED") //alert("Room is required")
+
+        }
+        else {
+            const meetingData = {
+
+                id: item.id,
+                status: "APPROVED",
+                // user: {
+                //     id: adminId
+                // },
+                // visitor: {
+                //     id: item.visitor.id
+                // },
+                room: {
+                    id: selectedRoom
+                }
+
+
+
+
+            };
+
+            const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
+
+            axios.post(addMeetingUrl, meetingData, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            })
+                .then((response) => {
+
+
+
+                    // handleCloseModal();
+                    setSelectedRoom('');
+                    setStatus('')
+
+                    if (response.data.message === "CANCELLED Successfully") {
+                        alert("Meeting cancelled succesfully")
+                    }
+                    else {
+                        alert("Room added succesfully")
+                        setRoomAdded(true);
+                    }
+
+
+
+                })
+                .catch((error) => {
+
+                    console.error('Error adding meeting:', error);
+
+                });
+        };
+
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     //status
@@ -164,29 +268,32 @@ export default function Dashboard() {
 
     function fetchData() {
 
-    
+
 
         const companyId = localStorage.getItem('companyId');
 
 
-        const payload ={
-            page:page,
-            size:rowsPerPage,
+        const payload = {
+            page: page,
+            size: rowsPerPage,
             phoneNumber: phoneNumberFilter,
             searchQuery: searchQuery,
-            companyId:companyId
-           // status:status,
+            companyId: companyId
+            // status:status,
             // date:'2023-10-18T11:00:00'
 
         }
         const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
         axios
-            .post(getVisitorUrl, 
-               payload)
+            .post(getVisitorUrl,
+                payload)
             .then(response => {
                 const responseData = response.data.data.meetings;
 
-              
+                // const passResponseData = response.data.data.meetings;
+                // console.log(passResponseData,"passREsponseData");
+
+
                 // Loop through the meetings to access each one and its meetingId
                 responseData.forEach(meeting => {
                     const meetingId = meeting.id; // This is the meetingId
@@ -194,8 +301,8 @@ export default function Dashboard() {
                     console.log("Meeting ID:", meetingId);
                 });
 
-              
-             
+
+
 
 
                 setMeetings(response.data.data.totalElements);
@@ -205,13 +312,13 @@ export default function Dashboard() {
                 setVisitors(responseData);
                 // setTotalMeetings(responseData.length);
                 setTotalVisitors(response.data.data.totalElements);
-               //recent
-               setPendingVisitors(response.data.data.totalPending);
-               setApprovedVisitors(response.data.data.totalApproved);
+                //recent
+                setPendingVisitors(response.data.data.totalPending);
+                setApprovedVisitors(response.data.data.totalApproved);
 
-               
-          
-              
+
+
+
 
 
 
@@ -224,9 +331,9 @@ export default function Dashboard() {
 
     }
 
-//change
+    //change
 
-   //date format
+    //date format
     // const formatDate = (dateString) => {
 
     //     const date = new Date(dateString);
@@ -234,9 +341,9 @@ export default function Dashboard() {
     //   };
 
 
-      function getFullName(user) {
+    function getFullName(user) {
         return `${user.firstName} ${user.lastName}`;
-      }
+    }
 
     function formatMeetingDuration(meeting) {
         const startDate = new Date(meeting.meetingStartDateTime);
@@ -254,24 +361,26 @@ export default function Dashboard() {
     ///////
 
 
-    const handleDownloadPass = (meetingId,visitorName,visitorPhoneNumber) => {
-      
+    const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
+
         const passApiEndpoint = `http://192.168.12.54:8080/api/meeting/downloadPass?meetingId=${meetingId}`;
-    
+
         axios
             .get(passApiEndpoint, {
-                responseType: 'blob', 
+                responseType: 'blob',
             })
             .then((response) => {
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            const fileName = `${visitorName}_${visitorPhoneNumber}_pass.pdf`;
-            a.setAttribute('download', fileName);
-            // a.download = ; 
-            a.click();
-            window.URL.revokeObjectURL(url);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const fileName = `${visitorName}_${visitorPhoneNumber}_pass.pdf`;
+                a.setAttribute('download', fileName);
+                // a.download = ; 
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert('Pass downloaded succesfully');
+                handleCloseModal();
             })
             .catch((error) => {
                 console.error('Error downloading pass:', error);
@@ -282,11 +391,11 @@ export default function Dashboard() {
 
 
 
-    
+
     const handlePhoneNumberSearch = (event) => {
         if (event.key === 'Enter') {
             // Call the fetchData function when Enter key is pressed
-            fetchData();
+            fetchData(phoneNumberFilter);
         }
     };
 
@@ -297,14 +406,14 @@ export default function Dashboard() {
 
 
         fetchData();
-        // getRoomsOption()
-    }, [page]);    
+        getRoomsOption()
+    }, [page]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
-      setSidebarOpen(!sidebarOpen);
+        setSidebarOpen(!sidebarOpen);
     };
 
 
@@ -312,263 +421,352 @@ export default function Dashboard() {
 
     return (
         <>
-                <Navbar toggleSidebar={toggleSidebar}/>
-                <Box sx={{display:'flex', flexGrow:1, p:3, width:'100%'}}>
+            <Navbar toggleSidebar={toggleSidebar} />
+            <Box sx={{ display: 'flex', flexGrow: 1, p: 3, width: '100%' }}>
                 <Sidebar open={sidebarOpen} />
-            <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow:1, }}>
-                <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow:1 }}>
-                    <Grid container>
+                <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
+                    <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
                         <Grid container>
-                            <Grid item xs={12}>
-                            <Paper
-                                 elevation={5}
-                                 sx={{
-                                   display:'flex',
-                                   justifyContent:'space-between',
-                                   // width:'100%',
-                                 height:'4.5em',
-                                 mt:'3em',
-                                 mb:'0.5em' 
-                                 }}
-                                 >
-                                    <Header title="Dashboard" subtitle="Welcome to dashboard" />
-                                </Paper>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <Paper
+                                        elevation={5}
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            // width:'100%',
+                                            height: '4.5em',
+                                            mt: '3em',
+                                            mb: '0.5em'
+                                        }}
+                                    >
+                                        <Header title="Visitors" subtitle="Get all the visitors list" />
+                                    </Paper>
+                                </Grid>
+
                             </Grid>
 
                         </Grid>
-
-                    </Grid>
-                    <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-                        <Grid item xs={12} style={{backgroundColor:""}}>
-                            <Grid style={{ gap: "30px", marginTop: "20px"}} container justifyContent="center" >
-                                <Paper  style={{backgroundColor:""}}elevation={1} sx={{
-                                    height: 150,
-                                    width: 400,
-                                    display: 'flex', // Use flex display
-                                    alignItems: 'center',// Vertically center content
-                                    // borderRadius:"40px",
-                                    backgroundColor:"red",
-                                    
-
-                                    boxShadow:"5px 5px 10px grey",
-
-                                    ":hover": {
-                                        boxShadow: "10px 10px 20px grey",
-                                        cursor: "pointer"
-                                    },
-
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                        <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
+                            {/* <Grid item xs={12} style={{ backgroundColor: "" }}> */}
+                            {/* <Grid style={{ gap: "30px", marginTop: "" }} container justifyContent="center" > */}
+                            {/* <Paper style={{ backgroundColor: "" }} elevation={1} sx={{
+                                        height: 150,
+                                        width: 400,
+                                        display: 'flex', // Use flex display
+                                        alignItems: 'center',// Vertically center content
+                                        // borderRadius:"40px",
+                                        backgroundColor: "red",
 
 
-                                }}>
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",backgroundColor:"" }}>
+                                        boxShadow: "5px 5px 10px grey",
 
-                                        
-                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "skyblue", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center",fontSize:"50px" }}>
-                                                <PersonOutlineIcon style={{fontSize:"50px"}}/>
+                                        ":hover": {
+                                            boxShadow: "10px 10px 20px grey",
+                                            cursor: "pointer"
+                                        },
+
+                                        backgroundColor: (theme) =>
+                                            theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+
+
+                                    }}>
+                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", backgroundColor: "" }}>
+
+
+                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "skyblue", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "50px" }}>
+                                                <PersonOutlineIcon style={{ fontSize: "50px" }} />
 
                                             </div>
 
-                                        
 
-                                        <div className='info' style={{ marginLeft:"50px",display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center" ,textAlign:"center"}}>
-                                            <h2>Total Visitors:</h2>
-                                            <h2>{totalVisitors}</h2>
 
-                                        </div>
+                                            <div className='info' style={{ marginLeft: "50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
+                                                <h2>Total Visitors:</h2>
+                                                <h2>{totalVisitors}</h2>
 
-                                    </div>
-
-                                </Paper>
-                                <Paper elevation={1} sx={{
-                                    height: 150,
-                                    width: 400,
-                                    boxShadow:"5px 5px 10px grey",
-
-                                    ":hover": {
-                                        boxShadow: "10px 10px 20px grey",
-                                        cursor: "pointer"
-                                    },
-
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                }}>
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "orange", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                            <GroupsIcon style={{fontSize:"50px"}} />
-
-                                        </div>
-                                        <div className='info' style={{marginRight:"70px" ,display: "flex", flexDirection: "column",alignItems:"center",textAlign:"center" }}>
-                                            <div><h2>Pending Visitors:</h2></div>
-                                            <div><h2>{pendingVisitors}</h2></div>
+                                            </div>
 
                                         </div>
 
-                                    </div>
-                                </Paper>
-                                <Paper elevation={1} sx={{
-                                    height: 150,
-                                    width: 400,
-                                    boxShadow:"5px 5px 10px grey",
-
-                                    ":hover": {
-                                        boxShadow: "10px 10px 20px grey",
-                                        cursor: "pointer"
-                                    },
-
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                }}>
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "lightpink", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                            <WatchLaterIcon style={{fontSize:"50px"}} />
-
-                                        </div>
-                                        <div className='info' style={{ marginRight:"70px",display: "flex", flexDirection: "column" ,alignItems:"center",textAlign:""}}>
-                                            <div><h2>Approved Visitors:</h2></div>
-                                            <div><h2>{approvedVisitors}</h2></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </Paper>
+                                    </Paper> */}
 
 
-                            </Grid>
+
+                            {/* </Grid> */}
+                            {/* </Grid> */}
+
                         </Grid>
+                        <Grid container style={{ marginTop: "40px" }}>
+                            <Grid item xs={12} style={{ backgroundColor: "" }}>
+                                <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
+                                    <div style={{ display: "flex", justifyContent: "", width: "100%", backgroundColor: "" }}>
+                                        {/* <h1 style={{ textAlign: "left" }}>Visitors</h1> */}
+                                        {/* <button type="submit" onclick={<MeetingDetails/>}>Add User</button> */}
 
-                    </Grid>
-                    <Grid container style={{ marginTop: "40px" }}>
-                        <Grid item xs={12} style={{ backgroundColor: "" }}>
-                            <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <h1 style={{ textAlign: "left" }}>Visitors</h1>
-                                    {/* <button type="submit" onclick={<MeetingDetails/>}>Add User</button> */}
-                                    <Grid style={{
-                                            position: '',
-                                            right: 0,
-                                            marginTop: "15px",
-                                            // marginBottom: "15px",
-                                            height: "30px",
-                                            marginRight: "10px",
-                                            borderRadius: "10px"}}>
-                                    <input
-                                        type="text"
-                                        placeholder="Search..."
-                                        value={phoneNumberFilter}
-                                        onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                        onKeyPress={handlePhoneNumberSearch} 
-                                        // value={searchQuery}
-                                        // onChange={handleSearch}
-                                        style={{
+
+                                        <Grid style={{
                                             // position: '',
                                             // right: 0,
-                                            // marginTop: "15px",
-                                            // marginBottom: "15px",
-                                            height: "30px",
-                                            
-                                            borderRadius: "10px",
-                                            // border: "none"
-                                        }}
-                                    /> 
+                                            // // marginTop: "15px",
+                                            // marginBottom: "20px",
+                                            // width: "100%",
+                                            // height: "50px",
+                                            // marginRight: "10px",
+                                            // borderRadius: "10px",
+                                            // gap: "30px",
+                                            // display: "flex",
+                                            // // flexDirection:"column",
+                                            // justifyContent: "flex-start",
+                                            // backgroundColor: ""
+                                        }}>
+                                            {/* <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                // value={phoneNumberFilter}
+                                                // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                // onKeyPress={handlePhoneNumberSearch}
 
-                                    </Grid>
-                                   
+                                                style={{
+                                                    // position: '',
+                                                    // right: 0,
+                                                    // marginTop: "15px",
+                                                    // marginBottom: "15px",
+                                                    height: "45px",
+                                                    width: "250px",
 
-                                </div>
+                                                    borderRadius: "10px",
+                                                    // border: "none"
+                                                }}
+                                            /> */}
 
-                                <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
-                                    <Table sx={{}} aria-label="simple table">
-                                        <TableHead sx={{ backgroundColor: 'aliceblue', border: "1px solid black" }}>
-                                            <TableRow sx={{ border: "1px solid black" }}>
-                                                {/* <TableCell>Meeting ID</TableCcenter
+
+
+                                            {/* <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                // value={phoneNumberFilter}
+                                                // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                // onKeyPress={handlePhoneNumberSearch}
+
+                                                style={{
+                                                    // position: '',
+                                                    // right: 0,
+                                                    // marginTop: "15px",
+                                                    // marginBottom: "15px",
+                                                    height: "45px",
+                                                    width: "250px",
+
+                                                    borderRadius: "10px",
+                                                    // border: "none"
+                                                }}
+                                            /> */}
+
+
+
+
+                                            {/* <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                // value={phoneNumberFilter}
+                                                // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                // onKeyPress={handlePhoneNumberSearch}
+
+                                                style={{
+                                                    // position: '',
+                                                    // right: 0,
+                                                    // marginTop: "15px",
+                                                    // marginBottom: "15px",
+                                                    height: "45px",
+                                                    width: "250px",
+
+                                                    borderRadius: "10px",
+                                                    // border: "none"
+                                                }}
+                                            /> */}
+
+
+                                        </Grid>
+
+                                        <Grid>
+                                            {/* <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                value={phoneNumberFilter}
+                                                onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                onKeyPress={handlePhoneNumberSearch}
+                                                // value={searchQuery}
+                                                // onChange={handleSearch}
+                                                style={{
+                                                    // position: '',
+                                                    // right: 0,
+                                                    // marginTop: "15px",
+                                                    // marginBottom: "15px",
+                                                    height: "45px",
+                                                    width: "250px",
+
+                                                    borderRadius: "10px",
+                                                    // border: "none"
+                                                }}
+                                            /> */}
+
+
+                                        </Grid>
+                                        <Box
+                                            component="form"
+                                            sx={{
+                                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                            }}
+                                            noValidate
+                                            autoComplete="off"
+                                        >
+                                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "", margin: "auto", backgroundColor: "" }}>
+
+
+                                                <TextField id="outlined-search" label="Search Phone Number" type="search" />
+                                                {/* <TextField id="outlined-search" label="Search field" type="search" /> */}
+
+                                                <TextField
+                                                    id="outlined-select-currency"
+                                                    select
+                                                    label="SEarch by phone number"
+                                                    value={phoneNumberFilter}
+                                                    onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                    onKeyPress={handlePhoneNumberSearch}
+
+
+                                                >
+                                                    {/* {currencies.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))} */}
+                                                </TextField>
+                                                
+                                                
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                                       
+                                                        <DatePicker
+                                                            label="Start Date"
+                                                            value={selectedDate}
+                                                            onChange={(newValue) => setSelectedDate(newValue)}
+                                                        />
+                                                           <DatePicker
+                                                            label="End Date"
+                                                            value={selectedDate}
+                                                            onChange={(newValue) => setSelectedDate(newValue)}
+                                                        />
+                                                    </DemoContainer>
+                                                </LocalizationProvider>
+
+                                            </div>
+
+
+                                        </Box>
+
+
+                                    </div>
+
+                                    <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
+                                        <Table sx={{}} aria-label="simple table">
+                                            <TableHead sx={{ backgroundColor: 'aliceblue', border: "1px solid black" }}>
+                                                <TableRow sx={{ border: "1px solid black" }}>
+                                                    {/* <TableCell>Meeting ID</TableCcenter
                                                 <TableCell>Visitor ID</TableCell> */}
-                                                <TableCell>Sl No</TableCell>
-                                                <TableCell align="left">Full Name</TableCell>
-                                                {/* <TableCell align="right">Email</TableCell> */}
-                                                <TableCell align="left">Phone No.</TableCell>
-                                                <TableCell align="left">Company Name</TableCell>
-                                                <TableCell align="left">Host Name</TableCell>
-                                                {/* <TableCell align="right">Remarks</TableCell> */}
-                                                <TableCell align="left">Room</TableCell>
+                                                    <TableCell>Sl No</TableCell>
+                                                    <TableCell align="left">Full Name</TableCell>
+                                                    {/* <TableCell align="right">Email</TableCell> */}
+                                                    <TableCell align="left">Phone No.</TableCell>
+                                                    <TableCell align="left">Company Name</TableCell>
+                                                    <TableCell align="left">Host Name</TableCell>
+                                                    {/* <TableCell align="right">Remarks</TableCell> */}
+                                                    {/* <TableCell align="left">Room</TableCell> */}
 
-                                                <TableCell align="left">Meeting Time</TableCell>
-                                                {/* <TableCell align="right">End Time</TableCell> */}
+                                                    <TableCell align="left">Meeting Time</TableCell>
+                                                    {/* <TableCell align="right">End Time</TableCell> */}
 
-                                                <TableCell align="left">Check In</TableCell>
-                                                <TableCell align="left">Check Out</TableCell>
-                                               
-                                                <TableCell align="left">Status</TableCell>
+                                                    <TableCell align="left">Check In</TableCell>
+                                                    <TableCell align="left">Check Out</TableCell>
+
+                                                    <TableCell align="left">Status</TableCell>
 
 
 
-                                                <TableCell align="left"></TableCell>
+                                                    <TableCell align="left"></TableCell>
 
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {visitors
-                                                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                .map((visitor, index) => (
-                                                    <TableRow key={index}>
-                                                        {/* <TableCell>{visitor.id}</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {visitors
+                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                    .map((visitor, index) => (
+                                                        <TableRow key={index}>
+                                                            {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                                        <TableCell>{calculateSerialNumber(page,rowsPerPage,index)}</TableCell>
+                                                            <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
 
-                                                        <TableCell align="left">{visitor.visitor.name}</TableCell>
+                                                            <TableCell align="left">{visitor.visitor.name}</TableCell>
 
-                                                        {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
-                                                        <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
+                                                            {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
+                                                            <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
 
-                                                        <TableCell align="left">{visitor.visitor.companyName}</TableCell>
-                                                        <TableCell align="left">{getFullName(visitor.user)}</TableCell>
-                                                        {/* <TableCell align="right">{visitor.remarks}</TableCell> */}
-                                                        <TableCell align="left">{visitor.room.roomName}</TableCell>
-                                                        <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
-                                                        {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
-                                                        <TableCell align="left">{visitor.checkInDateTime}</TableCell>
-                                                        <TableCell align="left">{visitor.checkOutDateTime}</TableCell>
-                                                        <TableCell align="left">{visitor.status}</TableCell>
+                                                            <TableCell align="left">{visitor.visitor.companyName}</TableCell>
+                                                            <TableCell align="left">{getFullName(visitor.user)}</TableCell>
+                                                            {/* <TableCell align="right">{visitor.remarks}</TableCell> */}
+                                                            {/* <TableCell align="left">{visitor.room.roomName}</TableCell> */}
+                                                            <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                            {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
+                                                            <TableCell align="left">{visitor.checkInDateTime}</TableCell>
+                                                            <TableCell align="left">{visitor.checkOutDateTime}</TableCell>
+                                                            <TableCell align="left">{visitor.status}</TableCell>
 
-                                                        {/* <TableCell align="right">{visitor.meetingStartDateTime}</TableCell>
+                                                            {/* <TableCell align="right">{visitor.meetingStartDateTime}</TableCell>
                                                         <TableCell align="right">{visitor.meetingEndDateTime}</TableCell>
                                                         <TableCell align="right">{visitor.remarks}</TableCell>
                                                         <TableCell align="right">{visitor.status}</TableCell> */}
-                                                        <TableCell align="right">
+                                                            <TableCell align="right">
 
-
+                                                                {/* //download pass
                                                             {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ? (
                                                                 
                                                                 <DownloadIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                             ) : (
                                                             
                                                                 <DownloadIcon style={{cursor:"pointer"}} onClick={() => handleDownloadPass(visitor.id,visitor.visitor.name,visitor.visitor.phoneNumber)} />
-                                                            )}
+                                                            )} */}
+
+
+                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
+                                                                    // Disable the Edit button
+                                                                    <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
+                                                                ) : (
+                                                                    // Enable the Edit button
+                                                                    <EditIcon onClick={() => handleOpenModal(visitor)} />
+                                                                )}
 
 
 
-                                                        </TableCell>
+                                                            </TableCell>
 
-                                                    </TableRow>
-                                                ))}
-                                        </TableBody>
-                                        
-                                    </Table>
-                                    <TablePagination
-                                        rowsPerPageOptions={[]}
-                                        component="div"
-                                        // count={visitors.length}
-                                        count={meetings}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onPageChange={
-                                            handleChangePage}
-                                    
-                                    />
-                                </TableContainer>
+                                                        </TableRow>
+                                                    ))}
+                                            </TableBody>
+
+                                        </Table>
+                                        <TablePagination
+                                            rowsPerPageOptions={[]}
+                                            component="div"
+                                            // count={visitors.length}
+                                            count={meetings}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onPageChange={
+                                                handleChangePage}
+
+                                        />
+                                    </TableContainer>
 
 
 
@@ -576,13 +774,112 @@ export default function Dashboard() {
 
 
                                 </Item>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                        <StyledModal
+                            open={open} // Set the open prop of the modal
+                            // onClose={handleCloseModal} // Handle closing the modal
+                            aria-labelledby="modal-title"
+                            aria-describedby="modal-description"
+                        >
+                            <Box width={600} height={300} bgcolor={'white'} p={3} borderRadius={5} border='none' >
 
-                 
+                                <Box
+                                    display="flex" flexDirection='column'
+
+                                    // margin='auto'
+                                    // marginTop={10}
+                                    padding={3}
+                                    borderRadius={5}
+                                    gap={3}
+
+                                >
+                                    <Typography fontSize={20} fontWeight={'bold'} variant={'h1'}>Meeting</Typography>
+
+
+
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={selectedRoom}
+                                            label="rooms"
+                                            onChange={handleChange1}
+                                        >
+
+                                            {Array.isArray(rooms) && rooms.map((room) => (
+                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
+                                            ))}
+
+
+
+
+
+                                        </Select>
+                                    </FormControl>
+
+                                    {/* <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={
+                                            
+                                        }
+                                        label="status"
+                                        onChange={handleChangeStatus}
+                                    >
+                                        <MenuItem value='APPROVED'>APPROVE</MenuItem>
+                                        <MenuItem value='CANCELLED' >CANCEL</MenuItem>
+
+                                    </Select>
+                                </FormControl> */}
+
+
+
+                                    <div style={{ display: "flex", justifyContent: "center", gap: "5px" }}>
+                                        <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
+
+
+                                    </div>
+                                    <div style={{ display: "flex", justifyContent: "space-between", gap: "5px" }}>
+
+
+                                        {/* <Button variant='contained' onClick={() => handleDownloadPass(item.id,item.visitor.name,item.visitor.phoneNumber)}>Pass</Button> */}
+
+                                        {roomAdded && (
+                                            <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
+                                        )}
+
+                                        <Button variant='contained' onClick={handleCloseModal}>Close</Button>
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+                                </Box>
+
+
+
+
+
+
+
+
+                            </Box>
+                        </StyledModal>
+
+
+                    </div>
+
                 </div>
-
-            </div>
 
             </Box>
 

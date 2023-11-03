@@ -419,6 +419,7 @@
 //again
 
 import React from 'react';
+import axios from "axios";
 
 // import './Dashboard.css';
 import '../../css/DashboardReceptionist.css';
@@ -469,11 +470,123 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Dashboard() {
 
 
+
+
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
+
+    const [visitors, setVisitors] = useState([]);
+
+        const [totalVisitors, setTotalVisitors] = useState(0);
+    const [pendingVisitors, setPendingVisitors] = useState(0);
+    const [approvedVisitors, setApprovedVisitors] = useState(0);
+    const [inProcessVisitors, setInprocessVisitors] = useState(0);
+    const [completedVisitors, setCompletedVisitors] = useState(0);
+
+
+
+    const companyId = localStorage.getItem('companyId');
+
+
+
+
+
+    function fetchData() {
+
+
+
+        const payload = {
+            page: 1,
+            size: 1,
+            // phoneNumber: '',
+            // searchQuery: '',
+            companyId: companyId
+            // status:status,
+            // date:'2023-10-18T11:00:00'
+
+        }
+        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+        axios
+            .post(getVisitorUrl,
+                payload)
+            .then(response => {
+                const responseData = response.data.data.meetings;
+
+
+                // Loop through the meetings to access each one and its meetingId
+                responseData.forEach(meeting => {
+                    const meetingId = meeting.id; // This is the meetingId
+                    // Now you can use the meetingId as needed
+                    console.log("Meeting ID:", meetingId);
+                });
+
+
+
+
+
+                // setMeetings(response.data.data.totalElements);
+                // console.log(response.data.data.meetings.user);
+
+                // console.log(visitorId,"visitorId")
+                setVisitors(responseData);
+                // setTotalMeetings(responseData.length);
+                setTotalVisitors(response.data.data.totalElements);
+                // const pendingCount = responseData.filter(visitor => visitor.status === 'PENDING').length;
+                // const approvedCount = responseData.filter(visitor => visitor.status === 'APPROVED').length;
+                // setPendingVisitors(pendingCount);
+                // setApprovedVisitors(approvedCount);
+                setPendingVisitors(response.data.data.totalPending);
+                setApprovedVisitors(response.data.data.totalApproved);
+                setInprocessVisitors(response.data.data.totalInProcess);
+                setCompletedVisitors(response.data.data.totalCompleted);
+
+
+
+
+
+
+                //test code
+
+                // let totalPendingVisitors = 0;
+                // let totalApprovedVisitors = 0;
+
+                // responseData.forEach((visitor) => {
+                //   if (visitor.status === 'PENDING') {
+                //     totalPendingVisitors++;
+                //   } else if (visitor.status === 'APPROVED') {
+                //     totalApprovedVisitors++;
+                //   }
+                // });
+
+
+
+                // console.log(response.data.data[0].id, "visitors");
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+
+    }
+
+
+    useEffect(()=>{
+        fetchData();
+    },[])
+
+    
+
+
+
+
+
+
+
+
+
 
 
     return (
@@ -544,7 +657,7 @@ export default function Dashboard() {
 
                                             <div className='info' style={{ marginRight:"50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
                                                 <h3>Total Meetings:</h3>
-                                                <h2>100</h2>
+                                                <h2>{totalVisitors}</h2>
 
                                             </div>
 
@@ -577,7 +690,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",backgroundColor:"" }}>
                                                 <div><h3>Pending Meetings:</h3></div>
-                                                <div><h2>100</h2></div>
+                                                <div><h2>{pendingVisitors}</h2></div>
 
                                             </div>
 
@@ -609,7 +722,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
                                                 <div><h3>Approved Meetings:</h3></div>
-                                                <div><h2>100</h2></div>
+                                                <div><h2>{approvedVisitors}</h2></div>
 
                                             </div>
 
@@ -641,7 +754,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
                                                 <div><h3>Inprocess Meetings:</h3></div>
-                                                <div><h2>100</h2></div>
+                                                <div><h2>{inProcessVisitors}</h2></div>
 
                                             </div>
 
@@ -673,7 +786,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
                                                 <div><h3>Completed Meetings:</h3></div>
-                                                <div><h2>100</h2></div>
+                                                <div><h2>{completedVisitors}</h2></div>
 
                                             </div>
 
