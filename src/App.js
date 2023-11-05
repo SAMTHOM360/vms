@@ -25,6 +25,7 @@ import EmpDashboard from './components/EmpDashboard';
 import MeetingNotices from './components/MeetingNotices';
 import Dashboard from './components/Dashboard';
 import EmpMeeting from './components/EmpMeeting';
+import Profile from './components/Profile';
 // HARSHITA ENDS
 
 const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
@@ -53,9 +54,11 @@ function App() {
           <Route path="/" element={<LoginForm setAuthenticated={setAuthenticated} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/loader" element={<Loader />} />
-          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route path="/empdashboard" element={<EmpDashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/userform" element={<UserForm />} />
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
-            <Route path="/userform" element={<PrivateRoute element={<UserForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
+            {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
             <Route path="/employee" element={<PrivateRoute element={<Employee />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
             {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} /> */}
 
@@ -72,7 +75,7 @@ function App() {
 
             <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
             <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} />
-            <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} />
+            {/* <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} /> */}
 
             //HARSHITA ENDS
 

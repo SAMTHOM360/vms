@@ -7,7 +7,7 @@ const Header = ({title, subtitle}) => {
 
   return (
    <Box
-   sx={{pl:'1em', overflow:'hidden'}}
+   sx={{overflow:'hidden'}}
    >
     <Typography variant='h4'
     color="#3d3d3d"

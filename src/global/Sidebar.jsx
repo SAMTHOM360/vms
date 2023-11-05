@@ -13,6 +13,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
+import PersonIcon from '@mui/icons-material/Person';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
@@ -195,6 +196,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
             </ListItemButton>
           </ListItem>
 
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Profile' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
             </>
           )}
 
@@ -241,6 +263,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
               <ListItemText primary='Meeting Form' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
+
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Profile' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
             </>
           )}
 
@@ -285,6 +328,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
                 <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
               <ListItemText primary='Employee Meetings' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Profile' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 

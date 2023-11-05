@@ -108,11 +108,7 @@ const EmpDashboard = () => {
       }}
       >
         <Header title="Dashboard" subtitle="Welcome to dashboard" />
-        <Button variant="contained"
-        size='small'
-        sx={{margin:'1.2em', height:'3em', bgcolor:'green'}}
-        // onClick={handleAddDialogOpen}
-        >Present</Button>
+
     </Box>
 
   </Grid>

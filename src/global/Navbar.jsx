@@ -26,6 +26,7 @@ import SyncLockIcon from '@mui/icons-material/SyncLock';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
@@ -99,10 +100,17 @@ export default function Navbar({toggleSidebar}) {
   const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState(false)
 
   const [showPassword, setShowPassword] = useState(false);
+  const [statusDotstatus, setStatusDotStatus] = useState(false)
 
   const togglePasswordVisibility = () => {
       setShowPassword(!showPassword);
   };
+
+  
+  let statusDot = 'red'
+  if(statusDotstatus === true){
+    statusDot = '#34E60C'
+  }
 
 
 
@@ -152,6 +160,10 @@ export default function Navbar({toggleSidebar}) {
 
   const handleChangePasswordDialogClose = () => {
     setOpenChangePasswordDialog(false)
+  }
+
+  const handleProfileOpen = () =>{
+    navigate('/profile')
   }
 
   const handleSavePasswordChange = async(e) => {
@@ -253,11 +265,12 @@ export default function Navbar({toggleSidebar}) {
     <Menu
     elevation={2}
     sx={{
-      overflow: "visible",
+      // overflow: "visible",
       filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
       mt: '2.6em',
-      mr: '9em',
-      height:'13em',
+      mr: '7em',
+      width:'15em',
+      height:'23em',
 
     }}
       anchorEl={anchorEl}
@@ -274,15 +287,35 @@ export default function Navbar({toggleSidebar}) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-            <MenuItem 
-      onClick={handleChangePasswordDialogOpen}
+
+<MenuItem 
+      onClick={handleProfileOpen}
       sx={{
-        height:'2.4em',
-        paddingRight:'2em'
+        height:'2em',
+        fontSize:'15px'
       }}
       >
         <IconButton
-          size="large"
+          size="small"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <PersonIcon />
+        </IconButton>
+        <p style={{paddingLeft:'2.2em'}}>Profile</p>
+      </MenuItem><hr />
+
+            <MenuItem 
+      onClick={handleChangePasswordDialogOpen}
+      sx={{
+        height:'2em',
+        fontSize:'15px',
+      }}
+      >
+        <IconButton
+          size="small"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
@@ -293,19 +326,21 @@ export default function Navbar({toggleSidebar}) {
         <p>Change Password</p>
       </MenuItem><hr />
       <MenuItem onClick={handleLogout}
-            sx={{
-              paddingRight:'2em',
-              height:'2.4em'
-            }}>
+      sx={{
+        height:'2em',
+        fontSize:'15px',
+      }}
+            >
       <IconButton
-              size="large"
+              size="small"
               aria-label="account of current user"
               aria-haspopup="true"
               color="inherit"
             >
               <LogoutIcon />
             </IconButton>
-            <p>Logout</p>
+
+            <p style={{paddingLeft:'2em'}}>Logout</p>
       </MenuItem>
     </Menu>
   );
@@ -381,6 +416,13 @@ export default function Navbar({toggleSidebar}) {
     </Menu>
   );
 
+  function handleStatusUpdate() {
+    setStatusDotStatus(true)
+    setTimeout(() => {
+      setStatusDotStatus(false)
+    }, 2000);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
@@ -407,7 +449,7 @@ export default function Navbar({toggleSidebar}) {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <span style={{fontSize:'20px'}}>{loggedUserName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>{loggedUserRole}</span>
-          <Box sx={{ display: { xs: 'none', md: 'flex', color:'#ffffff' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex', color:'#ffffff',position:'relative' } }}>
             {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -422,6 +464,22 @@ export default function Navbar({toggleSidebar}) {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
+
+
+    <div onClick={handleStatusUpdate}
+      style={{
+        position:'absolute',
+        top:'2.2em',
+        left:'0.8em',
+        zIndex:1,
+        width: '13px',
+        height: '13px',
+        backgroundColor: statusDot, // Change the color to represent "present" or "absent"
+        borderRadius: '50%',
+        border: '2px solid #fff',
+      }}
+    />
+
             <IconButton
               size="large"
               edge="end"
@@ -430,6 +488,10 @@ export default function Navbar({toggleSidebar}) {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              // sx={{
+              //   display: 'flex',
+              //   alignItems: 'center',
+              // }}
             >
               <AccountCircle sx={{fontSize:'40px'}} />
             </IconButton>
