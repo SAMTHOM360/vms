@@ -25,7 +25,7 @@ import { Label } from "@mui/icons-material";
 
 const Profile = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isPresent, setIsPresent] = useState(false);
+  const [isPresent, setIsPresent] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isAddress, setIsAddress] = useState(false);
 
@@ -251,6 +251,7 @@ const Profile = () => {
                       sx={{ width: "100%", mt: "10px" }}
                       label="First Name"
                       name="firstName"
+                      disabled={!isEdit}
                       // value={formData.firstName}
                       inputProps={{ maxLength: 26 }}
                       // onChange={handleChange}
@@ -264,6 +265,7 @@ const Profile = () => {
                       label="Last Name"
                       name="lastName"
                       size="small"
+                      disabled={!isEdit}
                       // value={formData.lastName}
                       inputProps={{ maxLength: 26 }}
                       // onChange={handleChange}
@@ -276,6 +278,7 @@ const Profile = () => {
                       sx={{ width: "100%", mt: "10px" }}
                       label="Phone"
                       name="phone"
+                      disabled
                       size="small"
                       // value={formData.phone}
                       inputProps={{
@@ -303,6 +306,7 @@ const Profile = () => {
                       name="email"
                       type="email"
                       size="small"
+                      disabled={!isEdit}
                       // value={formData.email}
                       inputProps={{ maxLength: 126 }}
                       // onChange={handleChange}
@@ -316,6 +320,7 @@ const Profile = () => {
                         sx={{ width: "100%", mt: "10px" }}
                         label="Date of Birth"
                         format="YYYY/MM/DD"
+                        disabled={!isEdit}
                         // shouldDisableDate={shouldDisableDate}
                         // onChange={handleDateChange}
                         slotProps={{
@@ -337,6 +342,7 @@ const Profile = () => {
                         // value={formData.gender}
                         label="Gender"
                         size="small"
+                        disabled={!isEdit}
                         // onChange={handleChangeGender}
                         required
                       >
@@ -353,6 +359,7 @@ const Profile = () => {
                       select
                       label="Government ID Type"
                       size="small"
+                      disabled={!isEdit}
                       // value={governmentIdType}
                       // onChange={handleChangeGovernmentIdType}
                       fullWidth
@@ -368,6 +375,7 @@ const Profile = () => {
                       sx={{ width: "100%", mt: "10px" }}
                       label="Government ID"
                       size="small"
+                      disabled={!isEdit}
                       // value={formData.govtId}
                       // onChange={handleChangeGovernmentId}
                       inputProps={
@@ -467,6 +475,7 @@ const Profile = () => {
                         label="State"
                         name="state"
                         size="small"
+                        disabled={!isAddress}
                         // value={formData.state.id || ''}
                         // onChange={handleChange}
                         required
@@ -494,6 +503,7 @@ const Profile = () => {
                         label="City"
                         name="city"
                         size="small"
+                        disabled={!isAddress}
                         // value={formData.city.id || ''}
                         // onChange={handleChange}
                         required
@@ -520,6 +530,7 @@ const Profile = () => {
                       label="PIN Code"
                       name="pincode"
                       size="small"
+                      disabled={!isAddress}
                       // value={formData.pincode}
                       inputProps={{
                         pattern: "^[0-9]*",
@@ -604,6 +615,7 @@ const Profile = () => {
                       sx={{ width: "100%", mt: "10px" }}
                       label="Employee Id"
                       name="empId"
+                      disabled
                       // value={formData.firstName}
                       inputProps={{ maxLength: 26, readOnly: true  }}
                       // onChange={handleChange}
@@ -617,7 +629,7 @@ const Profile = () => {
                       sx={{ width: "100%", mt: "10px" }}
                       label="Department"
                       name="dept"
-                      
+                      disabled
                       // value={formData.firstName}
                       inputProps={{ maxLength: 26, readOnly: true  }}
                       // onChange={handleChange}
