@@ -27,6 +27,7 @@ import Navbar from '../global/Navbar';
 import Sidebar from '../global/Sidebar';
 import Header from './Header';
 import Loader from './Loader';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -40,6 +41,7 @@ const Employee = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [columns, setColumns] = useState([]);
   const [divText, setDivText] = useState('');
+  const navigate = useNavigate()
 
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const adminId = localStorage.getItem('adminId')
@@ -207,7 +209,8 @@ const Employee = () => {
   };
   
   const handleAddDialogOpen = () => {
-    setAddUserDialogOpen(true)
+    // setAddUserDialogOpen(true)
+    navigate('/userform')
   }
   
   const handleAddDialogClose = () => {

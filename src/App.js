@@ -26,6 +26,8 @@ import MeetingNotices from './components/MeetingNotices';
 import Dashboard from './components/Dashboard';
 import EmpMeeting from './components/EmpMeeting';
 import Profile from './components/Profile';
+import ExcelUpload from './components/experimentals/ExcelUpload';
+import FileDropArea from './components/experimentals/FileDropArea';
 // HARSHITA ENDS
 
 const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
@@ -57,6 +59,8 @@ function App() {
           <Route path="/empdashboard" element={<EmpDashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/userform" element={<UserForm />} />
+          <Route path="/excelupload" element={<ExcelUpload />} />
+          <Route path="/filedrop" element={<FileDropArea />} />
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
             {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
             <Route path="/employee" element={<PrivateRoute element={<Employee />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />

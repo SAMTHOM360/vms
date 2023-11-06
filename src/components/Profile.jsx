@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "../global/Navbar";
 import Sidebar from "../global/Sidebar";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
 import {
   Paper,
   Box,
@@ -24,21 +25,71 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Label } from "@mui/icons-material";
 
 const Profile = () => {
+
+  const BASE_URL = 'http://192.168.12.58:8080/api/user';
+
+  const AuthToken = sessionStorage.getItem('token');
+  const adminId = localStorage.getItem('adminId')
+
+
+  
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${AuthToken}`,
+    },
+  });
+
+  const headers = {
+    Authorization: `Bearer ${AuthToken}`,
+  };
+
+
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isPresent, setIsPresent] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isAddress, setIsAddress] = useState(false);
+  const [statusOnPayload, setStatusOnPayload] = useState({
+    id:adminId,
+    isActive:true,
+  })
+
+  const [statusOffPayload, setStatusOffPayload] = useState({
+    id:adminId,
+    isActive:false,
+  })
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handlePresentOn = () => {
-    setIsPresent(true);
+  const handlePresentOn = async() => {
+    try{
+      const response = await axios.post(`${BASE_URL}/present`, statusOnPayload, {headers})
+      const statusApiData = response
+
+      console.log("statusApiData", statusApiData)
+      setIsPresent(true);
+    } catch(error) {
+      console.error("Catched Error: ", error)
+    }
+    
+
   };
 
-  const handlePresentOff = () => {
-    setIsPresent(false);
+  const handlePresentOff = async() => {
+    try{
+      const response = await axios.post(`${BASE_URL}/present`, statusOffPayload, {headers})
+      const statusApiData = response
+
+      console.log("statusApiData", statusApiData)
+      setIsPresent(false);
+    } catch(error) {
+      console.error("Catched Error: ", error)
+    }
   };
 
 
@@ -57,6 +108,18 @@ const Profile = () => {
   const handleAddressOff = () => {
     setIsAddress(false);
   };
+
+  // async function handleStatusUpdate() {
+
+  //   try{
+  //     const response = await axios.post(`${BASE_URL}/present`, statusPayload, {headers})
+  //     const statusApiData = response
+
+  //     console.log("statusApiData", statusApiData)
+  //   } catch(error) {
+  //     console.error("Catched Error: ", error)
+  //   }
+  // }
 
   return (
     <>

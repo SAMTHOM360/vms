@@ -18,6 +18,7 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Groups3Icon from '@mui/icons-material/Groups3';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 import BusinessIcon from '@mui/icons-material/Business';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -196,6 +197,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
             </ListItemButton>
           </ListItem>
 
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/userform')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <ListAltIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Employee Form' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
           <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
             <ListItemButton
               sx={{
@@ -214,6 +236,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
                 <PersonIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
               <ListItemText primary='Profile' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/excelupload')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Excel' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
