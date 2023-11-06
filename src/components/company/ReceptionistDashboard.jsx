@@ -49,6 +49,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useStaticPicker } from '@mui/x-date-pickers/internals';
 
 
 
@@ -109,12 +111,66 @@ export default function Dashboard() {
 
 
     //calender
-    const [selectedDate, setSelectedDate] = useState(null);
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-      };
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
 
+
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
+        //  console.log(selectedStatusOptions,"acsd")
+    };
+
+
+    const handleEndDateChange = (date) => {
+        setEndDate(date);
+        //  fetchData();
+    };
+
+
+
+    //status
+    const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
+    const [status,setStatus] = useState('');
+
+    console.log(selectedStatusOptions,"selectedstatus");
+
+
+    const handleChangeStatus = (event) => {
+
+        setSelectedStatusOptions(event.target.value);
+       
+        // console.log(event.target.value,"xyz");
+        // fetchData();
+
+    };
+
+    function fetchStatusOptions() {
+
+        const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+        axios.get(statusUrl)
+            .then(response => {
+                const data = response.data.data;
+
+                // data.forEach(datas =>{
+                //     const status1 = datas;
+                //     console.log(status1,"status1");
+                //     setStatus(status1);
+                // })
+
+                // console.log(data,"sttaus")
+               
+
+                setStatusOptions(data);
+
+
+
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    }
 
     const [roomAdded, setRoomAdded] = useState(false);
 
@@ -173,12 +229,12 @@ export default function Dashboard() {
     //  add meeting details  
     const handleAddMeeting = () => {
         // if (status === 'APPROVED' && !selectedRoom) {
-        if (status === 'APPROVED') {
+        // if (status === 'APPROVED') {
 
-            console.log("APPROVED") //alert("Room is required")
+        //     console.log("APPROVED") //alert("Room is required")
 
-        }
-        else {
+        // }
+        // else {
             const meetingData = {
 
                 id: item.id,
@@ -209,7 +265,7 @@ export default function Dashboard() {
 
                     // handleCloseModal();
                     setSelectedRoom('');
-                    setStatus('')
+                    // setStatus('')
 
                     if (response.data.message === "CANCELLED Successfully") {
                         alert("Meeting cancelled succesfully")
@@ -227,11 +283,74 @@ export default function Dashboard() {
                     console.error('Error adding meeting:', error);
 
                 });
-        };
+        // };
 
 
     }
 
+
+    //export
+
+
+
+    function downloadFile(url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'meeting_details.xlsx'); 
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+
+    function excelExport() {
+
+        const companyId = localStorage.getItem('companyId');
+
+        const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+
+        const payload={
+            page: 0,
+            size: 100,
+            phoneNumber:phoneNumberFilter,
+            fromDate:startDate,
+            toDate:endDate,
+         
+            companyId: companyId,
+          
+            status:selectedStatusOptions.length ===0 ? null : selectedStatusOptions,
+            // date:'2023-10-18T11:00:00'
+
+        }
+
+        axios.post(exportUrl,payload, {
+           
+            // responseType: 'blob', // important
+        })
+        .then(response => {
+            const url = response.data.data;
+            console.log(url,"files")
+            downloadFile(url)
+            
+        
+            // const url = window.URL.createObjectURL(new Blob([data]));
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', `${Date.now()}.xlsx`);
+            // document.body.appendChild(link);
+            // link.click();
+
+         
+
+
+          
+
+
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
 
 
 
@@ -245,11 +364,9 @@ export default function Dashboard() {
 
     //status
 
-    const [status, setStatus] = useState('')
+    // const [status, setStatus] = useState('')
 
-    const handleChangeStatus = (event) => {
-        setStatus(event.target.value);
-    };
+ 
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -278,8 +395,10 @@ export default function Dashboard() {
             size: rowsPerPage,
             phoneNumber: phoneNumberFilter,
             searchQuery: searchQuery,
-            companyId: companyId
-            // status:status,
+            companyId: companyId,
+            fromDate:startDate,
+            toDate:endDate,
+            status:selectedStatusOptions.length ===0 ? null : selectedStatusOptions,
             // date:'2023-10-18T11:00:00'
 
         }
@@ -406,8 +525,13 @@ export default function Dashboard() {
 
 
         fetchData();
-        getRoomsOption()
-    }, [page]);
+        getRoomsOption();
+        fetchStatusOptions();
+
+        // console.log(statusOptions,"statusOptions")
+      
+
+    }, [page,selectedStatusOptions,phoneNumberFilter,startDate,endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -520,25 +644,7 @@ export default function Dashboard() {
                                             // justifyContent: "flex-start",
                                             // backgroundColor: ""
                                         }}>
-                                            {/* <input
-                                                type="text"
-                                                placeholder="Search..."
-                                                // value={phoneNumberFilter}
-                                                // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                // onKeyPress={handlePhoneNumberSearch}
-
-                                                style={{
-                                                    // position: '',
-                                                    // right: 0,
-                                                    // marginTop: "15px",
-                                                    // marginBottom: "15px",
-                                                    height: "45px",
-                                                    width: "250px",
-
-                                                    borderRadius: "10px",
-                                                    // border: "none"
-                                                }}
-                                            /> */}
+                                          
 
 
 
@@ -565,25 +671,7 @@ export default function Dashboard() {
 
 
 
-                                            {/* <input
-                                                type="text"
-                                                placeholder="Search..."
-                                                // value={phoneNumberFilter}
-                                                // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                // onKeyPress={handlePhoneNumberSearch}
-
-                                                style={{
-                                                    // position: '',
-                                                    // right: 0,
-                                                    // marginTop: "15px",
-                                                    // marginBottom: "15px",
-                                                    height: "45px",
-                                                    width: "250px",
-
-                                                    borderRadius: "10px",
-                                                    // border: "none"
-                                                }}
-                                            /> */}
+                                         
 
 
                                         </Grid>
@@ -612,58 +700,81 @@ export default function Dashboard() {
 
 
                                         </Grid>
-                                        <Box
-                                            component="form"
-                                            sx={{
-                                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                            }}
-                                            noValidate
-                                            autoComplete="off"
-                                        >
-                                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "", margin: "auto", backgroundColor: "" }}>
+
+                                        <Grid>
+                                            <Box
+                                                component="form"
+                                                sx={{
+                                                    '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                                }}
+                                                noValidate
+                                                autoComplete="off"
+                                            // style={{display:"flex",justifyContent:"space-evenly"}}
+                                            >
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "", margin: "", backgroundColor: "" }}>
 
 
-                                                <TextField id="outlined-search" label="Search Phone Number" type="search" />
-                                                {/* <TextField id="outlined-search" label="Search field" type="search" /> */}
+                                                  
 
-                                                <TextField
-                                                    id="outlined-select-currency"
-                                                    select
-                                                    label="SEarch by phone number"
-                                                    value={phoneNumberFilter}
-                                                    onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                    onKeyPress={handlePhoneNumberSearch}
+                                                    <TextField
+                                                        id="outlined-select-currency"
+                                                        select
+                                                        label="Search by Status"
+                                                        value={selectedStatusOptions}
+                                                        // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                        onChange={handleChangeStatus}
+                                                        
+                                                        style={{ top: "10px" }}
 
 
-                                                >
-                                                    {/* {currencies.map((option) => (
-                                                        <MenuItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))} */}
-                                                </TextField>
-                                                
-                                                
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                                    >
                                                        
-                                                        <DatePicker
-                                                            label="Start Date"
-                                                            value={selectedDate}
-                                                            onChange={(newValue) => setSelectedDate(newValue)}
-                                                        />
-                                                           <DatePicker
-                                                            label="End Date"
-                                                            value={selectedDate}
-                                                            onChange={(newValue) => setSelectedDate(newValue)}
-                                                        />
-                                                    </DemoContainer>
-                                                </LocalizationProvider>
-
-                                            </div>
+                                                       <MenuItem value="">
+                                                            <em>None</em>
+                                                        </MenuItem>
 
 
-                                        </Box>
+
+                                                        {Array.isArray(statusOptions) && statusOptions.map((options,index) => (
+                                                            <MenuItem key={index} value={options} >{options}</MenuItem>
+                                                        ))}
+                                                    </TextField>
+
+
+                                                  
+
+                                                    <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
+                                                        onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                        onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
+
+
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+
+                                                            <DatePicker
+                                                                label="Start Date"
+                                                                value={startDate}
+                                                                // onChange={(newValue) => setStartDate(newValue)}
+                                                                onChange ={handleStartDateChange}
+                                                            />
+                                                            <DatePicker
+                                                                label="End Date"
+                                                                value={endDate}
+                                                                // onChange={(newValue) => setEndDate(newValue)}
+                                                                onChange={handleEndDateChange}
+                                                            />
+                                                        </DemoContainer>
+                                                    </LocalizationProvider>
+                                                    <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "400px", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+
+                                                </div>
+                                                
+
+
+                                            </Box>
+
+                                        </Grid>
+
 
 
                                     </div>
@@ -738,7 +849,7 @@ export default function Dashboard() {
                                                             )} */}
 
 
-                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
+                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS'? (
                                                                     // Disable the Edit button
                                                                     <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                 ) : (
