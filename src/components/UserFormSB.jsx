@@ -22,14 +22,14 @@ import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { Divider, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CircularProgress from "@mui/material/CircularProgress";
 
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 function UserForm({ authenticated, closeDialog, fetchData }) {
   const BASE_URL = "http://192.168.12.58:8080/api/user";
@@ -89,9 +89,10 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
 
   // EXCEL UPLOAD STARTS -----------------------------------------------------------------------------------------------------------------
 
-  const [isUpload, setIsUpload] = useState();
+  const [isUpload, setIsUpload] = useState(false);
   const [isFileSelected, setIsFileSelected] = useState("");
   const [excelUpData, setExcelUpData] = useState();
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const [excelDownData, setExcelDownData] = useState({
     totalElement: "",
@@ -522,6 +523,13 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
+  };
+
+  const handleTest = () => {
+    setBtnLoading(true);
+    setTimeout(() => {
+      setBtnLoading(false);
+    }, 2000);
   };
 
   return (
@@ -1111,7 +1119,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                   paddingTop: "2em",
                 }}
               >
-                <Box sx={{ width: "50%", bgcolor: "#EBEBEB",  }}>
+                <Box sx={{ width: "50%", bgcolor: "#EBEBEB" }}>
                   <Box
                     sx={{ bgcolor: "#FF9145", width: "100%", height: "15em" }}
                   >
@@ -1123,95 +1131,157 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                       display: "flex",
                       flexDirection: "row",
                       width: "100%",
-                      bgcolor:'#F7F7F7',
+                      bgcolor: "#F7F7F7",
                       // mb:'2em'
                     }}
                   >
-                    <Box sx={{ width:'85px', mr:'10px' }}>
+                    <Box sx={{ width: "85px", mr: "10px" }}>
                       <Button
                         variant="contained"
                         sx={{
                           width: "100%",
                           height: "44px",
                           borderRadius: "0px",
-                          bgcolor:'#45D836',
-                          '&:hover': {
-                            backgroundColor: '#1B7D00',
-                            color: 'white',
+                          bgcolor: "#45D836",
+                          "&:hover": {
+                            backgroundColor: "#1B7D00",
+                            color: "white",
                           },
-                          boxShadow: 'none', // Remove shadow
-        elevation: 0, // Remove elevation
+                          boxShadow: "none", // Remove shadow
+                          elevation: 0, // Remove elevation
                         }}
                         // onClick={handleUpload}
                       >
-                        <AddIcon sx={{fontSize:'40px'}} />
+                        <AddIcon sx={{ fontSize: "40px" }} />
                       </Button>
                     </Box>
-                    <Box sx={{  display:'flex', alignItems:'center',color:'#ACACAC', width:'80%' }}>
-                      <Typography>Add your file here.</Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "#ACACAC",
+                        width: "80%",
+                      }}
+                    >
+                      <Typography>Add your excel file here.</Typography>
                     </Box>
-                    
                   </Box>
-                  <Box sx={{  display:'flex', justifyContent:'flex-end', alignItems:'center',color:'#ACACAC', width:'100%', mb:'2em' }}>
-                      <Typography>What to upload? <a href={excelFile} download>Get Template</a></Typography>
-                    </Box>
-
-
-
-                  <Box sx={{display:'flex', justifyContent:'space-between', mb:'2em'}}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    sx={{ width: "9em", height: "44px", }}
-                    onClick={handleCancel}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      color: "#ACACAC",
+                      width: "100%",
+                      mb: "2em",
+                    }}
                   >
-                    Cancel
-                  </Button>
+                    <Typography>
+                      What to upload?{" "}
+                      <a href={excelFile} download style={{ color: "#A0A0A0" }}>
+                        Get Template
+                      </a>
+                    </Typography>
+                  </Box>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ width: "9em", height: "44px", }}
-                    // onClick={handleCanel}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: "2em",
+                      paddingX:'1em'
+                    }}
                   >
-                    Upload
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{ width: "9em", height: "44px" }}
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={isUpload}
+                      disa
+                      sx={{
+                        width: "9em",
+                        height: "44px",
+                        pointerEvents: btnLoading ? "none" : "auto",
+                        backgroundColor: btnLoading
+                          ? "rgba(0, 0, 0, 0.12)"
+                          : "primary.main",
+                        "&:hover": {
+                          backgroundColor: btnLoading
+                            ? "rgba(0, 0, 0, 0.12)"
+                            : "primary.dark", // Change color on hover
+                        },
+                      }}
+                      onClick={handleTest}
+                    >
+                      {btnLoading ? (
+                        <>
+                          <CircularProgress
+                            size="2em"
+                            // sx={{ color: "rgba(0, 0, 0, 0.5)" }}
+                          />
+                        </>
+                      ) : (
+                        "Upload"
+                      )}
+                    </Button>
                   </Box>
 
-                  <Box sx={{mb:'2em'}}>
-                  <TableContainer >
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Total Element</TableCell>
-            <TableCell>Successfully Added</TableCell>
-            <TableCell>Unsuccessfully Added</TableCell>
-            <TableCell>Duplicate Data</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>{excelDownData.totalElement || '0'}</TableCell>
-            <TableCell>{excelDownData.successfullyAdded || '0'}</TableCell>
-            <TableCell>{excelDownData.duplicateData || '0'}</TableCell>
-            <TableCell>{excelDownData.unSuccessfullyAdded || '0'}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <Box sx={{ mb: "2em" }}>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Total Records</TableCell>
+                            <TableCell>Successfully Added</TableCell>
+                            <TableCell>Unsuccessfully Added</TableCell>
+                            <TableCell>Duplicate Data</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>
+                              {excelDownData.totalElement || "0"}
+                            </TableCell>
+                            <TableCell>
+                              {excelDownData.successfullyAdded || "0"}
+                            </TableCell>
+                            <TableCell>
+                              {excelDownData.duplicateData || "0"}
+                            </TableCell>
+                            <TableCell>
+                              {excelDownData.unSuccessfullyAdded || "0"}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </Box>
 
-                  <Box sx={{display:'flex', justifyContent:'center', width:'100%', mb:'2em'}}>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    sx={{ width: "9em", height: "44px", }}
-                    // onClick={handleCanel}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                      mb: "2em",
+                    }}
                   >
-                    Download
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      sx={{ width: "9em", height: "44px" }}
+                      // onClick={handleCanel}
+                    >
+                      Download
+                    </Button>
                   </Box>
-
                 </Box>
               </Box>
             </Grid>
