@@ -265,6 +265,29 @@ export default function Sidenav({ open: propOpen, onClose }) {
 
 {userRole === 'RECEPTIONIST' && (
             <>
+
+<ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/dashboardreceptionist')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <DashboardIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Dashboard Receptionist' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
+
           <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/receptionistdashboard')}>
             <ListItemButton
               sx={{

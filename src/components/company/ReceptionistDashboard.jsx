@@ -86,15 +86,31 @@ const rowsPerPage = 10;
 
 
 export default function Dashboard() {
+
+
+    //pagination and filter
+
     const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
+    // const rowsPerPage = 10;
+
+
+
+
+
+
+
     const [visitors, setVisitors] = useState([]);
 
     const [passVisitors, setPassVisitors] = useState([]);
 
     const [meetings, setMeetings] = useState([]);
+    const [meetingsPerPage, setMeetingsPerPage] = useState([]);
 
 
-    const rowsPerPage = 10;//now
+    // const rowsPerPage = 10;//now
     const [totalVisitors, setTotalVisitors] = useState(0);
     const [pendingVisitors, setPendingVisitors] = useState(0);
     const [approvedVisitors, setApprovedVisitors] = useState(0);
@@ -132,15 +148,15 @@ export default function Dashboard() {
     //status
     const [statusOptions, setStatusOptions] = useState([]);
     const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
-    const [status,setStatus] = useState('');
+    const [status, setStatus] = useState('');
 
-    console.log(selectedStatusOptions,"selectedstatus");
+    console.log(selectedStatusOptions, "selectedstatus");
 
 
     const handleChangeStatus = (event) => {
 
         setSelectedStatusOptions(event.target.value);
-       
+
         // console.log(event.target.value,"xyz");
         // fetchData();
 
@@ -160,7 +176,7 @@ export default function Dashboard() {
                 // })
 
                 // console.log(data,"sttaus")
-               
+
 
                 setStatusOptions(data);
 
@@ -176,7 +192,15 @@ export default function Dashboard() {
 
 
     function calculateSerialNumber(page, rowsPerPage, index) {
-        return page * rowsPerPage + index + 1;
+        if (phoneNumberFilter || startDate || endDate || selectedStatusOptions) {
+            return 0 * rowsPerPage + index + 1;
+
+        }
+        else {
+            return page * rowsPerPage + index + 1;
+
+        }
+
     }
 
 
@@ -235,54 +259,54 @@ export default function Dashboard() {
 
         // }
         // else {
-            const meetingData = {
+        const meetingData = {
 
-                id: item.id,
-                status: "APPROVED",
-                // user: {
-                //     id: adminId
-                // },
-                // visitor: {
-                //     id: item.visitor.id
-                // },
-                room: {
-                    id: selectedRoom
+            id: item.id,
+            status: "APPROVED",
+            // user: {
+            //     id: adminId
+            // },
+            // visitor: {
+            //     id: item.visitor.id
+            // },
+            room: {
+                id: selectedRoom
+            }
+
+
+
+
+        };
+
+        const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
+
+        axios.post(addMeetingUrl, meetingData, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        })
+            .then((response) => {
+
+
+
+                // handleCloseModal();
+                // setSelectedRoom('');
+                // setStatus('')
+
+                if (response.data.message === "CANCELLED Successfully") {
+                    alert("Meeting cancelled succesfully")
+                }
+                else {
+                    alert("Room added succesfully")
+                    setRoomAdded(true);
                 }
 
 
 
-
-            };
-
-            const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
-
-            axios.post(addMeetingUrl, meetingData, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             })
-                .then((response) => {
+            .catch((error) => {
 
+                console.error('Error adding meeting:', error);
 
-
-                    // handleCloseModal();
-                    setSelectedRoom('');
-                    // setStatus('')
-
-                    if (response.data.message === "CANCELLED Successfully") {
-                        alert("Meeting cancelled succesfully")
-                    }
-                    else {
-                        alert("Room added succesfully")
-                        setRoomAdded(true);
-                    }
-
-
-
-                })
-                .catch((error) => {
-
-                    console.error('Error adding meeting:', error);
-
-                });
+            });
         // };
 
 
@@ -296,13 +320,13 @@ export default function Dashboard() {
     function downloadFile(url) {
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'meeting_details.xlsx'); 
+        link.setAttribute('download', 'meeting_details.xlsx');
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     }
-    
+
 
     function excelExport() {
 
@@ -310,67 +334,61 @@ export default function Dashboard() {
 
         const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
 
-        const payload={
+        const payload = {
             page: 0,
             size: 100,
-            phoneNumber:phoneNumberFilter,
-            fromDate:startDate,
-            toDate:endDate,
-         
+            phoneNumber: phoneNumberFilter,
+            fromDate: startDate,
+            toDate: endDate,
+
             companyId: companyId,
-          
-            status:selectedStatusOptions.length ===0 ? null : selectedStatusOptions,
+
+            status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
             // date:'2023-10-18T11:00:00'
 
         }
 
-        axios.post(exportUrl,payload, {
-           
+        axios.post(exportUrl, payload, {
+
             // responseType: 'blob', // important
         })
-        .then(response => {
-            const url = response.data.data;
-            console.log(url,"files")
-            downloadFile(url)
-            
-        
-            // const url = window.URL.createObjectURL(new Blob([data]));
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.setAttribute('download', `${Date.now()}.xlsx`);
-            // document.body.appendChild(link);
-            // link.click();
-
-         
+            .then(response => {
+                const url = response.data.data;
+                console.log(url, "files")
+                downloadFile(url)
 
 
-          
+                // const url = window.URL.createObjectURL(new Blob([data]));
+                // const link = document.createElement('a');
+                // link.href = url;
+                // link.setAttribute('download', `${Date.now()}.xlsx`);
+                // document.body.appendChild(link);
+                // link.click();
 
 
-        }).catch(error => {
-            console.error('Error fetching data:', error);
-        });
+
+
+
+
+
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
     }
 
 
 
-
-
-
-
-
-
-
-
-    //status
-
-    // const [status, setStatus] = useState('')
-
- 
-
+    //pagination
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
         // fetchData(newPage);
+    };
+
+
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0); // Reset to the first page when changing rows per page
     };
 
 
@@ -391,14 +409,13 @@ export default function Dashboard() {
 
 
         const payload = {
-            page: page,
-            size: rowsPerPage,
+            page: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 0 : page,
+            size: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 1000 : rowsPerPage,
             phoneNumber: phoneNumberFilter,
-            searchQuery: searchQuery,
             companyId: companyId,
-            fromDate:startDate,
-            toDate:endDate,
-            status:selectedStatusOptions.length ===0 ? null : selectedStatusOptions,
+            fromDate: startDate,
+            toDate: endDate,
+            status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
             // date:'2023-10-18T11:00:00'
 
         }
@@ -423,7 +440,7 @@ export default function Dashboard() {
 
 
 
-
+                setMeetingsPerPage(response.data.data.totalMeeting);
                 setMeetings(response.data.data.totalElements);
                 // console.log(response.data.data.meetings.user);
 
@@ -464,20 +481,81 @@ export default function Dashboard() {
         return `${user.firstName} ${user.lastName}`;
     }
 
+    // function formatMeetingDuration(meeting) {
+    //     const startDate = new Date(meeting.meetingStartDateTime);
+    //     const endDate = new Date(meeting.meetingEndDateTime);
+
+    //     const formattedDate = startDate.toLocaleDateString();
+    //     const startTime = startDate.toLocaleTimeString();
+    //     const endTime = endDate.toLocaleTimeString();
+
+    //     return `${formattedDate}, ${startTime} - ${endTime}`;
+    // }
+
     function formatMeetingDuration(meeting) {
-        const startDate = new Date(meeting.meetingStartDateTime);
-        const endDate = new Date(meeting.meetingEndDateTime);
+        const startTimestamp = meeting.checkInDateTime;
+        const endTimestamp = meeting.checkOutDateTime;
 
-        const formattedDate = startDate.toLocaleDateString();
-        const startTime = startDate.toLocaleTimeString();
-        const endTime = endDate.toLocaleTimeString();
 
-        return `${formattedDate}, ${startTime} - ${endTime}`;
+
+        // Create JavaScript Date objects with IST timezone
+        const startDate = new Date(startTimestamp);
+        startDate.setHours(startDate.getHours() - 5);
+        startDate.setMinutes(startDate.getMinutes() - 30);
+        const endDate = new Date(endTimestamp);
+
+        // Define options for formatting
+        const options = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        };
+
+        // Format the start and end dates using the options
+        const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+        const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+
+        return `${formattedStart}`;
     }
 
+    function formatMeetingDuration1(meeting) {
+
+        const endTimestamp = meeting.checkOutDateTime;
+        console.log(endTimestamp, "endtimestamp")
 
 
-    ///////
+
+        // Create JavaScript Date objects with IST timezone
+        if (endTimestamp != null) {
+            const endDate = new Date(endTimestamp);
+            endDate.setHours(endDate.getHours() - 5);
+            endDate.setMinutes(endDate.getMinutes() - 30);
+
+            // Define options for formatting
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZone: 'Asia/Kolkata', // Set the timezone to IST
+            };
+
+            // Format the start and end dates using the options
+
+            const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+
+            return `${formattedEnd}`;
+
+
+        }
+
+    }
 
 
     const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
@@ -527,11 +605,14 @@ export default function Dashboard() {
         fetchData();
         getRoomsOption();
         fetchStatusOptions();
+        // filterData();
 
         // console.log(statusOptions,"statusOptions")
-      
 
-    }, [page,selectedStatusOptions,phoneNumberFilter,startDate,endDate]);
+
+
+
+    }, [page, selectedStatusOptions, phoneNumberFilter, startDate, endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -629,26 +710,26 @@ export default function Dashboard() {
                                         {/* <button type="submit" onclick={<MeetingDetails/>}>Add User</button> */}
 
 
-                                        <Grid style={{
-                                            // position: '',
-                                            // right: 0,
-                                            // // marginTop: "15px",
-                                            // marginBottom: "20px",
-                                            // width: "100%",
-                                            // height: "50px",
-                                            // marginRight: "10px",
-                                            // borderRadius: "10px",
-                                            // gap: "30px",
-                                            // display: "flex",
-                                            // // flexDirection:"column",
-                                            // justifyContent: "flex-start",
-                                            // backgroundColor: ""
-                                        }}>
-                                          
+                                        {/* <Grid style={{
+                                            position: '',
+                                            right: 0,
+                                            // marginTop: "15px",
+                                            marginBottom: "20px",
+                                            width: "100%",
+                                            height: "50px",
+                                            marginRight: "10px",
+                                            borderRadius: "10px",
+                                            gap: "30px",
+                                            display: "flex",
+                                            // flexDirection:"column",
+                                            justifyContent: "flex-start",
+                                            backgroundColor: "red"
+                                        }}> */}
 
 
 
-                                            {/* <input
+
+                                        {/* <input
                                                 type="text"
                                                 placeholder="Search..."
                                                 // value={phoneNumberFilter}
@@ -671,13 +752,13 @@ export default function Dashboard() {
 
 
 
-                                         
 
 
-                                        </Grid>
 
-                                        <Grid>
-                                            {/* <input
+                                        {/* </Grid> */}
+
+                                        {/* <Grid> */}
+                                        {/* <input
                                                 type="text"
                                                 placeholder="Search..."
                                                 value={phoneNumberFilter}
@@ -699,7 +780,7 @@ export default function Dashboard() {
                                             /> */}
 
 
-                                        </Grid>
+                                        {/* </Grid> */}
 
                                         <Grid>
                                             <Box
@@ -711,64 +792,74 @@ export default function Dashboard() {
                                                 autoComplete="off"
                                             // style={{display:"flex",justifyContent:"space-evenly"}}
                                             >
-                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "", margin: "", backgroundColor: "" }}>
-
-
-                                                  
-
-                                                    <TextField
-                                                        id="outlined-select-currency"
-                                                        select
-                                                        label="Search by Status"
-                                                        value={selectedStatusOptions}
-                                                        // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                        onChange={handleChangeStatus}
-                                                        
-                                                        style={{ top: "10px" }}
-
-
-                                                    >
-                                                       
-                                                       <MenuItem value="">
-                                                            <em>None</em>
-                                                        </MenuItem>
+                                                <Grid style={{ display: "flex", flexDirection: "", justifyContent: "space-between", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
 
 
 
-                                                        {Array.isArray(statusOptions) && statusOptions.map((options,index) => (
-                                                            <MenuItem key={index} value={options} >{options}</MenuItem>
-                                                        ))}
-                                                    </TextField>
+                                                    <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
+                                                        <TextField
+                                                            id="outlined-select-currency"
+                                                            select
+                                                            label="Search by Status"
+                                                            value={selectedStatusOptions}
+                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            onChange={handleChangeStatus}
+
+                                                            style={{ top: "10px" }}
 
 
-                                                  
+                                                        >
 
-                                                    <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
-                                                        onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                        onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
 
 
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                        <DemoContainer components={['DatePicker', 'DatePicker']}>
 
-                                                            <DatePicker
-                                                                label="Start Date"
-                                                                value={startDate}
-                                                                // onChange={(newValue) => setStartDate(newValue)}
-                                                                onChange ={handleStartDateChange}
-                                                            />
-                                                            <DatePicker
-                                                                label="End Date"
-                                                                value={endDate}
-                                                                // onChange={(newValue) => setEndDate(newValue)}
-                                                                onChange={handleEndDateChange}
-                                                            />
-                                                        </DemoContainer>
-                                                    </LocalizationProvider>
-                                                    <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "400px", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+                                                            {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
+                                                                <MenuItem key={index} value={options} >{options}</MenuItem>
+                                                            ))}
+                                                        </TextField>
 
-                                                </div>
-                                                
+
+
+
+                                                        <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
+                                                            onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
+
+
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
+
+                                                                <DatePicker
+                                                                    label="Start Date"
+                                                                    value={startDate}
+                                                                    // onChange={(newValue) => setStartDate(newValue)}
+                                                                    onChange={handleStartDateChange}
+                                                                />
+                                                                <DatePicker
+                                                                    label="End Date"
+                                                                    value={endDate}
+                                                                    // onChange={(newValue) => setEndDate(newValue)}
+                                                                    onChange={handleEndDateChange}
+                                                                />
+                                                            </DemoContainer>
+                                                        </LocalizationProvider>
+                                                    </Grid>
+
+                                                    <Grid style={{ backgroundColor: "", right: 0 }}>
+                                                        <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+
+                                                    </Grid>
+
+
+
+
+
+
+                                                </Grid>
+
 
 
                                             </Box>
@@ -781,7 +872,7 @@ export default function Dashboard() {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: 'aliceblue', border: "1px solid black" }}>
+                                            <TableHead sx={{ backgroundColor: 'lightgrey', border: "1px solid black" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCcenter
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -829,8 +920,10 @@ export default function Dashboard() {
                                                             {/* <TableCell align="left">{visitor.room.roomName}</TableCell> */}
                                                             <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
                                                             {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
-                                                            <TableCell align="left">{visitor.checkInDateTime}</TableCell>
-                                                            <TableCell align="left">{visitor.checkOutDateTime}</TableCell>
+
+                                                            <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                            <TableCell align="left">{formatMeetingDuration1(visitor)}</TableCell>
+                                                            {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                                                             <TableCell align="left">{visitor.status}</TableCell>
 
                                                             {/* <TableCell align="right">{visitor.meetingStartDateTime}</TableCell>
@@ -849,7 +942,7 @@ export default function Dashboard() {
                                                             )} */}
 
 
-                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS'? (
+                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS' ? (
                                                                     // Disable the Edit button
                                                                     <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                 ) : (
@@ -867,14 +960,28 @@ export default function Dashboard() {
 
                                         </Table>
                                         <TablePagination
-                                            rowsPerPageOptions={[]}
+                                            //   rowsPerPageOptions={[10, 25, 50, 100]}
+                                            rowsPerPageOptions={[5, 10, 15]}
                                             component="div"
-                                            // count={visitors.length}
-                                            count={meetings}
+
+
+
+                                            // count={meetings}
+
+                                            count={phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 1 : meetings}
+
+                                            // rowsPerPage={ phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 10 : rowsPerPage}
+
+
+
+
+
                                             rowsPerPage={rowsPerPage}
-                                            page={page}
+                                            page={phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 0 : page}
+                                            // page={page}
                                             onPageChange={
                                                 handleChangePage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
 
                                         />
                                     </TableContainer>

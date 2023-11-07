@@ -44,12 +44,11 @@ import Header from '../Header';
 
 
 
-//now
-
-
-
-
-
+//calender
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 
@@ -86,14 +85,15 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-//now
+
+  
 
 
 
 
 
 
-const rowsPerPage = 10;
+
 
 
 export default function Dashboard() {
@@ -105,12 +105,25 @@ export default function Dashboard() {
 
 
 
+    //searchCriteria
+
+const [searchCriteria, setSearchCriteria] = useState({
+    status: "",
+    phoneNumber: "",
+    startDate: null,
+    endDate: null,
+  });
+
+
+
 
     const [item, setItem] = useState('');
+    const[visitorsInfo,setVisitorsInfo] = useState([]);
 
-
-    function calculateSerialNumber(index) {
+    const rowsPerPage = 10;
+    function calculateSerialNumber(index,page,rowsPerPage) {
         return page * rowsPerPage + index + 1;
+        
     }
 
 
@@ -161,12 +174,60 @@ export default function Dashboard() {
 
 
     //status
+    const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
 
     const [status, setStatus] = useState('')
 
     // const handleChangeStatus = (event) => {
     //     setStatus(event.target.value);
     // };
+
+    const handleChangeStatus = (event) => {
+
+        setSelectedStatusOptions(event.target.value);
+
+        // console.log(event.target.value,"xyz");
+        // fetchData();
+
+    };
+
+    function fetchStatusOptions() {
+
+        const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+        axios.get(statusUrl)
+            .then(response => {
+                const data = response.data.data;
+
+                // data.forEach(datas =>{
+                //     const status1 = datas;
+                //     console.log(status1,"status1");
+                //     setStatus(status1);
+                // })
+
+                // console.log(data,"sttaus")
+
+
+                setStatusOptions(data);
+
+
+
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -191,6 +252,17 @@ export default function Dashboard() {
             })
             .then(response => {
                 const responseData = response.data.data;
+
+                // const responseDataVisitorsInfo = response.data.data.user;
+                // console.log(responseDataVisitorsInfo,"res")
+                // if (responseData && responseData.data) {
+                //     const visitorsArray = responseData.data;
+                    
+                   
+                //    setVisitorsInfo(visitorsArray);
+                //   }
+
+                  
                 // const status11111 = response.data.data.status;
                 // console.log(status11111,"status");
                 // console.log(responseData);
@@ -341,6 +413,78 @@ export default function Dashboard() {
         return date.toLocaleString();
     };
 
+//date
+function formatMeetingDuration(meeting) {
+    const startTimestamp = meeting.checkInDateTime;
+    console.log(startTimestamp,"starttimestamp")
+  
+    // console.log(visitorsInfo,"ggggg")
+
+  
+    // Create JavaScript Date objects with IST timezone
+    const startDate = new Date(startTimestamp);
+
+    startDate.setHours(startDate.getHours() - 5);
+    startDate.setMinutes(startDate.getMinutes() - 30);
+   
+  
+    // Define options for formatting
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'Asia/Kolkata', // Set the timezone to IST
+    };
+  
+    // Format the start and end dates using the options
+    const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+  
+  
+    return `${formattedStart }`;
+  }
+
+  function formatMeetingDuration1(meeting) {
+
+    const endTimestamp = meeting.checkOutDateTime;
+    console.log(endTimestamp,"endtimestamp")
+
+
+  
+    // Create JavaScript Date objects with IST timezone
+ if(endTimestamp!= null){
+    const endDate = new Date(endTimestamp);
+    endDate.setHours(endDate.getHours() - 5);
+    endDate.setMinutes(endDate.getMinutes() - 30);
+  
+    // Define options for formatting
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'Asia/Kolkata', // Set the timezone to IST
+    };
+  
+    // Format the start and end dates using the options
+   
+    const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+  
+    return `${formattedEnd}`;
+
+
+  }
+
+ }
+   
+
+
+
+
 
 
 
@@ -349,6 +493,7 @@ export default function Dashboard() {
 
 
         fetchData();
+        fetchStatusOptions();
         // getRoomsOption()
     }, []);
 
@@ -371,7 +516,7 @@ export default function Dashboard() {
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Paper
-                                        elevation={5}
+                                        elevation={1}
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
@@ -382,7 +527,7 @@ export default function Dashboard() {
                                         }}
                                     >
 
-                                        <Header title="Dashboard" subtitle="Welcome to dashboard" />
+                                        <Header title="Visitors" subtitle="Get all updates about visitors" />
                                     </Paper>
                                 </Grid>
 
@@ -390,7 +535,7 @@ export default function Dashboard() {
 
                         </Grid>
                         <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <Grid style={{ gap: "30px", marginTop: "20px" }} container justifyContent="center" >
                                     <Paper elevation={1} sx={{
                                         height: 150,
@@ -484,14 +629,14 @@ export default function Dashboard() {
 
 
                                 </Grid>
-                            </Grid>
+                            </Grid> */}
 
                         </Grid>
                         <Grid container style={{ marginTop: "40px" }}>
                             <Grid item xs={12} style={{ backgroundColor: "" }}>
                                 <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <h1 style={{ textAlign: "left" }}>Visitors</h1>
+                                        {/* <h1 style={{ textAlign: "left" }}>Visitors</h1>
                                         <input
                                             type="text"
                                             placeholder="Search..."
@@ -507,14 +652,128 @@ export default function Dashboard() {
                                                 borderRadius: "10px",
                                                 // border: "none"
                                             }}
-                                        />
+                                        /> */}
+
+
+
+                                        <Grid>
+                                            <Box
+                                                component="form"
+                                                sx={{
+                                                    '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                                }}
+                                                noValidate
+                                                autoComplete="off"
+                                            // style={{display:"flex",justifyContent:"space-evenly"}}
+                                            >
+                                                <Grid style={{ display: "flex", flexDirection: "", justifyContent: "", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
+
+
+
+                                                    <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
+                                                        <TextField
+                                                            id="outlined-select-currency"
+                                                            select
+                                                            label="Search by Status"
+                                                            value={selectedStatusOptions}
+
+                                                            onChange={handleChangeStatus}
+
+                                                            style={{ top: "10px" }}
+
+
+                                                        >
+
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+
+
+
+                                                            {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
+                                                                <MenuItem key={index} value={options} >{options}</MenuItem>
+                                                            ))}
+                                                        </TextField>
+
+
+
+
+                                                        <TextField id="outlined-search" label="Search By Phone Number"
+                                                            //  value={phoneNumberFilter}
+                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            // onKeyPress={handlePhoneNumberSearch} 
+
+
+                                                            //searchcriteria code
+                                                            // value={searchCriteria.phoneNumber}
+                                                            // onChange={(e) => setSearchCriteria({ ...searchCriteria, phoneNumber: e.target.value })}                                                       
+                                                            type="search" style={{ top: "10px" }} />
+
+
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
+
+                                                                <DatePicker
+                                                                    label="Start Date"
+                                                                // value={startDate}
+
+                                                                // onChange={handleStartDateChange}
+
+                                                                //searchcriteria code
+    //                                                             value={searchCriteria.startDate}
+    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, startDate: date })}
+
+
+                                                                />
+                                                                <DatePicker
+                                                                    label="End Date"
+                                                                // value={endDate}
+
+                                                                // onChange={handleEndDateChange}
+
+                                                                //searchcriteria code
+    //                                                             value={searchCriteria.endDate}
+    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
+
+                                                                />
+                                                            </DemoContainer>
+                                                        </LocalizationProvider>
+
+                                                        <TextField id="outlined-search" label="Search" 
+                                                            //  value={phoneNumberFilter}
+                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            // onKeyPress={handlePhoneNumberSearch} 
+                                                            type="search" style={{ top: "10px" }} />
+
+                                                       
+
+
+
+
+
+                                                    </Grid>
+
+
+
+
+
+
+
+
+                                                </Grid>
+
+
+
+                                            </Box>
+
+                                        </Grid>
 
 
                                     </div>
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: 'aliceblue', border: "1px solid black" }}>
+                                            <TableHead sx={{ backgroundColor: 'grey', border: "1px solid black" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCell>
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -542,11 +801,11 @@ export default function Dashboard() {
                                                 {visitors
                                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                     .map((visitor, index) => (
-                                                        <TableRow key={visitor.visitor.id}>
+                                                        <TableRow key={index}>
                                                             {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                                            <TableCell>{calculateSerialNumber(index)}</TableCell>
+                                                            <TableCell>{calculateSerialNumber(index,page,rowsPerPage)}</TableCell>
 
                                                             <TableCell align="left">{visitor.visitor.name}</TableCell>
 
@@ -555,8 +814,9 @@ export default function Dashboard() {
 
                                                             <TableCell align="left">{visitor.visitor.companyName}</TableCell>
 
-                                                            <TableCell align="left">{formatDate(visitor.meetingStartDateTime)}</TableCell>
-                                                            <TableCell align="left">{formatDate(visitor.meetingEndDateTime)}</TableCell>
+                                                            <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                            {/* <TableCell align="left">{formatDate(visitor.checkInDateTime)}</TableCell> */}
+                                                            <TableCell align="left">{formatMeetingDuration1(visitor)}</TableCell>
                                                             <TableCell align="left">{visitor.remarks}</TableCell>
                                                             <TableCell align="left">{visitor.status}</TableCell>
                                                             <TableCell align="left">
