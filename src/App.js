@@ -69,7 +69,7 @@ function App() {
             //HARSHITA STARTS
             <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
             <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />}/>
-            <Route path="/editcompanyform/:companyId" element={<PrivateRoute element={<EditCompanyForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
+            <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
             <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
             <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
 

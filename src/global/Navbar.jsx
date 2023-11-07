@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import{ Box,
@@ -79,6 +79,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar({toggleSidebar}) {
+  const adminId = localStorage.getItem('adminId')
   const loggedUserName = sessionStorage.getItem('loggedUserName')
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const loggedUserUsername = sessionStorage.getItem('loggedUserUsername')
@@ -114,7 +115,7 @@ export default function Navbar({toggleSidebar}) {
 
 
 
-  const BASE_URL = 'http://192.168.12.54:8080/api/user';
+  const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
   const AuthToken = sessionStorage.getItem('token');
 
@@ -140,6 +141,68 @@ export default function Navbar({toggleSidebar}) {
       setAnchorEl(null)
     }, 4500);
   };
+
+
+  async function fetchData() {
+    try {
+      const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
+      if (response.status === 200) {
+        const apiData = response.data.data.data;
+
+        const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
+        // setFormattedCreatedOn(formatCreatedOn);
+        setStatusDotStatus(apiData.isPresent)
+        // const apiData = response;
+        // console.log("apidata", apiData);
+        // setFormData({
+        //   id: apiData.id || "",
+        //   firstName: apiData.firstName || "",
+        //   lastName: apiData.lastName || "",
+        //   phone: apiData.phone || "",
+        //   email: apiData.email || "",
+        //   dob: apiData.dob || "",
+        //   gender: apiData.gender || "",
+        //   govtId: apiData.govtId || "",
+        //   image: apiData.image || "",
+        //   departmentDto: {
+        //     id: apiData.departmentDto.id || "",
+        //     name: apiData.departmentDto.name || "",
+        //   },
+        //   state: {
+        //     id: apiData.state.id || "",
+        //     name: apiData.state.name || "",
+        //   },
+        //   city: {
+        //     id: apiData.city.id || "",
+        //     name: apiData.city.name || "",
+        //   },
+        //   role: {
+        //     id: apiData.role.id || "",
+        //     name: apiData.role.name || "",
+        //   },
+        //   pincode: apiData.pincode || "",
+        //   empCode: apiData.empCode || "",
+        //   createdOn: apiData.createdOn || "",
+        // });
+      } else {
+        console.error("Error fetching data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  // useEffect(() => {
+  //   const fetchDataInterval = setInterval(() => {
+  //     fetchData();
+  //   }, 1500); // 1500 milliseconds (1.5 seconds)
+  
+  //   return () => {
+  //     // Clear the interval when the component unmounts
+  //     clearInterval(fetchDataInterval);
+  //   };
+  // }, []);
+  
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -416,13 +479,6 @@ export default function Navbar({toggleSidebar}) {
     </Menu>
   );
 
-  function handleStatusUpdate() {
-    setStatusDotStatus(true)
-    setTimeout(() => {
-      setStatusDotStatus(false)
-    }, 2000);
-  }
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
@@ -466,7 +522,8 @@ export default function Navbar({toggleSidebar}) {
             </IconButton> */}
 
 
-    <div onClick={handleStatusUpdate}
+    <div 
+    // onClick={handleStatusUpdate}
       style={{
         position:'absolute',
         top:'2.2em',
@@ -511,7 +568,7 @@ export default function Navbar({toggleSidebar}) {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
+      {/* {renderMobileMenu} */}
       {renderMenu}
       <Dialog open={openChangePasswordDialog} onClose={handleChangePasswordDialogClose} PaperProps={{ sx: { mt:'5em', borderRadius:'15px'},}}>
         <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Update Password</DialogTitle>

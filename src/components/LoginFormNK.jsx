@@ -16,7 +16,8 @@ import Loader from './Loader';
 
 function LoginForm({ }) {
   const navigate = useNavigate(); 
-const BASE_URL = 'http://192.168.12.54:8080';
+  // const BASE_URL = 'http://192.168.12.54:8080';
+  const BASE_URL = 'http://192.168.12.58:8080';
 const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
 const OWNER = 'https://www.rapidsofttechnologies.com/'
 

@@ -93,16 +93,19 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
   const [isFileSelected, setIsFileSelected] = useState("");
   const [excelUpData, setExcelUpData] = useState();
   const [btnLoading, setBtnLoading] = useState(false);
+  const [isDownload, setIsDownload] = useState(false);
 
   const [excelDownData, setExcelDownData] = useState({
     totalElement: "",
     successfullyAdded: "",
-    unSuccessfullyAdded: "",
+    falidData: "",
     duplicateData: "",
     downloadLink: "",
+    falidDataLink: "",
+    duplicateDataLink: "",
   });
 
-  const handleUpload = (event) => {
+  const handleChooseFile = (event) => {
     // debugger
     // console.log("i got hit")
     const excelFile = event.target.files[0];
@@ -114,13 +117,24 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     setIsUpload(true);
     setIsFileSelected(fileName);
     // console.log("FORM DATA", formData)
-    // console.log("Uploaded file name:", fileName);
+  };
+  // console.log("is upload", isUpload);
+
+  const handleCancel = (e) => {
+    e.preventDefault()
+    setIsUpload(false);
+    const fileInput = document.getElementById("fileInputExcel");
+    if (fileInput) {
+      fileInput.value = ""; // Clear the selected file
+    }
+    setIsFileSelected("");
   };
 
   // console.log("excel up data", excelUpData);
 
   const handleSaveUpload = async () => {
     try {
+      setBtnLoading(true);
       const response = await axios.post(
         `${BASE_URL}/excel/upload`,
         excelUpData,
@@ -130,39 +144,72 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
       );
       const excelApiData = response.data.data;
       // console.log("excelApiData", excelApiData);
+      if (
+        excelApiData.duplicateData != 0 ||
+        excelApiData.unSuccessfullyAdded != 0
+      ) {
+        setIsDownload(true);
+      } else {
+        setIsDownload(false);
+      }
       setExcelDownData({
         totalElement: excelApiData.totalElement || "",
         successfullyAdded: excelApiData.successfullyAdded || "",
-        unSuccessfullyAdded: excelApiData.unSuccessfullyAdded || "",
+        falidData: excelApiData.falidData || "",
         duplicateData: excelApiData.duplicateData || "",
         downloadLink: excelApiData.downloadLink || "",
+        falidDataLink: excelApiData.falidDataLink || "",
+        duplicateDataLink: excelApiData.duplicateDataLink || "",
       });
       setIsUpload(false);
-      const fileInput = document.getElementById("fileInput");
+      const fileInput = document.getElementById("fileInputExcel");
       if (fileInput) {
-        fileInput.value = ""; // Clear the selected file
+        fileInput.value = "";
       }
       setIsFileSelected("");
     } catch (error) {
       console.error("Excel API error: ", error);
     }
+    setBtnLoading(false);
   };
 
   // console.log("excel down data", excelDownData)
 
+  // const handleDownloadExcel = () => {
+  //   const fileUrl = excelDownData.downloadLink;
+  //   const link = document.createElement("a");
+  //   link.href = fileUrl;
+  //   link.download = "excel-file.xlsx";
+  //   link.click();
+  // };
+
   const handleDownloadExcel = () => {
-    // Define the URL of the file to download
-    const fileUrl = excelDownData.downloadLink;
-    const fileUrl2 =
-      "http://192.168.12.54:8080/api/user/download/excel?filename=3baa522c-f032-45e6-9787-1d14237015fb.xlsx";
+    const fileData = [
+      { url: excelDownData.falidDataLink, filename: "Failed Data.xlsx" },
+      { url: excelDownData.duplicateDataLink, filename: "Duplicate Data.xlsx" },
+    ];
 
-    // Create an anchor element to trigger the download
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = "excel-file.xlsx"; // Optional: You can specify the download filename here
+    const downloadFile = (index) => {
+      if (index < fileData.length) {
+        const data = fileData[index];
+        const link = document.createElement("a");
+        link.style.display = "none";
+        link.href = data.url;
+        link.download = "TEST 1";
 
-    // Trigger a click event on the anchor element to start the download
-    link.click();
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+
+        setTimeout(() => {
+          downloadFile(index + 1);
+        }, 1000); // Delay in milliseconds
+      }
+    };
+
+    // Start the download process with the first file
+    downloadFile(0);
   };
 
   //EXCEL UPLOAD ENDS -----------------------------------------------------------------------------------------------------------------
@@ -507,7 +554,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     setIsUserSelection(false);
   };
 
-  const handleCancel = () => {
+  const handleBack = () => {
     setIsSingleUser(false);
     setIsMultiUser(false);
     setIsUserSelection(true);
@@ -517,21 +564,20 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     const anchor = document.createElement("a");
     anchor.style.display = "none";
     anchor.href = excelFile;
-    anchor.download = "MultiuserTemplate.xlsx"; // Optional: Set the download filename
+    anchor.download = "MultiuserTemplate.xlsx";
 
-    // Append the anchor element to the body and trigger the click event
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
   };
 
-  const handleTest = () => {
-    setBtnLoading(true);
-    setTimeout(() => {
-      setBtnLoading(false);
-    }, 2000);
-  };
-
+  // const handleTest = () => {
+  //   setBtnLoading(true);
+  //   setTimeout(() => {
+  //     setBtnLoading(false);
+  //   }, 2000);
+  // };
+  console.log(excelDownData);
   return (
     <>
       <Loader isLoading={loading} />
@@ -988,9 +1034,9 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                     variant="contained"
                     color="secondary"
                     sx={{ width: "9em", height: "44px", mb: "2em" }}
-                    onClick={handleCancel}
+                    onClick={handleBack}
                   >
-                    Cancel
+                    Back
                   </Button>
 
                   <Button
@@ -1057,7 +1103,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
             //               sx={{ mt: "1em" }}
             //               disabled
             //             />
-            //             {/* <Button  variant="contained" sx={{margin:'1.2em',width:'20em', height:'4em', bgcolor:'green', color:'white'}} onChange={handleUpload}>
+            //             {/* <Button  variant="contained" sx={{margin:'1.2em',width:'20em', height:'4em', bgcolor:'green', color:'white'}} onChange={handleChooseFile}>
             //   Upload Excel File
             //               <input
             //                 type="file"
@@ -1068,7 +1114,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
             //             <Button
             //               variant="contained"
             //               component="label"
-            //               onChange={handleUpload}
+            //               onChange={handleChooseFile}
             //               sx={{
             //                 margin: "1.2em",
             //                 width: "20em",
@@ -1121,9 +1167,18 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
               >
                 <Box sx={{ width: "50%", bgcolor: "#EBEBEB" }}>
                   <Box
-                    sx={{ bgcolor: "#FF9145", width: "100%", height: "15em" }}
+                    sx={{
+                      bgcolor: "#FF9145",
+                      width: "100%",
+                      height: "15em",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    UPLOAD SECTION
+                    {isFileSelected
+                      ? isFileSelected
+                      : "Choose your file to upload"}
                   </Box>
 
                   <Box
@@ -1138,21 +1193,37 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                     <Box sx={{ width: "85px", mr: "10px" }}>
                       <Button
                         variant="contained"
+                        component="label"
                         sx={{
                           width: "100%",
                           height: "44px",
                           borderRadius: "0px",
-                          bgcolor: "#45D836",
+                          bgcolor: isUpload ? "#FF503B" : "#45D836",
                           "&:hover": {
-                            backgroundColor: "#1B7D00",
+                            backgroundColor: isUpload? "#922F24" : "#1B7D00",
                             color: "white",
                           },
-                          boxShadow: "none", // Remove shadow
-                          elevation: 0, // Remove elevation
+                          boxShadow: "none",
+                          elevation: 0,
                         }}
-                        // onClick={handleUpload}
+                        // onChange={isUpload ? null : handleChooseFile } // Conditionally set onChange
+                        onClick={isUpload ? handleCancel : undefined} // Conditionally set onClick
                       >
-                        <AddIcon sx={{ fontSize: "40px" }} />
+                        <AddIcon
+                          sx={{
+                            fontSize: "40px",
+                            transform: isUpload ? "rotate(45deg)" : "none",
+                            transition: "transform 500ms ease-in-out",
+                          }}
+                        />
+                        {isUpload ? '' : (
+                          <input
+                            type="file"
+                            hidden
+                            id="fileInputExcel"
+                            onChange={handleChooseFile}
+                          />
+                        )}
                       </Button>
                     </Box>
                     <Box
@@ -1178,7 +1249,11 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                   >
                     <Typography>
                       What to upload?{" "}
-                      <a href={excelFile} download style={{ color: "#A0A0A0" }}>
+                      <a
+                        href={excelFile}
+                        download="Multiuser Template.xlsx"
+                        style={{ color: "#A0A0A0" }}
+                      >
                         Get Template
                       </a>
                     </Typography>
@@ -1189,23 +1264,22 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                       display: "flex",
                       justifyContent: "space-between",
                       mb: "2em",
-                      paddingX:'1em'
+                      paddingX: "1em",
                     }}
                   >
                     <Button
                       variant="contained"
                       color="secondary"
                       sx={{ width: "9em", height: "44px" }}
-                      onClick={handleCancel}
+                      onClick={handleBack}
                     >
-                      Cancel
+                      Back
                     </Button>
 
                     <Button
                       variant="contained"
                       color="primary"
-                      disabled={isUpload}
-                      disa
+                      disabled={!isUpload}
                       sx={{
                         width: "9em",
                         height: "44px",
@@ -1219,7 +1293,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                             : "primary.dark", // Change color on hover
                         },
                       }}
-                      onClick={handleTest}
+                      onClick={handleSaveUpload}
                     >
                       {btnLoading ? (
                         <>
@@ -1254,10 +1328,10 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                               {excelDownData.successfullyAdded || "0"}
                             </TableCell>
                             <TableCell>
-                              {excelDownData.duplicateData || "0"}
+                              {excelDownData.falidData || "0"}
                             </TableCell>
                             <TableCell>
-                              {excelDownData.unSuccessfullyAdded || "0"}
+                              {excelDownData.duplicateData || "0"}
                             </TableCell>
                           </TableRow>
                         </TableBody>
@@ -1275,9 +1349,11 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                   >
                     <Button
                       variant="contained"
+                      // component="label"
+                      disabled={!isDownload}
                       color="error"
                       sx={{ width: "9em", height: "44px" }}
-                      // onClick={handleCanel}
+                      onClick={handleDownloadExcel}
                     >
                       Download
                     </Button>
