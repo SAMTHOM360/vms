@@ -434,7 +434,7 @@ const [searchCriteria, setSearchCriteria] = useState({
 //date
 function formatMeetingDuration(meeting) {
     const startTimestamp = meeting.checkInDateTime;
-    console.log(startTimestamp,"starttimestamp")
+    // console.log(startTimestamp,"starttimestamp")
   
     // console.log(visitorsInfo,"ggggg")
 
@@ -467,7 +467,7 @@ function formatMeetingDuration(meeting) {
   function formatMeetingDuration1(meeting) {
 
     const endTimestamp = meeting.checkOutDateTime;
-    console.log(endTimestamp,"endtimestamp")
+    // console.log(endTimestamp,"endtimestamp")
 
 
   
@@ -650,7 +650,7 @@ function formatMeetingDuration(meeting) {
                             </Grid> */}
 
                         </Grid>
-                        <Grid container style={{ marginTop: "40px" }}>
+                        <Grid container style={{ marginTop: "" }}>
                             <Grid item xs={12} style={{ backgroundColor: "" }}>
                                 <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
