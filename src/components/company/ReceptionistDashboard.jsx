@@ -635,7 +635,7 @@ export default function Dashboard() {
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Paper
-                                        elevation={5}
+                                        elevation={1}
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
