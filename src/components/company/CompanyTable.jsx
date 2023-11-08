@@ -454,22 +454,23 @@ const CompanyTable = () => {
               </div> */}
               <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
                 <Table aria-label="simple table">
-                  <TableHead style={{ backgroundColor: 'aliceblue' }}>
+                  <TableHead style={{ backgroundColor: '#2b345386' }}>
                     <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell align="left">Company Name</TableCell>
-                      <TableCell align="left">Email</TableCell>
-                      <TableCell align="left">Phone No.</TableCell>
-                      <TableCell align="left">Address</TableCell>
-                      <TableCell align="left">Logo</TableCell>
-                      <TableCell align="left">Industry</TableCell>
-                      <TableCell align="left">State</TableCell>
-                      <TableCell align="left">City</TableCell>
-                      <TableCell align="left">Pin Code</TableCell>
-                      <TableCell align="left">About Us</TableCell>
-                      <TableCell align="left">Created On</TableCell>
-                      <TableCell align="left">Created By</TableCell>
-                      <TableCell align="left">Actions</TableCell>
+                      <TableCell><h4>ID</h4></TableCell>
+                      <TableCell align="left"><h4>Company Name</h4></TableCell>
+                      <TableCell align="left"><h4>Email</h4></TableCell>
+                      <TableCell align="left"><h4>Phone No.</h4></TableCell>
+                      <TableCell align="left"><h4>Address</h4></TableCell>
+                      <TableCell align="left"><h4>Logo</h4></TableCell>
+                      <TableCell align="left"><h4>Industry</h4></TableCell>
+                      <TableCell align="left"><h4>State</h4></TableCell>
+                      <TableCell align="left"><h4>City</h4></TableCell>
+                      <TableCell align="left"><h4>Pin Code</h4></TableCell>
+                      <TableCell align="left"><h4>About Us</h4></TableCell>
+                      <TableCell align="left"><h4>Created On</h4></TableCell>
+                      {/* <TableCell align="left">Created By</TableCell> */}
+                      <TableCell align="left"><h4>User Limit</h4></TableCell>
+                      <TableCell align="left"><h4>Actions</h4></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -497,7 +498,8 @@ const CompanyTable = () => {
                           <TableCell align="left">{company.pincode}</TableCell>
                           <TableCell align="left">{company.aboutUs}</TableCell>
                           <TableCell align="left">{formatDate(company.createdOn)}</TableCell>
-                          <TableCell align="left">{company.createdBy}</TableCell>
+                          {/* <TableCell align="left">{company.createdBy}</TableCell> */}
+                          <TableCell align="left">{company.userLimit}</TableCell>
                           <TableCell align="left">
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <Link to={`/edit/${company.id}`}>

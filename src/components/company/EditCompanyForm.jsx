@@ -32,7 +32,8 @@ export default function EditCompanyForm() {
         email: "",
         phoneNumber: "",
         industry: "",
-        aboutUs: ""
+        aboutUs: "",
+        userLimit:""
 
 
     })
@@ -70,7 +71,8 @@ export default function EditCompanyForm() {
                     email: company.email,
                     phoneNumber: company.phoneNumber,
                     industry: company.industry,
-                    aboutUs: company.aboutUs
+                    aboutUs: company.aboutUs,
+                    userLimit:company.userLimit,
 
                 });
                 // console.log(company.city.id,"city");
@@ -192,6 +194,7 @@ export default function EditCompanyForm() {
             formData.append('email', companyData.email);
             formData.append('phoneNumber', companyData.phoneNumber);
             formData.append('industry', companyData.industry);
+            formData.append('userLimit', companyData.userLimit);
             formData.append('aboutUs', companyData.aboutUs);
             if(companyData.logo){
                 formData.append('image', companyData.logo);
@@ -340,7 +343,7 @@ export default function EditCompanyForm() {
         <TextField label="Company Address" type="text" name="address" value={companyData.address} onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}></TextField>
         <div
             className="input"
-            style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+            style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",gap:"10px" }}
         >
 
 
@@ -414,6 +417,19 @@ export default function EditCompanyForm() {
 
 
         <TextField placeholder="Industry" type="text" name="industry" value={companyData.industry} onChange={(e) => setCompanyData({ ...companyData, industry: e.target.value })}></TextField>
+
+        <div className='input'style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
+        <TextField placeholder="Industry" type="text" name="industry" value={companyData.industry} onChange={(e) => setCompanyData({ ...companyData, industry: e.target.value })}></TextField>
+
+                                    <TextField   sx={{ width: "47%" }} placeholder="User Limit" type="number" value={companyData.userLimit} onChange={(e) => setCompanyData({ ...companyData, userLimit: e.target.value })}></TextField>
+
+                               </div>
+
+
+
+
+
+
         <TextField placeholder="About" type="text" name="aboutUs" value={companyData.aboutUs} onChange={(e) => setCompanyData({ ...companyData, aboutUs: e.target.value })}></TextField>
         <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>
             <Button type="button" variant="contained" sx={{ width: 130, height: 50 }} onClick={handleSave} >Update</Button>

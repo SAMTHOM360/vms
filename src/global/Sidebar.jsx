@@ -324,13 +324,14 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   justifyContent: 'center',
                 }}
               >
-                <DashboardIcon sx={{color:'#ffffff'}} />
+                {/* <DashboardIcon sx={{color:'#ffffff'}} /> */}
+                <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Dashboard' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Visitors List' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/meetingDetails')}>
+          {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/meetingDetails')}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -349,7 +350,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               </ListItemIcon>
               <ListItemText primary='Meeting Form' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
           <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
             <ListItemButton
