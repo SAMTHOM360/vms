@@ -110,7 +110,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     } else if (loggedUserRole === 'ADMIN') {
       navigate('/empdashboard');
     } else if (loggedUserRole === 'RECEPTIONIST') {
-      navigate('/receptionistdashboard')
+      navigate('/dashboardreceptionist')
     } else if (loggedUserRole === 'EMPLOYEE') {
       navigate('/empdashboard')
     }

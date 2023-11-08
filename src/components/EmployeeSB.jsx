@@ -37,7 +37,7 @@ import { useAuth } from '../routes/AuthContext';
 const Employee = () => {
   const { isLimitReached } = useAuth();
 
-  console.log("isLimitReached", isLimitReached)
+  // console.log("isLimitReached", isLimitReached)
   const AuthToken = sessionStorage.getItem('token');
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const limit = sessionStorage.getItem('limit')
@@ -144,7 +144,7 @@ const Employee = () => {
 
   
       const response = await axiosInstance.post(`${BASE_URL}/delete`, deletePayload, {headers});
-      console.log("deleted", response)
+      // console.log("deleted", response)
       if(response.status === 200){
         toast.success('User is succesfully deleted.', {
           position: "top-right",
@@ -213,7 +213,7 @@ const Employee = () => {
   
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        console.log("apidata", apiData)
+        // console.log("apidata", apiData)
   
         setEditedItem({
           id:apiData.id || '',
@@ -226,8 +226,8 @@ const Employee = () => {
           roleName : apiData.role.name || '',
         });
 
-        console.log("logged user role", loggedUserRole)
-        console.log("edited user role", apiData.role.name)
+        // console.log("logged user role", loggedUserRole)
+        // console.log("edited user role", apiData.role.name)
 
         
         setOpenEditDialog(true);

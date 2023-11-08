@@ -646,7 +646,7 @@ export default function Dashboard() {
                                             mb: '0.5em'
                                         }}
                                     >
-                                        <Header title="Visitors" subtitle="Get all the visitors list" />
+                                        <Header title="Meetings" subtitle="Get all the meeting list" />
                                     </Paper>
                                 </Grid>
 

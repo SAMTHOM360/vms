@@ -205,8 +205,8 @@ if(dataItem){
 }
 
 let chipText = 'Others'
-let chipColor = 'grey';
-let chipBgColor = 'white';
+let chipColor = '#E9E9E9';
+let chipBgColor = '#E2E2E21f';
 if (dataItem) {
   if (dataItem.context === 'BUSINESS') {
     chipText = 'Business'

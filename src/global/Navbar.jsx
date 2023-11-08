@@ -184,7 +184,7 @@ export default function Navbar({toggleSidebar}) {
       const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        console.log("nav data", apiData)
+        // console.log("nav data", apiData)
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);

@@ -304,7 +304,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <DashboardIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Dashboard Receptionist' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Dashboard' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
@@ -327,7 +327,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
                 {/* <DashboardIcon sx={{color:'#ffffff'}} /> */}
                 <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Visitors List' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Meeting List' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
@@ -394,7 +394,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <DashboardIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Employee Dashboard' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Dashboard' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
@@ -415,7 +415,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Employee Meetings' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Meetings' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
