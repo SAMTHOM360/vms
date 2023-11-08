@@ -35,7 +35,7 @@ import TableRow from "@mui/material/TableRow";
 function UserForm({ authenticated, closeDialog, fetchData,}) {
   const { isLimitReached } = useAuth();
 
-  console.log("isLimitReached", isLimitReached)
+  // console.log("isLimitReached", isLimitReached)
   // const BASE_URL = "http://192.168.12.58:8080/api/user";
   const BASE_URL = "http://192.168.12.54:8080/api/user";
   const navigate = useNavigate();
@@ -187,7 +187,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         setIsFileSelected("");
       }
       else if(response.status === 400){
-        console.log("400 response", response)
+        // console.log("400 response", response)
         // toast.error("New Employee Added Successfully.", {
         //   position: "top-right",
         //   autoClose: 4000,

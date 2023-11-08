@@ -314,7 +314,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     setItemVisible2(true)
   }
 
-  console.log("loading btn", btnLoading)
+  // console.log("loading btn", btnLoading)
 
   return (
     <Box sx={{

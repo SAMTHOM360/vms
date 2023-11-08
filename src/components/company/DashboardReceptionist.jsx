@@ -521,7 +521,7 @@ export default function Dashboard() {
                 responseData.forEach(meeting => {
                     const meetingId = meeting.id; // This is the meetingId
                     // Now you can use the meetingId as needed
-                    console.log("Meeting ID:", meetingId);
+                    // console.log("Meeting ID:", meetingId);
                 });
 
 
@@ -860,7 +860,7 @@ export default function Dashboard() {
                                     }}>
 
 
-                                        <div class="rooms">
+                                        <div className="rooms">
                                             <h2 style={{color:"black"}}>Room Details</h2>
                                         <DoughnutChart/>
 
