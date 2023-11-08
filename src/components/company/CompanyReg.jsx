@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
+import Loader from '../Loader';
 
 
 export default function CompanyReg() {

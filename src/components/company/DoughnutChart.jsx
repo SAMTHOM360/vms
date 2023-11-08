@@ -10,6 +10,7 @@ import React from 'react';
 import {Doughnut} from 'react-chartjs-2';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
+import Loader from '../Loader';
 
 ChartJS.register(
     ArcElement,

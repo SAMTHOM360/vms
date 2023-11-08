@@ -5,8 +5,9 @@ import { Backdrop, Modal } from '@mui/material'
 const Loader = ({isLoading}) => {
   return (
  
-        <Modal open={isLoading}
+        <Backdrop open={isLoading}
          sx={{
+          zIndex:100,
           display:'flex', 
           justifyContent:'center', 
           alignItems:'center', 
@@ -17,7 +18,7 @@ const Loader = ({isLoading}) => {
           userSelect:'none', 
           borderStyle:'none'}}>
             <div className="loader"></div>
-        </Modal>
+        </Backdrop>
   )
 }
 

@@ -93,6 +93,37 @@ export default function Navbar({toggleSidebar}) {
 
   const companyName = sessionStorage.getItem('companyName')
 
+  const [formData, setFormData] = useState({
+    id: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
+          dob: "",
+          gender: "",
+          govtId: "",
+          image: "",
+          departmentDto: {
+            id: "",
+            name: "",
+          },
+          state: {
+            id: "",
+            name: "",
+          },
+          city: {
+            id: "",
+            name: "",
+          },
+          role: {
+            id: "",
+            name: "",
+          },
+          pincode: "",
+          empCode: "",
+          createdOn: "",
+  })
+
   const [changedItem, setChangedItem] = useState({
     oldpassword: '',
     newPassword:'',
@@ -143,48 +174,53 @@ export default function Navbar({toggleSidebar}) {
     }, 4500);
   };
 
+  useEffect(() => {
+    fetchData()
+  }, [])
+
 
   async function fetchData() {
     try {
       const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
+        console.log("nav data", apiData)
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
         setStatusDotStatus(apiData.isPresent)
         // const apiData = response;
         // console.log("apidata", apiData);
-        // setFormData({
-        //   id: apiData.id || "",
-        //   firstName: apiData.firstName || "",
-        //   lastName: apiData.lastName || "",
-        //   phone: apiData.phone || "",
-        //   email: apiData.email || "",
-        //   dob: apiData.dob || "",
-        //   gender: apiData.gender || "",
-        //   govtId: apiData.govtId || "",
-        //   image: apiData.image || "",
-        //   departmentDto: {
-        //     id: apiData.departmentDto.id || "",
-        //     name: apiData.departmentDto.name || "",
-        //   },
-        //   state: {
-        //     id: apiData.state.id || "",
-        //     name: apiData.state.name || "",
-        //   },
-        //   city: {
-        //     id: apiData.city.id || "",
-        //     name: apiData.city.name || "",
-        //   },
-        //   role: {
-        //     id: apiData.role.id || "",
-        //     name: apiData.role.name || "",
-        //   },
-        //   pincode: apiData.pincode || "",
-        //   empCode: apiData.empCode || "",
-        //   createdOn: apiData.createdOn || "",
-        // });
+        setFormData({
+          id: apiData.id || "",
+          firstName: apiData.firstName || "",
+          lastName: apiData.lastName || "",
+          // phone: apiData.phone || "",
+          // email: apiData.email || "",
+          // dob: apiData.dob || "",
+          // gender: apiData.gender || "",
+          // govtId: apiData.govtId || "",
+          // image: apiData.image || "",
+          // departmentDto: {
+          //   id: apiData.departmentDto.id || "",
+          //   name: apiData.departmentDto.name || "",
+          // },
+          // state: {
+          //   id: apiData.state.id || "",
+          //   name: apiData.state.name || "",
+          // },
+          // city: {
+          //   id: apiData.city.id || "",
+          //   name: apiData.city.name || "",
+          // },
+          // role: {
+          //   id: apiData.role.id || "",
+          //   name: apiData.role.name || "",
+          // },
+          // pincode: apiData.pincode || "",
+          // empCode: apiData.empCode || "",
+          // createdOn: apiData.createdOn || "",
+        });
       } else {
         console.error("Error fetching data:", response.statusText);
       }
@@ -193,16 +229,16 @@ export default function Navbar({toggleSidebar}) {
     }
   }
 
-  useEffect(() => {
-    const fetchDataInterval = setInterval(() => {
-      fetchData();
-    }, 2000); // 1500 milliseconds (1.5 seconds)
+  // useEffect(() => {
+  //   const fetchDataInterval = setInterval(() => {
+  //     fetchData();
+  //   }, 2000); // 1500 milliseconds (1.5 seconds)
   
-    return () => {
-      // Clear the interval when the component unmounts
-      clearInterval(fetchDataInterval);
-    };
-  }, []);
+  //   return () => {
+  //     // Clear the interval when the component unmounts
+  //     clearInterval(fetchDataInterval);
+  //   };
+  // }, []);
   
 
   const handleMobileMenuClose = () => {
@@ -505,7 +541,7 @@ export default function Navbar({toggleSidebar}) {
             <span style={{fontSize:'20px'}}>{companyName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>VMS</span>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <span style={{fontSize:'20px'}}>{loggedUserName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>{loggedUserRole}</span>
+          <span style={{fontSize:'20px'}}>{formData.firstName} {formData.lastName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>{loggedUserRole}</span>
           <Box sx={{ display: { xs: 'none', md: 'flex', color:'#ffffff',position:'relative' } }}>
             {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">

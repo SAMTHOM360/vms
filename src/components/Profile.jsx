@@ -28,8 +28,12 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Label } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
+import Loader from "./Loader";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
   const BASE_URL = "http://192.168.12.54:8080/api/user";
@@ -97,6 +101,15 @@ const Profile = () => {
     empCode: "",
     createdOn: "",
   });
+  const [editedBasicInfo, setEditedBasicInfo] = useState()
+  const [editedAddressInfo, setEditedAddressInfo] = useState()
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  // console.log("editedBasicInfo", editedAddressInfo)
 
   // let governmentIdType
   // if(formData.govtId === 12){
@@ -136,7 +149,7 @@ const Profile = () => {
         setFormattedCreatedOn(formatCreatedOn);
         setIsPresent(apiData.isPresent)
         // const apiData = response;
-        console.log("apidata", apiData);
+        // console.log("apidata", apiData);
         setFormData({
           id: apiData.id || "",
           firstName: apiData.firstName || "",
@@ -183,11 +196,21 @@ const Profile = () => {
         console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.error("Error fetching data:", error);
     }
   }
 
-  console.log("FORM DATA", formData);
+  // console.log("FORM DATA", formData);
 
   const handlePresentOn = async () => {
     try {
@@ -196,11 +219,35 @@ const Profile = () => {
         statusOnPayload,
         { headers }
       );
-      const statusApiData = response;
 
-      console.log("statusApiData", statusApiData);
-      setIsPresent(true);
+      if(response.status === 200) 
+      {
+        toast.success('Status updated successfully', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setIsPresent(true);
+      }
+      // const statusApiData = response;
+
+      // console.log("statusApiData", statusApiData);
     } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.error("Catched Error: ", error);
     }
   };
@@ -212,29 +259,91 @@ const Profile = () => {
         statusOffPayload,
         { headers }
       );
-      const statusApiData = response;
-
-      console.log("statusApiData", statusApiData);
-      setIsPresent(false);
+      if(response.status === 200) 
+      {
+        toast.success('Status updated successfully', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setIsPresent(false);
+      }
     } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.error("Catched Error: ", error);
     }
   };
 
   const handleEditOn = () => {
     setIsEdit(true);
+    setEditedBasicInfo({
+      id: formData.id,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      email: formData.email,
+      role: {
+        id: formData.role.id,
+      },
+    })
   };
 
   const handleEditOff = () => {
     setIsEdit(false);
+    setEditedBasicInfo({
+      id: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      role: {
+        id: '',
+      },
+    })
   };
 
   const handleAddressOn = () => {
     setIsAddress(true);
+    setEditedAddressInfo({
+      id: formData.id,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      email: formData.email,
+      role: {
+        id: formData.role.id,
+      },
+      pincode: formData.pincode,
+    })
   };
 
   const handleAddressOff = () => {
     setIsAddress(false);
+    setEditedAddressInfo({
+      id: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      role: {
+        id: '',
+      },
+      pincode:'',
+    })
   };
 
   const handleUploadImgDialogOpen = () => {
@@ -242,6 +351,13 @@ const Profile = () => {
   };
 
   const handleUploadImgDialogClose = () => {
+
+    const fileInput = document.getElementById("fileInputProfilePic");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+
+    setTempImgLink('')
     setUploadImgDialog(false);
   };
 
@@ -263,7 +379,7 @@ const Profile = () => {
 
       const capturedImage = canvas.toDataURL("image/jpeg");
 
-      console.log("captured Image", capturedImage);
+      // console.log("captured Image", capturedImage);
 
       // Close the camera stream and remove the video element
       videoElement.srcObject.getVideoTracks().forEach((track) => track.stop());
@@ -287,7 +403,7 @@ const Profile = () => {
         });
         const imgResponseApiData = response.data.data;
         setTempImgLink(imgResponseApiData)
-        console.log("imgResponseApiData", imgResponseApiData);
+        // console.log("imgResponseApiData", imgResponseApiData);
 
         const fileInput = document.getElementById("fileInputProfilePic");
         if (fileInput) {
@@ -295,6 +411,16 @@ const Profile = () => {
         }
         setIsUpload(true);
       } catch (error) {
+        toast.error('Something went wrong !', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         console.error("unable to send: ", error);
       }
     }
@@ -318,13 +444,147 @@ const Profile = () => {
         headers: headers,
       });
 
-      const submitImgApiData = response;
-      console.log("submitImgApiData", submitImgApiData);
-      handleUploadImgDialogClose();
-      setTempImgLink('')
-      fetchData()
+      if(response.status === 200)
+      {
+        toast.success('Profile Picture updated successfully', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const submitImgApiData = response;
+        // console.log("submitImgApiData", submitImgApiData);
+        handleUploadImgDialogClose();
+        setTempImgLink('')
+        fetchData()
+
+      }
+
     } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.error("unable to submit image  ", error);
+    }
+  };
+
+
+  const handleBasicInfoUpdate = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
+        headers: headers,
+      });
+
+      if(response.status === 200)
+      {
+        toast.success('Basic info updated successfully', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const submitApiData = response;
+        // console.log("submitImgApiData", submitApiData);
+        handleUploadImgDialogClose();
+        setTempImgLink('')
+        setIsEdit(false);
+        setEditedBasicInfo({
+          id: '',
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+          role: {
+            id: '',
+          },
+        })
+        fetchData()
+      }
+
+    } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.error("unable to submit basic info  ", error);
+    }
+  };
+
+
+
+  const HandleAddressInfoUpdate = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
+        headers: headers,
+      });
+
+      if(response.status === 200)
+      {
+        toast.success('Address info updated successfully', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const submitApiData = response;
+        // console.log("submitImgApiData", submitApiData);
+        handleUploadImgDialogClose();
+        setTempImgLink('')
+        setIsAddress(false);
+        setEditedAddressInfo({
+          id: '',
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+          role: {
+            id: '',
+          },
+          pincode:'',
+        })
+        fetchData()
+      }
+
+    } catch (error) {
+      toast.error('Something went wrong !', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.error("unable to submit address info  ", error);
     }
   };
 
@@ -340,9 +600,7 @@ const Profile = () => {
   //   }
   // }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   return (
     <>
@@ -559,10 +817,12 @@ const Profile = () => {
                       label="First Name"
                       name="firstName"
                       disabled={!isEdit}
-                      value={formData.firstName}
+                      value={isEdit ? editedBasicInfo.firstName : formData.firstName}
                       inputProps={{ maxLength: 26 }}
                       InputLabelProps={{ shrink: true }}
-                      // onChange={handleChange}
+                      onChange={(e) =>
+                        setEditedBasicInfo({ ...editedBasicInfo, firstName: e.target.value })
+                      }
                       required={isEdit}
                     />
                   </Grid>
@@ -574,10 +834,12 @@ const Profile = () => {
                       name="lastName"
                       size="small"
                       disabled={!isEdit}
-                      value={formData.lastName}
+                      value={isEdit ? editedBasicInfo.lastName : formData.lastName}
                       inputProps={{ maxLength: 26 }}
                       InputLabelProps={{ shrink: true }}
-                      // onChange={handleChange}
+                      onChange={(e) =>
+                        setEditedBasicInfo({ ...editedBasicInfo, lastName: e.target.value })
+                      }
                       required={isEdit}
                     />
                   </Grid>
@@ -743,7 +1005,7 @@ const Profile = () => {
                         size="small"
                         disabled={!isEdit}
                         sx={{ height: "3em", fontSize: "10px" }}
-                        onClick={handleEditOff}
+                        onClick={handleBasicInfoUpdate}
                       >
                         save
                       </Button>
@@ -913,7 +1175,10 @@ const Profile = () => {
                       name="pincode"
                       size="small"
                       disabled={!isAddress}
-                      value={formData.pincode}
+                      value={isAddress? editedAddressInfo.pincode : formData.pincode}
+                      onChange={(e) =>
+                        setEditedAddressInfo({ ...editedAddressInfo, pincode: e.target.value })
+                      }
                       inputProps={{
                         pattern: "^[0-9]*",
                         onInput: (event) => {
@@ -947,7 +1212,7 @@ const Profile = () => {
                         size="small"
                         disabled={!isAddress}
                         sx={{ height: "3em", fontSize: "10px" }}
-                        onClick={handleAddressOff}
+                        onClick={HandleAddressInfoUpdate}
                       >
                         save
                       </Button>
@@ -1042,11 +1307,11 @@ const Profile = () => {
 
         <Dialog open={uploadImgDialog} onClose={handleUploadImgDialogClose} PaperProps={{ sx: { width: "100%", maxWidth: "520px!important", mt:'5em', borderRadius:'15px',ml:'6em'},}}>
           <DialogContent sx={{display:'flex',justifyContent:'center', flexDirection:'column', alignItems:'center'}}>
-            <Box sx={{width:'150px', height:'150px', bgcolor:'cyan', mb:'2em', display:'flex', alignItems:'center', justifyContent:'center'}}>
+            <Box sx={{width:'250px', height:'250px', bgcolor:'#EDEDED', color:'#848484', mb:'2em', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'5px'}}>
               {tempImgLink? 
             <img src={tempImgLink} alt="No DP" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
             :
-            "No image is chosen"  
+            "Choose an image"  
             }
              
             </Box>

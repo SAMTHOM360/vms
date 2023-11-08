@@ -444,6 +444,7 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 import DoughnutChart from './DoughnutChart';
 import ProgressBar from './ProgressBar';
+import Loader from '../Loader';
 
 // import PieChart from './Piechart';
 

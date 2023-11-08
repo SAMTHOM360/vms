@@ -172,7 +172,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <HomeIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Employee Dashboard' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Dashboard' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 
@@ -193,7 +193,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               >
                 <DashboardIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
-              <ListItemText primary='Admin Dashboard' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary='Meetings' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
 

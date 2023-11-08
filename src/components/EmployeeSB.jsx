@@ -79,12 +79,12 @@ const Employee = () => {
   const [divText, setDivText] = useState('');
   const navigate = useNavigate()
 
-  let formattedLimitHead
+  let formattedHead
   if(loggedUserRole === 'ADMIN'){
-    formattedLimitHead = 'Employees'
+    formattedHead = 'Employees'
   }
   else{
-    formattedLimitHead = 'Admins'
+    formattedHead = 'Admins'
   }
 
   let formatedLimit
@@ -443,10 +443,10 @@ toast.success('Selected user is successfully updated.', {
       borderRadius:'10px'
       }}
       >
-        <Header title="Employees" subtitle="List of Employees for Future Referrence" />
+        <Header title={formattedHead} subtitle={`List of ${formattedHead} for Future Reference`} />
         <Box sx={{display:'flex', alignItems:'center'}}>
         <Typography sx={{fontSize:'20px', fontWeight:'550', color:'#949494'}}>
-          {formattedLimitHead}: {currEmpLength}{formatedLimit}
+          {formattedHead}: {currEmpLength}{formatedLimit}
         </Typography>
         {isLimitReached 
         ?

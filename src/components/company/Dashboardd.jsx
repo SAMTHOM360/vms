@@ -40,6 +40,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Header from '../Header';
+import Loader from '../Loader';
 
 
 
@@ -544,7 +545,7 @@ function formatMeetingDuration(meeting) {
                                         }}
                                     >
 
-                                        <Header title="Visitors" subtitle="Get all updates about visitors" />
+                                        <Header title="Meetings" subtitle="Get all updates about your meetings" />
                                     </Paper>
                                 </Grid>
 

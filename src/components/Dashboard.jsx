@@ -5,6 +5,7 @@ import Sidebar from '../global/Sidebar';
 import Grid from '@mui/material/Grid';
 import { Paper, Box } from '@mui/material';
 import Header from './Header';
+import Loader from './Loader';
 
 const Dashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);

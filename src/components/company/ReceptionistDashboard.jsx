@@ -16,6 +16,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Header from '../Header';
+import Loader from '../Loader';
 
 
 import Table from '@mui/material/Table';

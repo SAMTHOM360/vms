@@ -19,6 +19,7 @@ import Navbar from "../../global/Navbar";
 import Sidebar from "../../global/Sidebar";
 import Header from "../Header";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader";
 
 const MeetingDetails = () => {
   
