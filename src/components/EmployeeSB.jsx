@@ -12,6 +12,7 @@ import {
   MenuItem, 
   FormControl, 
   InputLabel,
+  Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -28,11 +29,46 @@ import Sidebar from '../global/Sidebar';
 import Header from './Header';
 import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../routes/AuthContext';
 
 
 
 
 const Employee = () => {
+  const { isLimitReached } = useAuth();
+
+  console.log("isLimitReached", isLimitReached)
+  const AuthToken = sessionStorage.getItem('token');
+  const loggedUserRole = sessionStorage.getItem('loggedUserRole')
+  const limit = sessionStorage.getItem('limit')
+  const adminId = localStorage.getItem('adminId')
+  const currEmpLength = sessionStorage.getItem('currEmpLength')
+  // console.log("admin id",currEmpLength)
+
+
+    const BASE_URL = 'http://192.168.12.54:8080/api/user';
+    // const BASE_URL = 'http://192.168.12.58:8080/api/user';
+
+  
+  
+    
+  
+    const axiosInstance = axios.create({
+      baseURL: BASE_URL,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${AuthToken}`,
+      },
+    });
+  
+    const headers = {
+      Authorization: `Bearer ${AuthToken}`,
+    };
+
+
+
+
+
   const [rows, setRows] = useState([]);
   const [AddUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -43,9 +79,23 @@ const Employee = () => {
   const [divText, setDivText] = useState('');
   const navigate = useNavigate()
 
-  const loggedUserRole = sessionStorage.getItem('loggedUserRole')
-  const adminId = localStorage.getItem('adminId')
-  console.log("admin id",adminId)
+  let formattedLimitHead
+  if(loggedUserRole === 'ADMIN'){
+    formattedLimitHead = 'Employees'
+  }
+  else{
+    formattedLimitHead = 'Admins'
+  }
+
+  let formatedLimit
+  if(loggedUserRole === 'ADMIN') {
+    formatedLimit = `/${limit}`
+  } 
+  else{
+    formatedLimit = ''
+  }
+
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -59,25 +109,7 @@ const Employee = () => {
     setDialogOpen(false);
   };
 
-  // const BASE_URL = 'http://192.168.12.12:8080/api/user';
-  const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
-  const AuthToken = sessionStorage.getItem('token');
-
-
-  
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${AuthToken}`,
-    },
-  });
-
-  const headers = {
-    Authorization: `Bearer ${AuthToken}`,
-  };
   
 
  
@@ -288,7 +320,8 @@ toast.success('Selected user is successfully updated.', {
 
       const apiDataArray = response.data;
 
-      console.log("getall data ",response)
+      sessionStorage.setItem('currEmpLength', apiDataArray.length)
+      console.log("getall data ",apiDataArray)
 
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
         console.error('API response does not contain the expected array or the array is empty:', apiDataArray);
@@ -403,6 +436,7 @@ toast.success('Selected user is successfully updated.', {
       sx={{
         display:'flex',
         justifyContent:'space-between',
+        alignItems:'center',
       height:'4.5em',
       mt:'3em',
       mb:'0.5em',
@@ -410,11 +444,26 @@ toast.success('Selected user is successfully updated.', {
       }}
       >
         <Header title="Employees" subtitle="List of Employees for Future Referrence" />
+        <Box sx={{display:'flex', alignItems:'center'}}>
+        <Typography sx={{fontSize:'20px', fontWeight:'550', color:'#949494'}}>
+          {formattedLimitHead}: {currEmpLength}{formatedLimit}
+        </Typography>
+        {isLimitReached 
+        ?
+        <Button variant="contained"
+        size='small'
+        sx={{margin:'1.2em', height:'3em'}}
+        disabled
+        >Max Limit Reached</Button>
+        :
         <Button variant="contained"
         size='small'
         sx={{margin:'1.2em', height:'3em'}}
         onClick={handleAddDialogOpen}
         >Add Employee</Button>
+       }
+        </Box>
+        
     </Box>
 
   </Grid>

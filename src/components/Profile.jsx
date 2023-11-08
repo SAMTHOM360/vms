@@ -32,9 +32,10 @@ import IconButton from "@mui/material/IconButton";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 const Profile = () => {
-  // const BASE_URL = "http://192.168.12.54:8080/api/user";
-  const BASE_URL = "http://192.168.12.58:8080/api/user";
-  const IMG_RESPONSE_URL = "http://192.168.12.58:8080/vis/upload";
+  const BASE_URL = "http://192.168.12.54:8080/api/user";
+  // const BASE_URL = "http://192.168.12.58:8080/api/user";
+  const IMG_RESPONSE_URL = "http://192.168.12.54:8080/vis/upload";
+  // const IMG_RESPONSE_URL = "http://192.168.12.58:8080/vis/upload";
 
   const AuthToken = sessionStorage.getItem("token");
   const adminId = localStorage.getItem("adminId");

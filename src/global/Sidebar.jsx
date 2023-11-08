@@ -155,7 +155,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
           {userRole === 'ADMIN' && (
             <>
 
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/dashboard')}>
+<ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/empdashboard')}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -171,6 +171,27 @@ export default function Sidenav({ open: propOpen, onClose }) {
                 }}
               >
                 <HomeIcon sx={{color:'#ffffff'}} />
+              </ListItemIcon>
+              <ListItemText primary='Employee Dashboard' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/dashboard')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <DashboardIcon sx={{color:'#ffffff'}} />
               </ListItemIcon>
               <ListItemText primary='Admin Dashboard' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
@@ -239,7 +260,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/excelupload')}>
+          {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/excelupload')}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -258,7 +279,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               </ListItemIcon>
               <ListItemText primary='Excel' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
             </>
           )}

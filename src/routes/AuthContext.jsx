@@ -6,6 +6,25 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(!!sessionStorage.getItem('token'));
   const [userRole, setUserRole] = useState(Cookies.get('userRole') || '');
+  const [addLimit, setAddLimit] = useState(sessionStorage.getItem('limit') || '');
+  const [currEmpLength, setCurrEmpLength] = useState(sessionStorage.getItem('currEmpLength') || '');
+  const [isLimitReached, setIsLimitReached] = useState(true)
+
+
+  useEffect(() => {
+    // Check if addLimit is not null and currEmpLength is less than addLimit
+    if (addLimit !== null && parseInt(currEmpLength, 10) < parseInt(addLimit, 10)) {
+      setIsLimitReached(false);
+    } else {
+      setIsLimitReached(true);
+    }
+  }, [addLimit, currEmpLength]);
+  
+  // console.log("currEmpLength", currEmpLength)
+  // console.log("addLimit", addLimit)
+  // console.log("isLimitReached", isLimitReached)
+
+
 
   useEffect(() => {
     if (!sessionStorage.getItem('token')) {
@@ -36,6 +55,8 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('loggedUserUsername');
     sessionStorage.removeItem('companyId')
     sessionStorage.removeItem('companyName')
+    sessionStorage.removeItem('limit')
+    sessionStorage.removeItem('currEmpLength')
 
     localStorage.removeItem('token');
     localStorage.removeItem('adminId')
@@ -44,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached }}>
       {children}
     </AuthContext.Provider>
   );

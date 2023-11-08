@@ -16,8 +16,8 @@ import Loader from './Loader';
 
 function LoginForm({ }) {
   const navigate = useNavigate(); 
-  // const BASE_URL = 'http://192.168.12.54:8080';
-  const BASE_URL = 'http://192.168.12.58:8080';
+  const BASE_URL = 'http://192.168.12.54:8080';
+  // const BASE_URL = 'http://192.168.12.58:8080';
 const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
 const OWNER = 'https://www.rapidsofttechnologies.com/'
 
@@ -86,6 +86,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     const companyId = response.data.company_id
     const companyName = response.data.company_name
     const adminId = response.data.id
+    const limit = response.data.limit
 
 
     setUserRoleAndAuth(loggedUserRole);
@@ -96,6 +97,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     sessionStorage.setItem('loggedUserUsername', loggedUserUsername)
     sessionStorage.setItem('companyId', companyId)
     sessionStorage.setItem('companyName', companyName)
+    sessionStorage.setItem('limit', limit)
 
 
     localStorage.setItem('token', token);
@@ -106,7 +108,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     if (loggedUserRole === 'SUPERADMIN') {
       navigate('/companyDetails');
     } else if (loggedUserRole === 'ADMIN') {
-      navigate('/dashboard');
+      navigate('/empdashboard');
     } else if (loggedUserRole === 'RECEPTIONIST') {
       navigate('/receptionistdashboard')
     } else if (loggedUserRole === 'EMPLOYEE') {
@@ -274,7 +276,8 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
       handleForgotPasswordClose()
       logout()
       }
-    } catch(error){
+    } 
+    catch(error){
       // console.error('Error Updating Password:', error);
       if(error.request.status === 400){
         const errMessage =error.response.data.message;

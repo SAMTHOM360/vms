@@ -115,7 +115,8 @@ export default function Navbar({toggleSidebar}) {
 
 
 
-  const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  const BASE_URL = 'http://192.168.12.54:8080/api/user';
 
   const AuthToken = sessionStorage.getItem('token');
 
@@ -192,16 +193,16 @@ export default function Navbar({toggleSidebar}) {
     }
   }
 
-  // useEffect(() => {
-  //   const fetchDataInterval = setInterval(() => {
-  //     fetchData();
-  //   }, 1500); // 1500 milliseconds (1.5 seconds)
+  useEffect(() => {
+    const fetchDataInterval = setInterval(() => {
+      fetchData();
+    }, 2000); // 1500 milliseconds (1.5 seconds)
   
-  //   return () => {
-  //     // Clear the interval when the component unmounts
-  //     clearInterval(fetchDataInterval);
-  //   };
-  // }, []);
+    return () => {
+      // Clear the interval when the component unmounts
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
   
 
   const handleMobileMenuClose = () => {

@@ -240,7 +240,7 @@ if (dataItem) {
                   <Box sx={{ width: '7%', bgcolor: '', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Avatar sx={{ width: '35px', height: '35px' }}>
                       {/* <ImageIcon /> */}
-                      <img src={dataItem.visitor.imageUrl} alt="No DP" />
+                      <img src={dataItem.visitor.imageUrl} alt="No DP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </Avatar>
                   </Box>
                   <Box sx={{ width: '60%', ml: '0.5em' }}>

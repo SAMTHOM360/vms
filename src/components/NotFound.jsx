@@ -13,7 +13,7 @@ const NotFound = () => {
   if (userRole === 'SUPERADMIN') {
     linkTo = '/companyDetails';
   } else if (userRole === 'ADMIN') {
-    linkTo = '/dashboard';
+    linkTo = '/empdashboard';
   } else if (userRole === 'RECEPTIONIST') {
     linkTo = '/receptionistdashboard';
   } else if (userRole === 'EMPLOYEE') {

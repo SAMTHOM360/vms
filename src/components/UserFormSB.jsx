@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../routes/AuthContext";
 import axios from "axios";
 import { Box } from "@mui/system";
 import TextField from "@mui/material/TextField";
@@ -20,7 +21,7 @@ import Sidebar from "../global/Sidebar";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-import { Divider, Typography } from "@mui/material";
+import { Divider, Paper, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -31,8 +32,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-function UserForm({ authenticated, closeDialog, fetchData }) {
-  const BASE_URL = "http://192.168.12.58:8080/api/user";
+function UserForm({ authenticated, closeDialog, fetchData,}) {
+  const { isLimitReached } = useAuth();
+
+  console.log("isLimitReached", isLimitReached)
+  // const BASE_URL = "http://192.168.12.58:8080/api/user";
+  const BASE_URL = "http://192.168.12.54:8080/api/user";
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
@@ -84,8 +89,8 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
   const [dobDate, setDobDate] = useState("");
   const [cleared, setCleared] = useState(false);
   const [isSingleUser, setIsSingleUser] = useState(false);
-  const [isMultiUser, setIsMultiUser] = useState(true);
-  const [isUserSelection, setIsUserSelection] = useState(false);
+  const [isMultiUser, setIsMultiUser] = useState(false);
+  const [isUserSelection, setIsUserSelection] = useState(true);
 
   // EXCEL UPLOAD STARTS -----------------------------------------------------------------------------------------------------------------
 
@@ -142,36 +147,90 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
           headers: excelHeaders,
         }
       );
-      const excelApiData = response.data.data;
-      // console.log("excelApiData", excelApiData);
-      if (
-        excelApiData.duplicateData != 0 ||
-        excelApiData.unSuccessfullyAdded != 0
-      ) {
-        setIsDownload(true);
-      } else {
-        setIsDownload(false);
+      if(response.status === 200) {
+        toast.success("File uploaded Successfully. Please check for faulty data.", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const excelApiData = response.data.data;
+        // console.log("excelApiData", excelApiData);
+        if (
+          excelApiData.duplicateData != 0 ||
+          excelApiData.unSuccessfullyAdded != 0
+        ) {
+          setIsDownload(true);
+        } else {
+          setIsDownload(false);
+        }
+        setExcelDownData({
+          totalElement: excelApiData.totalElement || "",
+          successfullyAdded: excelApiData.successfullyAdded || "",
+          falidData: excelApiData.falidData || "",
+          duplicateData: excelApiData.duplicateData || "",
+          downloadLink: excelApiData.downloadLink || "",
+          falidDataLink: excelApiData.falidDataLink || "",
+          duplicateDataLink: excelApiData.duplicateDataLink || "",
+        });
+        setIsUpload(false);
+        const fileInput = document.getElementById("fileInputExcel");
+        if (fileInput) {
+          fileInput.value = "";
+        }
+        setIsFileSelected("");
       }
-      setExcelDownData({
-        totalElement: excelApiData.totalElement || "",
-        successfullyAdded: excelApiData.successfullyAdded || "",
-        falidData: excelApiData.falidData || "",
-        duplicateData: excelApiData.duplicateData || "",
-        downloadLink: excelApiData.downloadLink || "",
-        falidDataLink: excelApiData.falidDataLink || "",
-        duplicateDataLink: excelApiData.duplicateDataLink || "",
+      else if(response.status === 400){
+        console.log("400 response", response)
+        // toast.error("New Employee Added Successfully.", {
+        //   position: "top-right",
+        //   autoClose: 4000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+      }
+    } 
+    catch(error){
+      // console.error('Error Updating Password:', error);
+      if(error.request.status === 400){
+        const errMessage =error.response.data;
+        // console.log("400 response", errMessage)
+        const cleanedMessage = JSON.stringify(errMessage);
+        toast.error(JSON.parse(cleanedMessage)+' !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
       });
-      setIsUpload(false);
-      const fileInput = document.getElementById("fileInputExcel");
-      if (fileInput) {
-        fileInput.value = "";
       }
-      setIsFileSelected("");
-    } catch (error) {
-      console.error("Excel API error: ", error);
+       else {
+        toast.error('Something went wrong !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
     }
-    setBtnLoading(false);
-  };
+    setBtnLoading(false)
+  }
 
   // console.log("excel down data", excelDownData)
 
@@ -560,6 +619,10 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     setIsUserSelection(true);
   };
 
+  const handleRedirectEmployee =  () => {
+    navigate('/employee')
+  }
+
   const handleTemplateDownload = () => {
     const anchor = document.createElement("a");
     anchor.style.display = "none";
@@ -577,12 +640,12 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
   //     setBtnLoading(false);
   //   }, 2000);
   // };
-  console.log(excelDownData);
+  // console.log(excelDownData);
   return (
     <>
       <Loader isLoading={loading} />
       <Navbar toggleSidebar={toggleSidebar} />
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3,  }}>
         <Sidebar open={sidebarOpen} />
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
@@ -604,19 +667,38 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
             </Box>
           </Grid>
 
-          {isUserSelection ? (
-            <Grid item xs={12} md={12} lg={12}>
+          {isLimitReached
+          ?
+          <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems:'center',
+            width: "100%",
+            height: "75vh",
+            // mt: "-5em",
+          }}
+        >
+          <Typography sx={{fontSize:'50px'}}>You have reached max limit</Typography>
+        </Box>
+          :
+          <>
+                    {isUserSelection ? (
+              <>
+                          <Grid item xs={12} md={12} lg={12}>
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   justifyContent: "center",
+                  alignItems:'center',
                   width: "100%",
                   height: "75vh",
-                  paddingTop: "10em",
+                  mt: "-5em",
                 }}
               >
-                <Box sx={{ display: "flex" }}>
+                <Box sx={{ display: "flex", flexDirection:'row', width:'50em' }}>
                   <Button
                     variant="contained"
                     size="large"
@@ -651,8 +733,27 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                     Add Multiple Employees
                   </Button>
                 </Box>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    // size="large"
+                    sx={{
+                      mt:'3em'
+                      // width: "20em",
+                      // height: "4em",
+                    }}
+                    onClick={handleRedirectEmployee}
+                  >
+                    Back to table
+                  </Button>                
               </Box>
+
             </Grid>
+
+            <Grid item xs={12} md={12} lg={12}>
+ 
+            </Grid>
+              </>
           ) : (
             ""
           )}
@@ -1153,7 +1254,8 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
             //         </Box>
             //       </Grid>
 
-            <Grid item xs={12} md={12} lg={12}>
+
+             <Grid item xs={12} md={12} lg={12}>
               <Box
                 sx={{
                   display: "flex",
@@ -1163,17 +1265,35 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                   width: "100%",
                   height: "75vh",
                   paddingTop: "2em",
+                  flexGrow:1,
                 }}
               >
-                <Box sx={{ width: "50%", bgcolor: "#EBEBEB" }}>
+                <Paper
+           elevation={1}
+           sx={{
+               display: 'flex',
+               justifyContent: 'center',
+               width:'50%',
+              //  height: '4.5em',
+              //  mt: '3em',
+               mb: '0.5em'
+           }}
+           >
+                <Box sx={{ width: "95%",
+                // bgcolor: "#EBEBEB", 
+                margin:'2em' 
+                }}>
                   <Box
                     sx={{
-                      bgcolor: "#FF9145",
+                      bgcolor: "#EBEBEB",
                       width: "100%",
                       height: "15em",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      borderRadius: "5px 5px 0 0",
+                      border: "2px dashed #A6A6A6",
+                      borderBottom: "none", 
                     }}
                   >
                     {isFileSelected
@@ -1187,6 +1307,9 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                       flexDirection: "row",
                       width: "100%",
                       bgcolor: "#F7F7F7",
+                      borderRadius: "0 0 5px 5px",
+                      border: "2px dashed #A6A6A6",
+                      borderTop:"none",
                       // mb:'2em'
                     }}
                   >
@@ -1359,11 +1482,16 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                     </Button>
                   </Box>
                 </Box>
+              </Paper>
               </Box>
             </Grid>
           ) : (
             ""
           )}
+          </>
+          }
+
+
         </Grid>
       </Box>
     </>
