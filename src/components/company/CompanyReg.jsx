@@ -41,6 +41,7 @@ export default function CompanyReg() {
         email: "",
         phoneNumber: "",
         industry: "",
+        userLimit:"",
         aboutUs: ""
 
     })
@@ -97,9 +98,14 @@ export default function CompanyReg() {
             newErrors.industry = "Industry is required";
         }
 
+        if (!values.userLimit) {
+            newErrors.userLimit = "User Limit is required";
+        }
+
         if (!values.aboutUs) {
             newErrors.aboutUs = "About is required";
         }
+
 
         setErrors(newErrors); // Update errors state
 
@@ -239,7 +245,7 @@ export default function CompanyReg() {
 
                             <Box
                                 display="flex" flexDirection='column'
-                                maxWidth='800px'
+                                maxWidth={800}
                                 margin='auto'
                                 marginTop={3}
                                 padding={3}
@@ -270,14 +276,14 @@ export default function CompanyReg() {
                                     helperText={errors.address}></TextField>
                                 <div
                                     className="input"
-                                    style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+                                    style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",gap:"20px"}}
                                 >
 
 
                                     <div>
 
-                                        <Box sx={{ minWidth: 120,gap:"20px" }}>
-                                            <FormControl fullWidth sx={{gap:"20px"}}>
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Select State</InputLabel>
                                                 <Select
                                                     sx={{ width: '300px' }}
@@ -379,7 +385,7 @@ export default function CompanyReg() {
                                         </FormControl>
                                     </Box>
                                 </div>
-                                <TextField placeholder="Pincode" value={values.pincode} onChange={(e) => setValues({ ...values, pincode: e.target.value })} error={Boolean(errors.pincode)}
+                                <TextField type="number" placeholder="Pincode" value={values.pincode} onChange={(e) => setValues({ ...values, pincode: e.target.value })} error={Boolean(errors.pincode)}
                                     helperText={errors.pincode}></TextField>
 
                                 <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
@@ -394,7 +400,8 @@ export default function CompanyReg() {
                                <TextField  sx={{ width: "47%" }} placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
                                     helperText={errors.industry}></TextField>
 
-                                    <TextField   sx={{ width: "47%" }} placeholder="User Limit" type="number" value={values.userLimit} onChange={(e) => setValues({ ...values, userLimit: e.target.value })}></TextField>
+                                    <TextField   sx={{ width: "47%" }} placeholder="User Limit" type="number" value={values.userLimit} onChange={(e) => setValues({ ...values, userLimit: e.target.value })} error={Boolean(errors.userLimit)}
+                                    helperText={errors.userLimit}></TextField>
 
                                </div>
                                

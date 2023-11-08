@@ -97,7 +97,24 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Dashboard() {
+
+    //pagination
     const [page, setPage] = useState(0);
+    const[rowsPerPage,setRowsPerPage] = useState(10);
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0); 
+    };
+
+ 
+
+
+
+
+
+
+
     const [visitors, setVisitors] = useState([]);
     const [totalMeetings, setTotalMeetings] = useState(0);
     const [pendingMeetings, setPendingMeetings] = useState(0);
@@ -120,7 +137,7 @@ const [searchCriteria, setSearchCriteria] = useState({
     const [item, setItem] = useState('');
     const[visitorsInfo,setVisitorsInfo] = useState([]);
 
-    const rowsPerPage = 10;
+   
     function calculateSerialNumber(index,page,rowsPerPage) {
         return page * rowsPerPage + index + 1;
         
@@ -773,7 +790,7 @@ function formatMeetingDuration(meeting) {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: 'grey', border: "1px solid black" }}>
+                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black",fontWeight:"600" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCell>
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -869,12 +886,13 @@ function formatMeetingDuration(meeting) {
                                             </TableBody>
                                         </Table>
                                         <TablePagination
-                                            rowsPerPageOptions={[]}
+                                           rowsPerPageOptions={[5, 10, 15]}
                                             component="div"
                                             count={visitors.length}
                                             rowsPerPage={rowsPerPage}
                                             page={page}
                                             onPageChange={handleChangePage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
                                         />
                                     </TableContainer>
 

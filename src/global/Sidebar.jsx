@@ -303,7 +303,8 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   justifyContent: 'center',
                 }}
               >
-                <DashboardIcon sx={{color:'#ffffff'}} />
+                {/* <DashboardIcon sx={{color:'#ffffff'}} /> */}
+                <Groups3Icon sx={{color:'#ffffff'}} />
               </ListItemIcon>
               <ListItemText primary='Dashboard' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>

@@ -388,7 +388,7 @@ export default function Dashboard() {
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
-        setPage(0); // Reset to the first page when changing rows per page
+        setPage(0); 
     };
 
 
@@ -612,7 +612,7 @@ export default function Dashboard() {
 
 
 
-    }, [page, selectedStatusOptions, phoneNumberFilter, startDate, endDate]);
+    }, [page,rowsPerPage, selectedStatusOptions, phoneNumberFilter, startDate, endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -872,7 +872,7 @@ export default function Dashboard() {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: 'lightgrey', border: "1px solid black" }}>
+                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black",fontWeight:600 }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCcenter
                                                 <TableCell>Visitor ID</TableCell> */}
