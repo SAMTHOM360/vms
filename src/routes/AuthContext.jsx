@@ -8,17 +8,31 @@ export const AuthProvider = ({ children }) => {
   const [userRole, setUserRole] = useState(Cookies.get('userRole') || '');
   const [addLimit, setAddLimit] = useState(sessionStorage.getItem('limit') || '');
   const [currEmpLength, setCurrEmpLength] = useState(sessionStorage.getItem('currEmpLength') || '');
-  const [isLimitReached, setIsLimitReached] = useState(true)
+  const [isLimitReached, setIsLimitReached] = useState(false)
 
+
+  // useEffect(() => {
+  //   // Check if addLimit is not null and currEmpLength is less than addLimit
+  //   if (
+  //      parseInt(currEmpLength, 10) < parseInt(addLimit, 10)) {
+  //     setIsLimitReached(false);
+  //   } else {
+  //     setIsLimitReached(true);
+  //   }
+  // }, [addLimit, currEmpLength]);
 
   useEffect(() => {
-    // Check if addLimit is not null and currEmpLength is less than addLimit
-    if (addLimit !== null && parseInt(currEmpLength, 10) < parseInt(addLimit, 10)) {
-      setIsLimitReached(false);
-    } else {
-      setIsLimitReached(true);
+    if (addLimit !== null) {
+      // Check if currEmpLength is less than addLimit
+      if (parseInt(currEmpLength, 10) >= parseInt(addLimit, 10)) {
+        setIsLimitReached(true);
+      } else {
+        setIsLimitReached(false);
+      }
     }
   }, [addLimit, currEmpLength]);
+
+  
   
   // console.log("currEmpLength", currEmpLength)
   // console.log("addLimit", addLimit)

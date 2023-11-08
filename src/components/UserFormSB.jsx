@@ -91,6 +91,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
   const [isSingleUser, setIsSingleUser] = useState(false);
   const [isMultiUser, setIsMultiUser] = useState(false);
   const [isUserSelection, setIsUserSelection] = useState(true);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(loggedUserRole === 'SUPERADMIN');
 
   // EXCEL UPLOAD STARTS -----------------------------------------------------------------------------------------------------------------
 
@@ -698,7 +699,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                   mt: "-5em",
                 }}
               >
-                <Box sx={{ display: "flex", flexDirection:'row', width:'50em' }}>
+                <Box sx={{ display: "flex", flexDirection:'row', width:'50em', justifyContent:'center' }}>
                   <Button
                     variant="contained"
                     size="large"
@@ -712,26 +713,37 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     Add Single Employee
                   </Button>
 
-                  <hr
-                    style={{
-                      height: "5em",
-                      border: "3px solid #BFBFBF",
-                      borderRadius: "5px",
-                    }}
-                  />
+                  {isSuperAdmin
+                  ?
 
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      margin: "1.2em 0 1.2em 1.2em",
-                      width: "20em",
-                      height: "4em",
-                    }}
-                    onClick={handleMultiUserForm}
-                  >
-                    Add Multiple Employees
-                  </Button>
+                  <></>
+                  :
+
+                  <>
+                  <hr
+  style={{
+    height: "5em",
+    border: "3px solid #BFBFBF",
+    borderRadius: "5px",
+  }}
+/>
+
+<Button
+  variant="contained"
+  size="large"
+  sx={{
+    margin: "1.2em 0 1.2em 1.2em",
+    width: "20em",
+    height: "4em",
+  }}
+  onClick={handleMultiUserForm}
+>
+  Add Multiple Employees
+</Button>
+</>
+                  }
+
+
                 </Box>
                 <Button
                     variant="contained"
