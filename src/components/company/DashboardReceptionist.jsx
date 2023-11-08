@@ -860,7 +860,7 @@ export default function Dashboard() {
                                     }}>
 
 
-                                        <div class="rooms">
+                                        <div className="rooms">
                                             <h2 style={{color:"black"}}>Room Details</h2>
                                         <DoughnutChart/>
 

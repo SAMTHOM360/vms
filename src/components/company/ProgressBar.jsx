@@ -58,7 +58,7 @@ const ProgressBar = () => {
                     //labeltext
                     const fontSizeLabel = 12;
 
-                    console.log(y);
+                    // console.log(y);
                     ctx.font = `${fontSizeLabel}px sans-serif`;
                     ctx.fillStyle = 'rgba(102,102,102,1)';
                     ctx.textAlign = 'left';
@@ -69,7 +69,7 @@ const ProgressBar = () => {
                     //valueText
                     const fontSizeDataPoint = 15;
 
-                    console.log(y);
+                    // console.log(y);
                     ctx.font = `bolder ${fontSizeDataPoint}px sans-serif`;
                     ctx.fillStyle = 'rgba(102,102,102,1)';
                     ctx.textAlign = 'right';
