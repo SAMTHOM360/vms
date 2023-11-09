@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import { Paper, Box, Typography, Button } from '@mui/material';
 import Header from './Header';
 import StatBox from './StatBox';
+import Loader from './Loader';
 
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import Diversity2Icon from '@mui/icons-material/Diversity2';
@@ -28,6 +29,7 @@ const EmpDashboard = () => {
     })
     const [barchartData, setBarchartData] = useState(null)
     const [timelineData, setTimelineData] = useState(null)
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -45,6 +47,7 @@ const EmpDashboard = () => {
 
     async function fetchData() {
       try{
+        setLoading(true)
         const dashboardResponse = await axios.get(`${BASE_URL1}/meeting/userdashboard?userId=${adminId}`)
         const dashboardTimelineResponse = await axios.get(`${BASE_URL1}/meeting/vis?id=${adminId}`)
         // const userPresentResponse = await axios.get(`${BASE_URL1/user/prese}`)
@@ -81,6 +84,7 @@ const EmpDashboard = () => {
       } catch(error){
         console.error('Error fetching data:', error);
       }
+      setLoading(false)
     }
     // console.log("dashboard data", dashboardData)
     useEffect(() => {
@@ -92,6 +96,7 @@ const EmpDashboard = () => {
 
   return (
     <>
+    <Loader isLoading={loading}/>
     <Navbar toggleSidebar={toggleSidebar}/>
     <Box sx={{display:"flex", flexGrow: 1, p: 3}}>
         <Sidebar open={sidebarOpen} />

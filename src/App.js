@@ -45,7 +45,6 @@ const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
 };
 
 function App() {
-  const { authenticated, setAuthenticated } = useAuth();
 
   return (
     <>
@@ -53,33 +52,37 @@ function App() {
       <Box className="App">
         <Box className="content">
           <Routes>
-          <Route path="/" element={<LoginForm setAuthenticated={setAuthenticated} />} />
+          <Route path="/" element={<LoginForm />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/loader" element={<Loader />} />
-          <Route path="/empdashboard" element={<EmpDashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/userform" element={<UserForm />} />
+          {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
+          {/* <Route path="/profile" element={<Profile />} /> */}
+          {/* <Route path="/userform" element={<UserForm />} /> */}
           {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
-          <Route path="/filedrop" element={<FileDropArea />} />
+          {/* <Route path="/filedrop" element={<FileDropArea />} /> */}
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
-            {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
-            <Route path="/employee" element={<PrivateRoute element={<Employee />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
-            {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} /> */}
+            {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
+            <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
+            {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
 
             //HARSHITA STARTS
-            <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
-            <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />}/>
-            <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} authenticated={authenticated} allowedRoles={['SUPERADMIN']} />} />
-            <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} authenticated={authenticated} allowedRoles={['SUPERADMIN','ADMIN']} />} />
-            <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
+            <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
+            <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
+            <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
+            <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
+            <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
 
             {/* mycode */}
-            <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
+            <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
 
-            <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} authenticated={authenticated} allowedRoles={['RECEPTIONIST']} />} />
-            <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} />
-            {/* <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} authenticated={authenticated} allowedRoles={['EMPLOYEE']} />} /> */}
+            <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} />
+            <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
+
+            <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
+            <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
+
+            <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
 
             //HARSHITA ENDS
 
@@ -154,11 +157,11 @@ export default App;
 //         />
 //         <Route
 //           path="/userform"
-//           element={<UserForm authenticated={authenticated} />}
+//           element={<UserForm  />}
 //         />
 //         <Route
 //         path="/employee"
-//         element={<PrivateRoute authenticated={authenticated}>
+//         element={<PrivateRoute >
 //         <Box className='content'>
 // <Employee />
 //         </Box>
@@ -166,7 +169,7 @@ export default App;
 //       />
 //       <Route
 //         path="/dashboard"
-//         element={<Dashboard authenticated={authenticated} />}
+//         element={<Dashboard  />}
 //       />
 
 //         <Route path="/" element={<Navigate to="/login" />} />

@@ -1275,7 +1275,7 @@ export default function Dashboard() {
     const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
     const [status, setStatus] = useState('');
 
-    console.log(selectedStatusOptions, "selectedstatus");
+    // console.log(selectedStatusOptions, "selectedstatus");
 
 
     const handleChangeStatus = (event) => {
@@ -1479,7 +1479,7 @@ export default function Dashboard() {
         })
             .then(response => {
                 const url = response.data.data;
-                console.log(url, "files")
+                // console.log(url, "files")
                 downloadFile(url)
 
 
@@ -1560,7 +1560,7 @@ export default function Dashboard() {
                 responseData.forEach(meeting => {
                     const meetingId = meeting.id; // This is the meetingId
                     // Now you can use the meetingId as needed
-                    console.log("Meeting ID:", meetingId);
+                    // console.log("Meeting ID:", meetingId);
                 });
 
 
@@ -1651,7 +1651,7 @@ export default function Dashboard() {
     function formatMeetingDuration1(meeting) {
 
         const endTimestamp = meeting.checkOutDateTime;
-        console.log(endTimestamp, "endtimestamp")
+        // console.log(endTimestamp, "endtimestamp")
 
 
 

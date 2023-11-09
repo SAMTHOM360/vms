@@ -160,7 +160,7 @@ const Employee = () => {
         row.id === id ? { ...row, isActive: true } : row
       );
       setRows(updatedRows);
-      console.log(`Deleted item with ID ${id} and set isActive to false`);
+      // console.log(`Deleted item with ID ${id} and set isActive to false`);
       fetchData();
       }
       } catch (error) {
@@ -254,7 +254,7 @@ const Employee = () => {
   };
   
   const handleSaveEdit = async () => {
-    console.log("edited item role", editedItem)
+    // console.log("edited item role", editedItem)
     const payload = {
       firstName: editedItem.firstName,
       lastName: editedItem.lastName,      
@@ -284,7 +284,7 @@ toast.success('Selected user is successfully updated.', {
 });
   const response = await axiosInstance.get(`${BASE_URL}/getbyid/${editedItem.id}`);
   const updatedData = response.data.data.data;
-  console.log("edited role name",response.data.data.data.role)
+  // console.log("edited role name",response.data.data.data.role)
 
   const updatedRole = updatedData.role || {};
   const updatedRoleName = updatedRole.name || '';
@@ -297,7 +297,7 @@ toast.success('Selected user is successfully updated.', {
   });
   setRows(updatedRows);
   setOpenEditDialog(false);
-  console.log(`Saved changes for item with ID ${editedItem.id}`);
+  // console.log(`Saved changes for item with ID ${editedItem.id}`);
 
 }
     } catch (error) {
@@ -321,7 +321,7 @@ toast.success('Selected user is successfully updated.', {
       const apiDataArray = response.data;
 
       sessionStorage.setItem('currEmpLength', apiDataArray.length)
-      console.log("getall data ",apiDataArray)
+      // console.log("getall data ",apiDataArray)
 
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
         console.error('API response does not contain the expected array or the array is empty:', apiDataArray);
