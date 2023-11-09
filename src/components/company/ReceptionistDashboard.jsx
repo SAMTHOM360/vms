@@ -1536,6 +1536,7 @@ export default function Dashboard() {
         const payload = {
             page: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 0 : page,
             size: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 1000 : rowsPerPage,
+            // size:rowsPerPage,
             phoneNumber: phoneNumberFilter,
             companyId: companyId,
             fromDate: startDate,
