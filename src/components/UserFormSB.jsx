@@ -100,6 +100,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
   const [excelUpData, setExcelUpData] = useState();
   const [btnLoading, setBtnLoading] = useState(false);
   const [isDownload, setIsDownload] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [excelDownData, setExcelDownData] = useState({
     totalElement: "",
@@ -110,6 +111,33 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     falidDataLink: "",
     duplicateDataLink: "",
   });
+
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+  
+    const files = e.dataTransfer.files;
+    const formData = new FormData();
+    formData.append("companyId", companyId);
+    formData.append("file", files[0]);
+  
+    const fileName = files[0] ? files[0].name : "";
+
+    e.dataTransfer.clearData();
+    setExcelUpData(formData);
+    setIsUpload(true);
+    setIsFileSelected(fileName);
+    setIsDragging(false);
+  };
 
   const handleChooseFile = (event) => {
     // debugger
@@ -122,6 +150,11 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     setExcelUpData(formData);
     setIsUpload(true);
     setIsFileSelected(fileName);
+
+    const fileInput = document.getElementById("fileInputExcel");
+    if (fileInput) {
+      fileInput.value = ""; // Clear the selected file
+    }
     // console.log("FORM DATA", formData)
   };
   // console.log("is upload", isUpload);
@@ -1296,6 +1329,10 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                 margin:'2em' 
                 }}>
                   <Box
+                        className={`file-drop-area ${isDragging ? 'dragging' : ''}`}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
                     sx={{
                       bgcolor: "#EBEBEB",
                       width: "100%",
@@ -1310,7 +1347,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                   >
                     {isFileSelected
                       ? isFileSelected
-                      : "Choose your file to upload"}
+                      : "You can Drag & Drop or Press \"+\" to add file"}
                   </Box>
 
                   <Box
@@ -1377,7 +1414,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                       display: "flex",
                       justifyContent: "flex-end",
                       alignItems: "center",
-                      color: "#ACACAC",
+                      color: "#8A8A8A",
                       width: "100%",
                       mb: "2em",
                     }}
@@ -1387,7 +1424,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                       <a
                         href={excelFile}
                         download="Multiuser Template.xlsx"
-                        style={{ color: "#A0A0A0" }}
+                        style={{ color: "#5A5A5A" }}
                       >
                         Get Template
                       </a>

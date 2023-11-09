@@ -59,7 +59,7 @@ function App() {
           {/* <Route path="/profile" element={<Profile />} /> */}
           {/* <Route path="/userform" element={<UserForm />} /> */}
           {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
-          {/* <Route path="/filedrop" element={<FileDropArea />} /> */}
+          <Route path="/filedrop" element={<FileDropArea />} />
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
             {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
             <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
