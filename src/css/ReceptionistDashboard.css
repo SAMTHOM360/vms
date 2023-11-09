@@ -21,4 +21,14 @@
 
 /* input{
     
+<<<<<<< Updated upstream
 } */
+=======
+}
+
+
+.room-dropdown {
+    max-height: 150px; /* Adjust the maximum height as needed */
+    overflow-y: auto; /* Enable vertical scrollbar if the content exceeds the height */
+}
+>>>>>>> Stashed changes
