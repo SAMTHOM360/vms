@@ -195,13 +195,25 @@ const formattedMeetingStartDateTime = formatMeetingStartDateTime(meetingStartDat
 const formattedMeetingEndDateTime = formatMeetingEndDateTime(meetingEndDateTime)
 // console.log(formattedMeetingDateTime);
 
-let dotColor = 'grey'
+let dotColor = '#808080'
 if(dataItem){
-  if(dataItem.status === 'COMPLETED'){
+  if(dataItem.status === 'PENDING'){
+    dotColor = '#17ACFB'
+  } else if(dataItem.status === 'COMPLETED'){
     dotColor = '#34E60C'
   } else if(dataItem.status === 'CANCELLED'){
   dotColor = 'red'
+} 
 }
+
+let timelineContentBgColor = '#808080'
+if(dataItem){
+  if(dataItem.status === 'PENDING'){
+    timelineContentBgColor = '#E198985e'
+  } else {
+    timelineContentBgColor = '#2D3E5F'
+    // timelineContentBgColor = '#ED66635e'
+  }
 }
 
 let chipText = 'Others'
@@ -223,7 +235,7 @@ if (dataItem) {
   }
 }
 
-        if (dataItem && (dataItem.status === 'COMPLETED' || dataItem.status === 'CANCELLED')) {
+        if (dataItem && (dataItem.status === 'PENDING' || dataItem.status === 'COMPLETED' || dataItem.status === 'CANCELLED')) {
 
           // console.log("dataitem data", dataItem)
 
@@ -236,7 +248,7 @@ if (dataItem) {
                 {index !== timelineApiData.length - 2 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent>
-                <Box sx={{ padding: "6px 16px", borderRadius: "5px", marginBottom: "15px", color: 'white', bgcolor: '#2D3E5F', display: 'flex' }}>
+                <Box sx={{ padding: "6px 16px", borderRadius: "5px", marginBottom: "15px", color: 'white', bgcolor: timelineContentBgColor, display: 'flex' }}>
                   <Box sx={{ width: '7%', bgcolor: '', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Avatar sx={{ width: '35px', height: '35px' }}>
                       {/* <ImageIcon /> */}

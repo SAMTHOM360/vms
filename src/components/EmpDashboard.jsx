@@ -37,7 +37,8 @@ const EmpDashboard = () => {
 
     // const BASE_URL1 = 'http://192.168.12.58:8080/api'
     const BASE_URL1 = 'http://192.168.12.54:8080/api'
-    const BASE_URL = 'http://192.168.12.54:8080/api'
+    // const BASE_URL1 = 'http://192.168.12.60:8080/api'
+    // const BASE_URL = 'http://192.168.12.54:8080/api'
     
 
 
@@ -232,7 +233,7 @@ const EmpDashboard = () => {
                       <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                       <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Activity Timeline</Typography>
                       <Box sx={{display:'flex',alignItems:'center', mt:'0.5em',mr:'1em', color:'#C1C1C1', fontSize:'14px'}}>
-                      <span style={{width:'12px', height:'12px', backgroundColor:'#34E60C', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Completed <span style={{width:'10px'}}></span> <span style={{width:'12px', height:'12px', backgroundColor:'red', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Rejected
+                      <span style={{width:'12px', height:'12px', backgroundColor:'#17ACFB', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Pending <span style={{width:'10px'}}></span> <span style={{width:'12px', height:'12px', backgroundColor:'#34E60C', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Completed <span style={{width:'10px'}}></span> <span style={{width:'12px', height:'12px', backgroundColor:'red', borderRadius:'50%',display:'inline-block'}}></span> <span style={{width:'3px'}}></span> Rejected
                       </Box>
                       </Box>
                       <Box sx={{overflowY:'auto', width:'100%', mb:'1em',}}>
