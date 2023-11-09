@@ -429,70 +429,68 @@ export default function Dashboard() {
         return date.toLocaleString();
     };
 
-<<<<<<< Updated upstream
 //date
-function formatMeetingDuration(meeting) {
-    const startTimestamp = meeting.checkInDateTime;
-    // console.log(startTimestamp,"starttimestamp")
+// function formatMeetingDuration(meeting) {
+//     const startTimestamp = meeting.checkInDateTime;
+//     // console.log(startTimestamp,"starttimestamp")
   
-    // console.log(visitorsInfo,"ggggg")
+//     // console.log(visitorsInfo,"ggggg")
 
   
-    // Create JavaScript Date objects with IST timezone
-    const startDate = new Date(startTimestamp);
+//     // Create JavaScript Date objects with IST timezone
+//     const startDate = new Date(startTimestamp);
 
-    startDate.setHours(startDate.getHours() - 5);
-    startDate.setMinutes(startDate.getMinutes() - 30);
+//     startDate.setHours(startDate.getHours() - 5);
+//     startDate.setMinutes(startDate.getMinutes() - 30);
    
   
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
+//     // Define options for formatting
+//     const options = {
+//       year: 'numeric',
+//       month: 'numeric',
+//       day: 'numeric',
+//       hour: 'numeric',
+//       minute: 'numeric',
+//       second: 'numeric',
+//       timeZone: 'Asia/Kolkata', // Set the timezone to IST
+//     };
   
-    // Format the start and end dates using the options
-    const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+//     // Format the start and end dates using the options
+//     const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
   
   
-    return `${formattedStart }`;
-  }
+//     return `${formattedStart }`;
+//   }
 
-  function formatMeetingDuration1(meeting) {
+//   function formatMeetingDuration1(meeting) {
 
-    const endTimestamp = meeting.checkOutDateTime;
-    // console.log(endTimestamp,"endtimestamp")
+//     const endTimestamp = meeting.checkOutDateTime;
+//     // console.log(endTimestamp,"endtimestamp")
 
 
   
-    // Create JavaScript Date objects with IST timezone
- if(endTimestamp!= null){
-    const endDate = new Date(endTimestamp);
-    endDate.setHours(endDate.getHours() - 5);
-    endDate.setMinutes(endDate.getMinutes() - 30);
+//     // Create JavaScript Date objects with IST timezone
+//  if(endTimestamp!= null){
+//     const endDate = new Date(endTimestamp);
+//     endDate.setHours(endDate.getHours() - 5);
+//     endDate.setMinutes(endDate.getMinutes() - 30);
   
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
+//     // Define options for formatting
+//     const options = {
+//       year: 'numeric',
+//       month: 'numeric',
+//       day: 'numeric',
+//       hour: 'numeric',
+//       minute: 'numeric',
+//       second: 'numeric',
+//       timeZone: 'Asia/Kolkata', // Set the timezone to IST
+//     };
   
-    // Format the start and end dates using the options
+//     // Format the start and end dates using the options
    
-    const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+//     const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
   
-    return `${formattedEnd}`;
-=======
+//     return `${formattedEnd}`;
     //date
     function formatMeetingDuration(meeting) {
         const startTimestamp = meeting.checkInDateTime;
@@ -500,7 +498,6 @@ function formatMeetingDuration(meeting) {
 
         // console.log(visitorsInfo,"ggggg")
 
->>>>>>> Stashed changes
 
         // Create JavaScript Date objects with IST timezone
         const startDate = new Date(startTimestamp);
