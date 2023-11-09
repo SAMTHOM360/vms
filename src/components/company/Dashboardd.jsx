@@ -87,7 +87,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-  
+
 
 
 
@@ -101,14 +101,14 @@ export default function Dashboard() {
 
     //pagination
     const [page, setPage] = useState(0);
-    const[rowsPerPage,setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
-        setPage(0); 
+        setPage(0);
     };
 
- 
+
 
 
 
@@ -125,23 +125,21 @@ export default function Dashboard() {
 
     //searchCriteria
 
-const [searchCriteria, setSearchCriteria] = useState({
-    status: "",
-    phoneNumber: "",
-    startDate: null,
-    endDate: null,
-  });
-
-
-
+    // const [searchCriteria, setSearchCriteria] = useState({
+    //     status: "",
+    //     phoneNumber: "",
+    //     startDate: null,
+    //     endDate: null,
+    // });
+    
 
     const [item, setItem] = useState('');
-    const[visitorsInfo,setVisitorsInfo] = useState([]);
+    const [visitorsInfo, setVisitorsInfo] = useState([]);
 
-   
-    function calculateSerialNumber(index,page,rowsPerPage) {
+
+    function calculateSerialNumber(index, page, rowsPerPage) {
         return page * rowsPerPage + index + 1;
-        
+
     }
 
 
@@ -275,12 +273,12 @@ const [searchCriteria, setSearchCriteria] = useState({
                 // console.log(responseDataVisitorsInfo,"res")
                 // if (responseData && responseData.data) {
                 //     const visitorsArray = responseData.data;
-                    
-                   
+
+
                 //    setVisitorsInfo(visitorsArray);
                 //   }
 
-                  
+
                 // const status11111 = response.data.data.status;
                 // console.log(status11111,"status");
                 // console.log(responseData);
@@ -432,73 +430,135 @@ const [searchCriteria, setSearchCriteria] = useState({
     };
 
 //date
-function formatMeetingDuration(meeting) {
-    const startTimestamp = meeting.checkInDateTime;
-    // console.log(startTimestamp,"starttimestamp")
+// function formatMeetingDuration(meeting) {
+//     const startTimestamp = meeting.checkInDateTime;
+//     // console.log(startTimestamp,"starttimestamp")
   
-    // console.log(visitorsInfo,"ggggg")
+//     // console.log(visitorsInfo,"ggggg")
 
   
-    // Create JavaScript Date objects with IST timezone
-    const startDate = new Date(startTimestamp);
+//     // Create JavaScript Date objects with IST timezone
+//     const startDate = new Date(startTimestamp);
 
-    startDate.setHours(startDate.getHours() - 5);
-    startDate.setMinutes(startDate.getMinutes() - 30);
+//     startDate.setHours(startDate.getHours() - 5);
+//     startDate.setMinutes(startDate.getMinutes() - 30);
    
   
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
+//     // Define options for formatting
+//     const options = {
+//       year: 'numeric',
+//       month: 'numeric',
+//       day: 'numeric',
+//       hour: 'numeric',
+//       minute: 'numeric',
+//       second: 'numeric',
+//       timeZone: 'Asia/Kolkata', // Set the timezone to IST
+//     };
   
-    // Format the start and end dates using the options
-    const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+//     // Format the start and end dates using the options
+//     const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
   
   
-    return `${formattedStart }`;
-  }
+//     return `${formattedStart }`;
+//   }
 
-  function formatMeetingDuration1(meeting) {
+//   function formatMeetingDuration1(meeting) {
 
-    const endTimestamp = meeting.checkOutDateTime;
-    // console.log(endTimestamp,"endtimestamp")
+//     const endTimestamp = meeting.checkOutDateTime;
+//     // console.log(endTimestamp,"endtimestamp")
 
 
   
-    // Create JavaScript Date objects with IST timezone
- if(endTimestamp!= null){
-    const endDate = new Date(endTimestamp);
-    endDate.setHours(endDate.getHours() - 5);
-    endDate.setMinutes(endDate.getMinutes() - 30);
+//     // Create JavaScript Date objects with IST timezone
+//  if(endTimestamp!= null){
+//     const endDate = new Date(endTimestamp);
+//     endDate.setHours(endDate.getHours() - 5);
+//     endDate.setMinutes(endDate.getMinutes() - 30);
   
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
+//     // Define options for formatting
+//     const options = {
+//       year: 'numeric',
+//       month: 'numeric',
+//       day: 'numeric',
+//       hour: 'numeric',
+//       minute: 'numeric',
+//       second: 'numeric',
+//       timeZone: 'Asia/Kolkata', // Set the timezone to IST
+//     };
   
-    // Format the start and end dates using the options
+//     // Format the start and end dates using the options
    
-    const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+//     const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
   
-    return `${formattedEnd}`;
+//     return `${formattedEnd}`;
+    //date
+    function formatMeetingDuration(meeting) {
+        const startTimestamp = meeting.checkInDateTime;
+        console.log(startTimestamp, "starttimestamp")
+
+        // console.log(visitorsInfo,"ggggg")
 
 
-  }
+        // Create JavaScript Date objects with IST timezone
+        const startDate = new Date(startTimestamp);
 
- }
-   
+        startDate.setHours(startDate.getHours() - 5);
+        startDate.setMinutes(startDate.getMinutes() - 30);
+
+
+        // Define options for formatting
+        const options = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        };
+
+        // Format the start and end dates using the options
+        const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+
+
+        return `${formattedStart}`;
+    }
+
+    function formatMeetingDuration1(meeting) {
+
+        const endTimestamp = meeting.checkOutDateTime;
+        console.log(endTimestamp, "endtimestamp")
+
+
+
+        // Create JavaScript Date objects with IST timezone
+        if (endTimestamp != null) {
+            const endDate = new Date(endTimestamp);
+            endDate.setHours(endDate.getHours() - 5);
+            endDate.setMinutes(endDate.getMinutes() - 30);
+
+            // Define options for formatting
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZone: 'Asia/Kolkata', // Set the timezone to IST
+            };
+
+            // Format the start and end dates using the options
+
+            const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+
+            return `${formattedEnd}`;
+
+
+        }
+
+    }
+
 
 
 
@@ -738,8 +798,8 @@ function formatMeetingDuration(meeting) {
                                                                 // onChange={handleStartDateChange}
 
                                                                 //searchcriteria code
-    //                                                             value={searchCriteria.startDate}
-    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, startDate: date })}
+                                                                //                                                             value={searchCriteria.startDate}
+                                                                //   onChange={(date) => setSearchCriteria({ ...searchCriteria, startDate: date })}
 
 
                                                                 />
@@ -750,20 +810,20 @@ function formatMeetingDuration(meeting) {
                                                                 // onChange={handleEndDateChange}
 
                                                                 //searchcriteria code
-    //                                                             value={searchCriteria.endDate}
-    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
+                                                                //                                                             value={searchCriteria.endDate}
+                                                                //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
 
                                                                 />
                                                             </DemoContainer>
                                                         </LocalizationProvider>
 
-                                                        <TextField id="outlined-search" label="Search" 
+                                                        <TextField id="outlined-search" label="Search"
                                                             //  value={phoneNumberFilter}
                                                             // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                                             // onKeyPress={handlePhoneNumberSearch} 
                                                             type="search" style={{ top: "10px" }} />
 
-                                                       
+
 
 
 
@@ -791,7 +851,7 @@ function formatMeetingDuration(meeting) {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black",fontWeight:"600" }}>
+                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black", fontSize:"25px" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCell>
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -823,7 +883,7 @@ function formatMeetingDuration(meeting) {
                                                             {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                                            <TableCell>{calculateSerialNumber(index,page,rowsPerPage)}</TableCell>
+                                                            <TableCell>{calculateSerialNumber(index, page, rowsPerPage)}</TableCell>
 
                                                             <TableCell align="left">{visitor.visitor.name}</TableCell>
 
@@ -887,7 +947,7 @@ function formatMeetingDuration(meeting) {
                                             </TableBody>
                                         </Table>
                                         <TablePagination
-                                           rowsPerPageOptions={[5, 10, 15]}
+                                            rowsPerPageOptions={[5, 10, 15]}
                                             component="div"
                                             count={visitors.length}
                                             rowsPerPage={rowsPerPage}
