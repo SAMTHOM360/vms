@@ -120,23 +120,28 @@ import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineContent from "@mui/lab/TimelineContent";
 import { Box, Typography } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import Chip from "@mui/material/Chip";
 import { TimelineConnector } from "@mui/lab";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
-import {  Dialog,
+import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
+import CloseIcon from "@mui/icons-material/Close";
+
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import {
+  Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions, Button,}  from '@mui/material';
+  DialogActions,
+  Button,
+  Avatar,
+} from "@mui/material";
 
 export default function MeetingTimeline({ timelineApiData }) {
   const [openMeetDialog, setOpenMeetDialog] = useState(false);
   const [dashMeetDialogData, setDashMeetDialogData] = useState({});
-  
 
   const handleMeetDialogOpen = async () => {
     setOpenMeetDialog(true);
@@ -204,11 +209,13 @@ export default function MeetingTimeline({ timelineApiData }) {
           // console.log(formattedMeetingDateTime);
 
           let dotColor = "#808080";
+          let roomNo;
           if (dataItem) {
             if (dataItem.status === "PENDING") {
               dotColor = "#17ACFB";
             } else if (dataItem.status === "COMPLETED") {
               dotColor = "#34E60C";
+              roomNo = `|| ${dataItem.room.roomName}`;
             } else if (dataItem.status === "CANCELLED") {
               dotColor = "red";
             }
@@ -243,9 +250,9 @@ export default function MeetingTimeline({ timelineApiData }) {
             }
           }
 
-          let info = false
-          if(dataItem.status ==="PENDING"){
-            info = true
+          let info = false;
+          if (dataItem.status === "PENDING") {
+            info = true;
           }
 
           if (
@@ -314,7 +321,7 @@ export default function MeetingTimeline({ timelineApiData }) {
                           }}
                         >
                           {formattedMeetingStartDateTime} -
-                          {formattedMeetingEndDateTime}
+                          {formattedMeetingEndDateTime} {roomNo}
                         </Typography>
                       </Box>
                     </Box>
@@ -331,13 +338,13 @@ export default function MeetingTimeline({ timelineApiData }) {
                         label={chipText}
                         sx={{ color: chipColor, bgcolor: chipBgColor }}
                       />
-                      {info ? 
-                      <IconButton onClick={handleMeetDialogOpen}>
-                      <InfoIcon sx={{color:'#FFA635'}} />
-                    </IconButton>
-                    :
-                    ''
-                    }
+                      {info ? (
+                        <IconButton onClick={handleMeetDialogOpen}>
+                          <InfoIcon sx={{ color: "#FFA635" }} />
+                        </IconButton>
+                      ) : (
+                        ""
+                      )}
                     </Box>
                   </Box>
                 </TimelineContent>
@@ -350,15 +357,76 @@ export default function MeetingTimeline({ timelineApiData }) {
 
       <Dialog
         open={openMeetDialog}
-        onClose={handleMeetDialogClose}
-        PaperProps={{ sx: { mt: "5em", borderRadius: "15px" } }}
+        // onClose={handleMeetDialogClose}
+        PaperProps={{
+          sx: {
+            mt: "5em",
+            borderRadius: "5px",
+            width: "400px",
+            height: "550px",
+          },
+        }}
       >
         <DialogTitle
-          sx={{ textAlign: "center", fontSize: "29px", fontWeight: "600" }}
+          sx={{
+            textAlign: "right",
+            fontSize: "29px",
+            fontWeight: "600",
+            height: "2em",
+          }}
         >
-          Update Form
+          <IconButton
+            onClick={handleMeetDialogClose}
+            sx={{ mt: "-1em", mr: "-0.7em" }}
+          >
+            <CloseIcon sx={{ color: "#FF3636" }} />
+          </IconButton>
         </DialogTitle>
-        <DialogContent></DialogContent>
+        <DialogContent
+          sx={{
+            overflow: "hidden",
+            padding: "0",
+            position: "relative",
+            display:'flex',
+            // flexDirection:'column',
+            justifyContent:'center'
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              mt: "-3em",
+              ml: "-1em",
+              minWidth: "200%",
+              minHeight: "40%",
+              bgcolor: "cyan",
+              transform: "rotate(10deg)",
+              transformOrigin: "center",
+              // position: 'absolute',
+              // top: '50%',
+              // left: '50%',
+              // Translate the box to center it after rotation
+              // transform: 'translate(-50%, -50%) rotate(45deg)',
+            }}
+          ></Box>
+
+          <Box sx={{position:'absolute',top:'4em', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+          <Avatar sx={{ width: "100px", height: "100px", }}>
+            <ImageIcon />
+            {/* <img
+              src={formData.image}
+              alt="No DP"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            /> */}
+          </Avatar>
+          <Typography
+          sx={{
+            fontSize:'20px',
+            fontWeight:''
+          }}
+          >SAMTHOM 360</Typography>
+          </Box>
+        </DialogContent>
         <DialogActions
           sx={{
             display: "flex",
@@ -371,18 +439,32 @@ export default function MeetingTimeline({ timelineApiData }) {
           <Button
             variant="contained"
             onClick={handleMeetDialogClose}
-            color="secondary"
-            sx={{ width: "6em" }}
+            // color="secondary"
+            sx={{
+              width: "6em",
+              bgcolor: "#DA2B2B",
+              "&:hover": {
+                backgroundColor: "#9F3327",
+                color: "white",
+              },
+            }}
           >
-            Cancel
+            Reject
           </Button>
           <Button
             variant="contained"
             // onClick={handleSaveEdit}
             color="primary"
-            sx={{ width: "6em" }}
+            sx={{
+              width: "6em",
+              bgcolor: "#349E2A",
+              "&:hover": {
+                backgroundColor: "#1B7D00",
+                color: "white",
+              },
+            }}
           >
-            Save
+            Approve
           </Button>
         </DialogActions>
       </Dialog>

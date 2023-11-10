@@ -63,7 +63,7 @@ const EmpDashboard = () => {
       const dashboardApiData = dashboardResponse.data.data;
       const timelineApiData = dashboardTimelineResponse.data.data;
 
-      console.log("DB API DATA", dashboardApiData);
+      console.log("DB API DATA", timelineApiData);
       // console.log("Timeline API DATA", dashboardTimelineResponse.data.data)
 
       const transformedData = Object.keys(
