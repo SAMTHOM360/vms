@@ -80,19 +80,21 @@ const Employee = () => {
   const navigate = useNavigate()
 
   let formattedHead
-  if(loggedUserRole === 'ADMIN'){
-    formattedHead = 'Employees'
+  if(loggedUserRole === 'SUPERADMIN'){
+    formattedHead = 'Admins'
   }
   else{
-    formattedHead = 'Admins'
+    formattedHead = 'Employees'
   }
 
   let formatedLimit
   if(loggedUserRole === 'ADMIN') {
     formatedLimit = `/${limit}`
   } 
-  else{
+  else if(loggedUserRole === 'SUPERADMIN'){
     formatedLimit = ''
+  } else {
+    formatedLimit = '0'
   }
 
 

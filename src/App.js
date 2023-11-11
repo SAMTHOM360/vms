@@ -54,18 +54,27 @@ function App() {
           <Routes>
           <Route path="/" element={<LoginForm />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/loader" element={<Loader />} />
+          {/* <Route path="/loader" element={<Loader />} /> */}
           {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
           {/* <Route path="/profile" element={<Profile />} /> */}
           {/* <Route path="/userform" element={<UserForm />} /> */}
-          {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
-          <Route path="/filedrop" element={<FileDropArea />} />
+          {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
           {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
+          {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
+          {/* <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} /> */}
+          {/* <Route path="/dashboard" element={<Dashboardd />} /> */}
+          {/* <Route path="/companyDetails" element={<CompanyTable />} /> */}
+          {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
+          {/* <Route path="/employee" element={<Employee />} /> */}
+          {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
+          {/* <Route path="/filedrop" element={<FileDropArea />} /> */}
+
+
             {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
             <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
             {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
 
-            //HARSHITA STARTS
+
             <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
             <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
             <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
@@ -84,7 +93,6 @@ function App() {
 
             <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
 
-            //HARSHITA ENDS
 
           </Routes>
           
