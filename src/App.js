@@ -54,6 +54,7 @@ function App() {
           <Routes>
           <Route path="/" element={<LoginForm />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/filedrop" element={<FileDropArea />} />
           {/* <Route path="/loader" element={<Loader />} /> */}
           {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
           {/* <Route path="/profile" element={<Profile />} /> */}
@@ -67,7 +68,6 @@ function App() {
           {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
           {/* <Route path="/employee" element={<Employee />} /> */}
           {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
-          {/* <Route path="/filedrop" element={<FileDropArea />} /> */}
 
 
             {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
