@@ -35,14 +35,14 @@ import { useAuth } from '../routes/AuthContext';
 
 
 const Employee = () => {
-  const { isLimitReached } = useAuth();
+  const { isLimitReached, setIsNavBar, setIsSideBar } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
   const AuthToken = sessionStorage.getItem('token');
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const limit = sessionStorage.getItem('limit')
   const adminId = localStorage.getItem('adminId')
-  const currEmpLength = sessionStorage.getItem('currEmpLength')
+  const currEmpLength = sessionStorage.getItem('currEmpLength') || '0'
   // console.log("admin id",currEmpLength)
 
 
@@ -414,6 +414,8 @@ toast.success('Selected user is successfully updated.', {
   useEffect(() => {
     fetchData()
     fetchRoles()
+    setIsNavBar(true)
+    setIsSideBar(true)
   },[])
 
   const [sidebarOpen, setSidebarOpen] = useState(true);

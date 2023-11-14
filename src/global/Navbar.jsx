@@ -90,6 +90,16 @@ export default function Navbar({toggleSidebar}) {
   const { logout } =useAuth();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [ isProfile, setIsProfile ] = useState(false)
+
+  useEffect(() => {
+    // Use useEffect to set the state after the initial render
+    if (loggedUserRole === 'SUPERADMIN') {
+      setIsProfile(true);
+    } else {
+      setIsProfile(false);
+    }
+  }, [loggedUserRole]); 
 
   const companyName = sessionStorage.getItem('companyName')
 
@@ -388,24 +398,29 @@ export default function Navbar({toggleSidebar}) {
       onClose={handleMenuClose}
     >
 
-<MenuItem 
-      onClick={handleProfileOpen}
-      sx={{
-        height:'2em',
-        fontSize:'15px'
-      }}
-      >
-        <IconButton
-          size="small"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <PersonIcon />
-        </IconButton>
-        <p style={{paddingLeft:'2.2em'}}>Profile</p>
-      </MenuItem><hr />
+{isProfile ? null : [
+  <MenuItem 
+    key="profileMenuItem" 
+    onClick={handleProfileOpen}
+    sx={{
+      height:'2em',
+      fontSize:'15px'
+    }}
+  >
+    <IconButton
+      size="small"
+      aria-label="account of current user"
+      aria-controls="primary-search-account-menu"
+      aria-haspopup="true"
+      color="inherit"
+    >
+      <PersonIcon />
+    </IconButton>
+    <p style={{paddingLeft:'2.2em'}}>Profile</p>
+  </MenuItem>,
+  <hr key="profileMenuDivider" />
+]}
+
 
             <MenuItem 
       onClick={handleChangePasswordDialogOpen}

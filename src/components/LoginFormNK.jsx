@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from '@mui/material/Link';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,14 +14,14 @@ import image1 from "../assets/office2_0.jpg"
 import image2 from "../assets/rapidsoft+report+colour+logo.png"
 import Loader from './Loader';
 
-function LoginForm({ }) {
+function LoginForm() {
   const navigate = useNavigate(); 
-  // const BASE_URL = 'http://192.168.12.54:8080';
-  const BASE_URL = 'http://192.168.12.58:8080';
+  const BASE_URL = 'http://192.168.12.54:8080';
+  // const BASE_URL = 'http://192.168.12.58:8080';
 const BASE_URL2 = 'http://192.168.12.54:8080/api/user';
 const OWNER = 'https://www.rapidsofttechnologies.com/'
 
-  const { authenticated, setAuthenticated, logout } = useAuth();
+  const { authenticated, setAuthenticated, logout, setIsNavBar, setIsSideBar } = useAuth();
   const { setUserRoleAndAuth } = useAuth();
   const [loading, setLoading] = useState(false)
   const [btnLoading, setBtnLoading] = useState(false)
@@ -60,6 +60,11 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
       [name]:value,
     })
   };
+
+  useEffect(() => {
+    setIsNavBar(false)
+    setIsSideBar(false)
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();

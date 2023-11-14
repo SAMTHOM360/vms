@@ -9,6 +9,10 @@ export const AuthProvider = ({ children }) => {
   const [addLimit, setAddLimit] = useState(sessionStorage.getItem('limit') || '');
   const [currEmpLength, setCurrEmpLength] = useState(sessionStorage.getItem('currEmpLength') || '');
   const [isLimitReached, setIsLimitReached] = useState(false)
+  const [ isNavBar, setIsNavBar ] = useState(false)
+  const [ isSideBar, setIsSideBar ] = useState(false)
+
+  // console.log("Parent call", isNavBar)
 
 
   // useEffect(() => {
@@ -79,7 +83,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar }}>
       {children}
     </AuthContext.Provider>
   );

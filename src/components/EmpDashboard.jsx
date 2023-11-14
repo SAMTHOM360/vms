@@ -18,11 +18,25 @@ import MeetingTimeline from "./experimentals/MeetingTimeline";
 import TimelineDot from "@mui/lab/TimelineDot";
 import axios from "axios";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../routes/AuthContext";
 
 const EmpDashboard = () => {
+  const BASE_URL1 = "http://192.168.12.58:8080/api";
+  // const BASE_URL1 = 'http://192.168.12.54:8080/api'
+  // const BASE_URL1 = 'http://192.168.12.60:8080/api'
+  // const BASE_URL = 'http://192.168.12.54:8080/api'
+
+
+  const adminId = localStorage.getItem("adminId");
+  const token = sessionStorage.getItem('token')
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const { setIsNavBar, setIsSideBar } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     totalMeetings: "",
@@ -34,37 +48,123 @@ const EmpDashboard = () => {
   const [timelineData, setTimelineData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const adminId = localStorage.getItem("adminId");
 
-  const BASE_URL1 = "http://192.168.12.58:8080/api";
-  // const BASE_URL1 = 'http://192.168.12.54:8080/api'
-  // const BASE_URL1 = 'http://192.168.12.60:8080/api'
-  // const BASE_URL = 'http://192.168.12.54:8080/api'
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  async function fetchData() {
+  // async function fetchData() {
+  //   const payLoad = {
+  //     user: {
+  //       id: adminId,
+  //     },
+      
+  //     fromDate:"2023-07-13", 
+  //     toDate:"2023-11-19",
+  //   };
+  //   try {
+  //     setLoading(true);
+  //     // const dashboardResponse = await axios.get(
+  //     //   `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
+  //     // );
+
+  //     const dashboardResponse = await axios.post(
+  //       `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
+  //       payLoad
+  //     );
+
+  //     const dashboardTimelineResponse = await axios.post(
+  //       `${BASE_URL1}/meeting/meetingfordashboard`,
+  //       payLoad
+  //     );
+
+  //     // const dashboardTimelineResponse = await axios.get(
+  //     //   `${BASE_URL1}/meeting/vis?id=${adminId}`
+  //     // );
+
+  //     const dashboardApiData = dashboardResponse.data.data;
+  //     const timelineApiData = dashboardTimelineResponse.data.data;
+
+  //     console.log("DB API DATA", timelineApiData);
+  //     // console.log("Timeline API DATA", dashboardTimelineResponse.data.data)
+
+  //     const transformedData = Object.keys(
+  //       dashboardApiData.meetingsContextDate
+  //     ).map((date) => ({
+  //       date: date,
+  //       ...dashboardApiData[date],
+  //     }));
+
+  //     if (dashboardResponse.status === 200) {
+  //       setBarchartData(dashboardApiData.meetingsContextDate);
+  //       setTimelineData(timelineApiData);
+
+  //       let hours = dashboardApiData.totalHoursOfMeeting / 3600000;
+  //       let hoursFloat = Math.round(hours * 100) / 100;
+
+  //       setDashboardData({
+  //         totalMeetings: dashboardApiData.totalMeetings || "",
+  //         completedMeetings: dashboardApiData.completed || "",
+  //         pendingMeetings: dashboardApiData.pending || "",
+  //         totalMeetngHours: hoursFloat || "",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast.error("Something went wrong !", {
+  //       position: "top-right",
+  //       autoClose: 4000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //     console.error("Error fetching data:", error);
+  //   }
+  //   setLoading(false);
+  // }
+
+
+
+
+  // console.log("dashboard data", dashboardData)
+
+
+
+
+
+
+  async function fetchData(fromDate, toDate) {
+    const adminId = 3; // Replace with your actual adminId
     const payLoad = {
-      userId: adminId,
+      user: {
+        id: adminId,
+      },
+      fromDate: fromDate,
+      // fromDate: "2023-11-13",
+      // toDate: "2023-11-14",
+      toDate: toDate,
     };
+
+    console.log("dynamic payload", payLoad)
+
     try {
       setLoading(true);
+
       const dashboardResponse = await axios.post(
         `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
         payLoad
       );
-      const dashboardTimelineResponse = await axios.get(
-        `${BASE_URL1}/meeting/vis?id=${adminId}`
+
+      const dashboardTimelineResponse = await axios.post(
+        `${BASE_URL1}/meeting/meetingfordashboard`,
+        payLoad
       );
-      // const userPresentResponse = await axios.get(`${BASE_URL1/user/prese}`)
 
       const dashboardApiData = dashboardResponse.data.data;
       const timelineApiData = dashboardTimelineResponse.data.data;
-
-      console.log("DB API DATA", timelineApiData);
-      // console.log("Timeline API DATA", dashboardTimelineResponse.data.data)
 
       const transformedData = Object.keys(
         dashboardApiData.meetingsContextDate
@@ -88,7 +188,7 @@ const EmpDashboard = () => {
         });
       }
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong!", {
         position: "top-right",
         autoClose: 4000,
         hideProgressBar: false,
@@ -100,11 +200,94 @@ const EmpDashboard = () => {
       });
       console.error("Error fetching data:", error);
     }
+
     setLoading(false);
   }
-  // console.log("dashboard data", dashboardData)
+
+
+
+  // const handleTodayClick = async () => {
+  //   const today = new Date().toISOString().split('T')[0];
+  //   await fetchData(today, today);
+  // };
+
+  // const handleThisWeekClick = async () => {
+  //   const currentDate = new Date();
+  //   const diffFromMonday = currentDate.getDay() - 1;
+  //   const startOfWeek = new Date(currentDate);
+  //   startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
+  //   const endOfWeek = new Date(startOfWeek);
+  //   endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  //   const fromWeek = startOfWeek.toISOString().split('T')[0];
+  //   const toWeek = endOfWeek.toISOString().split('T')[0];
+
+  //   await fetchData(fromWeek, toWeek);
+  // };
+
+  // const handleThisMonthClick = async () => {
+  //   const currentDate = new Date();
+  //   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  //   const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+  //   const fromMonth = firstDayOfMonth.toISOString().split('T')[0];
+  //   const toMonth = lastDayOfMonth.toISOString().split('T')[0];
+
+  //   await fetchData(fromMonth, toMonth);
+  // };
+
+
+
+  const handleTodayClick = async () => {
+    const today = new Date();
+    const formattedToday = formatDateForServer(today);
+    await fetchData(formattedToday, formattedToday);
+  };
+  
+  const handleThisWeekClick = async () => {
+    const currentDate = new Date();
+    const diffFromMonday = currentDate.getDay() - 1;
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+    const formattedFromWeek = formatDateForServer(startOfWeek);
+    const formattedToWeek = formatDateForServer(endOfWeek);
+  
+    await fetchData(formattedFromWeek, formattedToWeek);
+  };
+  
+  const handleThisMonthClick = async () => {
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  
+    const formattedFromMonth = formatDateForServer(firstDayOfMonth);
+    const formattedToMonth = formatDateForServer(lastDayOfMonth);
+  
+    await fetchData(formattedFromMonth, formattedToMonth);
+  };
+  
+  const formatDateForServer = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  
+
+
+
+
+
+
   useEffect(() => {
-    fetchData();
+    // fetchData();
+    handleTodayClick()
+    setIsNavBar(true);
+    setIsSideBar(true);
   }, []);
 
   // console.log("Bar chart Data", barchartData)
@@ -130,6 +313,45 @@ const EmpDashboard = () => {
               }}
             >
               <Header title="Dashboard" subtitle="Welcome to dashboard" />
+
+              <Box>
+                <Button
+                  variant="contained"
+                  size="small"
+                  sx={{ 
+                  height: "3em",
+                  borderRadius: "0px",
+                  width:'95px',
+                   }}
+                  onClick={handleTodayClick}
+                >
+                  Today
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  sx={{
+                     height: "3em", 
+                     borderRadius: "0px",
+                     width:'95px',
+                    }}
+                  onClick={handleThisWeekClick}
+                >
+                  This week
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  sx={{ 
+                    height: "3em",
+                     borderRadius: "0px", 
+                     width:'95px',  
+                    }}
+                  onClick={handleThisMonthClick}
+                >
+                  Total
+                </Button>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
@@ -326,7 +548,7 @@ const EmpDashboard = () => {
                             style={{
                               width: "12px",
                               height: "12px",
-                              backgroundColor: "#17ACFB",
+                              backgroundColor: "#FFA635",
                               borderRadius: "50%",
                               display: "inline-block",
                             }}
