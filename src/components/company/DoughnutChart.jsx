@@ -39,18 +39,27 @@ export default function DoughnutChart(){
 function fetchRooms(){
 
 
+  const today = new Date().toISOString().split('T')[0];
+
+  const eightDaysAgo = new Date();
+  eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
+  const eightDaysAgoFormatted = eightDaysAgo.toISOString().split('T')[0];
+
+
 
   const payload = {
     page: 1,
     size: 1,
     // phoneNumber: '',
     // searchQuery: '',
-    companyId: companyId
+    companyId: companyId,
+    fromDate:eightDaysAgoFormatted,
+    toDate:today
     // status:status,
     // date:'2023-10-18T11:00:00'
 
 }
-const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
 axios
     .post(getVisitorUrl,
         payload)
@@ -60,7 +69,7 @@ axios
 
         setRooms(responseData);
   
-        setTotalRooms(response.data.data.totalRooms);
+        // setTotalRooms(response.data.data.totalRooms);
         setAvailableRooms(response.data.data.totalAvailableRoom);
         setBusyRooms(response.data.data.totalBusyRooms);
 
@@ -81,22 +90,13 @@ useEffect(()=>{
 },[])
 
 
-
-
-
-
-
-
-
-
-
-
-
     const data ={
-        labels:['Total','Available','Busy'],
+        // labels:['Total','Available','Busy'],
+        labels:['Available','Busy'],
         datasets:[{
             // label:"Poll",
-            data:[totalRooms,availableRooms,busyRooms],
+            // data:[totalRooms,availableRooms,busyRooms],
+            data:[availableRooms,busyRooms],
             backgroundColor:['#34aadc','#32577e','#618fbed9'],
             borderColor:['#34aadc','#32577e','#618fbed9']
         }]
@@ -114,7 +114,7 @@ useEffect(()=>{
         layout: {
           padding: {
             top: 10, // Increase or decrease top padding as needed
-            bottom: 20, // Increase or decrease bottom padding as needed
+            bottom: 30, // Increase or decrease bottom padding as needed
           },
         },
         // scales: {

@@ -446,7 +446,12 @@ import DoughnutChart from './DoughnutChart';
 import ProgressBar from './ProgressBar';
 import Loader from '../Loader';
 
+// import { createBrowserHistory } from 'history';
+
 // import PieChart from './Piechart';
+
+
+import ReceptionistDashboard from './ReceptionistDashboard'
 
 
 
@@ -471,17 +476,33 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Dashboard() {
 
 
-
-
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
 
+
+    //paperclick
+    // const history = useHistory();
+
+
+// const customHistory = createBrowserHistory();
+
+
+//     const handlePaperClick = () => {
+        
+//   customHistory.push('dashboardreceptionist');
+
+//     }
+
+
+
+
+
     const [visitors, setVisitors] = useState([]);
 
-        const [totalVisitors, setTotalVisitors] = useState(0);
+    const [totalVisitors, setTotalVisitors] = useState(0);
     const [pendingVisitors, setPendingVisitors] = useState(0);
     const [approvedVisitors, setApprovedVisitors] = useState(0);
     const [inProcessVisitors, setInprocessVisitors] = useState(0);
@@ -497,19 +518,27 @@ export default function Dashboard() {
 
     function fetchData() {
 
+        const today = new Date().toISOString().split('T')[0];
+
+        const eightDaysAgo = new Date();
+        eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
+        const eightDaysAgoFormatted = eightDaysAgo.toISOString().split('T')[0];
+
 
 
         const payload = {
-            page: 1,
-            size: 1,
+            page: 0,
+            size: 1000,
             // phoneNumber: '',
             // searchQuery: '',
-            companyId: companyId
+            companyId: companyId,
+            fromDate:eightDaysAgoFormatted,
+            toDate:today
             // status:status,
             // date:'2023-10-18T11:00:00'
 
         }
-        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
         axios
             .post(getVisitorUrl,
                 payload)
@@ -574,11 +603,11 @@ export default function Dashboard() {
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchData();
-    },[])
+    }, [])
 
-    
+
 
 
 
@@ -621,8 +650,8 @@ export default function Dashboard() {
                         </Grid>
                         <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                             <Grid item xs={12} style={{ backgroundColor: "" }}>
-                                <Grid style={{ gap: "10px", marginTop: "20px",flexGrow:1,backgroundColor:"" }} container justifyContent="space-evenly" >
-                                    <Paper elevation={1} sx={{
+                                <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
+                                    <Paper  elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         // display: 'flex', // Use flex display
@@ -650,19 +679,22 @@ export default function Dashboard() {
 
 
                                             <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "20px" }}>
-                                                <PersonOutlineIcon style={{ fontSize: "50px",color:"" }} />
+                                                <PersonOutlineIcon style={{ fontSize: "50px", color: "" }} />
+
+
 
                                             </div>
 
 
 
-                                            <div className='info' style={{ marginRight:"50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
+                                            <div className='info' style={{ marginRight: "50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
                                                 <h3>Total Meetings:</h3>
                                                 <h2>{totalVisitors}</h2>
 
                                             </div>
 
                                         </div>
+                                        {/* {isOpen && <ReceptionistDashboard />} */}
 
                                     </Paper>
                                     <Paper elevation={1} sx={{
@@ -689,7 +721,7 @@ export default function Dashboard() {
                                                 <PendingIcon style={{ fontSize: "50px" }} />
 
                                             </div>
-                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",backgroundColor:"" }}>
+                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", backgroundColor: "" }}>
                                                 <div><h3>Pending Meetings:</h3></div>
                                                 <div><h2>{pendingVisitors}</h2></div>
 
@@ -766,7 +798,7 @@ export default function Dashboard() {
                                         height: 150,
                                         width: 300,
                                         backgroundColor: "#32577e",
-                                        
+
                                         // boxShadow: "5px 5px 10px grey",
 
                                         // ":hover": {
@@ -809,10 +841,10 @@ export default function Dashboard() {
                         <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                             <Grid item xs={12} style={{ backgroundColor: "" }}>
                                 <Grid style={{ gap: "20px", marginTop: "20px" }} container justifyContent="space-between" >
-                                    <Paper style={{ backgroundColor: "" ,display:"flex",justifyContent:"center"}} elevation={7} sx={{
+                                    <Paper style={{ backgroundColor: "", display: "flex", justifyContent: "center" }} elevation={7} sx={{
                                         height: 570,
                                         width: 900,
-                                        flexGrow:1,
+                                        flexGrow: 1,
 
                                         // border:
                                         // display: 'flex', // Use flex display
@@ -837,16 +869,16 @@ export default function Dashboard() {
 
                                         {/* <h2>Today Meetings Chart</h2> */}
                                         <div>
-                                        <h2 style={{color:"black"}}>Meeting Hours</h2>
-                                            <ProgressBar/>
+                                            <h2 style={{ color: "black" }}>Meeting Hours</h2>
+                                            <ProgressBar />
                                         </div>
-                                   
+
 
                                     </Paper>
                                     <Paper elevation={7} sx={{
                                         height: 570,
                                         width: 550,
-                                        flexGrow:1,
+                                        flexGrow: 1,
                                         // backgroundColor: "#32577e",
                                         // boxShadow: "5px 5px 10px grey",
 
@@ -861,17 +893,17 @@ export default function Dashboard() {
 
 
                                         <div className="rooms">
-                                            <h2 style={{color:"black"}}>Room Details</h2>
-                                        <DoughnutChart/>
+                                            <h2 style={{ color: "black",bottom:"" }}>Room Details</h2>
+                                            <DoughnutChart />
 
                                         </div>
                                         {/* <PieChart/> */}
 
-                                        
-                                        
-                                    
+
+
+
                                     </Paper>
-                                  
+
 
 
 
@@ -880,7 +912,7 @@ export default function Dashboard() {
                             </Grid>
 
                         </Grid>
-                        
+
 
 
 
