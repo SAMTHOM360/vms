@@ -935,10 +935,10 @@
 
 //                                                                 {/* //download pass
 //                                                             {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ? (
-                                                                
+
 //                                                                 <DownloadIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
 //                                                             ) : (
-                                                            
+
 //                                                                 <DownloadIcon style={{cursor:"pointer"}} onClick={() => handleDownloadPass(visitor.id,visitor.visitor.name,visitor.visitor.phoneNumber)} />
 //                                                             )} */}
 
@@ -1044,7 +1044,7 @@
 //                                         labelId="demo-simple-select-label"
 //                                         id="demo-simple-select"
 //                                         value={
-                                            
+
 //                                         }
 //                                         label="status"
 //                                         onChange={handleChangeStatus}
@@ -1181,6 +1181,9 @@ const MenuProps = {
 
 
 
+
+
+
 const StyledModal = styled(Modal)({
     display: "flex",
     justifyContent: "center",
@@ -1232,6 +1235,7 @@ export default function Dashboard() {
     const [passVisitors, setPassVisitors] = useState([]);
 
     const [meetings, setMeetings] = useState([]);
+    const [meetingsLength, setMeetingsLength] = useState(0);
     const [meetingsPerPage, setMeetingsPerPage] = useState([]);
 
 
@@ -1273,7 +1277,9 @@ export default function Dashboard() {
     //status
     const [statusOptions, setStatusOptions] = useState([]);
     const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
-    const [status, setStatus] = useState('');
+
+    
+    
 
     // console.log(selectedStatusOptions, "selectedstatus");
 
@@ -1313,18 +1319,80 @@ export default function Dashboard() {
 
     }
 
+
+
+
+
+    //host
+
+    const [hostOptions, setHostOptions] = useState([]);
+    const [selectedHostOptions, setSelectedHostOptions] = useState("");
+    
+
+    const handleChangeHost = (event) => {
+
+        setSelectedHostOptions(event.target.value);
+
+        // console.log(event.target.value,"xyz");
+        // fetchData();
+
+    };
+
+
+    function fetchHostOptions() {
+
+        const hostUrl = `http://192.168.12.54:8080/api/user/alluser`;
+        axios.get(hostUrl)
+            .then(response => {
+                const data = response.data.data;
+                
+
+
+                console.log(data,"hostnames")
+              
+
+                // data.forEach(datas =>{
+                //     const status1 = datas;
+                //     console.log(status1,"status1");
+                //     setStatus(status1);
+                // })
+
+                // console.log(data,"sttaus")
+
+
+                setHostOptions(data);
+               
+
+
+
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    }
+
+
+
     const [roomAdded, setRoomAdded] = useState(false);
 
 
+ 
+
+    //     function calculateSerialNumber(page, rowsPerPage, index) {
+    //     if (phoneNumberFilter || startDate || endDate || selectedStatusOptions) {
+    //         return 0 * rowsPerPage + index + 1;
+
+    //     }
+    //     else {
+    //         return page * rowsPerPage + index + 1;
+
+    //     }
+
+
+    // }
+
     function calculateSerialNumber(page, rowsPerPage, index) {
-        if (phoneNumberFilter || startDate || endDate || selectedStatusOptions) {
-            return 0 * rowsPerPage + index + 1;
-
-        }
-        else {
-            return page * rowsPerPage + index + 1;
-
-        }
+        return page * rowsPerPage + index + 1;
 
     }
 
@@ -1348,12 +1416,21 @@ export default function Dashboard() {
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
 
+    const [selectedRoomOptions,setSelectedRoomOptions] = useState('');
+
+
+    const handleChange2 = (event) =>{
+        setSelectedRoomOptions(event.target.value);
+    }
+
 
     const handleChange1 = (event) => {
         setSelectedRoom(event.target.value);
+        
     };
 
     function getRoomsOption() {
+       
 
         const companyId = localStorage.getItem('companyId');
 
@@ -1420,6 +1497,7 @@ export default function Dashboard() {
                     alert("Meeting cancelled succesfully")
                 }
                 else {
+                    console.log(selectedRoom,"selectedRoom")
                     alert("Room added succesfully")
                     setRoomAdded(true);
                 }
@@ -1513,7 +1591,7 @@ export default function Dashboard() {
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
-        setPage(0); 
+        setPage(0);
     };
 
 
@@ -1524,6 +1602,13 @@ export default function Dashboard() {
 
     // const { adminId } = useParams();
 
+    function filters(){
+
+        if(phoneNumberFilter || selectedHostOptions ||selectedStatusOptions ||selectedRoom || startDate|| endDate ){
+            setPage(0)
+        }
+    }
+
 
 
     function fetchData() {
@@ -1533,14 +1618,24 @@ export default function Dashboard() {
         const companyId = localStorage.getItem('companyId');
 
 
+
         const payload = {
-            page: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 0 : page,
-            size: phoneNumberFilter || startDate && endDate || selectedStatusOptions ? 1000 : rowsPerPage,
-            phoneNumber: phoneNumberFilter,
+            page: page,
+            size: rowsPerPage,
+            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter ,
             companyId: companyId,
             fromDate: startDate,
             toDate: endDate,
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+            user:{
+
+                id:selectedHostOptions.length === 0 ? null : selectedHostOptions,
+           },
+       
+            room: {
+                id: selectedRoom.length === 0 ? null : selectedRoom,
+            }
+
             // date:'2023-10-18T11:00:00'
 
         }
@@ -1550,6 +1645,10 @@ export default function Dashboard() {
                 payload)
             .then(response => {
                 const responseData = response.data.data.meetings;
+                const responseDataLength = response.data.data.meetings.length;
+                console.log(responseDataLength,"length")
+                console.log(responseData,"responseDatta")
+                // console.log(responseData.visitor.phoneNumber,"blahhhhh")
 
                 // const passResponseData = response.data.data.meetings;
                 // console.log(passResponseData,"passREsponseData");
@@ -1563,7 +1662,7 @@ export default function Dashboard() {
                 });
 
 
-
+               setMeetingsLength(responseDataLength);
 
                 setMeetingsPerPage(response.data.data.totalMeeting);
                 setMeetings(response.data.data.totalElements);
@@ -1730,6 +1829,7 @@ export default function Dashboard() {
         fetchData();
         getRoomsOption();
         fetchStatusOptions();
+        fetchHostOptions();
         // filterData();
 
         // console.log(statusOptions,"statusOptions")
@@ -1737,7 +1837,7 @@ export default function Dashboard() {
 
 
 
-    }, [page,rowsPerPage, selectedStatusOptions, phoneNumberFilter, startDate, endDate]);
+    }, [page, rowsPerPage, selectedStatusOptions,selectedRoom,selectedHostOptions, phoneNumberFilter, startDate, endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1922,6 +2022,15 @@ export default function Dashboard() {
 
 
                                                     <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
+
+
+
+
+                                                    <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
+                                                            onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
+
+
                                                         <TextField
                                                             id="outlined-select-currency"
                                                             select
@@ -1947,11 +2056,83 @@ export default function Dashboard() {
                                                         </TextField>
 
 
+                                                        <TextField
+                                                            id="outlined-select-currency"
+                                                            select
+                                                            label="Search by Host"
+                                                            value={selectedHostOptions}
+                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            onChange={handleChangeHost}
+                                                            SelectProps={{
+                                                                MenuProps: {
+                                                                  style: {
+                                                                    maxHeight: '400px', // Adjust the height as per your requirement
+                                                                  },
+                                                                },
+                                                              }}
+
+                                                            style={{ top: "10px" }}
 
 
-                                                        <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
-                                                            onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
+                                                        >
+
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+
+
+
+                                                            {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
+                                                                <MenuItem key={index} value={options.id}      disabled={!options.isPresent} 
+                                                                style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
+                                                            ))}
+                                                        </TextField>
+
+
+                                                        <TextField
+                                                            id="outlined-select-currency"
+                                                            select
+                                                            label="Search by Room"
+                                                            value={selectedRoom}
+                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                            onChange={handleChange1}
+
+                                                            SelectProps={{
+                                                                MenuProps: {
+                                                                  style: {
+                                                                    maxHeight: '400px', // Adjust the height as per your requirement
+                                                                  },
+                                                                },
+                                                              }}
+
+                                                            style={{ top: "10px" }}
+
+
+                                                        >
+
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+
+
+
+                                                            {Array.isArray(rooms) && rooms.map((room) => (
+                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
+                                            ))}
+                                                        </TextField>
+
+
+
+
+                                                     
+
+
+
+                                                      
+
+
+
+                                                      
 
 
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1997,7 +2178,7 @@ export default function Dashboard() {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black",fontSize:"18px" }}>
+                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black", fontSize: "18px" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCcenter
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -2042,7 +2223,7 @@ export default function Dashboard() {
                                                             <TableCell align="left">{visitor.visitor.companyName}</TableCell>
                                                             <TableCell align="left">{getFullName(visitor.user)}</TableCell>
                                                             {/* <TableCell align="right">{visitor.remarks}</TableCell> */}
-                                                            {/* <TableCell align="left">{visitor.room.roomName}</TableCell> */}
+                                                            {/* <TableCell align="left">{visitor.room.roomName === null ? '':visitor.room.roomName}</TableCell> */}
                                                             <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
                                                             {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
 
@@ -2091,9 +2272,9 @@ export default function Dashboard() {
 
 
 
-                                            // count={meetings}
+                                            count={meetings}
 
-                                            count={phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 1 : meetings}
+                                            // count={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom? meetingsLength : meetings}
 
                                             // rowsPerPage={ phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 10 : rowsPerPage}
 
@@ -2102,8 +2283,8 @@ export default function Dashboard() {
 
 
                                             rowsPerPage={rowsPerPage}
-                                            page={phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 0 : page}
-                                            // page={page}
+                                            // page={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom ? 0 : page}
+                                            page={page}
                                             onPageChange={
                                                 handleChangePage}
                                             onRowsPerPageChange={handleChangeRowsPerPage}
@@ -2126,8 +2307,8 @@ export default function Dashboard() {
                             aria-describedby="modal-description"
                         >
                             <Box width={450} height={250} bgcolor={'white'} p={2} borderRadius={5} border='none' >
-                               
-                                
+
+
 
                                 <Box
                                     display="flex" flexDirection='column'
@@ -2140,17 +2321,17 @@ export default function Dashboard() {
 
                                 >
                                     {/* <div style={{display:"flex",justifyContent:"right",backgroundColor:"yellow"}}>  */}
-                                    <CloseIcon  onClick={handleCloseModal} style={{backgroundColor:"",color:"grey",cursor:"pointer",marginBottom:"10px",marginLeft:"400px"}}/>
+                                    <CloseIcon onClick={handleCloseModal} style={{ backgroundColor: "", color: "grey", cursor: "pointer", marginBottom: "10px", marginLeft: "400px" }} />
                                     {/* </div> */}
-                                     {/* <div style={{display:"flex", flexDirection:"row"}}> */}
-                                     {/* <Typography fontSize={20} fontWeight={'bold'} variant={'h1'}>Meeting</Typography > */}
-                                   
-                                    
+                                    {/* <div style={{display:"flex", flexDirection:"row"}}> */}
+                                    {/* <Typography fontSize={20} fontWeight={'bold'} variant={'h1'}>Meeting</Typography > */}
 
-                                     {/* </div> */}
-                                
 
-                                   
+
+                                    {/* </div> */}
+
+
+
 
                                     <FormControl >
                                         <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
@@ -2193,29 +2374,29 @@ export default function Dashboard() {
                                 </FormControl> */}
 
 
-                                    <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}> 
-                                    <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
-                                        <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
-                                        {/* <Button variant='contained' onClick={handleCloseModal}>Close</Button> */}
+                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                        <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
+                                            <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
+                                            {/* <Button variant='contained' onClick={handleCloseModal}>Close</Button> */}
 
+
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
+
+
+                                            {/* <Button variant='contained' onClick={() => handleDownloadPass(item.id,item.visitor.name,item.visitor.phoneNumber)}>Pass</Button> */}
+
+                                            {roomAdded && (
+                                                <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
+                                            )}
+
+
+
+
+                                        </div>
 
                                     </div>
-                                    <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
 
-
-                                        {/* <Button variant='contained' onClick={() => handleDownloadPass(item.id,item.visitor.name,item.visitor.phoneNumber)}>Pass</Button> */}
-
-                                        {roomAdded && (
-                                            <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
-                                        )}
-
-                                        
-
-
-                                    </div>
-
-                                    </div>
-                                    
 
 
 

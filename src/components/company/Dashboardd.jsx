@@ -236,6 +236,23 @@ const [searchCriteria, setSearchCriteria] = useState({
 
     }
 
+       //calender
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+
+
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
+        //  console.log(selectedStatusOptions,"acsd")
+    };
+
+
+    const handleEndDateChange = (date) => {
+        setEndDate(date);
+        //  fetchData();
+    };
+
 
 
 
@@ -257,36 +274,51 @@ const [searchCriteria, setSearchCriteria] = useState({
     const adminId = localStorage.getItem('adminId');
     console.log(adminId, "adminId");
 
-    // const { adminId } = useParams();
+      //phonefilter
+    const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
+    const [meetings, setMeetings] = useState([]);
 
 
-
+// now previous
     function fetchData() {
-        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis/${id}`;
-        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
+       
+        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
+      
+
+        const payload={
+            page: page,
+            size: rowsPerPage,
+            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter ,
+    //         companyId: companyId,
+            fromDate: startDate,
+            toDate: endDate,
+            status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+            user:{
+
+                id:adminId
+           },
+       
+            room: {
+                id: selectedRoom.length === 0 ? null : selectedRoom,
+            }
+
+    //         // date:'2023-10-18T11:00:00'
+
+    //     }
+
+        }
+
+        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
         axios
-            .get(getVisitorUrl, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            })
+            .post(getVisitorUrl, payload)
+               
+            
             .then(response => {
-                const responseData = response.data.data;
+                const responseData = response.data.data.meetings;
 
-                // const responseDataVisitorsInfo = response.data.data.user;
-                // console.log(responseDataVisitorsInfo,"res")
-                // if (responseData && responseData.data) {
-                //     const visitorsArray = responseData.data;
-                    
-                   
-                //    setVisitorsInfo(visitorsArray);
-                //   }
-
-                  
-                // const status11111 = response.data.data.status;
-                // console.log(status11111,"status");
-                // console.log(responseData);
-
-                // console.log(visitorId,"visitorId")
+              
                 setVisitors(responseData);
+                setMeetings(response.data.data.totalElements);
                 setTotalMeetings(responseData.length);
                 const pendingCount = responseData.filter(visitor => visitor.status === 'PENDING').length;
                 const approvedCount = responseData.filter(visitor => visitor.status === 'APPROVED').length;
@@ -294,7 +326,6 @@ const [searchCriteria, setSearchCriteria] = useState({
                 setApprovedMeetings(approvedCount);
 
 
-                // console.log(response.data.data[0].id, "visitors");
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -302,6 +333,87 @@ const [searchCriteria, setSearchCriteria] = useState({
 
 
     }
+
+
+
+    //now
+    // function fetchData() {
+
+
+    //     const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
+
+
+
+    //     const companyId = localStorage.getItem('companyId');
+
+
+
+    //     const payload = {
+    //         page: page,
+    //         size: rowsPerPage,
+    //         phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter ,
+    //         companyId: companyId,
+    //         fromDate: startDate,
+    //         toDate: endDate,
+    //         status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+    //         user:{
+
+    //             id:selectedHostOptions.length === 0 ? null : selectedHostOptions,
+    //        },
+       
+    //         room: {
+    //             id: selectedRoom.length === 0 ? null : selectedRoom,
+    //         }
+
+    //         // date:'2023-10-18T11:00:00'
+
+    //     }
+    //     const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+    //     axios
+    //         .post(getVisitorUrl,
+    //             payload)
+    //         .then(response => {
+    //             const responseData = response.data.data.meetings;
+    //             const responseDataLength = response.data.data.meetings.length;
+    //             console.log(responseDataLength,"length")
+    //             console.log(responseData,"responseDatta")
+    //             // console.log(responseData.visitor.phoneNumber,"blahhhhh")
+
+    //             // const passResponseData = response.data.data.meetings;
+    //             // console.log(passResponseData,"passREsponseData");
+
+
+            
+
+
+    //            setMeetingsLength(responseDataLength);
+
+    //             setMeetingsPerPage(response.data.data.totalMeeting);
+    //             setMeetings(response.data.data.totalElements);
+    //             // console.log(response.data.data.meetings.user);
+
+    //             // console.log(visitorId,"visitorId")
+    //             setVisitors(responseData);
+    //             // setTotalMeetings(responseData.length);
+    //             // setTotalVisitors(response.data.data.totalElements);
+    //             //recent
+    //             setPendingVisitors(response.data.data.totalPending);
+    //             setApprovedVisitors(response.data.data.totalApproved);
+
+
+
+
+
+
+
+    //             // console.log(response.data.data[0].id, "visitors");
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data:', error);
+    //         });
+
+
+    // }
 
 
 
@@ -498,10 +610,9 @@ function formatMeetingDuration(meeting) {
   }
 
  }
-   
 
-
-
+ //room
+ 
 
 
 
@@ -512,8 +623,8 @@ function formatMeetingDuration(meeting) {
 
         fetchData();
         fetchStatusOptions();
-        // getRoomsOption()
-    }, []);
+        getRoomsOption()
+    }, [page, rowsPerPage, selectedStatusOptions,selectedRoom, phoneNumberFilter, startDate, endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -717,8 +828,8 @@ function formatMeetingDuration(meeting) {
 
 
                                                         <TextField id="outlined-search" label="Search By Phone Number"
-                                                            //  value={phoneNumberFilter}
-                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                             value={phoneNumberFilter}
+                                                            onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                                             // onKeyPress={handlePhoneNumberSearch} 
 
 
@@ -727,27 +838,69 @@ function formatMeetingDuration(meeting) {
                                                             // onChange={(e) => setSearchCriteria({ ...searchCriteria, phoneNumber: e.target.value })}                                                       
                                                             type="search" style={{ top: "10px" }} />
 
+<TextField
+                                                            id="outlined-select-currency"
+                                                            select
+                                                            label="Search by Room"
+                                                            value={selectedRoom}
+
+                                                            onChange={handleChange1}
+                                                            SelectProps={{
+                                                                MenuProps: {
+                                                                  style: {
+                                                                    maxHeight: '400px', // Adjust the height as per your requirement
+                                                                  },
+                                                                },
+                                                              }}
+
+                                                            style={{ top: "10px" }}
+
+                                                           
+
+
+                                                        >
+
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+
+
+
+                                                            {Array.isArray(rooms) && rooms.map((room) => (
+                                                                  <MenuItem  disabled={!room.isAvailable} key={room.id} value={room.id}  style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
+                                                            ))}
+                                                        </TextField>
+
+
+
+
+
+
+
+
+
+
+
+
 
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DemoContainer components={['DatePicker', 'DatePicker']}>
 
                                                                 <DatePicker
                                                                     label="Start Date"
-                                                                // value={startDate}
+                                                                value={startDate}
 
-                                                                // onChange={handleStartDateChange}
+                                                                onChange={handleStartDateChange}
 
-                                                                //searchcriteria code
-    //                                                             value={searchCriteria.startDate}
-    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, startDate: date })}
+            
 
 
                                                                 />
                                                                 <DatePicker
                                                                     label="End Date"
-                                                                // value={endDate}
+                                                                value={endDate}
 
-                                                                // onChange={handleEndDateChange}
+                                                                onChange={handleEndDateChange}
 
                                                                 //searchcriteria code
     //                                                             value={searchCriteria.endDate}
@@ -817,7 +970,7 @@ function formatMeetingDuration(meeting) {
                                             </TableHead>
                                             <TableBody>
                                                 {visitors
-                                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                     .map((visitor, index) => (
                                                         <TableRow key={index}>
                                                             {/* <TableCell>{visitor.id}</TableCell>
@@ -889,7 +1042,9 @@ function formatMeetingDuration(meeting) {
                                         <TablePagination
                                            rowsPerPageOptions={[5, 10, 15]}
                                             component="div"
-                                            count={visitors.length}
+                                            count={meetings}
+                                            // count={visitors}
+
                                             rowsPerPage={rowsPerPage}
                                             page={page}
                                             onPageChange={handleChangePage}
