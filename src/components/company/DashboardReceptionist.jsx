@@ -475,6 +475,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Dashboard() {
 
+    const [allData, setAllData] = useState(null);
+
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -515,8 +517,7 @@ export default function Dashboard() {
 
 
 
-
-    function fetchData() {
+      function fetchData() {
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -543,57 +544,28 @@ export default function Dashboard() {
             .post(getVisitorUrl,
                 payload)
             .then(response => {
+
+                setAllData(response.data.data);
                 const responseData = response.data.data.meetings;
 
 
-                // Loop through the meetings to access each one and its meetingId
-                responseData.forEach(meeting => {
-                    const meetingId = meeting.id; // This is the meetingId
-                    // Now you can use the meetingId as needed
-                    // console.log("Meeting ID:", meetingId);
-                });
+               
+                // responseData.forEach(meeting => {
+                //     const meetingId = meeting.id; 
+                   
+                // });
 
+                
 
-
-
-
-                // setMeetings(response.data.data.totalElements);
-                // console.log(response.data.data.meetings.user);
-
-                // console.log(visitorId,"visitorId")
                 setVisitors(responseData);
-                // setTotalMeetings(responseData.length);
+           
                 setTotalVisitors(response.data.data.totalElements);
-                // const pendingCount = responseData.filter(visitor => visitor.status === 'PENDING').length;
-                // const approvedCount = responseData.filter(visitor => visitor.status === 'APPROVED').length;
-                // setPendingVisitors(pendingCount);
-                // setApprovedVisitors(approvedCount);
+            
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
                 setInprocessVisitors(response.data.data.totalInProcess);
                 setCompletedVisitors(response.data.data.totalCompleted);
 
-
-
-
-
-
-                //test code
-
-                // let totalPendingVisitors = 0;
-                // let totalApprovedVisitors = 0;
-
-                // responseData.forEach((visitor) => {
-                //   if (visitor.status === 'PENDING') {
-                //     totalPendingVisitors++;
-                //   } else if (visitor.status === 'APPROVED') {
-                //     totalApprovedVisitors++;
-                //   }
-                // });
-
-
-
-                // console.log(response.data.data[0].id, "visitors");
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -606,14 +578,6 @@ export default function Dashboard() {
     useEffect(() => {
         fetchData();
     }, [])
-
-
-
-
-
-
-
-
 
 
 
@@ -894,7 +858,7 @@ export default function Dashboard() {
 
                                         <div className="rooms">
                                             <h2 style={{ color: "black",bottom:"" }}>Room Details</h2>
-                                            <DoughnutChart />
+                                            <DoughnutChart  allData={allData}/>
 
                                         </div>
                                         {/* <PieChart/> */}
