@@ -9,73 +9,118 @@ const MeetBarChart = ({ data }) => {
 
     const dataEntries = Object.entries(data);
 
+    
     // const dataEntries = unReversed.reverse();
-
+    
     const labels = dataEntries.map(([date]) => new Date(date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
     }));
+    
+    // const datasets = [
+    //   {
+    //     label: 'Business',
+    //     data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
+    //     backgroundColor: '#305BA6',
+    //   },
+    //   {
+    //     label: 'Casual',
+    //     data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
+    //     backgroundColor: '#54ccd2',
+    //   },
+    //   {
+    //     label: 'Interview',
+    //     data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
+    //     backgroundColor: '#d9c9b4',
+    //   },
+    // ];
 
-    const datasets = [
-      {
-        label: 'Business',
-        data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-        backgroundColor: '#305BA6',
-      },
-      {
-        label: 'Casual',
-        data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-        backgroundColor: '#54ccd2',
-      },
-      {
-        label: 'Interview',
-        data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-        backgroundColor: '#d9c9b4',
-      },
-    ];
+    // const datas = {
+    //   labels: labels,
+    //   datasets: [
+    //     {
+    //       label: 'BUSINESS',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
+    //       backgroundColor: '#305BA6',
+    //       stack: 'Stack 0',
+    //     },
+    //     {
+    //       label: 'CASUAL',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
+    //       backgroundColor: '#54ccd2',
+    //       stack: 'Stack 0',
+    //     },
+    //     {
+    //       label: 'INTERVIEW',
+    //         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
+    //         backgroundColor: '#d9c9b4',
+    //         stack: 'Stack 0',
+    //       },
+    //       {
+    //       label: 'BUSINESS',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS_HOUR'] || 0),
+    //       backgroundColor: '#094C66',
+    //       stack: 'Stack 1',
+    //     },
+    //     {
+    //       label: 'CASUAL',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL_HOUR'] || 0),
+    //       backgroundColor: '#1C84A6',
+    //       stack: 'Stack 1',
+    //     },
+    //     {
+    //       label: 'INTERVIEW',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW_HOUR'] || 0),
+    //       backgroundColor: '#0EA499',
+    //       stack: 'Stack 1',
+    //     },
+    //   ]
+    // };
 
     const datas = {
       labels: labels,
       datasets: [
         {
           label: 'BUSINESS',
-            data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-            backgroundColor: '#305BA6',
+          data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.count || 0),
+          backgroundColor: '#305BA6',
           stack: 'Stack 0',
         },
         {
           label: 'CASUAL',
-            data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-            backgroundColor: '#54ccd2',
+          data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.count || 0),
+          backgroundColor: '#54ccd2',
           stack: 'Stack 0',
         },
         {
           label: 'INTERVIEW',
-            data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-            backgroundColor: '#d9c9b4',
+          data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.count || 0),
+          backgroundColor: '#d9c9b4',
           stack: 'Stack 0',
         },
         {
           label: 'BUSINESS',
-            data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS_HOUR'] || 0),
-            backgroundColor: '#094C66',
+          data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.hour || 0),
+          backgroundColor: '#094C66',
           stack: 'Stack 1',
         },
         {
           label: 'CASUAL',
-            data: dataEntries.map(([, meetingData]) => meetingData['CASUAL_HOUR'] || 0),
-            backgroundColor: '#1C84A6',
+          data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.hour || 0),
+          backgroundColor: '#1C84A6',
           stack: 'Stack 1',
         },
         {
           label: 'INTERVIEW',
-            data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW_HOUR'] || 0),
-            backgroundColor: '#0EA499',
+          data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.hour || 0),
+          backgroundColor: '#0EA499',
           stack: 'Stack 1',
         },
-      ]
+      ],
     };
-
+    
+    
+    console.log("DATA ENTRIES", data)
 
         const sumDataLabel = {
       id: 'sumDataLabel',

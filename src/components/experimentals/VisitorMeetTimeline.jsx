@@ -26,7 +26,10 @@ import {
   Avatar,
 } from "@mui/material";
 
-export default function MeetingTimeline({ timelineApiData }) {
+export default function VisitorMeetTimeline({ meetData }) {
+
+
+
 
  const BASE_URL1 = 'http://192.168.12.58:8080/api'
 
@@ -144,7 +147,7 @@ export default function MeetingTimeline({ timelineApiData }) {
     setOpenMeetDialog(false);
   };
 
-  if (!timelineApiData || timelineApiData.length === 0) {
+  if (!meetData || meetData.length === 0) {
     return null;
   }
 
@@ -182,18 +185,28 @@ export default function MeetingTimeline({ timelineApiData }) {
     return ` ${meetingEndTime}`;
   }
 
+  if (!Array.isArray(meetData) || meetData.length === 0) {
+    return null;
+  }
+
   return (
     <>
-      <Timeline
-        position="right"
+
+    <Box
+    sx={{width:'85%', padding:'0',bgcolor:'pink', height:'62vh', overflowX:'hidden', overflowY:'auto'}}
+    >
+    <Timeline
+        position="center"
         sx={{
-          [`& .${timelineItemClasses.root}:before`]: {
-            flex: 0,
-            padding: 0,
-          },
+            padding:'0',
+            
+            [`& .${timelineItemClasses.root}:before`]: {
+                flex: 0,
+                padding: 0,
+            },
         }}
-      >
-        {timelineApiData.map((dataItem, index) => 
+        >
+        {meetData.map((dataItem, index) => 
         {
           const meetingStartDateTime = dataItem.meetingStartDateTime || "";
           const meetingEndDateTime = dataItem.meetingEndDateTime || "";
@@ -252,9 +265,7 @@ export default function MeetingTimeline({ timelineApiData }) {
 
           if (
             dataItem &&
-            (dataItem.status === "PENDING" ||
-              dataItem.status === "COMPLETED" ||
-              dataItem.status === "CANCELLED")
+            (dataItem.status === "APPROVED")
           ) 
           {
             // console.log("dataitem data", dataItem)
@@ -262,43 +273,36 @@ export default function MeetingTimeline({ timelineApiData }) {
             return (
               <>
              
-              <TimelineItem key={index}>
-                <TimelineSeparator>
-                  <TimelineDot
-                    sx={{
-                      background: dotColor,
-                    }}
-                  />
-                  {index !== timelineApiData.length - 1 && (
-                    <TimelineConnector
-                    //  sx={{bgcolor:dotColor}}
-                      />
-                  )}
-                </TimelineSeparator>
+              <TimelineItem key={index}              >
                 <TimelineContent>
                   <Box
                     sx={{
-                      padding: "6px 16px",
+                      padding: "6px 6px",
                       borderRadius: "5px",
                       marginBottom: "15px",
                       color: "white",
                       bgcolor: timelineContentBgColor,
                       display: "flex",
+                      minHeight:'7em',
+                      flexDirection: {xs: 'column', md:'row'},
+                    // flexDirection:'column',
+                    justifyContent:'center',
+                    alignItems:'center'
                     }}
                   >
                     <Box
                       sx={{
-                        width: "7%",
+                        width: "7em",
                         bgcolor: "",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                       }}
                     >
-                      <Avatar sx={{ width: "35px", height: "35px" }}>
+                      <Avatar sx={{ width: "115px", height: "115px", borderRadius:'5px' }}>
                         {/* <ImageIcon /> */}
                         <img
-                          src={dataItem.visitor.imageUrl}
+                          src={dataItem.user.image}
                           alt="No DP"
                           style={{
                             width: "100%",
@@ -308,35 +312,47 @@ export default function MeetingTimeline({ timelineApiData }) {
                         />
                       </Avatar>
                     </Box>
-                    <Box sx={{ width: "60%", ml: "0.5em" }}>
-                      <Typography sx={{ fontWeight: "550", bgcolor: "" }}>
-                        {dataItem.visitor.name}
+                    <Box sx={{ width: "83%", ml: "0.5em", display:'flex',flexDirection:'column', }}>
+                      <Typography sx={{ fontWeight: "550", bgcolor: "", fontSize:'16px' }}>
+                        <span style={{fontWeight:'700', fontSize:'18px'}}>Host: </span>{dataItem.user.firstName} {dataItem.user.lastName} <span style={{fontSize:'14px'}}>({dataItem.user.role.name})</span>
+                      </Typography>
+
+                      <Typography sx={{  bgcolor: "", fontSize:'14px' }}>
+                        <span style={{fontWeight:'500', fontSize:'15px'}}>Meeting Id: </span>{dataItem.id}
                       </Typography>
                       <Box sx={{ display: "flex" }}>
                         <Typography
                           sx={{
                             color: "#959697",
-                            fontSize: "15px",
+                            fontSize: "14px",
                             bgcolor: "",
                           }}
-                        >
+                        >  <span style={{fontSize:'15px',fontWeight:'500'}}>Meeting Time: </span>
                           {formattedMeetingStartDateTime} -
                           {formattedMeetingEndDateTime} {roomNo}
                         </Typography>
                       </Box>
+
+                      <Typography sx={{  bgcolor: "", fontSize:'14px' }}>
+                        <span style={{fontWeight:'500', fontSize:'15px'}}>Meeting Room: </span>{dataItem.room.roomName}
+                      </Typography>
+
+                      <Typography sx={{  bgcolor: "", fontSize:'14px' }}>
+                        <span style={{fontWeight:'500', fontSize:'15px'}}>Meeting Remarks: </span>{dataItem.remarks}
+                      </Typography>
                     </Box>
                     <Box
                       sx={{
                         display: "flex",
-                        justifyContent: "right",
+                        justifyContent: "center",
                         alignItems: "center",
-                        width: "33%",
+                        width: "80px",
                         bgcolor: "",
                       }}
                     >
                       <Chip
                         label={chipText}
-                        sx={{ color: chipColor, bgcolor: chipBgColor }}
+                        sx={{ color: chipColor, bgcolor: chipBgColor, width:'100%' }}
                       />
                       {info ? (
                         <IconButton onClick={() => handleMeetDialogOpen(dataItem)}>
@@ -364,6 +380,7 @@ export default function MeetingTimeline({ timelineApiData }) {
           
           })}
       </Timeline>
+    </Box>
 
 
 

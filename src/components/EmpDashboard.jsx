@@ -164,6 +164,8 @@ const EmpDashboard = () => {
       );
 
       const dashboardApiData = dashboardResponse.data.data;
+
+      console.log("dashboardApiData", dashboardApiData)
       const timelineApiData = dashboardTimelineResponse.data.data;
 
       const transformedData = Object.keys(
