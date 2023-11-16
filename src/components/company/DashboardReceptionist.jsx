@@ -420,6 +420,7 @@
 
 import React from 'react';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 // import './Dashboard.css';
 import '../../css/DashboardReceptionist.css';
@@ -452,6 +453,7 @@ import Loader from '../Loader';
 
 
 import ReceptionistDashboard from './ReceptionistDashboard'
+// import { useNavigate } from 'react-router-dom';
 
 
 
@@ -579,6 +581,12 @@ export default function Dashboard() {
         fetchData();
     }, [])
 
+    const navigate = useNavigate();
+    const routeChange = () =>{ 
+        let path = `/receptionistdashboard`; 
+        navigate(path);
+      }
+
 
 
 
@@ -615,13 +623,14 @@ export default function Dashboard() {
                         <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                             <Grid item xs={12} style={{ backgroundColor: "" }}>
                                 <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                    <Paper  elevation={1} sx={{
+                                    <Paper onClick={routeChange} elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         // display: 'flex', // Use flex display
                                         // alignItems: 'center',// Vertically center content
                                         // borderRadius:"40px",
                                         backgroundColor: "#32577e",
+                                        
 
 
                                         // boxShadow: "5px 5px 10px grey",
@@ -833,7 +842,7 @@ export default function Dashboard() {
 
                                         {/* <h2>Today Meetings Chart</h2> */}
                                         <div>
-                                            <h2 style={{ color: "black" }}>Meeting Hours</h2>
+                                            {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
                                             <ProgressBar />
                                         </div>
 

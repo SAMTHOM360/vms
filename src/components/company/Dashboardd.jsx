@@ -87,7 +87,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-  
+
 
 
 
@@ -101,14 +101,14 @@ export default function Dashboard() {
 
     //pagination
     const [page, setPage] = useState(0);
-    const[rowsPerPage,setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
-        setPage(0); 
+        setPage(0);
     };
 
- 
+
 
 
 
@@ -125,23 +125,23 @@ export default function Dashboard() {
 
     //searchCriteria
 
-const [searchCriteria, setSearchCriteria] = useState({
-    status: "",
-    phoneNumber: "",
-    startDate: null,
-    endDate: null,
-  });
+    const [searchCriteria, setSearchCriteria] = useState({
+        status: "",
+        phoneNumber: "",
+        startDate: null,
+        endDate: null,
+    });
 
 
 
 
     const [item, setItem] = useState('');
-    const[visitorsInfo,setVisitorsInfo] = useState([]);
+    const [visitorsInfo, setVisitorsInfo] = useState([]);
 
-   
-    function calculateSerialNumber(index,page,rowsPerPage) {
+
+    function calculateSerialNumber(index, page, rowsPerPage) {
         return page * rowsPerPage + index + 1;
-        
+
     }
 
 
@@ -236,7 +236,7 @@ const [searchCriteria, setSearchCriteria] = useState({
 
     }
 
-       //calender
+    //calender
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
@@ -274,49 +274,49 @@ const [searchCriteria, setSearchCriteria] = useState({
     const adminId = localStorage.getItem('adminId');
     console.log(adminId, "adminId");
 
-      //phonefilter
+    //phonefilter
     const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
     const [meetings, setMeetings] = useState([]);
 
 
-// now previous
+    // now previous
     function fetchData() {
-       
-        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
-      
 
-        const payload={
+        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
+
+
+        const payload = {
             page: page,
             size: rowsPerPage,
-            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter ,
-    //         companyId: companyId,
+            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+            //         companyId: companyId,
             fromDate: startDate,
             toDate: endDate,
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
-            user:{
+            user: {
 
-                id:adminId
-           },
-       
+                id: adminId
+            },
+
             room: {
                 id: selectedRoom.length === 0 ? null : selectedRoom,
             }
 
-    //         // date:'2023-10-18T11:00:00'
+            //         // date:'2023-10-18T11:00:00'
 
-    //     }
+            //     }
 
         }
 
         const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
         axios
             .post(getVisitorUrl, payload)
-               
-            
+
+
             .then(response => {
                 const responseData = response.data.data.meetings;
 
-              
+
                 setVisitors(responseData);
                 setMeetings(response.data.data.totalElements);
                 setTotalMeetings(responseData.length);
@@ -360,7 +360,7 @@ const [searchCriteria, setSearchCriteria] = useState({
 
     //             id:selectedHostOptions.length === 0 ? null : selectedHostOptions,
     //        },
-       
+
     //         room: {
     //             id: selectedRoom.length === 0 ? null : selectedRoom,
     //         }
@@ -383,7 +383,7 @@ const [searchCriteria, setSearchCriteria] = useState({
     //             // console.log(passResponseData,"passREsponseData");
 
 
-            
+
 
 
     //            setMeetingsLength(responseDataLength);
@@ -543,76 +543,76 @@ const [searchCriteria, setSearchCriteria] = useState({
         return date.toLocaleString();
     };
 
-//date
-function formatMeetingDuration(meeting) {
-    const startTimestamp = meeting.checkInDateTime;
-    // console.log(startTimestamp,"starttimestamp")
-  
-    // console.log(visitorsInfo,"ggggg")
+    //date
+    function formatMeetingDuration(meeting) {
+        const startTimestamp = meeting.checkInDateTime;
+        // console.log(startTimestamp,"starttimestamp")
 
-  
-    // Create JavaScript Date objects with IST timezone
-    const startDate = new Date(startTimestamp);
-
-    startDate.setHours(startDate.getHours() - 5);
-    startDate.setMinutes(startDate.getMinutes() - 30);
-   
-  
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
-  
-    // Format the start and end dates using the options
-    const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
-  
-  
-    return `${formattedStart }`;
-  }
-
-  function formatMeetingDuration1(meeting) {
-
-    const endTimestamp = meeting.checkOutDateTime;
-    // console.log(endTimestamp,"endtimestamp")
+        // console.log(visitorsInfo,"ggggg")
 
 
-  
-    // Create JavaScript Date objects with IST timezone
- if(endTimestamp!= null){
-    const endDate = new Date(endTimestamp);
-    endDate.setHours(endDate.getHours() - 5);
-    endDate.setMinutes(endDate.getMinutes() - 30);
-  
-    // Define options for formatting
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to IST
-    };
-  
-    // Format the start and end dates using the options
-   
-    const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
-  
-    return `${formattedEnd}`;
+        // Create JavaScript Date objects with IST timezone
+        const startDate = new Date(startTimestamp);
+
+        startDate.setHours(startDate.getHours() - 5);
+        startDate.setMinutes(startDate.getMinutes() - 30);
 
 
-  }
+        // Define options for formatting
+        const options = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        };
 
- }
+        // Format the start and end dates using the options
+        const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
 
- //room
- 
+
+        return `${formattedStart}`;
+    }
+
+    function formatMeetingDuration1(meeting) {
+
+        const endTimestamp = meeting.checkOutDateTime;
+        // console.log(endTimestamp,"endtimestamp")
+
+
+
+        // Create JavaScript Date objects with IST timezone
+        if (endTimestamp != null) {
+            const endDate = new Date(endTimestamp);
+            endDate.setHours(endDate.getHours() - 5);
+            endDate.setMinutes(endDate.getMinutes() - 30);
+
+            // Define options for formatting
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZone: 'Asia/Kolkata', // Set the timezone to IST
+            };
+
+            // Format the start and end dates using the options
+
+            const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+
+            return `${formattedEnd}`;
+
+
+        }
+
+    }
+
+    //room
+
 
 
 
@@ -624,7 +624,7 @@ function formatMeetingDuration(meeting) {
         fetchData();
         fetchStatusOptions();
         getRoomsOption()
-    }, [page, rowsPerPage, selectedStatusOptions,selectedRoom, phoneNumberFilter, startDate, endDate]);
+    }, [page, rowsPerPage, selectedStatusOptions, selectedRoom, phoneNumberFilter, startDate, endDate]);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -828,7 +828,7 @@ function formatMeetingDuration(meeting) {
 
 
                                                         <TextField id="outlined-search" label="Search By Phone Number"
-                                                             value={phoneNumberFilter}
+                                                            value={phoneNumberFilter}
                                                             onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                                             // onKeyPress={handlePhoneNumberSearch} 
 
@@ -838,7 +838,7 @@ function formatMeetingDuration(meeting) {
                                                             // onChange={(e) => setSearchCriteria({ ...searchCriteria, phoneNumber: e.target.value })}                                                       
                                                             type="search" style={{ top: "10px" }} />
 
-<TextField
+                                                        <TextField
                                                             id="outlined-select-currency"
                                                             select
                                                             label="Search by Room"
@@ -847,15 +847,15 @@ function formatMeetingDuration(meeting) {
                                                             onChange={handleChange1}
                                                             SelectProps={{
                                                                 MenuProps: {
-                                                                  style: {
-                                                                    maxHeight: '400px', // Adjust the height as per your requirement
-                                                                  },
+                                                                    style: {
+                                                                        maxHeight: '400px', // Adjust the height as per your requirement
+                                                                    },
                                                                 },
-                                                              }}
+                                                            }}
 
                                                             style={{ top: "10px" }}
 
-                                                           
+
 
 
                                                         >
@@ -867,7 +867,7 @@ function formatMeetingDuration(meeting) {
 
 
                                                             {Array.isArray(rooms) && rooms.map((room) => (
-                                                                  <MenuItem  disabled={!room.isAvailable} key={room.id} value={room.id}  style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
+                                                                <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
                                                             ))}
                                                         </TextField>
 
@@ -888,35 +888,35 @@ function formatMeetingDuration(meeting) {
 
                                                                 <DatePicker
                                                                     label="Start Date"
-                                                                value={startDate}
+                                                                    value={startDate}
 
-                                                                onChange={handleStartDateChange}
+                                                                    onChange={handleStartDateChange}
 
-            
+
 
 
                                                                 />
                                                                 <DatePicker
                                                                     label="End Date"
-                                                                value={endDate}
+                                                                    value={endDate}
 
-                                                                onChange={handleEndDateChange}
+                                                                    onChange={handleEndDateChange}
 
                                                                 //searchcriteria code
-    //                                                             value={searchCriteria.endDate}
-    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
+                                                                //                                                             value={searchCriteria.endDate}
+                                                                //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
 
                                                                 />
                                                             </DemoContainer>
                                                         </LocalizationProvider>
 
-                                                        <TextField id="outlined-search" label="Search" 
+                                                        <TextField id="outlined-search" label="Search"
                                                             //  value={phoneNumberFilter}
                                                             // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                                             // onKeyPress={handlePhoneNumberSearch} 
                                                             type="search" style={{ top: "10px" }} />
 
-                                                       
+
 
 
 
@@ -944,7 +944,7 @@ function formatMeetingDuration(meeting) {
 
                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                         <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black",fontWeight:"600" }}>
+                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black", fontWeight: "600" }}>
                                                 <TableRow sx={{ border: "1px solid black" }}>
                                                     {/* <TableCell>Meeting ID</TableCell>
                                                 <TableCell>Visitor ID</TableCell> */}
@@ -976,7 +976,7 @@ function formatMeetingDuration(meeting) {
                                                             {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                                            <TableCell>{calculateSerialNumber(index,page,rowsPerPage)}</TableCell>
+                                                            <TableCell>{calculateSerialNumber(index, page, rowsPerPage)}</TableCell>
 
                                                             <TableCell align="left">{visitor.visitor.name}</TableCell>
 
@@ -1040,7 +1040,7 @@ function formatMeetingDuration(meeting) {
                                             </TableBody>
                                         </Table>
                                         <TablePagination
-                                           rowsPerPageOptions={[5, 10, 15]}
+                                            rowsPerPageOptions={[5, 10, 15]}
                                             component="div"
                                             count={meetings}
                                             // count={visitors}
