@@ -90,14 +90,14 @@ export default function Navbar({toggleSidebar}) {
   const { logout } =useAuth();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [ isProfile, setIsProfile ] = useState(false)
+  const [ isSUPERADMIN, setIsSUPERADMIN ] = useState(false)
 
   useEffect(() => {
     // Use useEffect to set the state after the initial render
     if (loggedUserRole === 'SUPERADMIN') {
-      setIsProfile(true);
+      setIsSUPERADMIN(true);
     } else {
-      setIsProfile(false);
+      setIsSUPERADMIN(false);
     }
   }, [loggedUserRole]); 
 
@@ -398,7 +398,7 @@ export default function Navbar({toggleSidebar}) {
       onClose={handleMenuClose}
     >
 
-{isProfile ? null : [
+{isSUPERADMIN ? null : [
   <MenuItem 
     key="profileMenuItem" 
     onClick={handleProfileOpen}

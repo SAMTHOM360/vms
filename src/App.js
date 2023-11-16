@@ -68,7 +68,7 @@ function App() {
             <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
             <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
             <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
-            <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
+            <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
             <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
 
             {/* mycode */}

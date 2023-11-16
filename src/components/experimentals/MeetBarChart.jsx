@@ -81,37 +81,37 @@ const MeetBarChart = ({ data }) => {
       labels: labels,
       datasets: [
         {
-          label: 'BUSINESS',
+          label: 'BUSINESS COUNT',
           data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.count || 0),
           backgroundColor: '#305BA6',
           stack: 'Stack 0',
         },
         {
-          label: 'CASUAL',
+          label: 'CASUAL COUNT',
           data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.count || 0),
           backgroundColor: '#54ccd2',
           stack: 'Stack 0',
         },
         {
-          label: 'INTERVIEW',
+          label: 'INTERVIEW COUNT',
           data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.count || 0),
           backgroundColor: '#d9c9b4',
           stack: 'Stack 0',
         },
         {
-          label: 'BUSINESS',
+          label: 'BUSINESS HOUR',
           data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.hour || 0),
           backgroundColor: '#094C66',
           stack: 'Stack 1',
         },
         {
-          label: 'CASUAL',
+          label: 'CASUAL HOUR',
           data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.hour || 0),
           backgroundColor: '#1C84A6',
           stack: 'Stack 1',
         },
         {
-          label: 'INTERVIEW',
+          label: 'INTERVIEW HOUR',
           data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.hour || 0),
           backgroundColor: '#0EA499',
           stack: 'Stack 1',
@@ -130,17 +130,11 @@ const MeetBarChart = ({ data }) => {
         const datasetMeta0 = chart.getDatasetMeta(0);
         const datasetMeta1 = chart.getDatasetMeta(1);
         const datasetMeta2 = chart.getDatasetMeta(2);
-        const datasetMeta3 = chart.getDatasetMeta(3);
-        const datasetMeta4= chart.getDatasetMeta(4);
-        const datasetMeta5= chart.getDatasetMeta(5);
 
         datasetMeta0.data.forEach((dataPoint, index) => {
           let y0 = datasetMeta0.data[index].y;
           let y1 = datasetMeta1.data[index].y;
           let y2 = datasetMeta2.data[index].y;
-          let y3 = datasetMeta3.data[index].y;
-          let y4 = datasetMeta4.data[index].y;
-          let y5 = datasetMeta5.data[index].y;
 
           if (y0 > 0 || y1 > 0 || y2 > 0) {
             y0 = datasetMeta0.hidden ? 1000 : y0;
@@ -171,6 +165,8 @@ const MeetBarChart = ({ data }) => {
         const datasetMeta3 = chart.getDatasetMeta(3);
         const datasetMeta4= chart.getDatasetMeta(4);
         const datasetMeta5= chart.getDatasetMeta(5);
+
+        
 
         datasetMeta3.data.forEach((dataPoint, index) => {
           let y3 = datasetMeta3.data[index].y;
@@ -240,7 +236,7 @@ const MeetBarChart = ({ data }) => {
           },
           legend: {
             labels: {
-              color: 'white', // Color of the legend labels
+              color: 'white',
             },
           },
           zoom: {

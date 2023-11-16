@@ -17,6 +17,7 @@ import MeetBarChart from "./experimentals/MeetBarChart";
 import MeetingTimeline from "./experimentals/MeetingTimeline";
 import TimelineDot from "@mui/lab/TimelineDot";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,13 +29,15 @@ const EmpDashboard = () => {
   // const BASE_URL1 = 'http://192.168.12.60:8080/api'
   // const BASE_URL = 'http://192.168.12.54:8080/api'
 
-
   const adminId = localStorage.getItem("adminId");
-  const token = sessionStorage.getItem('token')
+  const token = sessionStorage.getItem("token");
+  const loggedUserRole = sessionStorage.getItem('loggedUserRole')
 
   const headers = {
     Authorization: `Bearer ${token}`,
   };
+
+  const navigate = useNavigate();
 
   const { setIsNavBar, setIsSideBar } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -48,10 +51,22 @@ const EmpDashboard = () => {
   const [timelineData, setTimelineData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-
+  const [isTodayBtn, setIsTodayBtn] = useState(true);
+  const [isWeekBtn, setIsWeekBtn] = useState(false);
+  const [isMonthBtn, setIsMonthBtn] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleNavigateMeeting = () => {
+    if(loggedUserRole){
+      if(loggedUserRole === 'ADMIN'){
+        navigate("/dashboard");
+      } else{
+        navigate('/dashboard')
+      }
+    }
   };
 
   // async function fetchData() {
@@ -59,8 +74,8 @@ const EmpDashboard = () => {
   //     user: {
   //       id: adminId,
   //     },
-      
-  //     fromDate:"2023-07-13", 
+
+  //     fromDate:"2023-07-13",
   //     toDate:"2023-11-19",
   //   };
   //   try {
@@ -126,18 +141,9 @@ const EmpDashboard = () => {
   //   setLoading(false);
   // }
 
-
-
-
   // console.log("dashboard data", dashboardData)
 
-
-
-
-
-
   async function fetchData(fromDate, toDate) {
-    const adminId = 3; // Replace with your actual adminId
     const payLoad = {
       user: {
         id: adminId,
@@ -148,7 +154,7 @@ const EmpDashboard = () => {
       toDate: toDate,
     };
 
-    console.log("dynamic payload", payLoad)
+    console.log("dynamic payload", payLoad);
 
     try {
       setLoading(true);
@@ -165,7 +171,7 @@ const EmpDashboard = () => {
 
       const dashboardApiData = dashboardResponse.data.data;
 
-      console.log("dashboardApiData", dashboardApiData)
+      console.log("dashboardApiData", dashboardApiData);
       const timelineApiData = dashboardTimelineResponse.data.data;
 
       const transformedData = Object.keys(
@@ -206,8 +212,6 @@ const EmpDashboard = () => {
     setLoading(false);
   }
 
-
-
   // const handleTodayClick = async () => {
   //   const today = new Date().toISOString().split('T')[0];
   //   await fetchData(today, today);
@@ -238,14 +242,15 @@ const EmpDashboard = () => {
   //   await fetchData(fromMonth, toMonth);
   // };
 
-
-
   const handleTodayClick = async () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
     await fetchData(formattedToday, formattedToday);
+    setIsTodayBtn(true);
+    setIsWeekBtn(false);
+    setIsMonthBtn(false);
   };
-  
+
   const handleThisWeekClick = async () => {
     const currentDate = new Date();
     const diffFromMonday = currentDate.getDay() - 1;
@@ -253,41 +258,48 @@ const EmpDashboard = () => {
     startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
-  
+
     const formattedFromWeek = formatDateForServer(startOfWeek);
     const formattedToWeek = formatDateForServer(endOfWeek);
-  
+
     await fetchData(formattedFromWeek, formattedToWeek);
+    setIsTodayBtn(false);
+    setIsWeekBtn(true);
+    setIsMonthBtn(false);
   };
-  
+
   const handleThisMonthClick = async () => {
     const currentDate = new Date();
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-  
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const lastDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+
     const formattedFromMonth = formatDateForServer(firstDayOfMonth);
     const formattedToMonth = formatDateForServer(lastDayOfMonth);
-  
+
     await fetchData(formattedFromMonth, formattedToMonth);
+    setIsTodayBtn(false);
+    setIsWeekBtn(false);
+    setIsMonthBtn(true);
   };
-  
+
   const formatDateForServer = (date) => {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  
-  
-
-
-
-
-
 
   useEffect(() => {
     // fetchData();
-    handleTodayClick()
+    handleTodayClick();
     setIsNavBar(true);
     setIsSideBar(true);
   }, []);
@@ -308,10 +320,12 @@ const EmpDashboard = () => {
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
+                alignItems: "center",
                 // width:'100%',
-                height: "4.5em",
+                minHeight: "4.5em",
                 mt: "3em",
                 mb: "0.5em",
+                flexDirection: { xs: "column", md: "row" },
               }}
             >
               <Header title="Dashboard" subtitle="Welcome to dashboard" />
@@ -320,35 +334,43 @@ const EmpDashboard = () => {
                 <Button
                   variant="contained"
                   size="small"
-                  sx={{ 
-                  height: "3em",
-                  borderRadius: "0px",
-                  width:'95px',
-                   }}
+                  color={isTodayBtn ? "primary" : "inherit"}
+                  sx={{
+                    height: "3em",
+                    borderRadius: "0px",
+                    width: "97px",
+                    boxShadow: "none",
+                    borderRight: "2px solid #B0B0B0",
+                  }}
                   onClick={handleTodayClick}
                 >
                   Today
                 </Button>
                 <Button
+                  color={isWeekBtn ? "primary" : "inherit"}
                   variant="contained"
                   size="small"
                   sx={{
-                     height: "3em", 
-                     borderRadius: "0px",
-                     width:'95px',
-                    }}
+                    height: "3em",
+                    borderRadius: "0px",
+                    width: "97px",
+                    boxShadow: "none",
+                    borderRight: "2px solid #B0B0B0",
+                  }}
                   onClick={handleThisWeekClick}
                 >
                   This week
                 </Button>
                 <Button
+                color={isMonthBtn ? 'primary' : 'inherit'}
                   variant="contained"
                   size="small"
-                  sx={{ 
+                  sx={{
                     height: "3em",
-                     borderRadius: "0px", 
-                     width:'95px',  
-                    }}
+                    borderRadius: "0px",
+                    width: "97px",
+                    boxShadow: "none",
+                  }}
                   onClick={handleThisMonthClick}
                 >
                   Total
@@ -402,7 +424,9 @@ const EmpDashboard = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        cursor: "pointer",
                       }}
+                      onClick={handleNavigateMeeting}
                     >
                       <StatBox
                         title={dashboardData.totalMeetings || "0"}
