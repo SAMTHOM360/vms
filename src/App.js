@@ -33,7 +33,7 @@ import PrivateRoute from './routes/PrivateRoute';
 
 import DynamicIdCard from './components/experimentals/DynamicIdCard';
 import UpdateDialogue from './components/unused/UpdateDialogue';
-import BulkUserForm from './components/BulkUserForm';
+// import BulkUserForm from './components/BulkUserForm';
 
 function App() {
 
@@ -45,7 +45,7 @@ function App() {
           <Routes>
           <Route path="/" element={<LoginForm />} />
           <Route path ="/demoland" element={<UpdateDialogue />} />
-          <Route path ="/vertical" element={<BulkUserForm />} />
+          {/* <Route path ="/vertical" element={<BulkUserForm />} /> */}
           <Route path="*" element={<NotFound />} />
           <Route path="/filedrop" element={<FileDropArea />} />
           <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
