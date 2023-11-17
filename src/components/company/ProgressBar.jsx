@@ -71,7 +71,7 @@ useEffect(()=>{
 
 
 
-        const totalMeetingHoursByDay = meetingHours.map(hour => hour.totalMeetingHours);
+        const totalMeetingHoursByDay = meetingHours.map(hour => `${hour.totalMeetingHours} hrs`);
         const totalMeetingDate = meetingHours.map(Date => Date.date);
         const totalMeeting = meetingHours.map(hour => hour.totalMeeting);
         const averageMeeting = meetingHours.map(hour => hour.meetingAverage);

@@ -614,17 +614,28 @@ export default function Dashboard() {
     //room
 
 
-
-
-
-
     useEffect(() => {
 
 
         fetchData();
         fetchStatusOptions();
         getRoomsOption()
-    }, [page, rowsPerPage, selectedStatusOptions, selectedRoom, phoneNumberFilter, startDate, endDate]);
+    }, [page, rowsPerPage]);
+
+
+    useEffect(() => {
+
+        if (page === 0) {
+            fetchData();
+
+        } else {
+            setPage(0);
+        }
+
+
+    }, [selectedStatusOptions,selectedRoom, phoneNumberFilter, startDate, endDate])
+
+
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1003,7 +1014,7 @@ export default function Dashboard() {
                                                             )} */}
 
                                                                 {
-                                                                    visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
+                                                                    visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'CANCELLED_BY_VISITOR' ? (
                                                                         <>
                                                                             <div className='status'>
                                                                                 <CheckIcon style={{ cursor: "pointer", color: "lightgray", pointerEvents: "none", marginRight: "10px" }} />

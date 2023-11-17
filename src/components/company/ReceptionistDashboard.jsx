@@ -2363,7 +2363,9 @@ export default function Dashboard() {
                                         >
                                             
                                             {Array.isArray(rooms) && rooms.map((room) => (
-                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
+                                              
+                                                <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
+                                                style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
                                             ))}
 
 
