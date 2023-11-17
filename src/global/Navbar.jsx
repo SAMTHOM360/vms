@@ -91,6 +91,7 @@ export default function Navbar({toggleSidebar}) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [ isSUPERADMIN, setIsSUPERADMIN ] = useState(false)
+  const [ isVISITOR, setIsVISITOR ] = useState(false)
 
   useEffect(() => {
     // Use useEffect to set the state after the initial render
@@ -99,6 +100,8 @@ export default function Navbar({toggleSidebar}) {
     } else {
       setIsSUPERADMIN(false);
     }
+
+    // if(loggedUserRole === 'SUPERADMIN')
   }, [loggedUserRole]); 
 
   const companyName = sessionStorage.getItem('companyName')

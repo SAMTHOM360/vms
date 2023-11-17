@@ -338,7 +338,28 @@ const DynamicIdCard = () => {
           </Box>
         </>
       ) : (
-        <Typography>No Data Found</Typography>
+        <Box 
+        sx={{
+          // minWidth:'100%',
+          // minHeight:'100%',
+          width:'100vw',
+          height:'100vh',
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
+          padding:'0 1em 1em 1em',
+        }}
+        >
+          <Typography
+          sx={{
+            fontSize:'54px',
+            fontWeight:'bold',
+            // fontStyle:'Arial'
+          }}
+          >
+            No Data Found / Pass is expired !!! 
+            </Typography>
+        </Box>
       )}
     </>
   );

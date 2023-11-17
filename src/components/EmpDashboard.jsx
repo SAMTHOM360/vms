@@ -3,7 +3,14 @@ import { useState } from "react";
 import Navbar from "../global/Navbar";
 import Sidebar from "../global/Sidebar";
 import Grid from "@mui/material/Grid";
-import { Paper, Box, Typography, Button } from "@mui/material";
+import {
+  Paper,
+  Box,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import Header from "./Header";
 import StatBox from "./StatBox";
 import Loader from "./Loader";
@@ -15,6 +22,8 @@ import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import MeetList from "./experimentals/MeetList";
 import MeetBarChart from "./experimentals/MeetBarChart";
 import MeetingTimeline from "./experimentals/MeetingTimeline";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import TimelineDot from "@mui/lab/TimelineDot";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +40,7 @@ const EmpDashboard = () => {
 
   const adminId = localStorage.getItem("adminId");
   const token = sessionStorage.getItem("token");
-  const loggedUserRole = sessionStorage.getItem('loggedUserRole')
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -60,11 +69,11 @@ const EmpDashboard = () => {
   };
 
   const handleNavigateMeeting = () => {
-    if(loggedUserRole){
-      if(loggedUserRole === 'ADMIN'){
+    if (loggedUserRole) {
+      if (loggedUserRole === "ADMIN") {
         navigate("/dashboard");
-      } else{
-        navigate('/dashboard')
+      } else {
+        navigate("/dashboard");
       }
     }
   };
@@ -242,6 +251,34 @@ const EmpDashboard = () => {
   //   await fetchData(fromMonth, toMonth);
   // };
 
+  const options = [
+    { label: "Today", value: "today" },
+    { label: "This Week", value: "thisWeek" },
+    { label: "This Month", value: "thisMonth" },
+  ];
+
+  const [selectedFilter, setSelectedFilter] = useState("today");
+
+  const handleFilterChange = (event) => {
+    const selectedValue = event.target.value;
+
+    switch (selectedValue) {
+      case "today":
+        handleTodayClick();
+        break;
+      case "thisWeek":
+        handleThisWeekClick();
+        break;
+      case "thisMonth":
+        handleThisMonthClick();
+        break;
+      default:
+        break;
+    }
+
+    setSelectedFilter(selectedValue);
+  };
+
   const handleTodayClick = async () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
@@ -304,8 +341,31 @@ const EmpDashboard = () => {
     setIsSideBar(true);
   }, []);
 
-  // console.log("Bar chart Data", barchartData)
+  const [pageIndex, setPageIndex] = useState(0);
+
+  // ... (other code)
+
+  const handleNextPage = () => {
+    setPageIndex((prevIndex) => prevIndex + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPageIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const dates = Object.keys(barchartData || {});
+  const visibleData = dates
+    .slice(pageIndex * 15, (pageIndex + 1) * 15)
+    .reduce((acc, date) => {
+      acc[date] = barchartData[date];
+      return acc;
+    }, {});
+
+  console.log("VISIBLE DATA", Object.keys(visibleData || {}).length);
+  console.log("Bar chart Data", barchartData);
   // console.log("Time Line Data", timelineData)
+
+  console.log("page index", pageIndex);
 
   return (
     <>
@@ -331,7 +391,7 @@ const EmpDashboard = () => {
               <Header title="Dashboard" subtitle="Welcome to dashboard" />
 
               <Box>
-                <Button
+                {/* <Button
                   variant="contained"
                   size="small"
                   color={isTodayBtn ? "primary" : "inherit"}
@@ -346,6 +406,7 @@ const EmpDashboard = () => {
                 >
                   Today
                 </Button>
+
                 <Button
                   color={isWeekBtn ? "primary" : "inherit"}
                   variant="contained"
@@ -361,6 +422,7 @@ const EmpDashboard = () => {
                 >
                   This week
                 </Button>
+
                 <Button
                 color={isMonthBtn ? 'primary' : 'inherit'}
                   variant="contained"
@@ -374,7 +436,44 @@ const EmpDashboard = () => {
                   onClick={handleThisMonthClick}
                 >
                   Total
-                </Button>
+                </Button> */}
+
+                <FormControl
+                  sx={{
+                    border: "none",
+                    borderRadius: "5px",
+                    // width: "130px !important",
+                    // height: '50px !important',
+                    boxShadow: "0px 2px 2px #333333",
+                  }}
+                >
+                  <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel>
+                  <Select
+                    sx={{
+                      color: "white",
+                      bgcolor: "#1976d2",
+                      width: "130px !important",
+                      height: '40px !important',
+                      border: "none",
+                      "&:hover": {
+                        bgcolor: "#1565c0",
+                      },
+                      "& .MuiSelect-icon": {
+                        color: "white",
+                      },
+                    }}
+                    label="Select a filter"
+                    value={selectedFilter}
+                    onChange={handleFilterChange}
+                    elevation={3}
+                  >
+                    {options.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
             </Box>
           </Grid>
@@ -426,7 +525,7 @@ const EmpDashboard = () => {
                         alignItems: "center",
                         cursor: "pointer",
                         "&:hover": {
-                          bgcolor:"#283550",
+                          bgcolor: "#283550",
                         },
                       }}
                       onClick={handleNavigateMeeting}
@@ -525,17 +624,104 @@ const EmpDashboard = () => {
                         height: "32em",
                         display: "flex",
                         flexDirection: "column",
+                        overflow: "hidden",
+                        pb:'2em'
                       }}
                     >
-                      <Typography
-                        variant="h5"
-                        sx={{ color: "#4cceac", mt: "10px", ml: "10px" }}
+                      {/* <Grid  container>
+
+                      <Grid item xs={12} md={12} lg={12}> */}
+
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          // mb: "1em",
+                          pr: "1em",
+                        }}
                       >
-                        Meeting Counts
-                      </Typography>
-                      <Box sx={{ width: "95%", height: "100%" }}>
-                        <MeetBarChart data={barchartData} />
+                        <Typography
+                          variant="h5"
+                          sx={{ color: "#4cceac", mt: "10px", ml: "10px" }}
+                        >
+                          Meeting Counts
+                        </Typography>
+                        <Box
+                          sx={{
+                            mt: "1em",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            onClick={handlePrevPage}
+                            color={pageIndex === 0 ? "inherit" : "primary"}
+                            sx={{
+                              pointerEvents:
+                                pageIndex === 0 ||
+                                (barchartData &&
+                                  Object.keys(barchartData).length <= 15)
+                                  ? "none"
+                                  : "auto",
+                            }}
+                          >
+                            PREV
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={handleNextPage}
+                            color={
+                              barchartData &&
+                              Object.keys(barchartData).length <= 15
+                                ? "inherit"
+                                : pageIndex === 0
+                                ? "primary"
+                                : (pageIndex + 1) * 15 <
+                                  Object.keys(barchartData || {}).length
+                                ? "primary"
+                                : "inherit"
+                            }
+                            sx={{
+                              pointerEvents:
+                                Object.keys(barchartData || {}).length <=
+                                Object.keys(visibleData || {}).length
+                                  ? "none"
+                                  : (pageIndex + 1) * 15 >=
+                                    Object.keys(barchartData || {}).length
+                                  ? "none"
+                                  : "auto",
+                            }}
+                          >
+                            NEXT
+                          </Button>
+                        </Box>
                       </Box>
+{/* 
+                      </Grid>
+
+
+                      <Grid item xs={12} md={12} lg={12}></Grid> */}
+
+
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "95%",
+                          // bgcolor: "orange",
+                          pb:'1em'
+                        }}
+                      >
+                        <MeetBarChart data={visibleData} />
+                      </Box>
+
+                      {/* </Grid> */}
+
+
+
+
+
+
                     </Box>
                   </Grid>
 

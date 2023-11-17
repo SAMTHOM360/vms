@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 
 const MeetBarChart = ({ data }) => {
   const chartRef = useRef(null);
@@ -9,31 +9,14 @@ const MeetBarChart = ({ data }) => {
 
     const dataEntries = Object.entries(data);
 
-    
     // const dataEntries = unReversed.reverse();
-    
-    const labels = dataEntries.map(([date]) => new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    }));
-    
-    // const datasets = [
-    //   {
-    //     label: 'Business',
-    //     data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-    //     backgroundColor: '#305BA6',
-    //   },
-    //   {
-    //     label: 'Casual',
-    //     data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-    //     backgroundColor: '#54ccd2',
-    //   },
-    //   {
-    //     label: 'Interview',
-    //     data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-    //     backgroundColor: '#d9c9b4',
-    //   },
-    // ];
+
+    const labels = dataEntries.map(([date]) =>
+      new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
+    );
 
     // const datas = {
     //   labels: labels,
@@ -77,59 +60,117 @@ const MeetBarChart = ({ data }) => {
     //   ]
     // };
 
+    // const datas = {
+    //   labels: labels,
+    //   datasets: [
+    //     {
+    //       label: 'BUSINESS COUNT',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.count || 0),
+    //       backgroundColor: '#305BA6',
+    //       stack: 'Stack 0',
+    //     },
+    //     {
+    //       label: 'CASUAL COUNT',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.count || 0),
+    //       backgroundColor: '#54ccd2',
+    //       stack: 'Stack 0',
+    //     },
+    //     {
+    //       label: 'INTERVIEW COUNT',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.count || 0),
+    //       backgroundColor: '#d9c9b4',
+    //       stack: 'Stack 0',
+    //     },
+    //     {
+    //       label: 'BUSINESS HOUR',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.hour || 0),
+    //       backgroundColor: '#094C66',
+    //       stack: 'Stack 1',
+    //     },
+    //     {
+    //       label: 'CASUAL HOUR',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.hour || 0),
+    //       backgroundColor: '#1C84A6',
+    //       stack: 'Stack 1',
+    //     },
+    //     {
+    //       label: 'INTERVIEW HOUR',
+    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.hour || 0),
+    //       backgroundColor: '#0EA499',
+    //       stack: 'Stack 1',
+    //     },
+    //   ],
+    // };
+
     const datas = {
       labels: labels,
       datasets: [
         {
-          label: 'BUSINESS COUNT',
-          data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.count || 0),
-          backgroundColor: '#305BA6',
-          stack: 'Stack 0',
+          label: "BUSINESS COUNT",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["BUSINESS"]?.count ?? 0
+          ),
+          backgroundColor: "#305BA6",
+          stack: "Stack 0",
         },
         {
-          label: 'CASUAL COUNT',
-          data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.count || 0),
-          backgroundColor: '#54ccd2',
-          stack: 'Stack 0',
+          label: "CASUAL COUNT",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["CASUAL"]?.count ?? 0
+          ),
+          backgroundColor: "#54ccd2",
+          stack: "Stack 0",
         },
         {
-          label: 'INTERVIEW COUNT',
-          data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.count || 0),
-          backgroundColor: '#d9c9b4',
-          stack: 'Stack 0',
+          label: "INTERVIEW COUNT",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["INTERVIEW"]?.count ?? 0
+          ),
+          backgroundColor: "#d9c9b4",
+          stack: "Stack 0",
         },
         {
-          label: 'BUSINESS HOUR',
-          data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.hour || 0),
-          backgroundColor: '#094C66',
-          stack: 'Stack 1',
+          label: "BUSINESS HOUR",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["BUSINESS"]?.hour ?? 0
+          ),
+          backgroundColor: "#094C66",
+          stack: "Stack 1",
         },
         {
-          label: 'CASUAL HOUR',
-          data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.hour || 0),
-          backgroundColor: '#1C84A6',
-          stack: 'Stack 1',
+          label: "CASUAL HOUR",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["CASUAL"]?.hour ?? 0
+          ),
+          backgroundColor: "#1C84A6",
+          stack: "Stack 1",
         },
         {
-          label: 'INTERVIEW HOUR',
-          data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.hour || 0),
-          backgroundColor: '#0EA499',
-          stack: 'Stack 1',
+          label: "INTERVIEW HOUR",
+          data: dataEntries.map(
+            ([, meetingData]) => meetingData?.["INTERVIEW"]?.hour ?? 0
+          ),
+          backgroundColor: "#0EA499",
+          stack: "Stack 1",
         },
       ],
     };
-    
-    
-    console.log("DATA ENTRIES", data)
 
-        const sumDataLabel = {
-      id: 'sumDataLabel',
+    console.log("DATA ENTRIES", data);
+
+    const sumDataLabel = {
+      id: "sumDataLabel",
       afterDatasetDraw(chart, args, plugins) {
-        const { ctx, scales: { y } } = chart;
+        const {
+          ctx,
+          scales: { y },
+        } = chart;
 
         const datasetMeta0 = chart.getDatasetMeta(0);
         const datasetMeta1 = chart.getDatasetMeta(1);
         const datasetMeta2 = chart.getDatasetMeta(2);
+
+        const angle = Math.PI / 180;
 
         datasetMeta0.data.forEach((dataPoint, index) => {
           let y0 = datasetMeta0.data[index].y;
@@ -147,26 +188,35 @@ const MeetBarChart = ({ data }) => {
 
             const value = Math.min(newY0, newY1, newY2);
             ctx.save();
-            ctx.font = '12px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'white'; // Set the label color to white
-            ctx.fillText(y.getValueForPixel(value).toFixed(0)+'  MEETINGS', dataPoint.x, value - 12);
+            ctx.translate(dataPoint.x, value - 12);
+            ctx.rotate(angle * 272);
+
+            ctx.font = "9px arial";
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#9ca8a8"; // Set the label color to white
+            ctx.fillText(
+              y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
+              33,
+              0
+            );
             ctx.restore();
           }
-
         });
       },
     };
 
     const sumDataLabel2 = {
-      id: 'sumDataLabel2',
+      id: "sumDataLabel2",
       afterDatasetDraw(chart, args, plugins) {
-        const { ctx, scales: { y } } = chart;
+        const {
+          ctx,
+          scales: { y },
+        } = chart;
         const datasetMeta3 = chart.getDatasetMeta(3);
-        const datasetMeta4= chart.getDatasetMeta(4);
-        const datasetMeta5= chart.getDatasetMeta(5);
+        const datasetMeta4 = chart.getDatasetMeta(4);
+        const datasetMeta5 = chart.getDatasetMeta(5);
 
-        
+        const angle = Math.PI / 180;
 
         datasetMeta3.data.forEach((dataPoint, index) => {
           let y3 = datasetMeta3.data[index].y;
@@ -184,21 +234,34 @@ const MeetBarChart = ({ data }) => {
 
             const value = Math.min(newY3, newY4, newY5);
             ctx.save();
-            ctx.font = ' 12px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'white'; // Set the label color to white
-            ctx.fillText(y.getValueForPixel(value).toFixed(0)+ '  HOURS', dataPoint.x, value - 12);
+            ctx.translate(dataPoint.x, value - 12);
+            ctx.rotate(angle * 272);
+
+            ctx.font = " 9px arial";
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#9ca8a8"; // Set the label color to white
+            ctx.fillText(
+              y.getValueForPixel(value).toFixed(0) + "  HOURS",
+              33,
+              0
+            );
             ctx.restore();
           }
-
         });
       },
     };
 
     const config = {
-      type: 'bar',
+      type: "bar",
       data: datas,
       options: {
+        Animation: false,
+          layout: {
+            padding: {
+                top: 50
+            }
+        },
+
         scales: {
           x: {
             stacked: true,
@@ -225,8 +288,11 @@ const MeetBarChart = ({ data }) => {
             grid: {
               color: '#404E6B',
             },
+            // min: 0,
+                max: 20,
           },
         },
+
         plugins: {
           sumDataLabel: {
             color: 'white',
@@ -239,14 +305,16 @@ const MeetBarChart = ({ data }) => {
               color: 'white',
             },
           },
-          zoom: {
-            pan: {
-               enabled: true
-            },
-            zoom: {
-               enabled: true
-            }
-         },
+
+        //   zoom: {
+        //     pan: {
+        //        enabled: true
+        //     },
+        //     zoom: {
+        //        enabled: true
+        //     }
+        //  },
+
         },
       },
       plugins: [sumDataLabel, sumDataLabel2],
@@ -260,35 +328,27 @@ const MeetBarChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ marginLeft: '1em', width: '100%', height: '99%', display: 'flex', justifyContent: 'center' }}>
-      <canvas ref={chartRef} id="myChart" 
-      // width='15000'
+    <div
+      style={{
+        // marginLeft: "1em",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        mb:'1em',
+        // backgroundColor:'cyan'
+      }}
+    >
+      <canvas
+        ref={chartRef}
+        id="myChart"
+        // width='15000'
       ></canvas>
-    </div>
+     </div>
   );
 };
 
 export default MeetBarChart;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useEffect, useRef } from 'react';
 // import Chart from 'chart.js/auto';
@@ -343,7 +403,6 @@ export default MeetBarChart;
 //         backgroundColor: '#d9c9b4',
 //       },
 //     ]
-
 
 // const datas = {
 //   labels: labels,
