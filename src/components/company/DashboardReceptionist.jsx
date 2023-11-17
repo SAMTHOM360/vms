@@ -447,20 +447,6 @@ import DoughnutChart from './DoughnutChart';
 import ProgressBar from './ProgressBar';
 import Loader from '../Loader';
 
-// import { createBrowserHistory } from 'history';
-
-// import PieChart from './Piechart';
-
-
-import ReceptionistDashboard from './ReceptionistDashboard'
-// import { useNavigate } from 'react-router-dom';
-
-
-
-
-
-
-
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -469,9 +455,6 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
 }));
-
-
-
 
 
 
@@ -491,14 +474,14 @@ export default function Dashboard() {
     // const history = useHistory();
 
 
-// const customHistory = createBrowserHistory();
+    // const customHistory = createBrowserHistory();
 
 
-//     const handlePaperClick = () => {
-        
-//   customHistory.push('dashboardreceptionist');
+    //     const handlePaperClick = () => {
 
-//     }
+    //   customHistory.push('dashboardreceptionist');
+
+    //     }
 
 
 
@@ -512,6 +495,14 @@ export default function Dashboard() {
     const [inProcessVisitors, setInprocessVisitors] = useState(0);
     const [completedVisitors, setCompletedVisitors] = useState(0);
 
+    const [filteredVisitors, setFilteredVisitors] = useState([]);
+
+
+    const [pendingVisitorsStatus, setPendingVisitorsStatus] = useState(0);
+    const [approvedVisitorsStatus, setApprovedVisitorsStatus] = useState(0);
+    const [inProcessVisitorsStatus, setInprocessVisitorsStatus] = useState(0);
+    const [completedVisitorsStatus, setCompletedVisitorsStatus] = useState(0);
+
 
 
     const companyId = localStorage.getItem('companyId');
@@ -519,7 +510,7 @@ export default function Dashboard() {
 
 
 
-      function fetchData() {
+    function fetchData() {
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -535,8 +526,8 @@ export default function Dashboard() {
             // phoneNumber: '',
             // searchQuery: '',
             companyId: companyId,
-            fromDate:eightDaysAgoFormatted,
-            toDate:today
+            fromDate: eightDaysAgoFormatted,
+            toDate: today
             // status:status,
             // date:'2023-10-18T11:00:00'
 
@@ -550,23 +541,31 @@ export default function Dashboard() {
                 setAllData(response.data.data);
                 const responseData = response.data.data.meetings;
 
+                console.log(response.data.data.status,"statusssss");
 
-               
+
+
+
                 // responseData.forEach(meeting => {
                 //     const meetingId = meeting.id; 
-                   
+
                 // });
 
-                
+
 
                 setVisitors(responseData);
-           
+
                 setTotalVisitors(response.data.data.totalElements);
-            
+
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
                 setInprocessVisitors(response.data.data.totalInProcess);
                 setCompletedVisitors(response.data.data.totalCompleted);
+
+
+
+
+                setPendingVisitorsStatus(response.data.data.status)
 
             })
             .catch(error => {
@@ -582,10 +581,20 @@ export default function Dashboard() {
     }, [])
 
     const navigate = useNavigate();
-    const routeChange = () =>{ 
-        let path = `/receptionistdashboard`; 
-        navigate(path);
-      }
+    const routeChange = (filteredVisitors) => {
+        let path = `/receptionistdashboard`;
+       
+
+
+        if (filteredVisitors) {
+            localStorage.setItem("filters", filteredVisitors)
+            navigate(path);
+
+        }
+        else{
+            navigate(path);
+        }
+    }
 
 
 
@@ -630,7 +639,8 @@ export default function Dashboard() {
                                         // alignItems: 'center',// Vertically center content
                                         // borderRadius:"40px",
                                         backgroundColor: "#32577e",
-                                        
+                                        cursor:"pointer"
+
 
 
                                         // boxShadow: "5px 5px 10px grey",
@@ -670,10 +680,12 @@ export default function Dashboard() {
                                         {/* {isOpen && <ReceptionistDashboard />} */}
 
                                     </Paper>
-                                    <Paper elevation={1} sx={{
+                                    <Paper  onClick={() => routeChange('PENDING' )} elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         backgroundColor: "#32577e",
+                                        cursor:"pointer"
+
 
                                         // boxShadow: "5px 5px 10px grey",
 
@@ -702,10 +714,11 @@ export default function Dashboard() {
 
                                         </div>
                                     </Paper>
-                                    <Paper elevation={1} sx={{
+                                    <Paper  onClick={() => routeChange('APPROVED' )} elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         backgroundColor: "#32577e",
+                                        cursor:"pointer"
                                         // boxShadow: "5px 5px 10px grey",
 
                                         // ":hover": {
@@ -736,10 +749,11 @@ export default function Dashboard() {
 
                                     </Paper>
 
-                                    <Paper elevation={1} sx={{
+                                    <Paper  onClick={() => routeChange('INPROCESS' )} elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         backgroundColor: "#32577e",
+                                        cursor:"pointer"
                                         // boxShadow: "5px 5px 10px grey",
 
                                         // ":hover": {
@@ -767,10 +781,11 @@ export default function Dashboard() {
                                         </div>
 
                                     </Paper>
-                                    <Paper elevation={1} sx={{
+                                    <Paper   onClick={() => routeChange('COMPLETED' )}elevation={1} sx={{
                                         height: 150,
                                         width: 300,
                                         backgroundColor: "#32577e",
+                                        cursor:"pointer"
 
                                         // boxShadow: "5px 5px 10px grey",
 
@@ -866,8 +881,8 @@ export default function Dashboard() {
 
 
                                         <div className="rooms">
-                                            <h2 style={{ color: "black",bottom:"" }}>Room Details</h2>
-                                            <DoughnutChart  allData={allData}/>
+                                            <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
+                                            <DoughnutChart allData={allData} />
 
                                         </div>
                                         {/* <PieChart/> */}

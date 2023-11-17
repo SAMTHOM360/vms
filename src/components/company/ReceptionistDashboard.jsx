@@ -1540,12 +1540,20 @@ export default function Dashboard() {
 
         const payload = {
             page: 0,
-            size: 100,
-            phoneNumber: phoneNumberFilter,
+            size: 1000,
+            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
             fromDate: startDate,
             toDate: endDate,
 
             companyId: companyId,
+            user: {
+
+                id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+            },
+
+            room: {
+                id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+            },
 
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
             // date:'2023-10-18T11:00:00'
@@ -1703,23 +1711,11 @@ export default function Dashboard() {
         return `${user.firstName} ${user.lastName}`;
     }
 
-    // function formatMeetingDuration(meeting) {
-    //     const startDate = new Date(meeting.meetingStartDateTime);
-    //     const endDate = new Date(meeting.meetingEndDateTime);
 
-    //     const formattedDate = startDate.toLocaleDateString();
-    //     const startTime = startDate.toLocaleTimeString();
-    //     const endTime = endDate.toLocaleTimeString();
-
-    //     return `${formattedDate}, ${startTime} - ${endTime}`;
-    // }
 
     function formatMeetingDuration(meeting) {
         const startTimestamp = meeting.checkInDateTime;
         const endTimestamp = meeting.checkOutDateTime;
-
-
-
 
         const startDate = new Date(startTimestamp);
         startDate.setHours(startDate.getHours() - 5);
@@ -1733,52 +1729,131 @@ export default function Dashboard() {
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
-            second: 'numeric',
+            // second: 'numeric',
             timeZone: 'Asia/Kolkata', // Set the timezone to IST
         };
 
 
         const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
-        const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+    
 
         return `${formattedStart}`;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // function formatMeetingDuration1(meeting) {
+
+    //     const endTimestamp = meeting.checkOutDateTime;
+    //     // console.log(endTimestamp, "endtimestamp")
+
+
+
+
+    //     if (endTimestamp != null) {
+    //         const endDate = new Date(endTimestamp);
+           
+    //         endDate.setHours(endDate.getHours() - 5);
+    //         endDate.setMinutes(endDate.getMinutes() - 30);
+    //         endDate.toLocaleString();
+
+
+    //         const options = {
+    //             year: 'numeric',
+    //             month: 'numeric',
+    //             day: 'numeric',
+    //             hour: 'numeric',
+    //             minute: 'numeric',
+    //             // second: 'numeric',
+    //             timeZone: 'Asia/Kolkata', // Set the timezone to IST
+    //         };
+
+            
+    //         const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
+             
+    //         return `${formattedEnd}`;
+
+
+    //     }
+
+
+
+
+    // }
+
+
+
+
     function formatMeetingDuration1(meeting) {
-
         const endTimestamp = meeting.checkOutDateTime;
-        // console.log(endTimestamp, "endtimestamp")
-
-
-
-
+    
         if (endTimestamp != null) {
             const endDate = new Date(endTimestamp);
+    
             endDate.setHours(endDate.getHours() - 5);
             endDate.setMinutes(endDate.getMinutes() - 30);
-
-
+    
             const options = {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
                 timeZone: 'Asia/Kolkata', // Set the timezone to IST
             };
-
-            // Format the start and end dates using the options
-
-            const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
-
-            return `${formattedEnd}`;
-
-
+    
+            const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+    
+            let hours = endDate.getHours();
+            const amPm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+    
+            // Manually construct the time in 12-hour format (hh:mm AM/PM)
+            const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+    
+            return `${formattedDate}, ${formattedTime}`;
         }
-
     }
+    
 
+    function formatMeetingDuration(meeting) {
+        const endTimestamp = meeting.checkInDateTime;
+    
+        if (endTimestamp != null) {
+            const endDate = new Date(endTimestamp);
+    
+            endDate.setHours(endDate.getHours() - 5);
+            endDate.setMinutes(endDate.getMinutes() - 30);
+    
+            const options = {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                timeZone: 'Asia/Kolkata', // Set the timezone to IST
+            };
+    
+            const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+    
+            let hours = endDate.getHours();
+            const amPm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+    
+            // Manually construct the time in 12-hour format (hh:mm AM/PM)
+            const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+    
+            return `${formattedDate}, ${formattedTime}`;
+        }
+    }
+    
 
     const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
 
@@ -1786,6 +1861,8 @@ export default function Dashboard() {
 
         axios
             .get(passApiEndpoint, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            
                 responseType: 'blob',
             })
             .then((response) => {
@@ -1841,6 +1918,9 @@ export default function Dashboard() {
 
     useEffect(() => {
 
+
+   
+
         if (page === 0) {
             fetchData();
 
@@ -1850,6 +1930,19 @@ export default function Dashboard() {
 
 
     }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, phoneNumberFilter, startDate, endDate])
+
+
+
+    useEffect(()=>{
+        const filter =localStorage.getItem('filters')
+        if(filter){
+           
+            setSelectedStatusOptions(filter)
+            fetchData()
+            localStorage.removeItem('filters')
+        }
+
+    },[selectedStatusOptions])
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -2249,7 +2342,7 @@ export default function Dashboard() {
 
                                                             {/* //zzzzz */}
  
-                                                                {visitor.status === 'APPROVED' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS'|| visitor.status === 'CANCELLED_BY_VISITOR' ? (
+                                                                {visitor.status === 'APPROVED'|| visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ||  visitor.status === 'CANCELLED_BY_VISITOR' ? (
                                                                     
                                                                     <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                 ) : (
@@ -2257,24 +2350,7 @@ export default function Dashboard() {
                                                                     <EditIcon onClick={() => handleOpenModal(visitor)} />
                                                                 )} 
 
-                                                                   
-
-
-                                                                    
-
-                                                                    
-
-
-
-                                                             
-
-                                                                   
-
                                                                 
-
-
-
-
                                                             </TableCell>
 
                                                         </TableRow>
