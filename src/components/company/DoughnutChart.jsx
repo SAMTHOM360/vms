@@ -11,6 +11,7 @@ import {Doughnut} from 'react-chartjs-2';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import Loader from '../Loader';
+import { fontSize } from '@mui/system';
 
 ChartJS.register(
     ArcElement,
@@ -91,32 +92,52 @@ useEffect(()=>{
 
 
     const data ={
-        // labels:['Total','Available','Busy'],
-        labels:['Available','Busy'],
+        
+        // labels:['Available','Busy'],
+        labels: [
+          `Available:${availableRooms} `,
+          `Busy:${busyRooms}`,
+    
+      ],
+
+
         datasets:[{
             // label:"Poll",
             // data:[totalRooms,availableRooms,busyRooms],
             data:[availableRooms,busyRooms],
             backgroundColor:['#34aadc','#32577e','#618fbed9'],
-            borderColor:['#34aadc','#32577e','#618fbed9']
+            borderColor:['#34aadc','#32577e','#618fbed9'],
+            
         }]
     }
 
     const options = {
-        maintainAspectRatio: false, // Prevent the chart from maintaining a 2:1 aspect ratio
-        responsive: true, // Allow the chart to be responsive
+        maintainAspectRatio: false, 
+        responsive: true, 
         plugins: {
           legend: {
             display: true,
-            position: 'bottom', // Adjust the legend position if needed
+            labels:{
+              font: {
+                size: 22
+            }
+            },
+            position: 'bottom', 
           },
+
+      
         },
         layout: {
           padding: {
-            top: 10, // Increase or decrease top padding as needed
-            bottom: 30, // Increase or decrease bottom padding as needed
+            top: 10, 
+            bottom: 30, 
           },
         },
+
+
+
+
+       
         // scales: {
         //   x: {
         //     display: false, // Hide the x-axis if not needed
@@ -126,15 +147,6 @@ useEffect(()=>{
         //   },
         // },
       };
-
-
-
-
-
-
-
-
-
 
 
     return(

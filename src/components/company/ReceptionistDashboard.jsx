@@ -1278,8 +1278,8 @@ export default function Dashboard() {
     const [statusOptions, setStatusOptions] = useState([]);
     const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
 
-    
-    
+
+
 
     // console.log(selectedStatusOptions, "selectedstatus");
 
@@ -1327,7 +1327,7 @@ export default function Dashboard() {
 
     const [hostOptions, setHostOptions] = useState([]);
     const [selectedHostOptions, setSelectedHostOptions] = useState("");
-    
+
 
     const handleChangeHost = (event) => {
 
@@ -1345,11 +1345,11 @@ export default function Dashboard() {
         axios.get(hostUrl)
             .then(response => {
                 const data = response.data.data;
-                
 
 
-                console.log(data,"hostnames")
-              
+
+                console.log(data, "hostnames")
+
 
                 // data.forEach(datas =>{
                 //     const status1 = datas;
@@ -1361,7 +1361,7 @@ export default function Dashboard() {
 
 
                 setHostOptions(data);
-               
+
 
 
 
@@ -1376,7 +1376,7 @@ export default function Dashboard() {
     const [roomAdded, setRoomAdded] = useState(false);
 
 
- 
+
 
     //     function calculateSerialNumber(page, rowsPerPage, index) {
     //     if (phoneNumberFilter || startDate || endDate || selectedStatusOptions) {
@@ -1415,22 +1415,23 @@ export default function Dashboard() {
     //select
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
+    const [filterSelectedRoom, setFilterSelectedRoom] = useState('');
 
-    const [selectedRoomOptions,setSelectedRoomOptions] = useState('');
+    const [selectedRoomOptions, setSelectedRoomOptions] = useState('');
 
 
-    const handleChange2 = (event) =>{
-        setSelectedRoomOptions(event.target.value);
+    const handleChange2 = (event) => {
+        setFilterSelectedRoom(event.target.value);
     }
 
 
     const handleChange1 = (event) => {
         setSelectedRoom(event.target.value);
-        
+
     };
 
     function getRoomsOption() {
-       
+
 
         const companyId = localStorage.getItem('companyId');
 
@@ -1497,7 +1498,7 @@ export default function Dashboard() {
                     alert("Meeting cancelled succesfully")
                 }
                 else {
-                    console.log(selectedRoom,"selectedRoom")
+                    console.log(selectedRoom, "selectedRoom")
                     alert("Room added succesfully")
                     setRoomAdded(true);
                 }
@@ -1602,12 +1603,9 @@ export default function Dashboard() {
 
     // const { adminId } = useParams();
 
-    function filters(){
 
-        if(phoneNumberFilter || selectedHostOptions ||selectedStatusOptions ||selectedRoom || startDate|| endDate ){
-            setPage(0)
-        }
-    }
+
+
 
 
 
@@ -1622,18 +1620,18 @@ export default function Dashboard() {
         const payload = {
             page: page,
             size: rowsPerPage,
-            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter ,
+            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
             companyId: companyId,
             fromDate: startDate,
             toDate: endDate,
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
-            user:{
+            user: {
 
-                id:selectedHostOptions.length === 0 ? null : selectedHostOptions,
-           },
-       
+                id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+            },
+
             room: {
-                id: selectedRoom.length === 0 ? null : selectedRoom,
+                id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
             }
 
             // date:'2023-10-18T11:00:00'
@@ -1646,8 +1644,8 @@ export default function Dashboard() {
             .then(response => {
                 const responseData = response.data.data.meetings;
                 const responseDataLength = response.data.data.meetings.length;
-                console.log(responseDataLength,"length")
-                console.log(responseData,"responseDatta")
+                console.log(responseDataLength, "length")
+                console.log(responseData, "responseDatta")
                 // console.log(responseData.visitor.phoneNumber,"blahhhhh")
 
                 // const passResponseData = response.data.data.meetings;
@@ -1662,7 +1660,7 @@ export default function Dashboard() {
                 });
 
 
-               setMeetingsLength(responseDataLength);
+                setMeetingsLength(responseDataLength);
 
                 setMeetingsPerPage(response.data.data.totalMeeting);
                 setMeetings(response.data.data.totalElements);
@@ -1722,13 +1720,13 @@ export default function Dashboard() {
 
 
 
-        // Create JavaScript Date objects with IST timezone
+
         const startDate = new Date(startTimestamp);
         startDate.setHours(startDate.getHours() - 5);
         startDate.setMinutes(startDate.getMinutes() - 30);
         const endDate = new Date(endTimestamp);
 
-        // Define options for formatting
+
         const options = {
             year: 'numeric',
             month: 'numeric',
@@ -1739,7 +1737,7 @@ export default function Dashboard() {
             timeZone: 'Asia/Kolkata', // Set the timezone to IST
         };
 
-        // Format the start and end dates using the options
+
         const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
         const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
 
@@ -1753,13 +1751,13 @@ export default function Dashboard() {
 
 
 
-        // Create JavaScript Date objects with IST timezone
+
         if (endTimestamp != null) {
             const endDate = new Date(endTimestamp);
             endDate.setHours(endDate.getHours() - 5);
             endDate.setMinutes(endDate.getMinutes() - 30);
 
-            // Define options for formatting
+
             const options = {
                 year: 'numeric',
                 month: 'numeric',
@@ -1830,6 +1828,7 @@ export default function Dashboard() {
         getRoomsOption();
         fetchStatusOptions();
         fetchHostOptions();
+
         // filterData();
 
         // console.log(statusOptions,"statusOptions")
@@ -1837,7 +1836,20 @@ export default function Dashboard() {
 
 
 
-    }, [page, rowsPerPage, selectedStatusOptions,selectedRoom,selectedHostOptions, phoneNumberFilter, startDate, endDate]);
+    }, [page, rowsPerPage]);
+
+
+    useEffect(() => {
+
+        if (page === 0) {
+            fetchData();
+
+        } else {
+            setPage(0);
+        }
+
+
+    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, phoneNumberFilter, startDate, endDate])
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -2026,7 +2038,7 @@ export default function Dashboard() {
 
 
 
-                                                    <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
+                                                        <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
                                                             onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                                             onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
 
@@ -2065,11 +2077,11 @@ export default function Dashboard() {
                                                             onChange={handleChangeHost}
                                                             SelectProps={{
                                                                 MenuProps: {
-                                                                  style: {
-                                                                    maxHeight: '400px', // Adjust the height as per your requirement
-                                                                  },
+                                                                    style: {
+                                                                        maxHeight: '400px', // Adjust the height as per your requirement
+                                                                    },
                                                                 },
-                                                              }}
+                                                            }}
 
                                                             style={{ top: "10px" }}
 
@@ -2083,8 +2095,8 @@ export default function Dashboard() {
 
 
                                                             {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
-                                                                <MenuItem key={index} value={options.id}      disabled={!options.isPresent} 
-                                                                style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
+                                                                <MenuItem key={index} value={options.id} disabled={!options.isPresent}
+                                                                    style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
                                                             ))}
                                                         </TextField>
 
@@ -2093,17 +2105,17 @@ export default function Dashboard() {
                                                             id="outlined-select-currency"
                                                             select
                                                             label="Search by Room"
-                                                            value={selectedRoom}
+                                                            value={filterSelectedRoom}
                                                             // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onChange={handleChange1}
+                                                            onChange={handleChange2}
 
                                                             SelectProps={{
                                                                 MenuProps: {
-                                                                  style: {
-                                                                    maxHeight: '400px', // Adjust the height as per your requirement
-                                                                  },
+                                                                    style: {
+                                                                        maxHeight: '400px', // Adjust the height as per your requirement
+                                                                    },
                                                                 },
-                                                              }}
+                                                            }}
 
                                                             style={{ top: "10px" }}
 
@@ -2117,22 +2129,9 @@ export default function Dashboard() {
 
 
                                                             {Array.isArray(rooms) && rooms.map((room) => (
-                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
-                                            ))}
+                                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
+                                                            ))}
                                                         </TextField>
-
-
-
-
-                                                     
-
-
-
-                                                      
-
-
-
-                                                      
 
 
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2189,7 +2188,7 @@ export default function Dashboard() {
                                                     <TableCell align="left">Company Name</TableCell>
                                                     <TableCell align="left">Host Name</TableCell>
                                                     {/* <TableCell align="right">Remarks</TableCell> */}
-                                                    {/* <TableCell align="left">Room</TableCell> */}
+                                                    <TableCell align="left">Room</TableCell>
 
                                                     <TableCell align="left">Meeting Time</TableCell>
                                                     {/* <TableCell align="right">End Time</TableCell> */}
@@ -2223,7 +2222,7 @@ export default function Dashboard() {
                                                             <TableCell align="left">{visitor.visitor.companyName}</TableCell>
                                                             <TableCell align="left">{getFullName(visitor.user)}</TableCell>
                                                             {/* <TableCell align="right">{visitor.remarks}</TableCell> */}
-                                                            {/* <TableCell align="left">{visitor.room.roomName === null ? '':visitor.room.roomName}</TableCell> */}
+                                                            <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
                                                             <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
                                                             {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
 
@@ -2248,13 +2247,31 @@ export default function Dashboard() {
                                                             )} */}
 
 
-                                                                {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS' ? (
-                                                                    // Disable the Edit button
+                                                            {/* //zzzzz */}
+ 
+                                                                {visitor.status === 'APPROVED' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'INPROCESS'|| visitor.status === 'CANCELLED_BY_VISITOR' ? (
+                                                                    
                                                                     <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                 ) : (
-                                                                    // Enable the Edit button
+                                                                    
                                                                     <EditIcon onClick={() => handleOpenModal(visitor)} />
-                                                                )}
+                                                                )} 
+
+                                                                   
+
+
+                                                                    
+
+                                                                    
+
+
+
+                                                             
+
+                                                                   
+
+                                                                
+
 
 
 
@@ -2344,7 +2361,7 @@ export default function Dashboard() {
                                             className="room-dropdown"
                                             MenuProps={MenuProps}
                                         >
-
+                                            
                                             {Array.isArray(rooms) && rooms.map((room) => (
                                                 <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
                                             ))}
