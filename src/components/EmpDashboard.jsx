@@ -425,6 +425,9 @@ const EmpDashboard = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         cursor: "pointer",
+                        "&:hover": {
+                          bgcolor:"#283550",
+                        },
                       }}
                       onClick={handleNavigateMeeting}
                     >
