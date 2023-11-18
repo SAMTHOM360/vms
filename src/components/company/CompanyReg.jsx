@@ -225,18 +225,8 @@ export default function CompanyReg() {
         setValues({ ...values, logo: logoFile });
     };
 
-
-
-    const [sidebarOpen, setSidebarOpen] = useState(true)
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
-
     return (
         <>
-            <Navbar toggleSidebar={toggleSidebar} />
-            <Box sx={{ display: 'flex', flexGrow: 1, p: 3, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                <Sidebar open={sidebarOpen} />
 
                 <Grid>
                     <div className='img'>
@@ -433,7 +423,6 @@ export default function CompanyReg() {
             )} */}
 
                 {/* <ToastContainer position="top-center" /> */}
-            </Box>
 
         </>
 

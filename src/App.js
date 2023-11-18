@@ -1,131 +1,111 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { CssBaseline, Box } from '@mui/material';
-import LoginForm from './components/LoginFormNK'; // Nikhil
-import Employee from './components/EmployeeSB'; // Sandeep
-import UserForm from './components/UserFormSB'; // Sandeep
+// PRIMARY STARTS
+
+// import { Routes, Route, Navigate } from 'react-router-dom';
+// import { CssBaseline, Box } from '@mui/material';
+// import LoginForm from './components/LoginFormNK'; // Nikhil
+// import Employee from './components/EmployeeSB'; // Sandeep
+// import UserForm from './components/UserFormSB'; // Sandeep
+// // import Dashboard from './components/Dashboard';
+// import { useAuth } from './routes/AuthContext';
+// import { ToastContainer } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+
+// import NotFound from './components/NotFound';
+// import Loader from './components/Loader';
+
+// import CompanyReg from './components/company/CompanyReg';
+// import CompanyTable from './components/company/CompanyTable';
+// import EditCompanyForm from './components/company/EditCompanyForm';
+// import Dashboardd from './components/company/Dashboardd';
+// import ReceptionistDashboard from './components/company/ReceptionistDashboard';
+
+// import DashboardReceptionist from './components/company/DashboardReceptionist';
+// import MeetingDetails from './components/company/MeetingDetails';
+// import EmpDashboard from './components/EmpDashboard';
+// import MeetingNotices from './components/MeetingNotices';
 // import Dashboard from './components/Dashboard';
-import { useAuth } from './routes/AuthContext';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import EmpMeeting from './components/EmpMeeting';
+// import Profile from './components/Profile';
+// // import ExcelUpload from './components/experimentals/ExcelUpload';
+// import FileDropArea from './components/experimentals/FileDropArea';
+// import PrivateRoute from './routes/PrivateRoute';
 
-import NotFound from './components/NotFound';
-import Loader from './components/Loader';
+// import DynamicIdCard from './components/experimentals/DynamicIdCard';
+// import UpdateDialogue from './components/unused/UpdateDialogue';
+// // import BulkUserForm from './components/BulkUserForm';
 
+// function App() {
 
-import CompanyReg from './components/company/CompanyReg';
-import CompanyTable from './components/company/CompanyTable';
-import EditCompanyForm from './components/company/EditCompanyForm';
-import Dashboardd from './components/company/Dashboardd';
-import ReceptionistDashboard from './components/company/ReceptionistDashboard';
+//   return (
+//     <>
+//       <CssBaseline />
+//       <Box className="App">
+//         <Box className="content">
+// <Routes>
+// <Route path="/" element={<LoginForm />} />
+// <Route path ="/demoland" element={<UpdateDialogue />} />
+// {/* <Route path ="/vertical" element={<BulkUserForm />} /> */}
+// <Route path="*" element={<NotFound />} />
+// <Route path="/filedrop" element={<FileDropArea />} />
+// <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
+// {/* <Route path="/loader" element={<Loader />} /> */}
+// {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
+// {/* <Route path="/profile" element={<Profile />} /> */}
+// {/* <Route path="/userform" element={<UserForm />} /> */}
+// {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
+// {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
+// {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
+// {/* <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} /> */}
+// {/* <Route path="/dashboard" element={<Dashboardd />} /> */}
+// {/* <Route path="/companyDetails" element={<CompanyTable />} /> */}
+// {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
+// {/* <Route path="/employee" element={<Employee />} /> */}
+// {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
 
+//   {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
+//   <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
+//   {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
 
-import DashboardReceptionist from './components/company/DashboardReceptionist';
-import MeetingDetails from './components/company/MeetingDetails';
-import EmpDashboard from './components/EmpDashboard';
-import MeetingNotices from './components/MeetingNotices';
-import Dashboard from './components/Dashboard';
-import EmpMeeting from './components/EmpMeeting';
-import Profile from './components/Profile';
-// import ExcelUpload from './components/experimentals/ExcelUpload';
-import FileDropArea from './components/experimentals/FileDropArea';
-import PrivateRoute from './routes/PrivateRoute';
+//   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
+//   <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
+//   <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
+//   <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
+//   <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
 
+//   {/* mycode */}
+//   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
-import DynamicIdCard from './components/experimentals/DynamicIdCard';
-import UpdateDialogue from './components/unused/UpdateDialogue';
-// import BulkUserForm from './components/BulkUserForm';
+//   <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} />
+//   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
 
-function App() {
+//   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
+//   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
 
-  return (
-    <>
-      <CssBaseline />
-      <Box className="App">
-        <Box className="content">
-          <Routes>
-          <Route path="/" element={<LoginForm />} />
-          <Route path ="/demoland" element={<UpdateDialogue />} />
-          {/* <Route path ="/vertical" element={<BulkUserForm />} /> */}
-          <Route path="*" element={<NotFound />} />
-          <Route path="/filedrop" element={<FileDropArea />} />
-          <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
-          {/* <Route path="/loader" element={<Loader />} /> */}
-          {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
-          {/* <Route path="/profile" element={<Profile />} /> */}
-          {/* <Route path="/userform" element={<UserForm />} /> */}
-          {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
-          {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
-          {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
-          {/* <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} /> */}
-          {/* <Route path="/dashboard" element={<Dashboardd />} /> */}
-          {/* <Route path="/companyDetails" element={<CompanyTable />} /> */}
-          {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
-          {/* <Route path="/employee" element={<Employee />} /> */}
-          {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
+//   <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
 
+// </Routes>
 
+//         </Box>
+//         <ToastContainer
+//           position="top-right"
+//           autoClose={4000}
+//           hideProgressBar={false}
+//           newestOnTop
+//           closeOnClick
+//           rtl={false}
+//           pauseOnFocusLoss
+//           draggable
+//           pauseOnHover
+//           theme="light"
+//         />
+//       </Box>
+//     </>
+//   );
+// }
 
+// export default App;
 
-
-          
-
-
-            {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
-            <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
-            {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
-
-
-            <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
-            <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
-            <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
-            <Route path="/dashboard" element={<PrivateRoute element={<Dashboardd />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
-            <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
-
-            {/* mycode */}
-            <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
-
-
-            <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} />
-            <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
-
-            <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
-            <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
-
-            <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
-
-
-          </Routes>
-          
-        </Box>
-        <ToastContainer
-          position="top-right"
-          autoClose={4000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </Box>
-    </>
-  );
-}
-
-export default App;
-
-
-
-
-
-
-
-
-
-
-
+//PRIMARY ENDS
 
 // import React, { lazy, Suspense, useState } from 'react';
 // import { Routes, Route, Navigate } from 'react-router-dom';
@@ -208,10 +188,8 @@ export default App;
 //           <Route path="/employee" element={<Employee />} />
 //           {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
 
-
 //             {/* <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
 //             {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
-
 
 //             {/* <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} /> */}
 //             <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
@@ -222,7 +200,6 @@ export default App;
 
 //             {/* mycode */}
 //             <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
-
 
 //             <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} />
 //             <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
@@ -254,3 +231,221 @@ export default App;
 // }
 
 // export default App;
+
+import React, { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { CssBaseline, Box, Container } from "@mui/material";
+import Navbar from "./global/Navbar";
+import Sidebar from "./global/Sidebar";
+import LoginForm from "./components/LoginFormNK";
+import Employee from "./components/EmployeeSB";
+import UserForm from "./components/UserFormSB";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import NotFound from "./components/NotFound";
+import Loader from "./components/Loader";
+import CompanyReg from "./components/company/CompanyReg";
+import CompanyTable from "./components/company/CompanyTable";
+import EditCompanyForm from "./components/company/EditCompanyForm";
+import Dashboardd from "./components/company/Dashboardd";
+import ReceptionistDashboard from "./components/company/ReceptionistDashboard";
+import DashboardReceptionist from "./components/company/DashboardReceptionist";
+import MeetingDetails from "./components/company/MeetingDetails";
+import EmpDashboard from "./components/EmpDashboard";
+import MeetingNotices from "./components/MeetingNotices";
+import EmpMeeting from "./components/EmpMeeting";
+import Profile from "./components/Profile";
+import FileDropArea from "./components/experimentals/FileDropArea";
+import DynamicIdCard from "./components/experimentals/DynamicIdCard";
+import PrivateRoute from "./routes/PrivateRoute";
+import DemoDashboardV2 from "./components/experimentals/DemoDashboardV2";
+import Grid from "@mui/material/Grid";
+
+function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(window.location.pathname);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  return (
+    <>
+      <CssBaseline />
+      {shouldShowSidebar && <Navbar toggleSidebar={toggleSidebar} /> }
+
+      <Box sx={{
+         display: "flex", // Comment it for overlay Sidebar
+        //  display:'',  // Uncomment for overlay Sidebar
+         flexGrow: 1, 
+         p: 3, 
+        //  pl:'5em',    // Uncomment for overlay Sidebar
+         }}>
+
+{shouldShowSidebar && <Sidebar open={sidebarOpen} /> }
+        
+        {/* <Grid container spacing={2} sx={{ bgcolor: "orange" }}>
+          <Grid item xs={12} md={12} lg={12}> */}
+            <Routes>
+              //OPEN ROUTES START
+              <Route path="/" element={<LoginForm />} />
+              <Route path="/demodashboard" element={<DemoDashboardV2 />} />
+              {/* <Route path ="/vertical" element={<BulkUserForm />} /> */}
+              <Route path="*" element={<NotFound />} />
+
+
+
+              <Route path="/filedrop" element={<FileDropArea />} />
+              <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
+              {/* <Route path="/edit/:companyId" element={<EditCompanyForm />} /> */}
+              {/* <Route path="/loader" element={<Loader />} /> */}
+              {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
+              {/* <Route path="/profile" element={<Profile />} /> */}
+              {/* <Route path="/userform" element={<UserForm />} /> */}
+              {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
+              {/* <Route path="/meetingDetails" element={<MeetingDetails />} /> */}
+              {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
+              {/* <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} /> */}
+              {/* <Route path="/dashboard" element={<Dashboardd />} /> */}
+              {/* <Route path="/companyDetails" element={<CompanyTable />} /> */}
+              {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
+              {/* <Route path="/employee" element={<Employee />} /> */}
+              {/* <Route path="/excelupload" element={<ExcelUpload />} /> */}
+
+              //OPEN ROUTES END //PRIVATE ROUTES START
+
+              {/* <Route
+                path="/employee"
+                element={
+                  <PrivateRoute
+                    element={<Employee />}
+                    allowedRoles={["SUPERADMIN", "ADMIN"]}
+                  />
+                }
+              /> */}
+              {/* <Route path="/meetingupdates" element={<PrivateRoute element={<MeetingNotices />} allowedRoles={['EMPLOYEE']} />} /> */}
+              <Route
+                path="/companyreg"
+                element={
+                  <PrivateRoute
+                    element={<CompanyReg />}
+                    allowedRoles={["SUPERADMIN"]}
+                  />
+                }
+              />
+              <Route
+                path="/companyDetails"
+                element={
+                  <PrivateRoute
+                    element={<CompanyTable />}
+                    allowedRoles={["SUPERADMIN"]}
+                  />
+                }
+              />
+              <Route
+                path="/edit/:companyId"
+                element={
+                  <PrivateRoute
+                    element={<EditCompanyForm />}
+                    allowedRoles={["SUPERADMIN"]}
+                  />
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute
+                    element={<Dashboardd />}
+                    allowedRoles={["ADMIN", "EMPLOYEE"]}
+                  />
+                }
+              />
+              <Route
+                path="/receptionistdashboard"
+                element={
+                  <PrivateRoute
+                    element={<ReceptionistDashboard />}
+                    allowedRoles={["RECEPTIONIST"]}
+                  />
+                }
+              />
+              {/* mycode */}
+              <Route
+                path="/dashboardreceptionist"
+                element={
+                  <PrivateRoute
+                    element={<DashboardReceptionist />}
+                    allowedRoles={["RECEPTIONIST"]}
+                  />
+                }
+              />
+
+              <Route
+                path="/meetingDetails"
+                element={
+                  <PrivateRoute
+                    element={<MeetingDetails />}
+                    allowedRoles={["RECEPTIONIST"]}
+                  />
+                }
+              />
+              
+              <Route
+                path="/empmeeting"
+                element={
+                  <PrivateRoute
+                    element={<EmpMeeting />}
+                    allowedRoles={["EMPLOYEE"]}
+                  />
+                }
+              />
+              <Route
+                path="/userform"
+                element={
+                  <PrivateRoute
+                    element={<UserForm />}
+                    allowedRoles={["ADMIN", "SUPERADMIN"]}
+                  />
+                }
+              />
+              <Route
+                path="/empdashboard"
+                element={
+                  <PrivateRoute
+                    element={<EmpDashboard />}
+                    allowedRoles={["EMPLOYEE", "ADMIN"]}
+                  />
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute
+                    element={<Profile />}
+                    allowedRoles={["EMPLOYEE", "RECEPTIONIST", "ADMIN"]}
+                  />
+                }
+              />
+              //PRIVATE ROUTES END
+            </Routes>
+          {/* </Grid>
+        </Grid> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </Box>
+    </>
+  );
+}
+
+export default App;

@@ -647,9 +647,6 @@ export default function Dashboard() {
 
     return (
         <>
-            <Navbar toggleSidebar={toggleSidebar} />
-            <Box sx={{ display: 'flex', flexGrow: 1, p: 3, width: '100%' }}>
-                <Sidebar open={sidebarOpen} />
                 <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1 }}>
                     <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
                         <Grid container>
@@ -1153,7 +1150,6 @@ export default function Dashboard() {
                     </div>
 
                 </div>
-            </Box>
         </>
     )
 }

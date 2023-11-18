@@ -1013,10 +1013,6 @@ const formatDate = (dateString) => {
     return (
 <>
 <Loader isLoading={loading}/>
-
-    <Navbar toggleSidebar={toggleSidebar} />
-       <Box sx={{display:'flex', flexGrow:1, p:3, width:'100%'}}>
-           <Sidebar open={sidebarOpen} />
             <div style={{ display: "flex", justifyContent: "center", flexDirection: "",flexGrow:1  }}>
                 <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow:1 }}>
                     <Grid container>
@@ -1337,7 +1333,6 @@ const formatDate = (dateString) => {
                 </div>
 
             </div>
-            </Box>
         </>
     )
 }

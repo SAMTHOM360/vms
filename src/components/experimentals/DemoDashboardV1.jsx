@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react';
-import Navbar from '../global/Navbar';
-import Sidebar from '../global/Sidebar';
+import Navbar from '../../global/Navbar';
+import Sidebar from '../../global/Sidebar';
 import Grid from '@mui/material/Grid';
 import { Paper, Box } from '@mui/material';
-import Header from './Header';
-import Loader from './Loader';
+import Header from '../Header';
+import Loader from '../Loader';
 
-const Dashboard = () => {
+const DemoDashboardV1 = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -17,7 +17,7 @@ const Dashboard = () => {
   return (
     <>
     <Navbar toggleSidebar={toggleSidebar}/>
-    <Box sx={{display:"flex", flexGrow: 1, p: 3}}>
+    <Box sx={{display:"flex", flexGrow: 1, p: 3, pl:'4em'}}>
         <Sidebar open={sidebarOpen} />
         <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
@@ -53,20 +53,7 @@ const Dashboard = () => {
           maxWidth='90%'
           flexGrow={1}
           height="75vh"
-          // sx={{
-          //   "& .MuiDataGrid-root": {
-          //     border: 'none',
-          //   },
-          // //   "& .MuiDataGrid-cell": {
-          // //     borderBottom: 'none',
-          // //   },
-          //   "& .MuiDataGrid-columnHeaders": {
-          //     borderBottom: 'none',
-          //   },
-          // //   "& .MuiDataGrid-footerContainer": {
-          // //     borderTop: 'none',
-          // //   },
-          // }}
+
 
           sx={{
             mb:'1.5em'
@@ -85,4 +72,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default DemoDashboardV1

@@ -20,7 +20,7 @@ const NotFound = () => {
     linkTo = '/empdashboard';
   }
   return (
-<Box sx={{overflow:'hidden'}}>
+<Box sx={{overflow:'hidden', bgcolor:'orange', width:'100vw', height:'100vh',}}>
 <Box sx={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', mt:'10em', height:'55vh',}}>
             <Box
             sx={{

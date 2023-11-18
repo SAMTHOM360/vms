@@ -389,9 +389,6 @@ const CompanyTable = () => {
 
   return (
 <>
-<Navbar toggleSidebar={toggleSidebar}/>
-<Box sx={{display:'flex', flexGrow:1, p:3, width:'100%'}}>
-<Sidebar open={sidebarOpen} />
 <div style={{ display: 'flex', justifyContent: 'center',backgroundColor:"",top:0, flexGrow:1 }}>
       <div style={{ backgroundColor:"" }}>
         <Grid container>
@@ -544,7 +541,6 @@ const CompanyTable = () => {
       </div>
       <ToastContainer />
     </div>
-</Box>
 </>
   );
 };
