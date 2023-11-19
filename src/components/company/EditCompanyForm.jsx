@@ -237,6 +237,7 @@ export default function EditCompanyForm() {
 
   return (
     <>
+    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
             <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
       <form>
@@ -486,6 +487,7 @@ export default function EditCompanyForm() {
       </form>
       </Grid>
       </Grid>
+      </Box>
     </>
   );
 }

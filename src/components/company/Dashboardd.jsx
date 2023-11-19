@@ -647,6 +647,10 @@ export default function Dashboard() {
 
     return (
         <>
+                <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+
+<Grid container spacing={2}>
+<Grid item xs={12} md={12} lg={12}>
                 <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1 }}>
                     <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
                         <Grid container>
@@ -1150,6 +1154,9 @@ export default function Dashboard() {
                     </div>
 
                 </div>
+                </Grid>
+                </Grid>
+                </Box>
         </>
     )
 }

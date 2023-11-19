@@ -227,8 +227,10 @@ export default function CompanyReg() {
 
     return (
         <>
+        <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
 
-                <Grid>
+        <Grid container spacing={2}>
+  <Grid item xs={12} md={12} lg={12}>
                     <div className='img'>
 
 
@@ -413,6 +415,8 @@ export default function CompanyReg() {
                         </form>
                     </div>
 
+                    </Grid>
+
                 </Grid>
 
                 {/* {isSubmitted && (
@@ -423,6 +427,8 @@ export default function CompanyReg() {
             )} */}
 
                 {/* <ToastContainer position="top-center" /> */}
+
+                </Box>
 
         </>
 

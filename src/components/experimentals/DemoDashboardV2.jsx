@@ -7,7 +7,7 @@ import { Paper, Box } from '@mui/material';
 import Header from '../Header';
 import Loader from '../Loader';
 
-const DemoDashboardV1 = () => {
+const DemoDashboardV2 = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -17,7 +17,7 @@ const DemoDashboardV1 = () => {
   return (
     <>
     {/* <Navbar toggleSidebar={toggleSidebar}/> */}
-    {/* <Box sx={{display:"flex", flexGrow: 1, p: 3, pl:'4em'}}> */}
+    <Box sx={{display:"flex", flexGrow: 1, p: 3, pl:'4em'}}>
         {/* <Sidebar open={sidebarOpen} /> */}
         <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
@@ -80,9 +80,9 @@ const DemoDashboardV1 = () => {
 
   </Grid>
 </Grid>
-    {/* </Box> */}
+    </Box>
     </>
   )
 }
 
-export default DemoDashboardV1
+export default DemoDashboardV2

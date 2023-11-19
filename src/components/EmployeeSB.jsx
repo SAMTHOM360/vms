@@ -242,9 +242,14 @@ const Employee = () => {
     setLoading(false)
   };
   
-  const handleAddDialogOpen = () => {
+  const handleOpenSingleUserForm = () => {
     // setAddUserDialogOpen(true)
     navigate('/userform')
+  }
+
+  const handleOpenBulkUsersForm = () => {
+    // setAddUserDialogOpen(true)
+    navigate('/bulkform')
   }
   
   const handleAddDialogClose = () => {
@@ -430,6 +435,7 @@ toast.success('Selected user is successfully updated.', {
   return (
 <>
 <Loader isLoading={loading}/>
+<Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
 <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
   <Box
@@ -457,11 +463,19 @@ toast.success('Selected user is successfully updated.', {
         disabled
         >Max Limit Reached</Button>
         :
+        <>
         <Button variant="contained"
         size='small'
+        sx={{marginLeft:'1.2em', height:'3em'}}
+        onClick={handleOpenSingleUserForm}
+        >Add Single User</Button>
+
+<Button variant="contained"
+        size='small'
         sx={{margin:'1.2em', height:'3em'}}
-        onClick={handleAddDialogOpen}
-        >Add Employee</Button>
+        onClick={handleOpenBulkUsersForm}
+        >Add Bulk Users</Button>
+        </>
        }
         </Box>
         
@@ -651,6 +665,7 @@ toast.success('Selected user is successfully updated.', {
         </DialogActions>
       </Dialog>
     </Box>
+</Box>
 </>
   );
 };

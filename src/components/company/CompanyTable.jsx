@@ -389,6 +389,10 @@ const CompanyTable = () => {
 
   return (
 <>
+<Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+
+<Grid container spacing={2}>
+<Grid item xs={12} md={12} lg={12}>
 <div style={{ display: 'flex', justifyContent: 'center',backgroundColor:"",top:0, flexGrow:1 }}>
       <div style={{ backgroundColor:"" }}>
         <Grid container>
@@ -541,6 +545,9 @@ const CompanyTable = () => {
       </div>
       <ToastContainer />
     </div>
+    </Grid>
+    </Grid>
+    </Box>
 </>
   );
 };

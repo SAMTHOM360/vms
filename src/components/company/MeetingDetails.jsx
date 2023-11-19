@@ -371,6 +371,7 @@ const MeetingDetails = () => {
 
   return (
     <>
+                    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={12} lg={12}>
           <Paper
@@ -555,6 +556,7 @@ const MeetingDetails = () => {
           </form>
         </Grid>
       </Grid>
+      </Box>
     </>
   );
 };
