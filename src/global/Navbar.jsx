@@ -79,7 +79,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar({toggleSidebar}) {
-  const adminId = localStorage.getItem('adminId')
+  const adminId = sessionStorage.getItem('adminId')
   const loggedUserName = sessionStorage.getItem('loggedUserName')
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const loggedUserUsername = sessionStorage.getItem('loggedUserUsername')

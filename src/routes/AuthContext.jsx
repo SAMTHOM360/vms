@@ -76,9 +76,9 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('limit')
     sessionStorage.removeItem('currEmpLength')
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('adminId')
-    localStorage.removeItem('companyId')
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('adminId')
+    sessionStorage.removeItem('companyId')
 
   };
 

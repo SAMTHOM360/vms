@@ -19,7 +19,7 @@ const ExcelUpload = () => {
   const headers = {
     Authorization: `Bearer ${AuthToken}`,
   };
-  const companyId = localStorage.getItem('companyId');
+  const companyId = sessionStorage.getItem('companyId');
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isUpload, setIsUpload] = useState(false);
