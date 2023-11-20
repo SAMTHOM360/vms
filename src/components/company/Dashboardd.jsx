@@ -878,8 +878,11 @@ export default function Dashboard() {
 
 
 
-                                                            {Array.isArray(rooms) && rooms.map((room) => (
+                                                            {/* {Array.isArray(rooms) && rooms.map((room) => (
                                                                 <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
+                                                            ))} */}
+                                                                 {Array.isArray(rooms) && rooms.map((room) => (
+                                                                <MenuItem key={room.id} value={room.id} >{room.roomName}   </MenuItem>
                                                             ))}
                                                         </TextField>
 

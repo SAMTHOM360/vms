@@ -2342,7 +2342,7 @@ export default function Dashboard() {
 
                                                             {/* //zzzzz */}
  
-                                                                {visitor.status === 'APPROVED'|| visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ||  visitor.status === 'CANCELLED_BY_VISITOR' ? (
+                                                                {visitor.status === 'APPROVED' && visitor.room!== null|| visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ||  visitor.status === 'CANCELLED_BY_VISITOR' ? (
                                                                     
                                                                     <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                 ) : (
