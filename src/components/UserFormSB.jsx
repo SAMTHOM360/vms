@@ -479,7 +479,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                 onSubmit={handleSubmit}
               >
                 <Grid container spacing={2} sx={{ mt: "10px" }}>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="First Name"
@@ -491,7 +491,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Last Name"
@@ -503,7 +503,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Phone"
@@ -527,7 +527,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Email"
@@ -540,7 +540,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         sx={{ width: "100%", mt: "10px" }}
@@ -558,7 +558,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     </LocalizationProvider>
                   </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Gender

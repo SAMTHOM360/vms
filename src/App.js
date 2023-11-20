@@ -262,7 +262,7 @@ const EditCompanyForm = lazy(() => import('./components/company/EditCompanyForm'
 const Dashboardd = lazy(() => import('./components/company/Dashboardd'));
 const ReceptionistDashboard = lazy(() => import('./components/company/ReceptionistDashboard'));
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
-const MeetingDetails = lazy(() => import('./components/company/MeetingDetails'));
+const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
 const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
 const Profile = lazy(() => import('./components/Profile'));
@@ -318,7 +318,7 @@ function App() {
 <Route path="/profile" element={<Profile />} />
 <Route path="/userform" element={<UserForm />} />
 {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
-<Route path="/meetingDetails" element={<MeetingDetails />} />
+<Route path="/appointmeeting" element={<AppointMeetForm />} />
 {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
 <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} />
 <Route path="/dashboard" element={<Dashboardd />} />
@@ -342,7 +342,7 @@ function App() {
   {/* mycode */}
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
-  {/* <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} /> */}
+  {/* <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST']} />} /> */}
   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
 
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />

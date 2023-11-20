@@ -444,7 +444,7 @@ toast.success('Selected user is successfully updated.', {
         display:'flex',
         justifyContent:'space-between',
         alignItems:'center',
-      height:'4.5em',
+      minHeight:'4.5em',
       mt:'3em',
       mb:'0.5em',
       borderRadius:'5px',
