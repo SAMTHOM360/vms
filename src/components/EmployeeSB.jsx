@@ -41,7 +41,7 @@ const Employee = () => {
   const AuthToken = sessionStorage.getItem('token');
   const loggedUserRole = sessionStorage.getItem('loggedUserRole')
   const limit = sessionStorage.getItem('limit')
-  const adminId = localStorage.getItem('adminId')
+  const adminId = sessionStorage.getItem('adminId')
   const currEmpLength = sessionStorage.getItem('currEmpLength') || '0'
   // console.log("admin id",currEmpLength)
 

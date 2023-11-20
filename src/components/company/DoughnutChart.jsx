@@ -33,7 +33,7 @@ export default function DoughnutChart({allData}){
   const[availableRooms,setAvailableRooms] = useState(0);
   const[busyRooms,setBusyRooms] = useState(0);
 
-  const companyId = localStorage.getItem('companyId');
+  const companyId = sessionStorage.getItem('companyId');
 
 
 

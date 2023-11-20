@@ -317,7 +317,7 @@ const CompanyTable = () => {
     const apiUrl = 'http://192.168.12.54:8080/com/all';
     axios
       .get(apiUrl, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then(response => {
         const responseData = response.data.data;
@@ -348,7 +348,7 @@ const CompanyTable = () => {
     };
     axios
       .post(`http://192.168.12.54:8080/com/active`, payload, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then(response => {
         if (isActive) {

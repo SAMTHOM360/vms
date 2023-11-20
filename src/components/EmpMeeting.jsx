@@ -792,12 +792,12 @@ export default function EmpMeeting() {
 
     function getRoomsOption() {
 
-        const companyId = localStorage.getItem('companyId');
+        const companyId = sessionStorage.getItem('companyId');
 
         const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
         axios.get(roomUrl, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
 
         }).then(response => {
             const data = response.data.data;
@@ -827,7 +827,7 @@ export default function EmpMeeting() {
 
     // const { id } = useParams();
 
-    const adminId = localStorage.getItem('adminId');
+    const adminId = sessionStorage.getItem('adminId');
     console.log(adminId,"adminId");
 
     // const { adminId } = useParams();
@@ -840,7 +840,7 @@ export default function EmpMeeting() {
         const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
         axios
             .get(getVisitorUrl, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
             })
             .then(response => {
                 const responseData = response.data.data;
@@ -957,7 +957,7 @@ export default function EmpMeeting() {
     const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/visitor';
 
             axios.post(addMeetingUrl, meetingData, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
             })
                 .then((response) => {
 

@@ -19,7 +19,7 @@ const ProgressBar = () => {
 
     const fetchHours = async () => {
         try {
-            const companyId = localStorage.getItem("companyId")
+            const companyId = sessionStorage.getItem("companyId")
             const today = new Date().toISOString().split('T')[0];
 
             const eightDaysAgo = new Date();
@@ -344,10 +344,11 @@ const ProgressBar = () => {
                 {/* <p>Meeting Hours </p> */}
                 {/* <p>Meeting Hours ( <span id="chartVersion"></span>)</p> */}
             </div>
-            <div className="chartCard">
-                <div className="chartBox">
-                    <h2 style={{ color: "black" }}>MeetingDetails</h2>
-                    <canvas id="myChart" style={{ height: "1000px !important", width: "900px" }}></canvas>
+            <div className="chartCard" style={{backgroundColor:""}}>
+            <h2 style={{ color: "black" }}>MeetingDetails</h2>
+                <div className="chartBox" style={{display:"flex",justifyContent: "",backgroundColor:"" }}>
+                    
+                    <canvas id="myChart" style={{ height: "1000px !important", width: "900px",marginRight: "",backgroundColor:"" }}></canvas>
                 </div>
             </div>
         </div>

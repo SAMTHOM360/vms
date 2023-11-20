@@ -42,7 +42,8 @@ const Profile = () => {
   // const IMG_RESPONSE_URL = "http://192.168.12.58:8080/vis/upload";
 
   const AuthToken = sessionStorage.getItem("token");
-  const adminId = localStorage.getItem("adminId");
+  // const adminId = localStorage.getItem("adminId");
+  const adminId = sessionStorage.getItem("adminId");
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,

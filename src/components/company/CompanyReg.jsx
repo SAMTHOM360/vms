@@ -42,7 +42,7 @@ export default function CompanyReg() {
         email: "",
         phoneNumber: "",
         industry: "",
-        userLimit:"",
+        userLimit: "",
         aboutUs: ""
 
     })
@@ -133,7 +133,7 @@ export default function CompanyReg() {
                 const res = await axios.post(url, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                        Authorization: `Bearer ${sessionStorage.getItem("token")}`
                     },
 
                 });
@@ -227,89 +227,89 @@ export default function CompanyReg() {
 
     return (
         <>
-        <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+            <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
 
-        <Grid container spacing={2}>
-  <Grid item xs={12} md={12} lg={12}>
-                    <div className='img'>
-
-
-                        <form onSubmit={(e) => handleSubmit(e)}>
-
-                            <Box
-                                display="flex" flexDirection='column'
-                                maxWidth={800}
-                                margin='auto'
-                                marginTop={3}
-                                padding={3}
-                                borderRadius={2}
-                                gap={5}
-                                elevation={2}
-                                boxShadow={"5px 5px 10px #ccc"}
-                            >
-                                <Typography sx={{ margin: "auto" }} fontSize={20} variant={'h1'}>Company Registration Form</Typography>
-                                <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={12} lg={12}>
+                        <div className='img'>
 
 
+                            <form onSubmit={(e) => handleSubmit(e)}>
 
-                                    <TextField sx={{ width: "47%" }} placeholder="Company Name " type="text" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
-                                        error={Boolean(errors.name)}
-                                        helperText={errors.name}
-
-                                    ></TextField>
-
-                                    <label className="custom-file-upload">
-                                        <input type="file" id="file-input" onChange={handleLogoChange} />
-                                        Upload Company Logo
-                                    </label>
-                                </div>
-
-
-                                <TextField placeholder="Company Address" type="text" value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
-                                    helperText={errors.address}></TextField>
-                                <div
-                                    className="input"
-                                    style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",gap:"20px"}}
+                                <Box
+                                    display="flex" flexDirection='column'
+                                    maxWidth={800}
+                                    margin='auto'
+                                    marginTop={3}
+                                    padding={3}
+                                    borderRadius={2}
+                                    gap={5}
+                                    elevation={2}
+                                    boxShadow={"5px 5px 10px #ccc"}
                                 >
+                                    <Typography sx={{ margin: "auto" }} fontSize={20} variant={'h1'}>Company Registration Form</Typography>
+                                    <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 
 
-                                    <div>
 
-                                        <Box sx={{ minWidth: 120 }}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Select State</InputLabel>
-                                                <Select
-                                                    sx={{ width: '300px' }}
+                                        <TextField sx={{ width: "47%" }} placeholder="Company Name " type="text" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
+                                            error={Boolean(errors.name)}
+                                            helperText={errors.name}
 
-                                                    // value={selectedState}
-                                                    value={values.state}
+                                        ></TextField>
 
-                                                    onChange={handleStateChange}
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-
-                                                    label="Select State"
-                                                >
-                                                    <MenuItem value="-"
-                                                        placeholder='Select State' >
-
-                                                    </MenuItem>
-                                                    {states.map((state) => (
-                                                        <MenuItem key={state.id} value={state.id}>
-                                                            {state.name}
-                                                        </MenuItem>
-                                                    ))}
-
-                                                </Select>
-                                            </FormControl>
-                                        </Box>
-
+                                        <label className="custom-file-upload">
+                                            <input type="file" id="file-input" onChange={handleLogoChange} />
+                                            Upload Company Logo
+                                        </label>
                                     </div>
 
 
+                                    <TextField placeholder="Company Address" type="text" value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
+                                        helperText={errors.address}></TextField>
+                                    <div
+                                        className="input"
+                                        style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px" }}
+                                    >
 
 
-                                    {/* <Select
+                                        <div>
+
+                                            <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Select State</InputLabel>
+                                                    <Select
+                                                        sx={{ width: '300px' }}
+
+                                                        // value={selectedState}
+                                                        value={values.state}
+
+                                                        onChange={handleStateChange}
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+
+                                                        label="Select State"
+                                                    >
+                                                        <MenuItem value="-"
+                                                            placeholder='Select State' >
+
+                                                        </MenuItem>
+                                                        {states.map((state) => (
+                                                            <MenuItem key={state.id} value={state.id}>
+                                                                {state.name}
+                                                            </MenuItem>
+                                                        ))}
+
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+
+                                        </div>
+
+
+
+
+                                        {/* <Select
 
             sx={{ width: '47%' }}
             id="state-select"
@@ -350,70 +350,70 @@ export default function CompanyReg() {
         </Select> */}
 
 
-                                    <Box sx={{ minWidth: 120 }}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select City</InputLabel>
-                                            <Select
-                                                sx={{ width: '300px' }}
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Select City</InputLabel>
+                                                <Select
+                                                    sx={{ width: '300px' }}
 
-                                                // value={selectedCity}
-                                                value={values.city}
+                                                    // value={selectedCity}
+                                                    value={values.city}
 
-                                                onChange={handleCityChange}
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                label="Select City">
+                                                    onChange={handleCityChange}
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Select City">
 
-                                                <MenuItem value="-"
-                                                    placeholder='Select City' >
+                                                    <MenuItem value="-"
+                                                        placeholder='Select City' >
 
-                                                </MenuItem>
-                                                {cities.map((city) => (
-                                                    <MenuItem key={city.id} value={city.id}>
-                                                        {city.name}
                                                     </MenuItem>
-                                                ))}
+                                                    {cities.map((city) => (
+                                                        <MenuItem key={city.id} value={city.id}>
+                                                            {city.name}
+                                                        </MenuItem>
+                                                    ))}
 
-                                            </Select>
-                                        </FormControl>
-                                    </Box>
-                                </div>
-                                <TextField type="number" placeholder="Pincode" value={values.pincode} onChange={(e) => setValues({ ...values, pincode: e.target.value })} error={Boolean(errors.pincode)}
-                                    helperText={errors.pincode}></TextField>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </div>
+                                    <TextField type="number" placeholder="Pincode" value={values.pincode} onChange={(e) => setValues({ ...values, pincode: e.target.value })} error={Boolean(errors.pincode)}
+                                        helperText={errors.pincode}></TextField>
 
-                                <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                    <TextField sx={{ width: "47%" }} placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
-                                        helperText={errors.email} >
-                                    </TextField>
-                                    <TextField sx={{ width: "47%" }} placeholder=" Phone Number " type="number" value={values.phoneNumber} onChange={(e) => setValues({ ...values, phoneNumber: e.target.value })} error={Boolean(errors.phoneNumber)}
-                                        helperText={errors.phoneNumber}></TextField>
-                                </div>
+                                    <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                        <TextField sx={{ width: "47%" }} placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
+                                            helperText={errors.email} >
+                                        </TextField>
+                                        <TextField sx={{ width: "47%" }} placeholder=" Phone Number " type="number" value={values.phoneNumber} onChange={(e) => setValues({ ...values, phoneNumber: e.target.value })} error={Boolean(errors.phoneNumber)}
+                                            helperText={errors.phoneNumber}></TextField>
+                                    </div>
 
-                               <div className='input'style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
-                               <TextField  sx={{ width: "47%" }} placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
-                                    helperText={errors.industry}></TextField>
+                                    <div className='input' style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
+                                        <TextField sx={{ width: "47%" }} placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
+                                            helperText={errors.industry}></TextField>
 
-                                    <TextField   sx={{ width: "47%" }} placeholder="User Limit" type="number" value={values.userLimit} onChange={(e) => setValues({ ...values, userLimit: e.target.value })} error={Boolean(errors.userLimit)}
-                                    helperText={errors.userLimit}></TextField>
+                                        <TextField sx={{ width: "47%" }} placeholder="User Limit" type="number" value={values.userLimit} onChange={(e) => setValues({ ...values, userLimit: e.target.value })} error={Boolean(errors.userLimit)}
+                                            helperText={errors.userLimit}></TextField>
 
-                               </div>
-                               
-                                <TextField placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
-                                    helperText={errors.aboutUs}></TextField>
+                                    </div>
 
-                                <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>
-                                    <Button type="submit" variant="contained" sx={{ width: 130, height: 50 }}  >Register</Button>
-                                    <Button onClick={(e) => {
-                                        navigate('/companyDetails')
-                                    }} type="button" variant="contained" sx={{ width: 130, height: 50 }} >Back</Button>
+                                    <TextField placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
+                                        helperText={errors.aboutUs}></TextField>
 
-
-                                </div>
+                                    <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>
+                                        <Button type="submit" variant="contained" sx={{ width: 130, height: 50 }}  >Register</Button>
+                                        <Button onClick={(e) => {
+                                            navigate('/companyDetails')
+                                        }} type="button" variant="contained" sx={{ width: 130, height: 50 }} >Back</Button>
 
 
-                            </Box>
-                        </form>
-                    </div>
+                                    </div>
+
+
+                                </Box>
+                            </form>
+                        </div>
 
                     </Grid>
 
@@ -428,7 +428,7 @@ export default function CompanyReg() {
 
                 {/* <ToastContainer position="top-center" /> */}
 
-                </Box>
+            </Box>
 
         </>
 

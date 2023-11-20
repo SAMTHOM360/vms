@@ -505,7 +505,7 @@ export default function Dashboard() {
 
 
 
-    const companyId = localStorage.getItem('companyId');
+    const companyId = sessionStorage.getItem('companyId');
 
 
 
@@ -587,7 +587,7 @@ export default function Dashboard() {
 
 
         if (filteredVisitors) {
-            localStorage.setItem("filters", filteredVisitors)
+            sessionStorage.setItem("filters", filteredVisitors)
             navigate(path);
 
         }
