@@ -477,13 +477,14 @@ const EmpDashboard = () => {
             </Box>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <Box
-              // elevation={5}
+            <Paper
+              elevation={5}
               sx={{
                 // width: '100%',
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                paddingX:'1em'
               }}
             >
               <Box
@@ -817,7 +818,7 @@ const EmpDashboard = () => {
                   </Grid>
                 </Grid>
               </Box>
-            </Box>
+            </Paper>
           </Grid>
         </Grid>
       </Box>

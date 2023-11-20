@@ -97,9 +97,7 @@ const DynamicIdCard = () => {
       <Loader isLoading={loading} />
       {isDynamicMeet ? (
         <>
-          {/* <Navbar toggleSidebar={toggleSidebar}/> */}
           <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
-            {/* <Sidebar open={sidebarOpen} /> */}
             <Grid container spacing={2}>
               <Grid item xs={12} md={12} lg={12}>
                 <Box

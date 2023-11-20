@@ -1,23 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../routes/AuthContext";
 import axios from "axios";
 import { Box } from "@mui/system";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 import Grid from "@mui/material/Grid";
 import { toast } from "react-toastify";
 import excelFile from "../assets/MultiuserTemplate.xlsx";
-
-import Navbar from "../global/Navbar";
-import Sidebar from "../global/Sidebar";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +21,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-function BulkUserForm({ authenticated, closeDialog, fetchData,}) {
+function BulkUserForm({}) {
   const { isLimitReached } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
@@ -54,44 +43,6 @@ function BulkUserForm({ authenticated, closeDialog, fetchData,}) {
     "Content-Type": "multipart/form-data",
   };
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    image: "",
-    email: "",
-    phone: "",
-    dob: new Date(),
-    gender: "",
-    govtId: "",
-    pincode: "",
-    company: {
-      id: "",
-      name: "",
-    },
-    role: {
-      id: "",
-      name: "",
-    },
-    state: {
-      id: "",
-      name: "",
-    },
-    city: {
-      id: "",
-      name: "",
-    },
-  });
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [companies, setCompanies] = useState([]);
-  // const [addUserDialogOpen, setAddUserDialogOpen] = useState();
-  const [dobDate, setDobDate] = useState("");
-  const [cleared, setCleared] = useState(false);
-  const [isSingleUser, setIsSingleUser] = useState(false);
-  const [isMultiUser, setIsMultiUser] = useState(false);
-  const [isUserSelection, setIsUserSelection] = useState(true);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(loggedUserRole === 'SUPERADMIN');
 
   // EXCEL UPLOAD STARTS -----------------------------------------------------------------------------------------------------------------
 
@@ -309,349 +260,12 @@ function BulkUserForm({ authenticated, closeDialog, fetchData,}) {
 
   const [loading, setLoading] = useState(false);
 
-  const shouldDisableDate = (date) => {
-    return date > new Date().setDate(new Date().getDate());
-  };
 
-  //ADHAAR STARTS
-  const [governmentIdType, setGovernmentIdType] = useState("");
-  const [error, setError] = useState("");
-  const [warning, setWarning] = useState("");
-
-  const handleChangeGovernmentIdType = (event) => {
-    setGovernmentIdType(event.target.value);
-    setError("");
-    setWarning("");
-    setFormData({
-      ...formData,
-      govtId: "",
-    });
-  };
-
-  const handleChangeGender = (event) => {
-    const value = event.target.value;
-
-    setFormData({
-      ...formData,
-      gender: value,
-    });
-  };
-
-  const handleChangeGovernmentId = (event) => {
-    let value = event.target.value;
-
-    let errorMessage = "";
-    let warningMessage = "";
-
-    if (governmentIdType === "Aadhar Card") {
-      if (/^\d{0,12}$/.test(value)) {
-        if (value.length === 12) {
-          warningMessage = "";
-        } else if (value.length < 12) {
-          warningMessage = "Aadhar Card must be 12 digits only.";
-        } else {
-          warningMessage = "";
-        }
-      } else {
-        errorMessage = "Aadhar Card must be 12 digits only.";
-      }
-    } else if (governmentIdType === "PAN Card") {
-      if (/^[A-Z0-9]{0,10}$/.test(value)) {
-        if (value.length === 10) {
-          warningMessage = "";
-        } else if (value.length > 0) {
-          warningMessage =
-            "PAN Card must be 10 characters, uppercase letters, and digits only.";
-        } else {
-          warningMessage = "";
-        }
-      } else {
-        errorMessage =
-          "PAN Card must be 10 characters, uppercase letters, and digits only.";
-      }
-    } else if (governmentIdType === "") {
-      errorMessage = "First Choose Your ID Type.";
-    }
-
-    if (value.length > (governmentIdType === "Aadhar Card" ? 12 : 10)) {
-      value = value.slice(0, governmentIdType === "Aadhar Card" ? 12 : 10);
-    }
-
-    if (governmentIdType === "Aadhar Card") {
-      value = value.replace(/[^0-9]/g, "");
-    }
-
-    if (governmentIdType === "PAN Card") {
-      value = value.replace(/[^A-Z0-9]/g, "");
-    }
-
-    setFormData({
-      ...formData,
-      govtId: value,
-    });
-
-    setError(errorMessage);
-    setWarning(warningMessage);
-  };
-
-  //ADHAAR ENDS
-
-  useEffect(() => {
-    axios
-      .get("http://192.168.12.54:8080/api/state/all")
-      .then((response) => {
-        setStates(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching states", error);
-      });
-
-    axios
-      .get("http://192.168.12.54:8080/api/role/getall")
-      .then((response) => {
-        setRoles(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching roles", error);
-      });
-
-    if (loggedUserRole === "SUPERADMIN") {
-      axios
-        .get("http://192.168.12.54:8080/com/all", { headers })
-        .then((response) => {
-          setCompanies(response.data.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching roles", error);
-        });
-    }
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "gender") {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-
-    if (name === "govtId") {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-
-    if (name === "state") {
-      const selectedState = states.find((state) => state.id === value);
-      setFormData({
-        ...formData,
-        [name]: {
-          id: value,
-          name: selectedState ? selectedState.name : "",
-        },
-        city: {
-          id: "",
-        },
-      });
-
-      fetchCities(value);
-    } else if (name === "city") {
-      const selectedCity = cities.find((city) => city.id === value);
-      setFormData({
-        ...formData,
-        [name]: {
-          id: value,
-          name: selectedCity ? selectedCity.name : "",
-        },
-      });
-    } else if (name === "role") {
-      const selectedRole = roles.find((role) => role.id === value);
-      setFormData({
-        ...formData,
-        [name]: {
-          id: value,
-          name: selectedRole ? selectedRole.name : "",
-        },
-      });
-    }
-    // else if (name === 'company') {
-    //   const selectedCompany = companies.find((company) => company.id === value);
-    //   setFormData({
-    //     ...formData,
-    //     [name]: {
-    //       id: value,
-    //       name: selectedCompany ? selectedCompany.name : '',
-    //     },
-    //   });
-    // }
-    else if (name === "company") {
-      if (loggedUserRole === "SUPERADMIN") {
-        const selectedCompany = companies.find(
-          (company) => company.id === value
-        );
-        setFormData({
-          ...formData,
-          [name]: {
-            id: value,
-            name: selectedCompany ? selectedCompany.name : "",
-          },
-        });
-      }
-      // else if (loggedUserRole === 'ADMIN') {
-      //   setFormData({
-      //     ...formData,
-      //     [name]: {
-      //       id: companyId,
-      //       name: companyName,
-      //     },
-      //   });
-      // }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const fetchCities = async (stateId) => {
-    try {
-      // console.log("state id", stateId);
-      let response = await axios.get(
-        `http://192.168.12.54:8080/api/city/${stateId}`
-      );
-      setCities(response.data.data);
-    } catch (error) {
-      console.error("Error fetching cities", error);
-      setCities([]);
-    }
-  };
-
-  const handleDateChange = (date) => {
-    const adjustedDate = date ? date.add(1, "day") : null;
-
-    // console.log("adjusted date", adjustedDate);
-
-    setFormData({
-      ...formData,
-      dob: adjustedDate,
-    });
-    // console.log("selected date", formData.dob);
-  };
-
-  const handleSubmit = async (e) => {
-    // console.log("I GOT HITTTT  !!!!!!");
-    e.preventDefault();
-    if (!formData.dob) {
-      alert("Date of birth is required");
-      return;
-    }
-
-    const user = {
-      id: null,
-      firstName: formData.firstName,
-      image: "alt img",
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      dob: formData.dob.toISOString().split("T")[0],
-      gender: formData.gender,
-      govtId: formData.govtId,
-      pincode: formData.pincode,
-      company: {
-        id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
-      },
-      role: {
-        id: formData.role.id,
-      },
-      state: {
-        id: formData.state.id,
-      },
-      city: {
-        id: formData.city.id,
-      },
-    };
-
-    // console.log("PAYLOAD USER", user);
-
-    // debugger
-    try {
-      setLoading(true);
-      let response = await axios.post(
-        "http://192.168.12.54:8080/api/user/adduser",
-        user,
-        { headers }
-      );
-      if (response.status === 200) {
-        // closeDialog()
-        handleEmployeeRedirect();
-        fetchData();
-        // setAddUserDialogOpen(false)
-        setGovernmentIdType("");
-        setDobDate("");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          dob: new Date(),
-          gender: "",
-          govtId: "",
-          pincode: "",
-          company: { id: "" },
-          role: { id: "" },
-          state: { id: "" },
-          city: { id: "" },
-        });
-        toast.success("New Employee Added Successfully.", {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else {
-        alert(
-          "Error in submitting data: " + JSON.stringify(response.data.response)
-        );
-      }
-    } catch (error) {
-      alert("Error submitting user data", error);
-    }
-    setLoading(false);
-  };
 
   const handleEmployeeRedirect = () => {
     navigate("/employee");
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const handleSingleUserForm = () => {
-    setIsSingleUser(true);
-    setIsUserSelection(false);
-  };
-
-  const handleMultiUserForm = () => {
-    setIsMultiUser(true);
-    setIsUserSelection(false);
-  };
-
-  const handleBack = () => {
-    setIsSingleUser(false);
-    setIsMultiUser(false);
-    setIsUserSelection(true);
-  };
 
   const handleRedirectEmployee =  () => {
     navigate('/employee')
@@ -668,13 +282,6 @@ function BulkUserForm({ authenticated, closeDialog, fetchData,}) {
     document.body.removeChild(anchor);
   };
 
-  // const handleTest = () => {
-  //   setBtnLoading(true);
-  //   setTimeout(() => {
-  //     setBtnLoading(false);
-  //   }, 2000);
-  // };
-  // console.log(excelDownData);
   return (
     <>
       <Loader isLoading={loading} />

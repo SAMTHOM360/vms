@@ -218,7 +218,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/userform')}>
+          {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/userform')}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -237,7 +237,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
               </ListItemIcon>
               <ListItemText primary='Employee Form' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
           <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/profile')}>
             <ListItemButton

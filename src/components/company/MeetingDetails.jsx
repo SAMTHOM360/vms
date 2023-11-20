@@ -1,6 +1,6 @@
 import React from "react";
-import "../../css/MeetingDetails.css";
-import { Button, TextField, Typography, Box, Paper } from "@mui/material";
+import '../../css/MeetingDetails.css'
+import { Autocomplete, Button, TextField, Box, Typography, Paper } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -15,27 +15,42 @@ import "react-toastify/dist/ReactToastify.css";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { duration } from "moment";
-import Navbar from "../../global/Navbar";
-import Sidebar from "../../global/Sidebar";
+import { SecurityUpdateGoodOutlined } from "@mui/icons-material";
+import Grid from '@mui/material/Grid';
 import Header from "../Header";
-import { useNavigate } from "react-router-dom";
-import Loader from "../Loader";
-import Grid from "@mui/material/Grid";
+
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const MeetingDetails = () => {
-  const navigate = useNavigate();
 
   // state for disabling submit button based on employee meeting status
   const [status, setStatus] = useState("");
+  const [cities, setCities] = useState([]);
 
-  const [availableRooms, setAvailableRooms] = useState([]);
-
+  console.log(cities, "fetched cities")
   //Host Url
   const userUrl = "http://192.168.12.54:8080/api/user/alluser";
   // fetch meeting context dropdown
   const meetingContextUrl = "http://192.168.12.54:8080/vis/meetCon";
 
+
   const [fetchedUserData, setFetchedUserData] = useState(null);
+
+  // console.log(fetchedUserData,"this data i sfetched user data from phone number")
+  // console.log(fetchedUserData.state.id,"state id")
+  // console.log(fetchedUserData.city.id,"city id")
+
 
   // store hosts here
   const [users, setUsers] = useState([]);
@@ -44,25 +59,25 @@ const MeetingDetails = () => {
 
   const initialFormData = {
     name: "",
-    phone: "",
+    phoneNumber: "",
+    email: "",
+    state: "",
+    stateId: "",
+    city: "",
+    cityId: "",
     user: {
       id: "",
     },
-    meetingContext: "",
     companyName: "",
     remarks: "",
     meetingStartDateTime: null,
-    duration: "",
-    visitor: {
-      id: "",
-    },
-    room: {
-      id: "",
-    },
+    context: "",
+
+
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
-  const [phoneInput, setPhoneInput] = useState("");
+  // const [phoneInput, setPhoneInput] = useState("");
 
   // function to fetch hosts
   useEffect(() => {
@@ -76,7 +91,7 @@ const MeetingDetails = () => {
             profilePhoto: user.image,
           }));
           setUsers(userList);
-          console.log(userList, "userlist");
+          console.log(userList, "userlist")
         }
         // room.roomName
       } catch (error) {
@@ -87,22 +102,14 @@ const MeetingDetails = () => {
     fetchUsers();
   }, []);
 
-  console.log(formData, "formdataa");
-  // function for disabling submit button based on employee meeting status
-  const checkEmployeeeStatus = () => {
-    if (status.data !== null) {
-      console.log(status, "employee already has an appointment");
-      return true;
-    } else {
-      console.log(status, "employee is free in this time slot");
-      return false;
-    }
-  };
+  console.log(formData, "formdataa")
+
 
   // fetching visitor data based on visitor phone number
 
   const handlePhoneNumberChange = async (event) => {
     const phone = event.target.value;
+    console.log(phone, "phone number is getting clicked")
     // setPhoneInput(phone);
     // handle selected states
     if (phone.length === 10) {
@@ -116,23 +123,30 @@ const MeetingDetails = () => {
           setFetchedUserData(response.data.data);
           // console.log(fetchedUserData, "getting user data by phone number initials")
 
+          // const newStateId = response.data.data.state.id;
+          // console.log(newStateId,"selected state id by handle phone")
+          // const newCityId = response.data.data.city.id;
+          // console.log(newCityId,"selected city id by handle phone")
+          console.log(response.data.data.city.id, "cityIdddd");
           setFormData({
             ...formData,
-            phone: phone,
+            phoneNumber: phone,
             name: response.data.data.name || "",
             companyName: response.data.data.companyName || "",
-            visitor: {
-              id: response.data.data.id || "",
-            },
+
+            cityId: response.data.data.city.id,
+            stateId: response.data.data.state.id,
+            city: response.data.data.city.name || "",
           });
+
         }
       } catch (error) {
         console.error(error);
-        toast.error("user does not exist");
+        toast.error("user does not exist")
       }
     }
   };
-
+  console.log(formData, "formDataaaaaaaaa");
   // state to store the meeting context dropdown
   const [meetingContextOptions, setMeetingContextOptions] = useState([]);
 
@@ -152,93 +166,73 @@ const MeetingDetails = () => {
     fetchMeetingContextOptions();
   }, []);
 
+
+
   // console.log(formData.user.id,"accesss the user id")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("form data will be submitted");
-    // Check for empty fields
-    // for (const key in formData) {
-    //   if (
-    //     [
-    //       "name",
-    //       "phoneNumber",
-    //       "user",
-    //       "meetingContext",
-    //       "companyName",
-    //       "meetingStartDateTime",
-    //     ].includes(key) &&
-    //     !formData[key]
-    //   ) {
-    //     toast.error("All input fields are required");
-    //     return;
-    //   }
-    // }
-    // debugger
+    console.log("form data will be submitted")
+
     const updatedFormData = {
+
       // ...formData,
       name: formData.name || "",
+      phoneNumber: formData.phoneNumber || "",
+
       user: {
         id: formData.user.id || "",
       },
-      visitor: {
-        id: formData.visitor.id || "",
+      city: {
+        id: formData.cityId || "",
       },
-      phone: formData.phone || "",
-      company: formData.companyName,
-      context: formData.meetingContext,
+      state: {
+        id: formData.stateId || "",
+      },
+      companyName: formData.companyName,
       remarks: formData.remarks,
-      room: {
-        id: formData.room.id || "",
-      },
       meetingStartDateTime: formattedDateTimePicker1,
-      duration: formData.duration,
+      context: formData.context,
+      email: formData.email
     };
+    // debugger
+    console.log(updatedFormData, "updatedFormData");
 
-    console.log(updatedFormData, "payload");
-    console.log("submit function has been called");
     try {
       const response = await axios.post(
-        "http://192.168.12.54:8080/api/meeting/save",
+        "http://192.168.12.54:8080/api/visitor-meeting/save",
         updatedFormData
       );
       if (response.status === 200) {
         console.log("Form Data:", updatedFormData);
-        toast.success("Meeting approval sent");
-        navigate("/receptionistdashboard");
+        toast.success("Meeting approval sent")
+      }else if(response.data.data === null){
+        // toast.warning("visitor already has pending meetings")
+        console.log("visitor already has pending meetings")
+
       }
     } catch (err) {
       console.error(err, "There is some issue moving into the database");
+      // toast.warning("Sorry there is some issue")
     }
 
     setFormData({ ...initialFormData });
-    // navigate(-1);
   };
-  // ---------------------------------------------------------------------
-  // const validateInput = (value, validationRule) => {
-  //   if (validationRule.test(value)) {
-  //     return "";
-  //   } else {
-  //     return "Invalid Input";
-  //   }
-  // };
 
-  // const phoneNumberError = validateInput(formData.phone, /^\d{10}$/);
 
   const shouldDisableDate = (date) => {
     return date < new Date().setDate(new Date().getDate() - 1);
   };
-
-  // rough
 
   // converting time to UTC format
   const formattedDateTimePicker1 = formData.meetingStartDateTime
     ? formData.meetingStartDateTime.toISOString()
     : null;
 
+
   // minimum and maximum time
-  const minTime = dayjs().set("hour", 9).startOf("hour");
-  const maxTime = dayjs().set("hour", 18).startOf("hour");
+  const minTime = dayjs().set('hour', 9).startOf('hour');
+  const maxTime = dayjs().set('hour', 18).startOf('hour');
 
   const handleDateTimePickerChange = (name, value) => {
     if (name === "meetingStartDateTime") {
@@ -257,66 +251,28 @@ const MeetingDetails = () => {
     }
   };
 
-  // employee status url
 
-  // fetch employee status
-
-  const fetchStatus = async () => {
-    const statusUrl = `http://192.168.12.54:8080/api/meeting/emp-status?id=${formData.user.id}&duration=${formData.duration}&meetingStartDate=${formattedDateTimePicker1}`;
-    try {
-      const response = await axios.get(statusUrl);
-      if (response.data.data && response.data.data.id) {
-        setStatus(response.data);
-        toast.warning("employee already has an appointment");
-      }
-    } catch (e) {
-      console.log("employee is free in this time slot");
-    }
-  };
-
-  // calling the status function
+  // calling the city 
   useEffect(() => {
-    fetchStatus();
-  }, [formattedDateTimePicker1, formData.duration]);
-
-  // find available rooms
-
-  useEffect(() => {
-    const fetchAvailableRooms = async () => {
-      const roomUrl = `http://192.168.12.54:8080/api/room/all?id=1&meetingStartDate=${formattedDateTimePicker1}&duration=${formData.duration}`;
-
+    const fetchCity = async () => {
       try {
-        const response = await axios.get(roomUrl);
-        if (response.status === 200 && response.data.data) {
-          const roomNames = response.data.data.map((room) => ({
-            id: room.id,
-            name: room.roomName,
-          }));
-          setAvailableRooms(roomNames);
-          console.log(roomNames, "this is setAvailable rooms");
-          // setFormData({
-          //   ...formData,
-          //   room:{
-          //     id:response.data.data.id,
-          //   }
-          // });
-          console.log(roomUrl, "room url");
+        const response = await axios.get(
+          `http://192.168.12.54:8080/api/cityByName?cityName=${formData.city}`
+        );
+        if (response.status === 200) {
+          setCities(response.data.data);
+          console.log(response.data.data, "this is city data from search filter");
         }
       } catch (error) {
-        console.error("Error fetching available rooms", error);
+        console.error(error);
       }
-      // fetchAvailableRooms();
     };
-    fetchAvailableRooms();
-  }, [formattedDateTimePicker1, formData.duration]);
 
-  const handleDurationChange = (event) => {
-    setFormData({
-      ...formData,
-      duration: event.target.value,
-    });
-    console.log(duration, "duration value");
-  };
+    if (formData.city) {
+      fetchCity();
+    }
+  }, [formData.city]);
+
 
   // handle change function
 
@@ -330,21 +286,8 @@ const MeetingDetails = () => {
           id: value.id,
         },
       });
-    } else if (name === "room") {
-      setFormData({
-        ...formData,
-        room: {
-          id: value.id,
-        },
-      });
     }
-    // else if (name === "phone"){
-    //   if(value.length <=10){
-    //     setFormData({
-    //       phone:value
-    //     })
-    //   }
-    // }
+
     else {
       setFormData({
         ...formData,
@@ -353,212 +296,231 @@ const MeetingDetails = () => {
     }
   };
 
-  // handle phone length
-  const handleLength = (event) => {
-    const phone = event.target.value;
-    setPhoneInput(phone);
-
-    setPhoneInput(phone.slice(0, 10)); // Truncate input to 10 characters
-  };
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+console.log("appoint fomrdata", formData)
 
   //------------------------ JSX ---------------------
 
   return (
     <>
-                    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12} lg={12}>
-          <Paper
-            elevation={5}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              height: "4.5em",
-              mt: "3em",
-              mb: "0.5em",
-            }}
-          >
-            <Header title="Meeting Form" subtitle="Add details for meeting." />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={12} lg={12}>
-          <form>
-            <div className="container">
-              <div className="left">
-                <TextField
-                  placeholder=" PhoneNumber*"
-                  type="number"
-                  name="phone"
-                  autoComplete="off"
-                  onInput={handlePhoneNumberChange}
-                  error={!!formData.phoneError}
-                  helperText={formData.phoneError}
-                  value={phoneInput}
-                  onChange={handleLength}
-                  autoFocus
+        <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+            <Grid container spacing={2}>
+            <Grid item xs={12} md={12} lg={12}>
+            <Box
+              // elevation={5}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                // width:'100%',
+                height: "4.5em",
+                mt: "3em",
+                mb: "0.5em",
+              }}
+            >
+              <Header
+                title="Meeting Appoint Form"
+                subtitle="Form to appoint a meeting with a visitor"
+              />
+            </Box>
+          </Grid>
+  <Grid item xs={12} md={12} lg={12}>
+  <Paper
+        elevation={5}
+        sx={{
+          // width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          m="20px 0 0 0"
+          // display='flex'
+          // width="100%"
+          maxWidth='90%'
+          flexGrow={1}
+          height="75vh"
+          // sx={{
+          //   "& .MuiDataGrid-root": {
+          //     border: 'none',
+          //   },
+          // //   "& .MuiDataGrid-cell": {
+          // //     borderBottom: 'none',
+          // //   },
+          //   "& .MuiDataGrid-columnHeaders": {
+          //     borderBottom: 'none',
+          //   },
+          // //   "& .MuiDataGrid-footerContainer": {
+          // //     borderTop: 'none',
+          // //   },
+          // }}
+
+          sx={{
+            mb:'1.5em'
+          }}
+        >
+      <form>
+        <div className="container">
+          <div className="left">
+            <TextField
+              placeholder=" PhoneNumber*"
+              type="number"
+              name="phoneNumber"
+              autoComplete="off"
+              onInput={handlePhoneNumberChange}
+              onChange={handleChange}
+              // onChange={handlePhoneNumberChange}
+              value={formData.phoneNumber}
+              // onChange={handleLength}
+              autoFocus
+            />
+
+            {/* host name */}
+
+            <FormControl >
+              <InputLabel id="demo-user-select-label">Host*</InputLabel>
+              <Select
+                labelId="demo-user-select-label"
+                id="demo-user-select"
+                value={formData.selectedUser}
+                label="Select a User"
+                name="user"
+                onChange={handleChange}
+                MenuProps={MenuProps}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user.id} value={user}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {user.username}
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* email */}
+
+            <TextField
+              // placeholder=" Email*"
+              variant='outlined'
+              label="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!formData.emailError}
+              helperText={formData.emailError}
+              inputProps={{ maxLength: 60 }}
+            // disabled={fetchedUserData && !editMode && !editButtonClicked}
+
+            />
+
+
+            {/* city name  */}
+
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={cities.map((city) => city.name)}
+              fullWidth
+              onInputChange={(event, newValue) => {
+                const selectedCity = cities.find((city) => city.name === newValue);
+                const cityId = selectedCity ? selectedCity.id : null;
+                const stateId = selectedCity ? selectedCity.state.id : null;
+
+
+                setFormData({
+                  ...formData,
+                  city: newValue,
+                  cityId: cityId,
+                  stateId: stateId,
+                });
+              }}
+              renderInput={(params) => <TextField {...params} label="City" />}
+            />
+
+
+
+            {/* company Name */}
+
+            <TextField
+              id="outlined-basic"
+              label="Company Name"
+              variant="outlined"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleChange}
+            />
+
+          </div>
+          <div className="right">
+
+
+            {/* visitor name */}
+
+            <TextField id="outlined-basic" label="Name" variant="outlined"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+
+            {/* Visit Type */}
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Context*
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={formData.context}
+                onChange={handleChange}
+                name="context"
+                label="context"
+              >
+                {meetingContextOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+
+            {/* Remarks */}
+            <TextField id="outlined-basic" label="Remarks" variant="outlined" value={formData.remarks} name="remarks"
+              onChange={handleChange}
+              inputProps={{ maxLength: 30 }}
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DateTimePicker"]}>
+                <DateTimePicker
+                  label="Start Time*"
+                  value={formData.meetingStartDateTime}
+                  shouldDisableDate={shouldDisableDate}
+                  minTime={minTime}
+                  maxTime={maxTime}
+                  onChange={(value) =>
+                    handleDateTimePickerChange("meetingStartDateTime", value)
+                  }
+                  ampm={false}
                 />
+              </DemoContainer>
+            </LocalizationProvider>
 
-                {/* host name */}
+            <Button variant="contained" onClick={handleSubmit}>submit</Button>
 
-                <FormControl>
-                  <InputLabel id="demo-user-select-label">Host*</InputLabel>
-                  <Select
-                    labelId="demo-user-select-label"
-                    id="demo-user-select"
-                    value={formData.selectedUser}
-                    label="Select a User"
-                    name="user"
-                    onChange={handleChange}
-                  >
-                    {users.map((user) => (
-                      <MenuItem key={user.id} value={user}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          {user.username}
-                        </div>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                {/* company Name */}
-
-                <TextField
-                  id="outlined-basic"
-                  label="Company Name"
-                  variant="outlined"
-                  name="companyName"
-                  value={formData.companyName}
-                />
-
-                {/* visitor name */}
-
-                <TextField
-                  id="outlined-basic"
-                  label="Name"
-                  variant="outlined"
-                  name="name"
-                  value={formData.name}
-                />
-
-                {/* Visit Type */}
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Visit Type*
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={formData.meetingContext}
-                    onChange={handleChange}
-                    name="meetingContext"
-                    label="meetingContext"
-                  >
-                    {meetingContextOptions.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="right">
-                {/* start time */}
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DateTimePicker"]}>
-                    <DateTimePicker
-                      label="Start Time*"
-                      value={formData.meetingStartDateTime}
-                      shouldDisableDate={shouldDisableDate}
-                      minTime={minTime}
-                      maxTime={maxTime}
-                      onChange={(value) =>
-                        handleDateTimePickerChange(
-                          "meetingStartDateTime",
-                          value
-                        )
-                      }
-                      ampm={false}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-
-                {/* div for selecting duration for meeeting and available slots */}
-                <div
-                  className="input"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Duration
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={formData.duration}
-                      name="duration"
-                      label="duration"
-                      onChange={handleDurationChange}
-                    >
-                      <MenuItem value={10}>10 mins.</MenuItem>
-                      <MenuItem value={15}>15 mins.</MenuItem>
-                      <MenuItem value={30}>30 mins.</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-
-                {/* Remarks */}
-                <TextField
-                  id="outlined-basic"
-                  label="Remarks"
-                  variant="outlined"
-                  value={formData.remarks}
-                  name="remarks"
-                  onChange={handleChange}
-                  inputProps={{ maxLength: 30 }}
-                />
-                {/* meeting Location */}
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label"> Room</InputLabel>
-                  <Select
-                    name="room"
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={formData.room.name}
-                    label="Room"
-                    onChange={handleChange}
-                  >
-                    {availableRooms.map((roomName) => (
-                      <MenuItem key={roomName.id} value={roomName}>
-                        {roomName.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Button variant="contained" onClick={handleSubmit}>
-                  submit
-                </Button>
-                {/* <Button variant="contained"disabled={checkEmployeeeStatus} onClick={handleSubmit}>submit</Button> */}
-                {/* <Button variant="contained"disabled={false} onClick={handleSubmit}>submit</Button> */}
-              </div>
-            </div>
-          </form>
-        </Grid>
+          </div>
+        </div>
+      </form>
+      </Box>
+      </Paper>
+      </Grid>
       </Grid>
       </Box>
+
     </>
   );
 };
 
 export default MeetingDetails;
+
+// meeeeeeeeeeeeting details adddded  jlksbdckjasbdkjbd

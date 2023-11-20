@@ -447,7 +447,7 @@ toast.success('Selected user is successfully updated.', {
       height:'4.5em',
       mt:'3em',
       mb:'0.5em',
-      borderRadius:'10px'
+      borderRadius:'5px',
       }}
       >
         <Header title={formattedHead} subtitle={`List of ${formattedHead} for Future Reference`} />
@@ -489,12 +489,12 @@ toast.success('Selected user is successfully updated.', {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius:'15px'
+          borderRadius:'5px',
+          // overflowX:'hidden'
         }}
       >
         <Box
           m="20px 0 0 0"
-          maxWidth='90%'
           flexGrow={1}
           height="75vh"
           sx={{
@@ -530,6 +530,9 @@ toast.success('Selected user is successfully updated.', {
                 color: `#141414 !important`
             },
             mb:'1.5em',
+            maxWidth:'95%',
+            borderRadius:'5px'
+            
           }}
         >
 

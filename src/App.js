@@ -234,44 +234,42 @@
 
 
 
-
+import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
-import LoginForm from './components/LoginFormNK'; // Nikhil
-import Employee from './components/EmployeeSB'; // Sandeep
-import UserForm from './components/UserFormSB'; // Sandeep
-import { useAuth } from './routes/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import NotFound from './components/NotFound';
-import Loader from './components/Loader';
 
-import CompanyReg from './components/company/CompanyReg';
-import CompanyTable from './components/company/CompanyTable';
-import EditCompanyForm from './components/company/EditCompanyForm';
-import Dashboardd from './components/company/Dashboardd';
-import ReceptionistDashboard from './components/company/ReceptionistDashboard';
 
-import DashboardReceptionist from './components/company/DashboardReceptionist';
-import MeetingDetails from './components/company/MeetingDetails';
-import EmpDashboard from './components/EmpDashboard';
-import MeetingNotices from './components/unused/MeetingNotices';
 
-import EmpMeeting from './components/EmpMeeting';
-import Profile from './components/Profile';
-// import ExcelUpload from './components/experimentals/ExcelUpload';
-import PrivateRoute from './routes/PrivateRoute';
-
-import DynamicIdCard from './components/experimentals/DynamicIdCard';
 import Navbar from './global/Navbar';
-
 import Sidebar from './global/Sidebar';
-import DemoDashboardV2 from './components/experimentals/DemoDashboardV2';
-import BulkUserForm from './components/BulkUserForm';
+import Loader from './components/Loader';
+import PrivateRoute from './routes/PrivateRoute';
+// import NotFound from './components/NotFound';
+// import MeetingNotices from './components/unused/MeetingNotices';
+// import ExcelUpload from './components/experimentals/ExcelUpload';
 
-// import BulkUserForm from './components/BulkUserForm';
+
+const LoginForm = lazy(() => import('./components/LoginFormNK'));
+const Employee = lazy(() => import('./components/EmployeeSB'));
+const UserForm = lazy(() => import('./components/UserFormSB'));
+const NotFound = lazy(() => import('./components/NotFound'));
+const CompanyReg = lazy(() => import('./components/company/CompanyReg'));
+const CompanyTable = lazy(() => import('./components/company/CompanyTable'));
+const EditCompanyForm = lazy(() => import('./components/company/EditCompanyForm'));
+const Dashboardd = lazy(() => import('./components/company/Dashboardd'));
+const ReceptionistDashboard = lazy(() => import('./components/company/ReceptionistDashboard'));
+const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
+const MeetingDetails = lazy(() => import('./components/company/MeetingDetails'));
+const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
+const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
+const Profile = lazy(() => import('./components/Profile'));
+const DynamicIdCard = lazy(() => import('./components/experimentals/DynamicIdCard'));
+const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
+const DemoDashboardV2 = lazy(() => import('./components/experimentals/DemoDashboardV2'));
+
 
 function App() {
   const location = useLocation();
@@ -280,7 +278,8 @@ function App() {
   const currentPath = window.location.pathname;
   const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
-  const isExcludedRoute = ['/', '/dynamicidcard/:id', '/lost'].some(route => location.pathname === route);
+  const isExcludedRoute = !['/', '/lost'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -288,10 +287,11 @@ function App() {
 
   return (
     <>
-      <CssBaseline />
-      
 
-      {shouldShowSidebar && <Navbar toggleSidebar={toggleSidebar} /> }
+      <CssBaseline />
+
+
+      {isExcludedRoute && <Navbar toggleSidebar={toggleSidebar} /> }
       <Box
       // className='app'
       sx={{
@@ -300,12 +300,13 @@ function App() {
          flexGrow: 1, 
         //  p: 3, 
         //  pl:'5em',    // Uncomment for overlay Sidebar
-        bgcolor:'green',
+        // bgcolor:'green',
         // width:'100vw',
         // height:'auto'
          }}>
 
-{shouldShowSidebar && <Sidebar open={sidebarOpen} /> }
+{isExcludedRoute && <Sidebar open={sidebarOpen} /> }
+<Suspense fallback={<Loader />}>
 <Routes>
 <Route path="/" element={<LoginForm />} />
 {/* <Route path ="/vertical" element={<BulkUserForm />} /> */}
@@ -318,7 +319,7 @@ function App() {
 <Route path="/userform" element={<UserForm />} />
 {/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
 <Route path="/meetingDetails" element={<MeetingDetails />} />
-<Route path="/dashboardreceptionist" element={<DashboardReceptionist />} />
+{/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
 <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} />
 <Route path="/dashboard" element={<Dashboardd />} />
 <Route path="/companyDetails" element={<CompanyTable />} />
@@ -339,7 +340,7 @@ function App() {
   {/* <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} /> */}
 
   {/* mycode */}
-  {/* <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} /> */}
+  <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
   {/* <Route path="/meetingDetails" element={<PrivateRoute element={<MeetingDetails />} allowedRoles={['RECEPTIONIST']} />} /> */}
   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
@@ -350,6 +351,7 @@ function App() {
   {/* <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} /> */}
 
 </Routes>
+</Suspense>
 
         <ToastContainer
           position="top-right"
