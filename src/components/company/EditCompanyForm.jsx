@@ -49,7 +49,7 @@ export default function EditCompanyForm() {
   function fetchData() {
     axios
       .get(`http://192.168.12.54:8080/com/get/${companyId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
         const company = response.data.data;

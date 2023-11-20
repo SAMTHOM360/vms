@@ -105,9 +105,15 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     sessionStorage.setItem('limit', limit)
 
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('companyId', companyId);
-    localStorage.setItem('adminId', adminId)
+    // localStorage.setItem('token', token);
+    // localStorage.setItem('companyId', companyId);
+    // localStorage.setItem('adminId', adminId)
+
+
+
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('companyId', companyId);
+    sessionStorage.setItem('adminId', adminId);
 
     setAuthenticated(true);
     if (loggedUserRole === 'SUPERADMIN') {

@@ -300,7 +300,7 @@ function App() {
          flexGrow: 1, 
         //  p: 3, 
         //  pl:'5em',    // Uncomment for overlay Sidebar
-        bgcolor:'green',
+        // bgcolor:'green',
         // width:'100vw',
         // height:'auto'
          }}>

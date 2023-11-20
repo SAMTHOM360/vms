@@ -1433,12 +1433,12 @@ export default function Dashboard() {
     function getRoomsOption() {
 
 
-        const companyId = localStorage.getItem('companyId');
+        const companyId = sessionStorage.getItem('companyId');
 
         const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
         axios.get(roomUrl, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
 
         }).then(response => {
             const data = response.data.data;
@@ -1484,7 +1484,7 @@ export default function Dashboard() {
         const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
 
         axios.post(addMeetingUrl, meetingData, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         })
             .then((response) => {
 
@@ -1534,7 +1534,7 @@ export default function Dashboard() {
 
     function excelExport() {
 
-        const companyId = localStorage.getItem('companyId');
+        const companyId = sessionStorage.getItem('companyId');
 
         const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
 
@@ -1606,7 +1606,7 @@ export default function Dashboard() {
 
     // const { id } = useParams();
 
-    const adminId = localStorage.getItem('adminId');
+    const adminId = sessionStorage.getItem('adminId');
     // console.log(adminId, "adminId");
 
     // const { adminId } = useParams();
@@ -1621,7 +1621,7 @@ export default function Dashboard() {
 
 
 
-        const companyId = localStorage.getItem('companyId');
+        const companyId = sessionStorage.getItem('companyId');
 
 
 
@@ -1861,7 +1861,7 @@ export default function Dashboard() {
 
         axios
             .get(passApiEndpoint, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
             
                 responseType: 'blob',
             })
@@ -1934,12 +1934,12 @@ export default function Dashboard() {
 
 
     useEffect(()=>{
-        const filter =localStorage.getItem('filters')
+        const filter =sessionStorage.getItem('filters')
         if(filter){
            
             setSelectedStatusOptions(filter)
             fetchData()
-            localStorage.removeItem('filters')
+            sessionStorage.removeItem('filters')
         }
 
     },[selectedStatusOptions])
