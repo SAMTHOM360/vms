@@ -426,67 +426,146 @@ export default function Dashboard() {
   };
 
   //date
-  function formatMeetingDuration(meeting) {
-    const startTimestamp = meeting.meetingStartDateTime;
-    // console.log(startTimestamp,"starttimestamp")
+  // function formatMeetingDuration(meeting) {
+  //   const startTimestamp = meeting.meetingStartDateTime;
+  //   // console.log(startTimestamp,"starttimestamp")
 
-    // console.log(visitorsInfo,"ggggg")
+  //   // console.log(visitorsInfo,"ggggg")
 
-    // Create JavaScript Date objects with IST timezone
-    const startDate = new Date(startTimestamp);
+  //   // Create JavaScript Date objects with IST timezone
+  //   const startDate = new Date(startTimestamp);
 
-    startDate.setHours(startDate.getHours());
-    startDate.setMinutes(startDate.getMinutes());
+  //   startDate.setHours(startDate.getHours());
+  //   startDate.setMinutes(startDate.getMinutes());
 
-    // Define options for formatting
-    const options = {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      timeZone: "Asia/Kolkata", // Set the timezone to IST
-    };
+  //   // Define options for formatting
+  //   const options = {
+  //     year: "numeric",
+  //     month: "numeric",
+  //     day: "numeric",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     second: "numeric",
+  //     timeZone: "Asia/Kolkata", // Set the timezone to IST
+  //   };
 
-    // Format the start and end dates using the options
-    const formattedStart = new Intl.DateTimeFormat("en-US", options).format(
-      startDate
-    );
+  //   // Format the start and end dates using the options
+  //   const formattedStart = new Intl.DateTimeFormat("en-US", options).format(
+  //     startDate
+  //   );
 
-    return `${formattedStart}`;
-  }
+  //   return `${formattedStart}`;
+  // }
+
+  // function formatMeetingDuration1(meeting) {
+  //   const endTimestamp = meeting.checkOutDateTime;
+  //   // console.log(endTimestamp,"endtimestamp")
+
+  //   // Create JavaScript Date objects with IST timezone
+  //   if (endTimestamp != null) {
+  //     const endDate = new Date(endTimestamp);
+  //     endDate.setHours(endDate.getHours() - 5);
+  //     endDate.setMinutes(endDate.getMinutes() - 30);
+
+  //     // Define options for formatting
+  //     const options = {
+  //       year: "numeric",
+  //       month: "numeric",
+  //       day: "numeric",
+  //       hour: "numeric",
+  //       minute: "numeric",
+  //       second: "numeric",
+  //       timeZone: "Asia/Kolkata", // Set the timezone to IST
+  //     };
+
+  //     // Format the start and end dates using the options
+
+  //     const formattedEnd = new Intl.DateTimeFormat("en-US", options).format(
+  //       endDate
+  //     );
+
+  //     return `${formattedEnd}`;
+  //   }
+  // }
+
+
 
   function formatMeetingDuration1(meeting) {
     const endTimestamp = meeting.checkOutDateTime;
-    // console.log(endTimestamp,"endtimestamp")
 
-    // Create JavaScript Date objects with IST timezone
     if (endTimestamp != null) {
-      const endDate = new Date(endTimestamp);
-      endDate.setHours(endDate.getHours() - 5);
-      endDate.setMinutes(endDate.getMinutes() - 30);
+        const endDate = new Date(endTimestamp);
 
-      // Define options for formatting
-      const options = {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        timeZone: "Asia/Kolkata", // Set the timezone to IST
-      };
+        endDate.setHours(endDate.getHours() - 5);
+        endDate.setMinutes(endDate.getMinutes() - 30);
 
-      // Format the start and end dates using the options
+        const options = {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        };
 
-      const formattedEnd = new Intl.DateTimeFormat("en-US", options).format(
-        endDate
-      );
+        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
 
-      return `${formattedEnd}`;
+        let hours = endDate.getHours();
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+
+        // Manually construct the time in 12-hour format (hh:mm AM/PM)
+        const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+
+        return `${formattedDate}, ${formattedTime}`;
     }
-  }
+}
+
+
+function formatMeetingDuration(meeting) {
+    const endTimestamp = meeting.checkInDateTime;
+
+    if (endTimestamp != null) {
+        const endDate = new Date(endTimestamp);
+
+        endDate.setHours(endDate.getHours() - 5);
+        endDate.setMinutes(endDate.getMinutes() - 30);
+
+        const options = {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        };
+
+        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+
+        let hours = endDate.getHours();
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+
+        // Manually construct the time in 12-hour format (hh:mm AM/PM)
+        const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+
+        return `${formattedDate}, ${formattedTime}`;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //room
 

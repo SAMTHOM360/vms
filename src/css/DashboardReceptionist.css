@@ -6,3 +6,21 @@ h2{
     color: white;
     text-align: center;
 }
+
+.icon{
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    
+   
+    
+}
+
+.icon:hover{
+   background-color: rgb(227, 209, 242);
+   cursor:pointer
+   
+}
+
+ h2{
+    color:"white"
+}

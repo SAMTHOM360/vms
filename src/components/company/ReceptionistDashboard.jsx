@@ -1166,6 +1166,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useStaticPicker } from '@mui/x-date-pickers/internals';
+import { style } from '@mui/system';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -1226,10 +1227,6 @@ export default function Dashboard() {
 
 
 
-
-
-
-
     const [visitors, setVisitors] = useState([]);
 
     const [passVisitors, setPassVisitors] = useState([]);
@@ -1248,6 +1245,7 @@ export default function Dashboard() {
 
 
     const [item, setItem] = useState('');
+
 
 
 
@@ -1278,15 +1276,24 @@ export default function Dashboard() {
     const [statusOptions, setStatusOptions] = useState([]);
     const [selectedStatusOptions, setSelectedStatusOptions] = useState("");
 
-
-
-
-    // console.log(selectedStatusOptions, "selectedstatus");
-
-
     const handleChangeStatus = (event) => {
 
         setSelectedStatusOptions(event.target.value);
+
+        // console.log(event.target.value,"xyz");
+        // fetchData();
+
+    };
+
+
+    //status modal
+    const [statusModal, setStatusModal] = useState([]);
+    const [selectedStatusModal, setSelectedStatusModal] = useState([]);
+
+
+    const handleChangeStatusModal = (event) => {
+
+        setSelectedStatusModal(event.target.value);
 
         // console.log(event.target.value,"xyz");
         // fetchData();
@@ -1310,6 +1317,7 @@ export default function Dashboard() {
 
 
                 setStatusOptions(data);
+                // setStatusModal(data);
 
 
 
@@ -1318,6 +1326,37 @@ export default function Dashboard() {
             });
 
     }
+
+    function fetchStatusOptions1() {
+
+        const statusUrl = `http://192.168.12.54:8080/vis/meetstatusadmin`;
+        axios.get(statusUrl)
+            .then(response => {
+                const data = response.data.data;
+
+                // data.forEach(datas =>{
+                //     const status1 = datas;
+                //     console.log(status1,"status1");
+                //     setStatus(status1);
+                // })
+
+                // console.log(data,"sttaus")
+
+
+
+                setStatusModal(data);
+
+
+
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    }
+
+
+
+
 
 
 
@@ -1465,7 +1504,7 @@ export default function Dashboard() {
         const meetingData = {
 
             id: item.id,
-            status: "APPROVED",
+            status: item.user.role.name === 'ADMIN' ? selectedStatusModal : item.status,
             // user: {
             //     id: adminId
             // },
@@ -1491,10 +1530,12 @@ export default function Dashboard() {
 
 
                 // handleCloseModal();
-                // setSelectedRoom('');
+                setSelectedRoom('');
+                setSelectedStatusModal('');
+                fetchData();
                 // setStatus('')
 
-                if (response.data.message === "CANCELLED Successfully") {
+                if (response.data.message === "Meeting is cancelled") {
                     alert("Meeting cancelled succesfully")
                 }
                 else {
@@ -1613,6 +1654,7 @@ export default function Dashboard() {
 
 
 
+    const [adminData, setAdminData] = useState([]);
 
 
 
@@ -1652,6 +1694,7 @@ export default function Dashboard() {
             .then(response => {
                 const responseData = response.data.data.meetings;
                 const responseDataLength = response.data.data.meetings.length;
+                // console.log(responseData.user.id,"rolename")
                 console.log(responseDataLength, "length")
                 console.log(responseData, "responseDatta")
                 // console.log(responseData.visitor.phoneNumber,"blahhhhh")
@@ -1735,7 +1778,7 @@ export default function Dashboard() {
 
 
         const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
-    
+
 
         return `${formattedStart}`;
     }
@@ -1751,7 +1794,7 @@ export default function Dashboard() {
 
 
 
-    
+
 
     // function formatMeetingDuration1(meeting) {
 
@@ -1763,7 +1806,7 @@ export default function Dashboard() {
 
     //     if (endTimestamp != null) {
     //         const endDate = new Date(endTimestamp);
-           
+
     //         endDate.setHours(endDate.getHours() - 5);
     //         endDate.setMinutes(endDate.getMinutes() - 30);
     //         endDate.toLocaleString();
@@ -1779,9 +1822,9 @@ export default function Dashboard() {
     //             timeZone: 'Asia/Kolkata', // Set the timezone to IST
     //         };
 
-            
+
     //         const formattedEnd = new Intl.DateTimeFormat('en-US', options).format(endDate);
-             
+
     //         return `${formattedEnd}`;
 
 
@@ -1797,63 +1840,63 @@ export default function Dashboard() {
 
     function formatMeetingDuration1(meeting) {
         const endTimestamp = meeting.checkOutDateTime;
-    
+
         if (endTimestamp != null) {
             const endDate = new Date(endTimestamp);
-    
+
             endDate.setHours(endDate.getHours() - 5);
             endDate.setMinutes(endDate.getMinutes() - 30);
-    
+
             const options = {
                 year: '2-digit',
                 month: '2-digit',
                 day: '2-digit',
                 timeZone: 'Asia/Kolkata', // Set the timezone to IST
             };
-    
+
             const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
-    
+
             let hours = endDate.getHours();
             const amPm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
-    
+
             // Manually construct the time in 12-hour format (hh:mm AM/PM)
             const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
-    
+
             return `${formattedDate}, ${formattedTime}`;
         }
     }
-    
+
 
     function formatMeetingDuration(meeting) {
         const endTimestamp = meeting.checkInDateTime;
-    
+
         if (endTimestamp != null) {
             const endDate = new Date(endTimestamp);
-    
+
             endDate.setHours(endDate.getHours() - 5);
             endDate.setMinutes(endDate.getMinutes() - 30);
-    
+
             const options = {
                 year: '2-digit',
                 month: '2-digit',
                 day: '2-digit',
                 timeZone: 'Asia/Kolkata', // Set the timezone to IST
             };
-    
+
             const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
-    
+
             let hours = endDate.getHours();
             const amPm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
-    
+
             // Manually construct the time in 12-hour format (hh:mm AM/PM)
             const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
-    
+
             return `${formattedDate}, ${formattedTime}`;
         }
     }
-    
+
 
     const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
 
@@ -1862,7 +1905,7 @@ export default function Dashboard() {
         axios
             .get(passApiEndpoint, {
                 headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-            
+
                 responseType: 'blob',
             })
             .then((response) => {
@@ -1904,6 +1947,7 @@ export default function Dashboard() {
         fetchData();
         getRoomsOption();
         fetchStatusOptions();
+        fetchStatusOptions1();
         fetchHostOptions();
 
         // filterData();
@@ -1919,7 +1963,7 @@ export default function Dashboard() {
     useEffect(() => {
 
 
-   
+
 
         if (page === 0) {
             fetchData();
@@ -1933,16 +1977,16 @@ export default function Dashboard() {
 
 
 
-    useEffect(()=>{
-        const filter =sessionStorage.getItem('filters')
-        if(filter){
-           
+    useEffect(() => {
+        const filter = sessionStorage.getItem('filters')
+        if (filter) {
+
             setSelectedStatusOptions(filter)
             fetchData()
             sessionStorage.removeItem('filters')
         }
 
-    },[selectedStatusOptions])
+    }, [selectedStatusOptions])
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1956,36 +2000,36 @@ export default function Dashboard() {
 
     return (
         <>
-        <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
-<Grid container spacing={2}>
-  <Grid item xs={12} md={12} lg={12}>
-                <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
-                    <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
-                        <Grid container>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Paper
-                                        elevation={1}
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            // width:'100%',
-                                            height: '4.5em',
-                                            mt: '3em',
-                                            mb: '0.5em'
-                                        }}
-                                    >
-                                        <Header title="Visitors" subtitle="Get all the visitors list" />
-                                    </Paper>
+            <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={12} lg={12}>
+                        <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
+                            <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
+                                <Grid container>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <Paper
+                                                elevation={1}
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    // width:'100%',
+                                                    height: '4.5em',
+                                                    mt: '3em',
+                                                    mb: '0.5em'
+                                                }}
+                                            >
+                                                <Header title="Visitors" subtitle="Get all the visitors list" />
+                                            </Paper>
+                                        </Grid>
+
+                                    </Grid>
+
                                 </Grid>
-
-                            </Grid>
-
-                        </Grid>
-                        <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-                            {/* <Grid item xs={12} style={{ backgroundColor: "" }}> */}
-                            {/* <Grid style={{ gap: "30px", marginTop: "" }} container justifyContent="center" > */}
-                            {/* <Paper style={{ backgroundColor: "" }} elevation={1} sx={{
+                                <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
+                                    {/* <Grid item xs={12} style={{ backgroundColor: "" }}> */}
+                                    {/* <Grid style={{ gap: "30px", marginTop: "" }} container justifyContent="center" > */}
+                                    {/* <Paper style={{ backgroundColor: "" }} elevation={1} sx={{
                                         height: 150,
                                         width: 400,
                                         display: 'flex', // Use flex display
@@ -2028,19 +2072,19 @@ export default function Dashboard() {
 
 
 
-                            {/* </Grid> */}
-                            {/* </Grid> */}
+                                    {/* </Grid> */}
+                                    {/* </Grid> */}
 
-                        </Grid>
-                        <Grid container style={{ marginTop: "" }}>
-                            <Grid item xs={12} style={{ backgroundColor: "" }}>
-                                <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
-                                    <div style={{ display: "flex", justifyContent: "", width: "100%", backgroundColor: "" }}>
-                                        {/* <h1 style={{ textAlign: "left" }}>Visitors</h1> */}
-                                        {/* <button type="submit" onclick={<MeetingDetails/>}>Add User</button> */}
+                                </Grid>
+                                <Grid container style={{ marginTop: "" }}>
+                                    <Grid item xs={12} style={{ backgroundColor: "" }}>
+                                        <Item elevation={2} style={{ height: '', margin: '10px', backgroundColor: "" }}>
+                                            <div style={{ display: "flex", justifyContent: "", width: "100%", backgroundColor: "" }}>
+                                                {/* <h1 style={{ textAlign: "left" }}>Visitors</h1> */}
+                                                {/* <button type="submit" onclick={<MeetingDetails/>}>Add User</button> */}
 
 
-                                        {/* <Grid style={{
+                                                {/* <Grid style={{
                                             position: '',
                                             right: 0,
                                             // marginTop: "15px",
@@ -2059,7 +2103,7 @@ export default function Dashboard() {
 
 
 
-                                        {/* <input
+                                                {/* <input
                                                 type="text"
                                                 placeholder="Search..."
                                                 // value={phoneNumberFilter}
@@ -2085,10 +2129,10 @@ export default function Dashboard() {
 
 
 
-                                        {/* </Grid> */}
+                                                {/* </Grid> */}
 
-                                        {/* <Grid> */}
-                                        {/* <input
+                                                {/* <Grid> */}
+                                                {/* <input
                                                 type="text"
                                                 placeholder="Search..."
                                                 value={phoneNumberFilter}
@@ -2110,227 +2154,238 @@ export default function Dashboard() {
                                             /> */}
 
 
-                                        {/* </Grid> */}
+                                                {/* </Grid> */}
 
-                                        <Grid>
-                                            <Box
-                                                component="form"
-                                                sx={{
-                                                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                                }}
-                                                noValidate
-                                                autoComplete="off"
-                                            // style={{display:"flex",justifyContent:"space-evenly"}}
-                                            >
-                                                <Grid style={{ display: "flex", flexDirection: "", justifyContent: "space-between", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
-
-
-
-                                                    <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
+                                                <Grid>
+                                                    <Box
+                                                        component="form"
+                                                        sx={{
+                                                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                                        }}
+                                                        noValidate
+                                                        autoComplete="off"
+                                                    // style={{display:"flex",justifyContent:"space-evenly"}}
+                                                    >
+                                                        <Grid style={{ display: "flex", flexDirection: "", justifyContent: "space-between", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
 
 
 
-
-                                                        <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
-                                                            onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
-
-
-                                                        <TextField
-                                                            id="outlined-select-currency"
-                                                            select
-                                                            label="Search by Status"
-                                                            value={selectedStatusOptions}
-                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onChange={handleChangeStatus}
-
-                                                            style={{ top: "10px" }}
-
-
-                                                        >
-
-                                                            <MenuItem value="">
-                                                                <em>None</em>
-                                                            </MenuItem>
-
-
-
-                                                            {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
-                                                                <MenuItem key={index} value={options} >{options}</MenuItem>
-                                                            ))}
-                                                        </TextField>
-
-
-                                                        <TextField
-                                                            id="outlined-select-currency"
-                                                            select
-                                                            label="Search by Host"
-                                                            value={selectedHostOptions}
-                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onChange={handleChangeHost}
-                                                            SelectProps={{
-                                                                MenuProps: {
-                                                                    style: {
-                                                                        maxHeight: '400px', // Adjust the height as per your requirement
-                                                                    },
-                                                                },
-                                                            }}
-
-                                                            style={{ top: "10px" }}
-
-
-                                                        >
-
-                                                            <MenuItem value="">
-                                                                <em>None</em>
-                                                            </MenuItem>
-
-
-
-                                                            {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
-                                                                <MenuItem key={index} value={options.id} disabled={!options.isPresent}
-                                                                    style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
-                                                            ))}
-                                                        </TextField>
-
-
-                                                        <TextField
-                                                            id="outlined-select-currency"
-                                                            select
-                                                            label="Search by Room"
-                                                            value={filterSelectedRoom}
-                                                            // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                                            onChange={handleChange2}
-
-                                                            SelectProps={{
-                                                                MenuProps: {
-                                                                    style: {
-                                                                        maxHeight: '400px', // Adjust the height as per your requirement
-                                                                    },
-                                                                },
-                                                            }}
-
-                                                            style={{ top: "10px" }}
-
-
-                                                        >
-
-                                                            <MenuItem value="">
-                                                                <em>None</em>
-                                                            </MenuItem>
-
-
-
-                                                            {Array.isArray(rooms) && rooms.map((room) => (
-                                                                <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
-                                                            ))}
-                                                        </TextField>
-
-
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
-
-                                                                <DatePicker
-                                                                    label="Start Date"
-                                                                    value={startDate}
-                                                                    // onChange={(newValue) => setStartDate(newValue)}
-                                                                    onChange={handleStartDateChange}
-                                                                />
-                                                                <DatePicker
-                                                                    label="End Date"
-                                                                    value={endDate}
-                                                                    // onChange={(newValue) => setEndDate(newValue)}
-                                                                    onChange={handleEndDateChange}
-                                                                />
-                                                            </DemoContainer>
-                                                        </LocalizationProvider>
-                                                    </Grid>
-
-                                                    <Grid style={{ backgroundColor: "", right: 0 }}>
-                                                        <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
-
-                                                    </Grid>
+                                                            <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
 
 
 
 
+                                                                <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
+                                                                    onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                                    onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
 
+
+                                                                <TextField
+                                                                    id="outlined-select-currency"
+                                                                    select
+                                                                    label="Search by Status"
+                                                                    value={selectedStatusOptions}
+                                                                    // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                                    onChange={handleChangeStatus}
+
+                                                                    style={{ top: "10px" }}
+
+
+                                                                >
+
+                                                                    <MenuItem value="">
+                                                                        <em>None</em>
+                                                                    </MenuItem>
+
+
+
+                                                                    {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
+                                                                        <MenuItem key={index} value={options} >{options}</MenuItem>
+                                                                    ))}
+                                                                </TextField>
+
+
+                                                                <TextField
+                                                                    id="outlined-select-currency"
+                                                                    select
+                                                                    label="Search by Host"
+                                                                    value={selectedHostOptions}
+                                                                    // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                                    onChange={handleChangeHost}
+                                                                    SelectProps={{
+                                                                        MenuProps: {
+                                                                            style: {
+                                                                                maxHeight: '400px', // Adjust the height as per your requirement
+                                                                            },
+                                                                        },
+                                                                    }}
+
+                                                                    style={{ top: "10px" }}
+
+
+                                                                >
+
+                                                                    <MenuItem value="">
+                                                                        <em>None</em>
+                                                                    </MenuItem>
+
+
+
+                                                                    {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
+                                                                        <MenuItem key={index} value={options.id} disabled={!options.isPresent}
+                                                                            style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
+                                                                    ))}
+                                                                </TextField>
+
+
+                                                                <TextField
+                                                                    id="outlined-select-currency"
+                                                                    select
+                                                                    label="Search by Room"
+                                                                    value={filterSelectedRoom}
+                                                                    // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+                                                                    onChange={handleChange2}
+
+                                                                    SelectProps={{
+                                                                        MenuProps: {
+                                                                            style: {
+                                                                                maxHeight: '400px', // Adjust the height as per your requirement
+                                                                            },
+                                                                        },
+                                                                    }}
+
+                                                                    style={{ top: "10px" }}
+
+
+                                                                >
+
+                                                                    <MenuItem value="">
+                                                                        <em>None</em>
+                                                                    </MenuItem>
+
+
+
+                                                                    {Array.isArray(rooms) && rooms.map((room) => (
+                                                                        <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
+                                                                    ))}
+                                                                </TextField>
+
+
+                                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                    <DemoContainer components={['DatePicker', 'DatePicker']}>
+
+                                                                        <DatePicker
+                                                                            label="Start Date"
+                                                                            value={startDate}
+                                                                            // onChange={(newValue) => setStartDate(newValue)}
+                                                                            onChange={handleStartDateChange}
+                                                                        />
+                                                                        <DatePicker
+                                                                            label="End Date"
+                                                                            value={endDate}
+                                                                            // onChange={(newValue) => setEndDate(newValue)}
+                                                                            onChange={handleEndDateChange}
+                                                                        />
+                                                                    </DemoContainer>
+                                                                </LocalizationProvider>
+                                                            </Grid>
+
+                                                            <Grid style={{ backgroundColor: "", right: 0 }}>
+                                                                <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+
+                                                            </Grid>
+
+
+
+
+
+
+                                                        </Grid>
+
+
+
+                                                    </Box>
 
                                                 </Grid>
 
 
 
-                                            </Box>
+                                            </div>
 
-                                        </Grid>
-
-
-
-                                    </div>
-
-                                    <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
-                                        <Table sx={{}} aria-label="simple table">
-                                            <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black", fontSize: "18px" }}>
-                                                <TableRow sx={{ border: "1px solid black" }}>
-                                                    {/* <TableCell>Meeting ID</TableCcenter
+                                            <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
+                                                <Table sx={{}} aria-label="simple table">
+                                                    <TableHead sx={{ backgroundColor: '#2b345386', border: "1px solid black", fontSize: "18px" }}>
+                                                        <TableRow sx={{ border: "1px solid black" }}>
+                                                            {/* <TableCell>Meeting ID</TableCcenter
                                                 <TableCell>Visitor ID</TableCell> */}
-                                                    <TableCell>Sl No</TableCell>
-                                                    <TableCell align="left">Full Name</TableCell>
-                                                    {/* <TableCell align="right">Email</TableCell> */}
-                                                    <TableCell align="left">Phone No.</TableCell>
-                                                    <TableCell align="left">Company Name</TableCell>
-                                                    <TableCell align="left">Host Name</TableCell>
-                                                    {/* <TableCell align="right">Remarks</TableCell> */}
-                                                    <TableCell align="left">Room</TableCell>
+                                                            <TableCell>Sl No</TableCell>
+                                                            <TableCell align="left">Full Name</TableCell>
+                                                            {/* <TableCell align="right">Email</TableCell> */}
+                                                            <TableCell align="left">Phone No.</TableCell>
+                                                            <TableCell align="left">Company Name</TableCell>
+                                                            <TableCell align="left">Host Name</TableCell>
+                                                            {/* <TableCell align="right">Remarks</TableCell> */}
+                                                            <TableCell align="left">Room</TableCell>
 
-                                                    <TableCell align="left">Meeting Time</TableCell>
-                                                    {/* <TableCell align="right">End Time</TableCell> */}
+                                                            <TableCell align="left">Meeting Time</TableCell>
+                                                            {/* <TableCell align="right">End Time</TableCell> */}
 
-                                                    <TableCell align="left">Check In</TableCell>
-                                                    <TableCell align="left">Check Out</TableCell>
+                                                            <TableCell align="left">Check In</TableCell>
+                                                            <TableCell align="left">Check Out</TableCell>
 
-                                                    <TableCell align="left">Status</TableCell>
+                                                            <TableCell align="left">Status</TableCell>
 
 
 
-                                                    <TableCell align="left"></TableCell>
+                                                            <TableCell align="left"></TableCell>
 
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {visitors
-                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                    .map((visitor, index) => (
-                                                        <TableRow key={index}>
-                                                            {/* <TableCell>{visitor.id}</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {visitors
+                                                            // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                            .map((visitor, index) => (
+                                                                <TableRow key={index}>
+                                                                    {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                                            <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
+                                                                    <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
 
-                                                            <TableCell align="left">{visitor.visitor.name}</TableCell>
+                                                                    <TableCell align="left">{visitor.visitor.name}</TableCell>
 
-                                                            {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
-                                                            <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
+                                                                    {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
+                                                                    <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
 
-                                                            <TableCell align="left">{visitor.visitor.companyName}</TableCell>
-                                                            <TableCell align="left">{getFullName(visitor.user)}</TableCell>
-                                                            {/* <TableCell align="right">{visitor.remarks}</TableCell> */}
-                                                            <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
-                                                            <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
-                                                            {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
+                                                                    <TableCell align="left">{visitor.visitor.companyName}</TableCell>
+                                                                    {/* <TableCell align="left">{getFullName(visitor.user)}</TableCell> */}
 
-                                                            <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
-                                                            <TableCell align="left">{formatMeetingDuration1(visitor)}</TableCell>
-                                                            {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
-                                                            <TableCell align="left">{visitor.status}</TableCell>
+                                                                    <TableCell align="left">
+                                                                        {visitor.user.role.name === "ADMIN" ? (
+                                                                            <span> {getFullName(visitor.user)} (Admin)
 
-                                                            {/* <TableCell align="right">{visitor.meetingStartDateTime}</TableCell>
+                                                                            </span>
+                                                                        ) : (
+                                                                            getFullName(visitor.user)
+                                                                        )}
+                                                                    </TableCell>
+
+                                                                    {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
+                                                                    <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
+                                                                    <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                                    {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
+
+                                                                    <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                                    <TableCell align="left">{formatMeetingDuration1(visitor)}</TableCell>
+                                                                    {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
+                                                                    <TableCell align="left">{visitor.status}</TableCell>
+
+                                                                    {/* <TableCell align="right">{visitor.meetingStartDateTime}</TableCell>
                                                         <TableCell align="right">{visitor.meetingEndDateTime}</TableCell>
                                                         <TableCell align="right">{visitor.remarks}</TableCell>
                                                         <TableCell align="right">{visitor.status}</TableCell> */}
-                                                            <TableCell align="right">
+                                                                    <TableCell align="right">
 
-                                                                {/* //download pass
+                                                                        {/* //download pass
                                                             {visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ? (
                                                                 
                                                                 <DownloadIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
@@ -2340,185 +2395,324 @@ export default function Dashboard() {
                                                             )} */}
 
 
-                                                            {/* //zzzzz */}
- 
-                                                                {visitor.status === 'APPROVED' && visitor.room!== null|| visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)}  />) :  visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' ||  visitor.status === 'CANCELLED_BY_VISITOR' ? (
-                                                                    
-                                                                    <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
-                                                                ) : (
-                                                                    
-                                                                    <EditIcon onClick={() => handleOpenModal(visitor)} />
-                                                                )} 
+                                                                        {/* //zzzzz */}
 
-                                                                
-                                                            </TableCell>
+                                                                        {/* {visitor.status === 'APPROVED' && visitor.room !== null || visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />) : visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'CANCELLED_BY_VISITOR' ? (
 
-                                                        </TableRow>
-                                                    ))}
-                                            </TableBody>
+                                                                            <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
+                                                                        ) : (
 
-                                        </Table>
-                                        <TablePagination
-                                            //   rowsPerPageOptions={[10, 25, 50, 100]}
-                                            rowsPerPageOptions={[5, 10, 15]}
-                                            component="div"
+                                                                            <EditIcon onClick={() => handleOpenModal(visitor)} />
+                                                                        )}  */}
+
+
+                                                                        {/* {visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (<EditIcon onClick={() => handleOpenModal(visitor)} />) :   <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />}  */}
 
 
 
-                                            count={meetings}
-
-                                            // count={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom? meetingsLength : meetings}
-
-                                            // rowsPerPage={ phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 10 : rowsPerPage}
-
-
-
-
-
-                                            rowsPerPage={rowsPerPage}
-                                            // page={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom ? 0 : page}
-                                            page={page}
-                                            onPageChange={
-                                                handleChangePage}
-                                            onRowsPerPageChange={handleChangeRowsPerPage}
-
-                                        />
-                                    </TableContainer>
+                                                                        {
+                                                                            (visitor.status === 'APPROVED' && visitor.room !== null) ||
+                                                                                (visitor.status === 'INPROCESS' && visitor.room !== null) ? (
+                                                                                <DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
+                                                                            ) : (visitor.status === 'COMPLETED' ||
+                                                                                visitor.status === 'CANCELLED' ||
+                                                                                visitor.status === 'CANCELLED_BY_VISITOR') ? (
+                                                                                <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
+                                                                            ) : (
+                                                                                visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (
+                                                                                    <EditIcon onClick={() => handleOpenModal(visitor)} />
+                                                                                ) : (
+                                                                                    <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
+                                                                                )
+                                                                            )
+                                                                        }
 
 
+                                                                    </TableCell>
 
+                                                                </TableRow>
+                                                            ))}
+                                                    </TableBody>
 
-
-
-                                </Item>
-                            </Grid>
-                        </Grid>
-                        <StyledModal
-                            open={open} // Set the open prop of the modal
-                            // onClose={handleCloseModal} // Handle closing the modal
-                            aria-labelledby="modal-title"
-                            aria-describedby="modal-description"
-                        >
-                            <Box width={450} height={250} bgcolor={'white'} p={2} borderRadius={5} border='none' >
+                                                </Table>
+                                                <TablePagination
+                                                    //   rowsPerPageOptions={[10, 25, 50, 100]}
+                                                    rowsPerPageOptions={[5, 10, 15]}
+                                                    component="div"
 
 
 
-                                <Box
-                                    display="flex" flexDirection='column'
+                                                    count={meetings}
 
-                                    // margin='auto'
-                                    marginBottom={10}
-                                    // padding={2}
-                                    borderRadius={5}
-                                    gap={3}
+                                                    // count={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom? meetingsLength : meetings}
 
+                                                    // rowsPerPage={ phoneNumberFilter || startDate || endDate || selectedStatusOptions ? 10 : rowsPerPage}
+
+
+
+
+
+                                                    rowsPerPage={rowsPerPage}
+                                                    // page={phoneNumberFilter || startDate || endDate || selectedStatusOptions || selectedRoom ? 0 : page}
+                                                    page={page}
+                                                    onPageChange={
+                                                        handleChangePage}
+                                                    onRowsPerPageChange={handleChangeRowsPerPage}
+
+                                                />
+                                            </TableContainer>
+
+
+
+
+
+
+                                        </Item>
+                                    </Grid>
+                                </Grid>
+                                <StyledModal
+                                    open={open} // Set the open prop of the modal
+                                    // onClose={handleCloseModal} // Handle closing the modal
+                                    aria-labelledby="modal-title"
+                                    aria-describedby="modal-description"
                                 >
-                                    {/* <div style={{display:"flex",justifyContent:"right",backgroundColor:"yellow"}}>  */}
-                                    <CloseIcon onClick={handleCloseModal} style={{ backgroundColor: "", color: "grey", cursor: "pointer", marginBottom: "10px", marginLeft: "400px" }} />
-                                    {/* </div> */}
-                                    {/* <div style={{display:"flex", flexDirection:"row"}}> */}
-                                    {/* <Typography fontSize={20} fontWeight={'bold'} variant={'h1'}>Meeting</Typography > */}
+                                    {/* <Box width={450} height={250} bgcolor={'white'} p={2} borderRadius={5} border='none' > */}
+                                    <Box width={450} height={300} bgcolor={'white'} p={2} borderRadius={5} border='none' >
 
 
 
-                                    {/* </div> */}
+                                        <Box
+                                            display="flex" flexDirection='column'
 
+                                            // margin='auto'
+                                            marginBottom={10}
+                                            // padding={2}
+                                            borderRadius={5}
+                                            gap={3}
 
-
-
-                                    <FormControl >
-                                        <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={selectedRoom}
-                                            label="rooms"
-                                            onChange={handleChange1}
-                                            className="room-dropdown"
-                                            MenuProps={MenuProps}
                                         >
-                                            
-                                            {Array.isArray(rooms) && rooms.map((room) => (
-                                              
-                                                <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
-                                                style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
-                                            ))}
+                                            {/* <div style={{display:"flex",justifyContent:"right",backgroundColor:"yellow"}}>  */}
+                                            <CloseIcon onClick={handleCloseModal} style={{ backgroundColor: "", color: "grey", cursor: "pointer", marginBottom: "10px", marginLeft: "400px" }} />
+                                            {/* </div> */}
+                                            {/* <div style={{display:"flex", flexDirection:"row"}}> */}
+                                            {/* <Typography fontSize={20} fontWeight={'bold'} variant={'h1'}>Meeting</Typography > */}
+
+
+
+                                            {/* </div> */}
+
+                                            {item.status === 'PENDING' && item.user.role.name === 'ADMIN' ?
+                                                <>
+                                                    <FormControl fullWidth>
+                                                        <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={
+                                                                selectedStatusModal
+
+                                                            }
+                                                            label="status"
+                                                            onChange={handleChangeStatusModal}
+                                                        >
+                                                            {/* <MenuItem value={selectedStatusModal}>APPROVE</MenuItem>
+                                                               <MenuItem value={selectedStatusModal} >CANCEL</MenuItem> */}
+
+
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+
+
+
+                                                            {Array.isArray(statusModal) && statusModal.map((options, index) => (
+                                                                <MenuItem key={index} value={options} >{options}</MenuItem>
+                                                            ))}
+
+                                                        </Select>
+                                                    </FormControl>
+
+                                                    <FormControl >
+                                                        <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={selectedRoom}
+                                                            label="rooms"
+                                                            onChange={handleChange1}
+                                                            disabled={selectedStatusModal === "CANCELLED" }
+                                                            style={{color:selectedStatusModal === "CANCELLED" ? 'grey':'black'}}
+                                                            className="room-dropdown"
+                                                            MenuProps={MenuProps}
+                                                        >
+
+                                                            {Array.isArray(rooms) && rooms.map((room) => (
+
+                                                                <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
+                                                                    style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
+                                                            ))}
 
 
 
 
 
-                                        </Select>
-                                    </FormControl>
+                                                        </Select>
+                                                    </FormControl>
 
-                                    {/* <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={
-                                            
-                                        }
-                                        label="status"
-                                        onChange={handleChangeStatus}
-                                    >
-                                        <MenuItem value='APPROVED'>APPROVE</MenuItem>
-                                        <MenuItem value='CANCELLED' >CANCEL</MenuItem>
-
-                                    </Select>
-                                </FormControl> */}
+                                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                        <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
+                                                            <Button variant='contained' onClick={handleAddMeeting} >Add </Button>
+                                                            {/* <Button variant='contained' onClick={handleCloseModal}>Close</Button> */}
 
 
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
-                                            <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
-                                            {/* <Button variant='contained' onClick={handleCloseModal}>Close</Button> */}
-
-
-                                        </div>
-                                        <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
-
-
-                                            {/* <Button variant='contained' onClick={() => handleDownloadPass(item.id,item.visitor.name,item.visitor.phoneNumber)}>Pass</Button> */}
-
-                                            {roomAdded && (
-                                                <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
-                                            )}
+                                                        </div>
+                                                        <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
 
 
 
 
-                                        </div>
-
-                                    </div>
-
-
+                                                            {roomAdded && (
+                                                                <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
+                                                            )}
 
 
 
 
+                                                        </div>
+
+                                                    </div>
 
 
 
-                                </Box>
+                                                </>
+
+                                                : <>
+                                                    <FormControl >
+                                                        <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={selectedRoom}
+                                                            label="rooms"
+                                                            onChange={handleChange1}
+                                                            className="room-dropdown"
+                                                            MenuProps={MenuProps}
+                                                        >
+
+                                                            {Array.isArray(rooms) && rooms.map((room) => (
+
+                                                                <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
+                                                                    style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
+                                                            ))}
 
 
 
 
 
+                                                        </Select>
+                                                    </FormControl>
+
+                                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                        <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
+                                                            <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
+                                                            {/* <Button variant='contained' onClick={handleCloseModal}>Close</Button> */}
+
+
+                                                        </div>
+                                                        <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
+
+
+                                                            {/* <Button variant='contained' onClick={() => handleDownloadPass(item.id,item.visitor.name,item.visitor.phoneNumber)}>Pass</Button> */}
+
+                                                            {roomAdded && (
+                                                                <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
+                                                            )}
 
 
 
-                            </Box>
-                        </StyledModal>
+
+                                                        </div>
+
+                                                    </div>
+                                                </>}
 
 
-                    </div>
 
-                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            {/* {item.role.name === 'ADMIN' && item.status === 'PENDING' && ( */}
+
+                                            {/* {Array.isArray(visitors) && visitors.map((options, index)&&(
+
+                                                
+                                                           <FormControl fullWidth>
+                                                           <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                                           <Select
+                                                               labelId="demo-simple-select-label"
+                                                               id="demo-simple-select"
+                                                               value={
+                                                                   selectedStatusOptions
+                                                               }
+                                                               label="status"
+                                                               onChange={handleChangeStatus}
+                                                           >
+                                                               <MenuItem value='APPROVED'>APPROVE</MenuItem>
+                                                               <MenuItem value='CANCELLED' >CANCEL</MenuItem>
+                       
+                                                           </Select>
+                                                       </FormControl> 
+
+                                            )
+                                  
+                                            )} */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        </Box>
+
+
+
+
+
+
+
+
+                                    </Box>
+                                </StyledModal>
+
+
+                            </div>
+
+                        </div>
+                    </Grid>
                 </Grid>
-                </Grid>
-                </Box>
+            </Box>
 
         </>
     )

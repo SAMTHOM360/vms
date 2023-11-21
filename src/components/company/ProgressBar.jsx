@@ -7,6 +7,9 @@ import axios from 'axios';
 const ProgressBar = () => {
 
     const [meetingHours, setMeetingHours] = useState([]);
+    const [averageHoursPerWeek,setAverageHoursPerWeek] = useState('');
+    const [totalMeetingsPerWeek,setTotalMeetingsPerWeek] = useState('');
+
     const chartRef = useRef(null);
 
 
@@ -45,6 +48,8 @@ const ProgressBar = () => {
             const responseData = response.data.data.meetingHours;
 
             setMeetingHours(responseData);
+            setAverageHoursPerWeek(response.data.data.avgHoursPerWeek);
+            setTotalMeetingsPerWeek(response.data.data.totalMeetingPerWeek);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -338,21 +343,46 @@ const ProgressBar = () => {
 
     }, [meetingHours]);
 
+    // return (
+    //     <div>
+    //         <div className="chartMenu">
+    //             {/* <p>Meeting Hours </p> */}
+    //             {/* <p>Meeting Hours ( <span id="chartVersion"></span>)</p> */}
+    //         </div>
+    //         <div className="chartCard" style={{backgroundColor:""}}>
+    //         <h2 style={{ color: "black" }}>MeetingDetails (Average Hours/week :{averageHoursPerWeek} ,Total Meetings/week:{totalMeetingsPerWeek})</h2>
+    //             <div className="chartBox" style={{display:"flex",justifyContent: "",backgroundColor:"" }}>
+                    
+    //                 <canvas id="myChart" style={{ height: "1000px !important", width: "900px",marginRight: "",backgroundColor:"" }}></canvas>
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
+
     return (
         <div>
-            <div className="chartMenu">
-                {/* <p>Meeting Hours </p> */}
-                {/* <p>Meeting Hours ( <span id="chartVersion"></span>)</p> */}
+      
+          <div className="statsSummary">
+            <h2>
+              Meeting Details (
+                {/* <span className="meetingDetails">Meeting Details ( */}
+              <span className="avgHours">Average Hours/Week: {averageHoursPerWeek}</span>  
+              <span className="totalMeetings"> , Total Meetings/Week: {totalMeetingsPerWeek}) </span> 
+            </h2>
+          </div>
+      
+          {/* <div className="chartMenu">
+            <h3>Weekly Trend</h3> 
+          </div> */}
+      
+          <div className="chartCard">
+            <div className="chartBox">
+              <canvas id="myChart"style={{ height: "1000px !important", width: "900px",marginRight: "",backgroundColor:"" }}></canvas>
             </div>
-            <div className="chartCard" style={{backgroundColor:""}}>
-            <h2 style={{ color: "black" }}>MeetingDetails</h2>
-                <div className="chartBox" style={{display:"flex",justifyContent: "",backgroundColor:"" }}>
-                    
-                    <canvas id="myChart" style={{ height: "1000px !important", width: "900px",marginRight: "",backgroundColor:"" }}></canvas>
-                </div>
-            </div>
+          </div>
+      
         </div>
-    );
+      );
 };
 
 export default ProgressBar;

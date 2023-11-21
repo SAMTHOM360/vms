@@ -2,3 +2,29 @@
     background-color:'red';
     width:"1180px";
 } */
+.statsSummary h2 {
+    font-size: 22px; 
+    color:black
+  }
+  
+  .avgHours {
+    color: #4755AB;  
+  }
+
+  .meetingDetails{
+    color:black
+
+  }
+  
+  .totalMeetings {
+    color: #CD5334; 
+  }
+  
+  .chartMenu {
+    background: #eee;
+    /* padding: 10px; */
+  }
+/*   
+  .chartCard { 
+    border: 1px solid #ddd;
+  } */
