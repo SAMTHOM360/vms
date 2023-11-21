@@ -1517,7 +1517,6 @@ export default function Dashboard() {
 
 
 
-
         };
 
         const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
@@ -1532,7 +1531,7 @@ export default function Dashboard() {
                 // handleCloseModal();
                 setSelectedRoom('');
                 setSelectedStatusModal('');
-                fetchData();
+               
                 // setStatus('')
 
                 if (response.data.message === "Meeting is cancelled") {
@@ -1544,6 +1543,7 @@ export default function Dashboard() {
                     setRoomAdded(true);
                 }
 
+                fetchData();
 
 
             })
@@ -1724,10 +1724,6 @@ export default function Dashboard() {
                 //recent
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
-
-
-
-
 
 
 
@@ -1920,6 +1916,7 @@ export default function Dashboard() {
                 window.URL.revokeObjectURL(url);
                 alert('Pass downloaded succesfully');
                 handleCloseModal();
+                fetchData();
             })
             .catch((error) => {
                 console.error('Error downloading pass:', error);

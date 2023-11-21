@@ -406,7 +406,7 @@ export default function Dashboard() {
         // setSelectedRoom('');
         setStatus("");
 
-        if (response.data.message === "CANCELLED Successfully") {
+        if (response.data.data.status === "CANCELLED") {
           alert("Meeting cancelled succesfully");
         } else {
           alert("Meeting added succesfully");
@@ -1001,7 +1001,8 @@ function formatMeetingDuration(meeting) {
                                     {visitor.status === "COMPLETED" ||
                                     visitor.status === "CANCELLED" ||
                                     visitor.status ===
-                                      "CANCELLED_BY_VISITOR" ? (
+                                      "CANCELLED_BY_VISITOR"|| visitor.status ===
+                                      "INPROCESS" ? (
                                       <>
                                         <div className="status">
                                           <CheckIcon
