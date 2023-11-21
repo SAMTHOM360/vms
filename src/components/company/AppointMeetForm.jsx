@@ -454,7 +454,7 @@ const MeetingDetails = () => {
   // };
 
   const handleRedirectMeetings = () => {
-    navigate("/dashboard");
+    navigate("/meetings");
   };
 
   // console.log("appoint formdata", formData);

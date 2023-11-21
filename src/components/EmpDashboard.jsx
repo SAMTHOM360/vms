@@ -71,9 +71,9 @@ const EmpDashboard = () => {
   const handleNavigateMeeting = () => {
     if (loggedUserRole) {
       if (loggedUserRole === "ADMIN") {
-        navigate("/dashboard");
+        navigate("/meetings");
       } else {
-        navigate("/dashboard");
+        navigate("/meetings");
       }
     }
   };
