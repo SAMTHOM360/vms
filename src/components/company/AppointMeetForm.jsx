@@ -25,6 +25,7 @@ import { duration } from "moment";
 import { SecurityUpdateGoodOutlined } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import Header from "../Header";
+import Loader from "../Loader";
 import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
@@ -43,19 +44,19 @@ const MeetingDetails = () => {
   // state for disabling submit button based on employee meeting status
   const [status, setStatus] = useState("");
   const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  console.log(cities, "fetched cities");
   //Host Url
   const userUrl = "http://192.168.12.54:8080/api/user/alluser";
   // fetch meeting context dropdown
   const meetingContextUrl = "http://192.168.12.54:8080/vis/meetCon";
+  const adminId = sessionStorage.getItem("adminId");
 
-  const [fetchedUserData, setFetchedUserData] = useState(null);
+  // const [fetchedUserData, setFetchedUserData] = useState(null);
 
   // console.log(fetchedUserData,"this data i sfetched user data from phone number")
   // console.log(fetchedUserData.state.id,"state id")
   // console.log(fetchedUserData.city.id,"city id")
-
   // store hosts here
   const [users, setUsers] = useState([]);
 
@@ -67,10 +68,14 @@ const MeetingDetails = () => {
     email: "",
     state: "",
     stateId: "",
-    city: "",
+    city: {
+      id: "",
+      name: "",
+    },
     cityId: "",
     user: {
       id: "",
+      username: "",
     },
     companyName: "",
     remarks: "",
@@ -82,6 +87,28 @@ const MeetingDetails = () => {
   // const [phoneInput, setPhoneInput] = useState("");
 
   // function to fetch hosts
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const response = await axios.get(userUrl);
+  //       if (response.status === 200 && response.data.data) {
+  //         const userList = response.data.data.map((user) => ({
+  //           id: user.id,
+  //           username: user.name,
+  //           profilePhoto: user.image,
+  //         }));
+  //         setUsers(userList);
+  //         console.log("userlist", userList);
+  //       }
+  //       // room.roomName
+  //     } catch (error) {
+  //       console.error("Error fetching users", error);
+  //     }
+  //   };
+
+  //   fetchUsers();
+  // }, []);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -92,60 +119,152 @@ const MeetingDetails = () => {
             username: user.name,
             profilePhoto: user.image,
           }));
+
           setUsers(userList);
-          console.log(userList, "userlist");
+
+          // Find the user with the matching adminId
+          const matchedAdminUser = userList.find(
+            (user) => user.id === Number(adminId)
+          );
+
+          if (matchedAdminUser) {
+            // Set the default host value to the matched admin user's username
+            setFormData((prevData) => ({
+              ...prevData,
+              user: {
+                id: matchedAdminUser.id,
+                username: matchedAdminUser.username,
+              },
+            }));
+          }
         }
-        // room.roomName
       } catch (error) {
         console.error("Error fetching users", error);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [adminId]);
 
-  console.log(formData, "formdataa");
+  // console.log(formData, "formdataa");
 
   // fetching visitor data based on visitor phone number
 
+  // const handlePhoneNumberChange = async (event) => {
+  //   const phone = event.target.value;
+  //   console.log(phone, "phone number is getting clicked");
+  //   // setPhoneInput(phone);
+  //   // handle selected states
+  //   if (phone.length === 10) {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
+  //       );
+
+  //       if (response.status === 200 && response.data.data) {
+  //         // set the fetched user data in the form
+  //         // setFetchedUserData(response.data.data);
+  //         // console.log(fetchedUserData, "getting user data by phone number initials")
+
+  //         // const newStateId = response.data.data.state.id;
+  //         // console.log(newStateId,"selected state id by handle phone")
+  //         // const newCityId = response.data.data.city.id;
+  //         // console.log(newCityId,"selected city id by handle phone")
+  //         console.log("cityIdddd", response.data.data);
+  //         setFormData({
+  //           ...formData,
+  //           phoneNumber: phone,
+  //           name: response.data.data.name || "",
+  //           companyName: response.data.data.companyName || "",
+
+  //           city: {
+  //             id: response.data.data.city.id || "",
+  //             name: response.data.data.city.name || "",
+  //           },
+  //           // cityId: response.data.data.city.id,
+  //           stateId: response.data.data.state.id,
+  //           // city: response.data.data.city.name || "",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       toast.error("User doesn't exist!", {
+  //         position: "top-right",
+  //         autoClose: 4000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //       });
+  //       setFormData({
+  //         ... initialFormData,
+  //         phoneNumber: phone,
+  //         user:{
+  //           id: formData.user.id || '',
+  //           username: formData.user.username || '',
+  //         }
+  //       });
+  //     }
+  //   }
+  // };
+
   const handlePhoneNumberChange = async (event) => {
     const phone = event.target.value;
-    console.log(phone, "phone number is getting clicked");
-    // setPhoneInput(phone);
-    // handle selected states
-    if (phone.length === 10) {
-      try {
-        const response = await axios.get(
-          `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
-        );
-
-        if (response.status === 200 && response.data.data) {
-          // set the fetched user data in the form
-          setFetchedUserData(response.data.data);
-          // console.log(fetchedUserData, "getting user data by phone number initials")
-
-          // const newStateId = response.data.data.state.id;
-          // console.log(newStateId,"selected state id by handle phone")
-          // const newCityId = response.data.data.city.id;
-          // console.log(newCityId,"selected city id by handle phone")
-          console.log(response.data.data.city.id, "cityIdddd");
+  
+    // Check if the entered value is numeric
+    if (/^\d*$/.test(phone)) {
+      // Proceed only if the entered value is numeric and has a length of 10
+      if (phone.length === 10) {
+        try {
+          setLoading(true)
+          const response = await axios.get(
+            `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
+          );
+  
+          if (response.status === 200 && response.data.data) {
+            const newStateId = response.data.data.state.id;
+            const newCityId = response.data.data.city.id;
+  
+            setFormData({
+              ...formData,
+              phoneNumber: phone,
+              name: response.data.data.name || "",
+              companyName: response.data.data.companyName || "",
+              city: {
+                id: newCityId || "",
+                name: response.data.data.city.name || "",
+              },
+              stateId: newStateId,
+            });
+          }
+        } catch (error) {
+          console.error(error);
+          toast.error("User doesn't exist!", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
           setFormData({
-            ...formData,
+            ...initialFormData,
             phoneNumber: phone,
-            name: response.data.data.name || "",
-            companyName: response.data.data.companyName || "",
-
-            cityId: response.data.data.city.id,
-            stateId: response.data.data.state.id,
-            city: response.data.data.city.name || "",
+            user: {
+              id: formData.user.id || "",
+              username: formData.user.username || "",
+            },
           });
         }
-      } catch (error) {
-        console.error(error);
-        toast.error("user does not exist");
       }
     }
+    setLoading(false)
   };
+  
   // state to store the meeting context dropdown
   const [meetingContextOptions, setMeetingContextOptions] = useState([]);
 
@@ -157,7 +276,7 @@ const MeetingDetails = () => {
         setMeetingContextOptions(response.data.data);
       }
     } catch (error) {
-      console.log("error fetching meeting context options");
+      console.error("error fetching meeting context options");
     }
   };
   // calling the meeting context options inside useeffect
@@ -180,7 +299,7 @@ const MeetingDetails = () => {
         id: formData.user.id || "",
       },
       city: {
-        id: formData.cityId || "",
+        id: formData.city.id || "",
       },
       state: {
         id: formData.stateId || "",
@@ -191,17 +310,30 @@ const MeetingDetails = () => {
       context: formData.context,
       email: formData.email,
     };
+    // console.log("UPDATED FORM DATA", updatedFormData)
     // debugger
-    console.log(updatedFormData, "updatedFormData");
+    // console.log(updatedFormData, "updatedFormData");
 
     try {
+      setLoading(false)
       const response = await axios.post(
         "http://192.168.12.58:8080/api/meeting/add/byuser",
         updatedFormData
       );
       if (response.status === 200) {
-        console.log("Form Data:", updatedFormData);
-        toast.success("Meeting approval sent");
+        // console.log("Form Data:", updatedFormData);
+        toast.success("Meeting appointed successfully.", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setFormData({ ...initialFormData });
+        handleRedirectMeetings()
       } else if (response.data.data === null) {
         // toast.warning("visitor already has pending meetings")
         console.log("visitor already has pending meetings");
@@ -210,8 +342,7 @@ const MeetingDetails = () => {
       console.error(err, "There is some issue moving into the database");
       // toast.warning("Sorry there is some issue")
     }
-
-    setFormData({ ...initialFormData });
+    setLoading(false)
   };
 
   const shouldDisableDate = (date) => {
@@ -249,24 +380,26 @@ const MeetingDetails = () => {
     const fetchCity = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.12.54:8080/api/cityByName?cityName=${formData.city}`
+          `http://192.168.12.54:8080/api/cityByName?cityName=${formData.city.name}`
         );
         if (response.status === 200) {
           setCities(response.data.data);
-          console.log(
-            response.data.data,
-            "this is city data from search filter"
-          );
+          // console.log(
+          //   response.data.data,
+          //   "this is city data from search filter"
+          // );
         }
       } catch (error) {
         console.error(error);
       }
     };
 
-    if (formData.city) {
+    if (formData.city.name) {
       fetchCity();
     }
-  }, [formData.city]);
+  }, [formData.city.name]);
+
+  // console.log("Cities", cities);
 
   // handle change function
 
@@ -275,12 +408,16 @@ const MeetingDetails = () => {
 
     if (name === "user") {
       const selectedUseruser = users.find((user) => user.id === value);
-
+      // console.log(" selected user user", selectedUseruser);
       setFormData({
         ...formData,
         [name]: {
-          id: selectedUseruser,
+          id: selectedUseruser.id,
+          username: selectedUseruser.username,
         },
+        // user:{
+        //   id:value
+        // }
       });
     } else {
       setFormData({
@@ -290,16 +427,43 @@ const MeetingDetails = () => {
     }
   };
 
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+
+  //   if (name === "user") {
+  //     // setFormData({
+  //     //   ...formData,
+  //     //   user: {
+  //     //     id: value.id,
+  //     //   },
+  //     // });
+
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+
+  //   }
+
+  //   else {
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+  //   }
+  // };
+
   const handleRedirectMeetings = () => {
     navigate("/dashboard");
   };
 
-  console.log("appoint formdata", formData);
+  // console.log("appoint formdata", formData);
 
   //------------------------ JSX ---------------------
 
   return (
     <>
+    <Loader isLoading={loading} />
       <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
@@ -334,7 +498,7 @@ const MeetingDetails = () => {
             >
               <Grid container spacing={2} sx={{ mt: "10px" }}>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                  <TextField
+                  {/* <TextField
                     label=" Visitor's Phone Number"
                     type="number"
                     name="phoneNumber"
@@ -345,6 +509,32 @@ const MeetingDetails = () => {
                     // onChange={handlePhoneNumberChange}
                     value={formData.phoneNumber}
                     // onChange={handleLength}
+                    autoFocus
+                    required
+                  /> */}
+
+                  <TextField
+                  label=" Visitor's Phone Number"
+                  // type="number"
+                  name="phoneNumber"
+                  autoComplete="off"
+                  sx={{ width: "100%", mt: "10px" }}
+                  value={formData.phoneNumber}
+                  onInput={handlePhoneNumberChange}
+                    inputProps={{
+                      pattern: "^[0-9]*$",
+                      onInput: (event) => {
+                        let value = event.target.value;
+                        value = value.replace(/\D/g, "");
+                        if (value.length > 10) {
+                          value = value.slice(0, 10);
+                        }
+                        setFormData({
+                          ...formData,
+                          phoneNumber: value,
+                        });
+                      },
+                    }}
                     autoFocus
                     required
                   />
@@ -359,6 +549,7 @@ const MeetingDetails = () => {
                     name="name"
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.name}
+                    inputProps={{ maxLength: 26 }}
                     onChange={handleChange}
                     required
                   />
@@ -377,20 +568,56 @@ const MeetingDetails = () => {
                     onChange={handleChange}
                     error={!!formData.emailError}
                     helperText={formData.emailError}
-                    inputProps={{ maxLength: 60 }}
+                    inputProps={{ maxLength: 126 }}
                     // disabled={fetchedUserData && !editMode && !editButtonClicked}
                     required
                   />
                 </Grid>
 
                 {/* city name  */}
-                <Grid item xs={12} sm={6} md={4} lg={4}>
+
+                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: "100%", mt: "10px" }}
                     options={cities.map((city) => city.name)}
                     fullWidth
+                    onInputChange={(event, newValue) => {
+                      const selectedCity = cities.find(
+                        (city) => city.name === newValue
+                      );
+                      const cityId = selectedCity ? selectedCity.id : null;
+                      const stateId = selectedCity
+                        ? selectedCity.state.id
+                        : null;
+
+                        setFormData({
+                          ...formData,
+                          city: { id: cityId, name: newValue }, // Update here
+                          stateId: stateId,
+                        });
+                      }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Visitor's City"
+                        id={formData.city.id}
+                        // value={formData.city}
+                        required
+                      />
+                    )}
+                  />
+                </Grid> */}
+
+                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    sx={{ width: "100%", mt: "10px" }}
+                    options={cities.map((city) => city.name)}
+                    fullWidth
+                    value={formData.city}
                     onInputChange={(event, newValue) => {
                       const selectedCity = cities.find(
                         (city) => city.name === newValue
@@ -412,9 +639,87 @@ const MeetingDetails = () => {
                         {...params}
                         label="Visitor's City"
                         id={formData.cityId}
+                        value={formData.city}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          const selectedCity = cities.find(
+                            (city) => city.name === newValue
+                          );
+                          const cityId = selectedCity ? selectedCity.id : null;
+                          const stateId = selectedCity
+                            ? selectedCity.state.id
+                            : null;
+
+                          setFormData({
+                            ...formData,
+                            city: newValue,
+                            cityId: cityId,
+                            stateId: stateId,
+                          });
+                        }}
                         required
                       />
                     )}
+                  />
+                </Grid> */}
+
+                <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    sx={{ width: "100%", mt: "10px" }}
+                    options={cities}
+                    fullWidth
+                    freeSolo={false}
+                    // value={formData.city ? formData.city : null} // Update here
+                    value={
+                      formData.city &&
+                      cities.some((city) => city.id === formData.city.id)
+                        ? formData.city
+                        : null
+                    }
+                    onInputChange={(event, newValue) => {
+                      const formCityId = formData.city
+                        ? formData.city.id
+                        : null;
+                      const formStateId = formData.stateId;
+                      const selectedCity = cities.find(
+                        (city) => city.name === newValue
+                      );
+                      const cityId = selectedCity
+                        ? selectedCity.id
+                        : formCityId || null;
+                      const stateId = selectedCity
+                        ? selectedCity.state.id
+                        : formStateId || null;
+
+                      setFormData({
+                        ...formData,
+                        city: {
+                          id: cityId,
+                          name: newValue,
+                        },
+                        stateId: stateId,
+                      });
+                    }}
+                    getOptionLabel={(option) => option.name || ""}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option.id}>
+                        {option.name}
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Visitor's City"
+                        id={formData.city ? String(formData.city.id) : ""}
+                        value={formData.city ? formData.city.name : ""} // Update here
+                        required
+                      />
+                    )}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
                   />
                 </Grid>
 
@@ -427,13 +732,15 @@ const MeetingDetails = () => {
                     name="companyName"
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.companyName}
+                    inputProps={{ maxLength: 120 }}
                     onChange={handleChange}
                     // required
                   />
                 </Grid>
 
                 {/* host name */}
-                <Grid item xs={12} sm={6} md={4} lg={4}>
+
+                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                   <FormControl sx={{ width: "100%", mt: "10px" }}>
                     <InputLabel id="demo-user-select-label" required>
                       Host
@@ -441,7 +748,7 @@ const MeetingDetails = () => {
                     <Select
                       labelId="demo-user-select-label"
                       id="demo-user-select"
-                      value={formData.selectedUser}
+                      value={formData.user.id || ""}
                       label="Host"
                       name="user"
                       onChange={handleChange}
@@ -449,16 +756,26 @@ const MeetingDetails = () => {
                       required
                     >
                       {users.map((user) => (
-                        <MenuItem key={user.id} value={user}>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {user.username}
-                          </div>
+                        <MenuItem key={user.id} value={user.id}>
+                
+                          {user.username}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                </Grid> */}
+
+                <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <TextField
+                    label="Host"
+                    variant="outlined"
+                    fullWidth
+                    value={formData.user.username || ""}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={{ mt: "10px" }}
+                  />
                 </Grid>
 
                 {/* Visit Type */}
@@ -495,7 +812,7 @@ const MeetingDetails = () => {
                     value={formData.remarks}
                     name="remarks"
                     onChange={handleChange}
-                    inputProps={{ maxLength: 30 }}
+                    inputProps={{ maxLength: 120 }}
                   />
                 </Grid>
 
