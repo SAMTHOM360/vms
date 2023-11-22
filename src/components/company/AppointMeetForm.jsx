@@ -146,70 +146,6 @@ const MeetingDetails = () => {
     fetchUsers();
   }, [adminId]);
 
-  // console.log(formData, "formdataa");
-
-  // fetching visitor data based on visitor phone number
-
-  // const handlePhoneNumberChange = async (event) => {
-  //   const phone = event.target.value;
-  //   console.log(phone, "phone number is getting clicked");
-  //   // setPhoneInput(phone);
-  //   // handle selected states
-  //   if (phone.length === 10) {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
-  //       );
-
-  //       if (response.status === 200 && response.data.data) {
-  //         // set the fetched user data in the form
-  //         // setFetchedUserData(response.data.data);
-  //         // console.log(fetchedUserData, "getting user data by phone number initials")
-
-  //         // const newStateId = response.data.data.state.id;
-  //         // console.log(newStateId,"selected state id by handle phone")
-  //         // const newCityId = response.data.data.city.id;
-  //         // console.log(newCityId,"selected city id by handle phone")
-  //         console.log("cityIdddd", response.data.data);
-  //         setFormData({
-  //           ...formData,
-  //           phoneNumber: phone,
-  //           name: response.data.data.name || "",
-  //           companyName: response.data.data.companyName || "",
-
-  //           city: {
-  //             id: response.data.data.city.id || "",
-  //             name: response.data.data.city.name || "",
-  //           },
-  //           // cityId: response.data.data.city.id,
-  //           stateId: response.data.data.state.id,
-  //           // city: response.data.data.city.name || "",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("User doesn't exist!", {
-  //         position: "top-right",
-  //         autoClose: 4000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //       });
-  //       setFormData({
-  //         ... initialFormData,
-  //         phoneNumber: phone,
-  //         user:{
-  //           id: formData.user.id || '',
-  //           username: formData.user.username || '',
-  //         }
-  //       });
-  //     }
-  //   }
-  // };
-
   const handlePhoneNumberChange = async (event) => {
     const phone = event.target.value;
   
@@ -260,9 +196,9 @@ const MeetingDetails = () => {
             },
           });
         }
+        setLoading(false)
       }
     }
-    setLoading(false)
   };
   
   // state to store the meeting context dropdown
@@ -473,7 +409,7 @@ const MeetingDetails = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 // width:'100%',
-                height: "4.5em",
+                minHeight: "4.5em",
                 mt: "3em",
                 mb: "0.5em",
               }}
@@ -498,20 +434,6 @@ const MeetingDetails = () => {
             >
               <Grid container spacing={2} sx={{ mt: "10px" }}>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                  {/* <TextField
-                    label=" Visitor's Phone Number"
-                    type="number"
-                    name="phoneNumber"
-                    autoComplete="off"
-                    sx={{ width: "100%", mt: "10px" }}
-                    onInput={handlePhoneNumberChange}
-                    onChange={handleChange}
-                    // onChange={handlePhoneNumberChange}
-                    value={formData.phoneNumber}
-                    // onChange={handleLength}
-                    autoFocus
-                    required
-                  /> */}
 
                   <TextField
                   label=" Visitor's Phone Number"
@@ -575,94 +497,6 @@ const MeetingDetails = () => {
                 </Grid>
 
                 {/* city name  */}
-
-                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: "100%", mt: "10px" }}
-                    options={cities.map((city) => city.name)}
-                    fullWidth
-                    onInputChange={(event, newValue) => {
-                      const selectedCity = cities.find(
-                        (city) => city.name === newValue
-                      );
-                      const cityId = selectedCity ? selectedCity.id : null;
-                      const stateId = selectedCity
-                        ? selectedCity.state.id
-                        : null;
-
-                        setFormData({
-                          ...formData,
-                          city: { id: cityId, name: newValue }, // Update here
-                          stateId: stateId,
-                        });
-                      }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Visitor's City"
-                        id={formData.city.id}
-                        // value={formData.city}
-                        required
-                      />
-                    )}
-                  />
-                </Grid> */}
-
-                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: "100%", mt: "10px" }}
-                    options={cities.map((city) => city.name)}
-                    fullWidth
-                    value={formData.city}
-                    onInputChange={(event, newValue) => {
-                      const selectedCity = cities.find(
-                        (city) => city.name === newValue
-                      );
-                      const cityId = selectedCity ? selectedCity.id : null;
-                      const stateId = selectedCity
-                        ? selectedCity.state.id
-                        : null;
-
-                      setFormData({
-                        ...formData,
-                        city: newValue,
-                        cityId: cityId,
-                        stateId: stateId,
-                      });
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Visitor's City"
-                        id={formData.cityId}
-                        value={formData.city}
-                        onChange={(e) => {
-                          const newValue = e.target.value;
-                          const selectedCity = cities.find(
-                            (city) => city.name === newValue
-                          );
-                          const cityId = selectedCity ? selectedCity.id : null;
-                          const stateId = selectedCity
-                            ? selectedCity.state.id
-                            : null;
-
-                          setFormData({
-                            ...formData,
-                            city: newValue,
-                            cityId: cityId,
-                            stateId: stateId,
-                          });
-                        }}
-                        required
-                      />
-                    )}
-                  />
-                </Grid> */}
-
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <Autocomplete
                     disablePortal
@@ -671,7 +505,6 @@ const MeetingDetails = () => {
                     options={cities}
                     fullWidth
                     freeSolo={false}
-                    // value={formData.city ? formData.city : null} // Update here
                     value={
                       formData.city &&
                       cities.some((city) => city.id === formData.city.id)
@@ -867,7 +700,6 @@ const MeetingDetails = () => {
                   variant="contained"
                   color="primary"
                   sx={{ width: "9em", height: "44px", mb: "2em" }}
-                  onClick={handleSubmit}
                 >
                   submit
                 </Button>
@@ -881,5 +713,3 @@ const MeetingDetails = () => {
 };
 
 export default MeetingDetails;
-
-// meeeeeeeeeeeeting details adddded  jlksbdckjasbdkjbd

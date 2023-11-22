@@ -70,6 +70,7 @@ const Profile = () => {
   const [uploadImgDialog, setUploadImgDialog] = useState(false);
   const [formattedCreatedOn, setFormattedCreatedOn] = useState("");
   const [tempImgLink, setTempImgLink] = useState('')
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     id: "",
@@ -126,15 +127,15 @@ const Profile = () => {
   //   governmentIdType = "PAN CARD";
   // }
 
-  const [statusOnPayload, setStatusOnPayload] = useState({
+  const statusOnPayload = {
     id: adminId,
     isActive: true,
-  });
+  };
 
-  const [statusOffPayload, setStatusOffPayload] = useState({
+  const statusOffPayload = {
     id: adminId,
     isActive: false,
-  });
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -142,6 +143,7 @@ const Profile = () => {
 
   async function fetchData() {
     try {
+      setLoading(true)
       const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
@@ -209,12 +211,14 @@ const Profile = () => {
       });
       console.error("Error fetching data:", error);
     }
+    setLoading(false)
   }
 
   // console.log("FORM DATA", formData);
 
   const handlePresentOn = async () => {
     try {
+      setLoading(true)
       const response = await axios.post(
         `${BASE_URL}/present`,
         statusOnPayload,
@@ -251,10 +255,12 @@ const Profile = () => {
       });
       console.error("Catched Error: ", error);
     }
+    setLoading(false)
   };
 
   const handlePresentOff = async () => {
     try {
+      setLoading(true)
       const response = await axios.post(
         `${BASE_URL}/present`,
         statusOffPayload,
@@ -287,6 +293,7 @@ const Profile = () => {
       });
       console.error("Catched Error: ", error);
     }
+    setLoading(false)
   };
 
   const handleEditOn = () => {
@@ -605,6 +612,7 @@ const Profile = () => {
 
   return (
     <>
+    <Loader isLoading={loading} />
     <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
@@ -613,7 +621,7 @@ const Profile = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 // width:'100%',
-                height: "4.5em",
+                minHeight: "4.5em",
                 mt: "3em",
                 mb: "0.5em",
               }}

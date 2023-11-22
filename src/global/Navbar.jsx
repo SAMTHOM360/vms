@@ -1,176 +1,178 @@
+import React, { useEffect, useState } from "react";
+import { styled, alpha } from "@mui/material/styles";
+import MuiAppBar from "@mui/material/AppBar";
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+} from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import InputBase from "@mui/material/InputBase";
+import { InputAdornment } from "@mui/material";
+import Badge from "@mui/material/Badge";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import SyncLockIcon from "@mui/icons-material/SyncLock";
+import MailIcon from "@mui/icons-material/Mail";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonIcon from "@mui/icons-material/Person";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../routes/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
-
-import React, { useEffect, useState } from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
-import{ Box,
-Dialog,
-DialogTitle,
-DialogContent,
-DialogActions,
-Button,
-TextField, }from '@mui/material';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import {InputAdornment} from '@mui/material';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import SyncLockIcon from '@mui/icons-material/SyncLock';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import PersonIcon from '@mui/icons-material/Person';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../routes/AuthContext';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import Loader from '../components/Loader';
-
-const AppBar = styled(MuiAppBar, {})(({ theme }) => ({
+const AppBar = styled(
+  MuiAppBar,
+  {}
+)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
 }));
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: "auto",
   },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
+  color: "inherit",
+  "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
   },
 }));
 
-export default function Navbar({toggleSidebar}) {
-  const adminId = sessionStorage.getItem('adminId')
-  const loggedUserName = sessionStorage.getItem('loggedUserName')
-  const loggedUserRole = sessionStorage.getItem('loggedUserRole')
-  const loggedUserUsername = sessionStorage.getItem('loggedUserUsername')
+export default function Navbar({ toggleSidebar }) {
+  const adminId = sessionStorage.getItem("adminId");
+  const loggedUserName = sessionStorage.getItem("loggedUserName");
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+  const loggedUserUsername = sessionStorage.getItem("loggedUserUsername");
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [loading, setLoading] = useState(false)
-  const { logout } =useAuth();
+  const [loading, setLoading] = useState(false);
+  const { logout } = useAuth();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [ isSUPERADMIN, setIsSUPERADMIN ] = useState(false)
-  const [ isVISITOR, setIsVISITOR ] = useState(false)
+  const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
 
   useEffect(() => {
     // Use useEffect to set the state after the initial render
-    if (loggedUserRole === 'SUPERADMIN') {
+    if (loggedUserRole === "SUPERADMIN") {
       setIsSUPERADMIN(true);
     } else {
       setIsSUPERADMIN(false);
     }
 
     // if(loggedUserRole === 'SUPERADMIN')
-  }, [loggedUserRole]); 
+  }, [loggedUserRole]);
 
-  const companyName = sessionStorage.getItem('companyName')
+  const companyName = sessionStorage.getItem("companyName");
 
   const [formData, setFormData] = useState({
     id: "",
-          firstName: "",
-          lastName: "",
-          phone: "",
-          email: "",
-          dob: "",
-          gender: "",
-          govtId: "",
-          image: "",
-          departmentDto: {
-            id: "",
-            name: "",
-          },
-          state: {
-            id: "",
-            name: "",
-          },
-          city: {
-            id: "",
-            name: "",
-          },
-          role: {
-            id: "",
-            name: "",
-          },
-          pincode: "",
-          empCode: "",
-          createdOn: "",
-  })
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    dob: "",
+    gender: "",
+    govtId: "",
+    image: "",
+    departmentDto: {
+      id: "",
+      name: "",
+    },
+    state: {
+      id: "",
+      name: "",
+    },
+    city: {
+      id: "",
+      name: "",
+    },
+    role: {
+      id: "",
+      name: "",
+    },
+    pincode: "",
+    empCode: "",
+    createdOn: "",
+  });
 
   const [changedItem, setChangedItem] = useState({
-    oldpassword: '',
-    newPassword:'',
-    confirmPassword:'',
-  })
-  const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState(false)
+    oldpassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [statusDotstatus, setStatusDotStatus] = useState(false)
+  const [statusDotstatus, setStatusDotStatus] = useState();
 
   const togglePasswordVisibility = () => {
-      setShowPassword(!showPassword);
+    setShowPassword(!showPassword);
   };
 
-  
-  let statusDot = 'red'
-  if(statusDotstatus === true){
-    statusDot = '#34E60C'
+
+
+  let statusDot = '#FFFFFF';
+  if(statusDotstatus === false){
+    statusDot = "#FF0000"
+  }
+  if (statusDotstatus === true) {
+    statusDot = "#34E60C";
   }
 
-
-
   // const BASE_URL = 'http://192.168.12.58:8080/api/user';
-  const BASE_URL = 'http://192.168.12.54:8080/api/user';
+  const BASE_URL = "http://192.168.12.54:8080/api/user";
 
-  const AuthToken = sessionStorage.getItem('token');
-
-
-  
+  const AuthToken = sessionStorage.getItem("token");
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${AuthToken}`,
     },
   });
@@ -183,14 +185,13 @@ export default function Navbar({toggleSidebar}) {
     setAnchorEl(event.currentTarget);
 
     setTimeout(() => {
-      setAnchorEl(null)
+      setAnchorEl(null);
     }, 4500);
   };
 
   useEffect(() => {
-    fetchData()
-  }, [])
-
+    fetchData();
+  }, []);
 
   async function fetchData() {
     try {
@@ -201,7 +202,7 @@ export default function Navbar({toggleSidebar}) {
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
-        setStatusDotStatus(apiData.isPresent)
+        setStatusDotStatus(apiData.isPresent);
         // const apiData = response;
         // console.log("apidata", apiData);
         setFormData({
@@ -246,13 +247,12 @@ export default function Navbar({toggleSidebar}) {
   //   const fetchDataInterval = setInterval(() => {
   //     fetchData();
   //   }, 2000); // 1500 milliseconds (1.5 seconds)
-  
+
   //   return () => {
   //     // Clear the interval when the component unmounts
   //     clearInterval(fetchDataInterval);
   //   };
   // }, []);
-  
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -268,27 +268,27 @@ export default function Navbar({toggleSidebar}) {
   };
 
   const handleChangePasswordDialogOpen = () => {
-    setOpenChangePasswordDialog(true)
-  }
+    setOpenChangePasswordDialog(true);
+  };
 
   const handleChangePasswordDialogClose = () => {
-    setOpenChangePasswordDialog(false)
-  }
+    setOpenChangePasswordDialog(false);
+  };
 
-  const handleProfileOpen = () =>{
-    navigate('/profile')
-  }
+  const handleProfileOpen = () => {
+    navigate("/profile");
+  };
 
-  const handleSavePasswordChange = async(e) => {
+  const handleSavePasswordChange = async (e) => {
     e.preventDefault();
     const changePayload = {
       username: loggedUserUsername,
       oldpassword: changedItem.oldpassword,
       newPassword: changedItem.confirmPassword,
-    }
+    };
 
-    if(changedItem.newPassword != changedItem.confirmPassword){
-      toast.warn('Confirm Password mismatched !', {
+    if (changedItem.newPassword != changedItem.confirmPassword) {
+      toast.warn("Confirm Password mismatched !", {
         position: "top-right",
         autoClose: 4000,
         hideProgressBar: false,
@@ -297,14 +297,16 @@ export default function Navbar({toggleSidebar}) {
         draggable: true,
         progress: undefined,
         theme: "light",
-    });
-      return
+      });
+      return;
     }
     try {
-      setLoading(true)
-      const response = await axios.post(`${BASE_URL}/change`, changePayload, {headers})
-      if(response.status === 200){
-        toast.success('Password has been successfully changed.', {
+      setLoading(true);
+      const response = await axios.post(`${BASE_URL}/change`, changePayload, {
+        headers,
+      });
+      if (response.status === 200) {
+        toast.success("Password has been successfully changed.", {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -313,16 +315,16 @@ export default function Navbar({toggleSidebar}) {
           draggable: true,
           progress: undefined,
           theme: "light",
-      });
-        handleChangePasswordDialogClose()
-        logout()
+        });
+        handleChangePasswordDialogClose();
+        logout();
       }
     } catch (error) {
-      const errMessage =error.response.data.message;
+      const errMessage = error.response.data.message;
       const cleanedMessage = JSON.stringify(errMessage);
 
-      if(error.response.status === 400){
-        toast.warn('Old '+JSON.parse(cleanedMessage)+'.', {
+      if (error.response.status === 400) {
+        toast.warn("Old " + JSON.parse(cleanedMessage) + ".", {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -331,9 +333,9 @@ export default function Navbar({toggleSidebar}) {
           draggable: true,
           progress: undefined,
           theme: "light",
-      });
+        });
       } else {
-        toast.error('Something went Wrong !', {
+        toast.error("Something went Wrong !", {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -342,22 +344,21 @@ export default function Navbar({toggleSidebar}) {
           draggable: true,
           progress: undefined,
           theme: "light",
-      });
+        });
       }
-      
-      console.error('Error saving changes:', error.response.data.message);
+
+      console.error("Error saving changes:", error.response.data.message);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const { authenticated, setAuthenticated } = useAuth();
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to log out?');
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
 
     if (confirmLogout) {
-
-      toast.success('Successfully logged out.', {
+      toast.success("Successfully logged out.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -368,69 +369,68 @@ export default function Navbar({toggleSidebar}) {
         theme: "light",
       });
 
-      logout()
-      navigate('/');
+      logout();
+      navigate("/");
     }
   };
 
-  const menuId = 'primary-search-account-menu';
+  const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
-    elevation={2}
-    sx={{
-      // overflow: "visible",
-      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-      mt: '2.6em',
-      mr: '7em',
-      width:'15em',
-      height:'23em',
-
-    }}
+      elevation={2}
+      sx={{
+        // overflow: "visible",
+        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+        mt: "2.6em",
+        mr: "7em",
+        width: "15em",
+        height: "23em",
+      }}
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       id={menuId}
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+      {isSUPERADMIN
+        ? null
+        : [
+            <MenuItem
+              key="profileMenuItem"
+              onClick={handleProfileOpen}
+              sx={{
+                height: "2em",
+                fontSize: "15px",
+              }}
+            >
+              <IconButton
+                size="small"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <PersonIcon />
+              </IconButton>
+              <p style={{ paddingLeft: "2.2em" }}>Profile</p>
+            </MenuItem>,
+            <hr key="profileMenuDivider" />,
+          ]}
 
-{isSUPERADMIN ? null : [
-  <MenuItem 
-    key="profileMenuItem" 
-    onClick={handleProfileOpen}
-    sx={{
-      height:'2em',
-      fontSize:'15px'
-    }}
-  >
-    <IconButton
-      size="small"
-      aria-label="account of current user"
-      aria-controls="primary-search-account-menu"
-      aria-haspopup="true"
-      color="inherit"
-    >
-      <PersonIcon />
-    </IconButton>
-    <p style={{paddingLeft:'2.2em'}}>Profile</p>
-  </MenuItem>,
-  <hr key="profileMenuDivider" />
-]}
-
-
-            <MenuItem 
-      onClick={handleChangePasswordDialogOpen}
-      sx={{
-        height:'2em',
-        fontSize:'15px',
-      }}
+      <MenuItem
+        onClick={handleChangePasswordDialogOpen}
+        sx={{
+          height: "2em",
+          fontSize: "15px",
+        }}
       >
         <IconButton
           size="small"
@@ -442,40 +442,42 @@ export default function Navbar({toggleSidebar}) {
           <SyncLockIcon />
         </IconButton>
         <p>Change Password</p>
-      </MenuItem><hr />
-      <MenuItem onClick={handleLogout}
-      sx={{
-        height:'2em',
-        fontSize:'15px',
-      }}
-            >
-      <IconButton
-              size="small"
-              aria-label="account of current user"
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <LogoutIcon />
-            </IconButton>
+      </MenuItem>
+      <hr />
+      <MenuItem
+        onClick={handleLogout}
+        sx={{
+          height: "2em",
+          fontSize: "15px",
+        }}
+      >
+        <IconButton
+          size="small"
+          aria-label="account of current user"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <LogoutIcon />
+        </IconButton>
 
-            <p style={{paddingLeft:'2em'}}>Logout</p>
+        <p style={{ paddingLeft: "2em" }}>Logout</p>
       </MenuItem>
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
@@ -491,20 +493,19 @@ export default function Navbar({toggleSidebar}) {
           </Badge>
         </IconButton>
         <IconButton
-              size="large"
-              // edge="end"
-              aria-label="account of current user"
-              // aria-controls={menuId}
-              aria-haspopup="true"
-              // onClick={handleLogout}
-              color="inherit"
-            >
-              <LogoutIcon />
-            </IconButton>
+          size="large"
+          // edge="end"
+          aria-label="account of current user"
+          // aria-controls={menuId}
+          aria-haspopup="true"
+          // onClick={handleLogout}
+          color="inherit"
+        >
+          <LogoutIcon />
+        </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem 
-      >
+      <MenuItem>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -517,19 +518,19 @@ export default function Navbar({toggleSidebar}) {
         <p>Profile</p>
       </MenuItem>
       <MenuItem onClick={handleLogout}>
-      <IconButton
-              size="large"
-              // edge="end"
-              aria-label="account of current user"
-              // aria-controls={menuId}
-              aria-haspopup="true"
-              // onClick={handleLogout}
-              color="inherit"
-              // sx={{mr:'1em'}}
-            >
-              <LogoutIcon  />
-            </IconButton>
-            <p>Logout</p>
+        <IconButton
+          size="large"
+          // edge="end"
+          aria-label="account of current user"
+          // aria-controls={menuId}
+          aria-haspopup="true"
+          // onClick={handleLogout}
+          color="inherit"
+          // sx={{mr:'1em'}}
+        >
+          <LogoutIcon />
+        </IconButton>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );
@@ -537,14 +538,14 @@ export default function Navbar({toggleSidebar}) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
-      <AppBar position="fixed" elevation={4} sx={{ background: '#141b2d' }}>
+      <AppBar position="fixed" elevation={4} sx={{ background: "#141b2d" }}>
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2, color:'#ffffff' }}
+            sx={{ mr: 2, color: "#ffffff" }}
             onClick={toggleSidebar}
           >
             <MenuIcon />
@@ -553,14 +554,65 @@ export default function Navbar({toggleSidebar}) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block', color:'#ffffff' } }}
+            sx={{ display: { xs: "none", sm: "block", color: "#ffffff" } }}
           >
             {/* <span style={{fontSize:'19px'}}>VMS</span>  */}
-            <span style={{fontSize:'20px'}}>{companyName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>VMS</span>
+            <span style={{ fontSize: "20px" }}>{companyName}</span>{" "}
+            <span
+              style={{
+                fontSize: "23px",
+                marginLeft: "0.4em",
+                marginRight: "0.4em",
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              |{" "}
+            </span>{" "}
+            <span
+              style={{
+                fontSize: "18px",
+                marginTop: "0.2em",
+                marginRight: "0.1em",
+              }}
+            >
+              VMS
+            </span>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <span style={{fontSize:'20px'}}>{formData.firstName} {formData.lastName}</span> <span style={{fontSize:'23px',marginLeft:'0.4em', marginRight:'0.4em', fontWeight:'500'}}> | </span> <span style={{fontSize:'18px',marginTop:'0.2em', marginRight:'0.1em'}}>{loggedUserRole}</span>
-          <Box sx={{ display: { xs: 'none', md: 'flex', color:'#ffffff',position:'relative' } }}>
+          <span style={{ fontSize: "20px" }}>
+            {formData.firstName} {formData.lastName}
+          </span>{" "}
+          <span
+            style={{
+              fontSize: "23px",
+              marginLeft: "0.4em",
+              marginRight: "0.4em",
+              fontWeight: "500",
+            }}
+          >
+            {" "}
+            |{" "}
+          </span>{" "}
+          <span
+            style={{
+              fontSize: "18px",
+              marginTop: "0.2em",
+              marginRight: "0.1em",
+            }}
+          >
+            {loggedUserRole}
+          </span>
+          <Box
+            sx={{
+              display: {
+                xs: "none",
+                md: "flex",
+                color: "#ffffff",
+                position: "relative",
+              },
+            }}
+          >
             {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -576,21 +628,39 @@ export default function Navbar({toggleSidebar}) {
               </Badge>
             </IconButton> */}
 
+            {isSUPERADMIN ? 
+            null :
 
-    <div 
-    // onClick={handleStatusUpdate}
-      style={{
-        position:'absolute',
-        top:'2.2em',
-        left:'0.8em',
-        zIndex:1,
-        width: '13px',
-        height: '13px',
-        backgroundColor: statusDot, // Change the color to represent "present" or "absent"
-        borderRadius: '50%',
-        border: '2px solid #fff',
-      }}
-    />
+            <div
+              // onClick={handleStatusUpdate}
+              style={{
+                position: "absolute",
+                top: "2.2em",
+                left: "0.8em",
+                zIndex: 1,
+                width: "13px",
+                height: "13px",
+                backgroundColor: statusDot, // Change the color to represent "present" or "absent"
+                borderRadius: "50%",
+                border: "2px solid #fff",
+              }}
+            />
+          }
+
+            {/* <div
+              // onClick={handleStatusUpdate}
+              style={{
+                position: "absolute",
+                top: "2.2em",
+                left: "0.8em",
+                zIndex: 1,
+                width: "13px",
+                height: "13px",
+                backgroundColor: statusDot, // Change the color to represent "present" or "absent"
+                borderRadius: "50%",
+                border: "2px solid #fff",
+              }}
+            /> */}
 
             <IconButton
               size="large"
@@ -605,10 +675,10 @@ export default function Navbar({toggleSidebar}) {
               //   alignItems: 'center',
               // }}
             >
-              <AccountCircle sx={{fontSize:'40px'}} />
+              <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -618,100 +688,139 @@ export default function Navbar({toggleSidebar}) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle sx={{fontSize:'40px'}} />
+              <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
       {/* {renderMobileMenu} */}
       {renderMenu}
-      <Dialog open={openChangePasswordDialog} onClose={handleChangePasswordDialogClose} PaperProps={{ sx: { mt:'5em', borderRadius:'15px'},}}>
-        <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Update Password</DialogTitle>
-        <DialogContent >
+      <Dialog
+        open={openChangePasswordDialog}
+        onClose={handleChangePasswordDialogClose}
+        PaperProps={{ sx: { mt: "5em", borderRadius: "5px" } }}
+      >
+        <DialogTitle
+          sx={{ textAlign: "center", fontSize: "29px", fontWeight: "600" }}
+        >
+          Update Password
+        </DialogTitle>
+        <DialogContent>
           {changedItem && (
-            <form style={{width:'32.5em'}}>
+            <form style={{ width: "380px" }}>
               <TextField
-                sx={{ mt: '2%', mb: '2%' }}
-                type={showPassword ? 'text' : 'password'}
+                size="small"
+                sx={{ mt: "1em" }}
+                type={showPassword ? "text" : "password"}
                 label="Old Password"
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.oldpassword}
                 onChange={(e) =>
-                  setChangedItem({ ...changedItem, oldpassword: e.target.value })
+                  setChangedItem({
+                    ...changedItem,
+                    oldpassword: e.target.value,
+                  })
                 }
                 InputProps={{
                   endAdornment: (
-                      <InputAdornment position="end">
-                          <IconButton
-                              onClick={togglePasswordVisibility}
-                              edge="end"
-                          >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                          </IconButton>
-                      </InputAdornment>
+                    <InputAdornment position="end">
+                      <IconButton onClick={togglePasswordVisibility} edge="end">
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
                   ),
-              }}
-              required
+                }}
+                required
               />
               <TextField
-                sx={{ mt: '2%', mb: '2%' }}
+                size="small"
+                sx={{ mt: "1em" }}
                 label="New Password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.newPassword}
                 onChange={(e) =>
-                  setChangedItem({ ...changedItem, newPassword: e.target.value })
+                  setChangedItem({
+                    ...changedItem,
+                    newPassword: e.target.value,
+                  })
                 }
                 InputProps={{
                   endAdornment: (
-                      <InputAdornment position="end">
-                          <IconButton
-                              onClick={togglePasswordVisibility}
-                              edge="end"
-                          >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                          </IconButton>
-                      </InputAdornment>
+                    <InputAdornment position="end">
+                      <IconButton onClick={togglePasswordVisibility} edge="end">
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
                   ),
-              }}
-              required
+                }}
+                required
               />
               <TextField
-                sx={{ mt: '2%', mb: '2%' }}
+                size="small"
+                sx={{ mt: "1em" }}
                 label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.confirmPassword}
                 onChange={(e) =>
-                  setChangedItem({ ...changedItem, confirmPassword: e.target.value })
+                  setChangedItem({
+                    ...changedItem,
+                    confirmPassword: e.target.value,
+                  })
                 }
                 InputProps={{
                   endAdornment: (
-                      <InputAdornment position="end">
-                          <IconButton
-                              onClick={togglePasswordVisibility}
-                              edge="end"
-                          >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                          </IconButton>
-                      </InputAdornment>
+                    <InputAdornment position="end">
+                      <IconButton onClick={togglePasswordVisibility} edge="end">
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
                   ),
-              }}
-              required
+                }}
+                required
               />
             </form>
           )}
         </DialogContent>
         <DialogActions
-        sx={{display:'flex',justifyContent:'space-between', mr:'1em', mb:'1em',ml:'1em'}}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mr: "1em",
+            mb: "1em",
+            ml: "1em",
+          }}
         >
-          <Button variant='contained' onClick={handleChangePasswordDialogClose} color="secondary" sx={{width:'6em'}}>
+          <Button
+            variant="contained"
+            onClick={handleChangePasswordDialogClose}
+            color="secondary"
+            sx={{ width: "6em" }}
+          >
             Cancel
           </Button>
-          <Button variant='contained' onClick={handleSavePasswordChange} color="primary" sx={{width:'6em'}}>
+          <Button
+            variant="contained"
+            onClick={handleSavePasswordChange}
+            color="primary"
+            sx={{ width: "6em" }}
+          >
             Save
           </Button>
         </DialogActions>

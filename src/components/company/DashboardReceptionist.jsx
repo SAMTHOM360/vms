@@ -339,7 +339,7 @@
 //                                             display: 'flex',
 //                                             justifyContent: 'space-between',
 //                                             // width:'100%',
-//                                             height: '4.5em',
+//                                             minHeight: '4.5em',
 //                                             mt: '3em',
 //                                             mb: '0.5em'
 //                                         }}
@@ -617,7 +617,7 @@ export default function Dashboard() {
                                             display: 'flex',
                                             justifyContent: 'space-between',
                                             // width:'100%',
-                                            height: '4.5em',
+                                            minHeight: '4.5em',
                                             mt: '3em',
                                             mb: '0.5em'
                                         }}

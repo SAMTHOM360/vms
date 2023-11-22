@@ -18,90 +18,6 @@ const MeetBarChart = ({ data }) => {
       })
     );
 
-    // const datas = {
-    //   labels: labels,
-    //   datasets: [
-    //     {
-    //       label: 'BUSINESS',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-    //       backgroundColor: '#305BA6',
-    //       stack: 'Stack 0',
-    //     },
-    //     {
-    //       label: 'CASUAL',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-    //       backgroundColor: '#54ccd2',
-    //       stack: 'Stack 0',
-    //     },
-    //     {
-    //       label: 'INTERVIEW',
-    //         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-    //         backgroundColor: '#d9c9b4',
-    //         stack: 'Stack 0',
-    //       },
-    //       {
-    //       label: 'BUSINESS',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS_HOUR'] || 0),
-    //       backgroundColor: '#094C66',
-    //       stack: 'Stack 1',
-    //     },
-    //     {
-    //       label: 'CASUAL',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL_HOUR'] || 0),
-    //       backgroundColor: '#1C84A6',
-    //       stack: 'Stack 1',
-    //     },
-    //     {
-    //       label: 'INTERVIEW',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW_HOUR'] || 0),
-    //       backgroundColor: '#0EA499',
-    //       stack: 'Stack 1',
-    //     },
-    //   ]
-    // };
-
-    // const datas = {
-    //   labels: labels,
-    //   datasets: [
-    //     {
-    //       label: 'BUSINESS COUNT',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.count || 0),
-    //       backgroundColor: '#305BA6',
-    //       stack: 'Stack 0',
-    //     },
-    //     {
-    //       label: 'CASUAL COUNT',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.count || 0),
-    //       backgroundColor: '#54ccd2',
-    //       stack: 'Stack 0',
-    //     },
-    //     {
-    //       label: 'INTERVIEW COUNT',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.count || 0),
-    //       backgroundColor: '#d9c9b4',
-    //       stack: 'Stack 0',
-    //     },
-    //     {
-    //       label: 'BUSINESS HOUR',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS']?.hour || 0),
-    //       backgroundColor: '#094C66',
-    //       stack: 'Stack 1',
-    //     },
-    //     {
-    //       label: 'CASUAL HOUR',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['CASUAL']?.hour || 0),
-    //       backgroundColor: '#1C84A6',
-    //       stack: 'Stack 1',
-    //     },
-    //     {
-    //       label: 'INTERVIEW HOUR',
-    //       data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW']?.hour || 0),
-    //       backgroundColor: '#0EA499',
-    //       stack: 'Stack 1',
-    //     },
-    //   ],
-    // };
-
     const datas = {
       labels: labels,
       datasets: [
@@ -156,7 +72,7 @@ const MeetBarChart = ({ data }) => {
       ],
     };
 
-    console.log("DATA ENTRIES", data);
+    // console.log("DATA ENTRIES", data);
 
     const sumDataLabel = {
       id: "sumDataLabel",
@@ -189,16 +105,29 @@ const MeetBarChart = ({ data }) => {
             const value = Math.min(newY0, newY1, newY2);
             ctx.save();
             ctx.translate(dataPoint.x, value - 12);
-            ctx.rotate(angle * 272);
+            ctx.rotate(angle * 270);
 
-            ctx.font = "9px arial";
+            ctx.font = "10px arial";
             ctx.textAlign = "center";
             ctx.fillStyle = "#9ca8a8"; // Set the label color to white
-            ctx.fillText(
-              y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
-              33,
-              0
-            );
+            // ctx.fillText(
+            //   y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
+            //   33,
+            //   0
+            // );
+            if(value !==411.6) {
+              ctx.fillText(
+                y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
+                33,
+                0
+              );
+            } else {
+              ctx.fillText(
+                "No Record . . .",
+                33,
+                0
+              );
+            }
             ctx.restore();
           }
         });
@@ -235,16 +164,24 @@ const MeetBarChart = ({ data }) => {
             const value = Math.min(newY3, newY4, newY5);
             ctx.save();
             ctx.translate(dataPoint.x, value - 12);
-            ctx.rotate(angle * 272);
+            ctx.rotate(angle * 270);
 
-            ctx.font = " 9px arial";
+            ctx.font = " 10px arial";
             ctx.textAlign = "center";
             ctx.fillStyle = "#9ca8a8"; // Set the label color to white
-            ctx.fillText(
-              y.getValueForPixel(value).toFixed(0) + "  HOURS",
-              33,
-              0
-            );
+            // ctx.fillText(
+            //   y.getValueForPixel(value).toFixed(0) + "  HOURS",
+            //   33,
+            //   0
+            // );
+            if(value !== 411.6) {
+              ctx.fillText(
+                y.getValueForPixel(value).toFixed(0) + "  HOURS",
+                33,
+                0
+              );
+            }
+
             ctx.restore();
           }
         });
@@ -349,6 +286,11 @@ const MeetBarChart = ({ data }) => {
 };
 
 export default MeetBarChart;
+
+
+
+
+
 
 // import React, { useEffect, useRef } from 'react';
 // import Chart from 'chart.js/auto';

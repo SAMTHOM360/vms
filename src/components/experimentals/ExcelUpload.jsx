@@ -85,7 +85,7 @@ const ExcelUpload = () => {
               sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                height: '4.5em',
+                minHeight: '4.5em',
                 mt: '3em',
                 mb: '0.5em'
               }}

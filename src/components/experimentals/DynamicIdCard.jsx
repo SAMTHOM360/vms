@@ -78,21 +78,8 @@ const DynamicIdCard = () => {
     backgroundRepeat: "no-repeat",
   };
 
-  // console.log("0th data", meetingDetails0)
-
   return (
-    // <div>
-    //   <h1>Meeting Details</h1>
-    //   {loading && <p>Loading meeting details...</p>}
-    //   {error && <p>{error}</p>}
-    //   {meetingDetails && (
-    //     <div>
-    //       {/* <p>Title: {meetingDetails.title}</p>
-    //       <p>Date: {meetingDetails.date}</p> */}
-    //       {/* Add more details as needed */}
-    //     </div>
-    //   )}
-    // </div>
+
     <>
       <Loader isLoading={loading} />
       {isDynamicMeet ? (

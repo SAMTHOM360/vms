@@ -39,7 +39,7 @@ const Loader = ({ isLoading }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        pointerEvents: 'none',
+        // pointerEvents: 'none',
         MozUserSelect: 'none',
         WebkitUserSelect: 'none',
         msUserSelect: 'none',

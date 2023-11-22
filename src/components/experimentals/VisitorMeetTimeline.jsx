@@ -231,13 +231,13 @@ export default function VisitorMeetTimeline({ meetData }) {
             // console.log(formattedMeetingDateTime);
 
             let dotColor = "#808080";
-            let roomNo;
+            let roomNo= null
             if (dataItem) {
               if (dataItem.status === "PENDING") {
                 dotColor = "#FFA635";
               } else if (dataItem.status === "COMPLETED") {
                 dotColor = "#34E60C";
-                roomNo = `|| ${dataItem.room.roomName}`;
+                roomNo = dataItem.room ? `|| ${dataItem.room.roomName}` : '';
               } else if (dataItem.status === "CANCELLED") {
                 dotColor = "red";
               }

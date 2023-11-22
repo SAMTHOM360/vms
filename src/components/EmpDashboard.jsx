@@ -10,6 +10,7 @@ import {
   Button,
   FormControl,
   InputLabel,
+  IconButton,
 } from "@mui/material";
 import Header from "./Header";
 import StatBox from "./StatBox";
@@ -19,6 +20,10 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+
 import MeetList from "./experimentals/MeetList";
 import MeetBarChart from "./experimentals/MeetBarChart";
 import MeetingTimeline from "./experimentals/MeetingTimeline";
@@ -78,80 +83,6 @@ const EmpDashboard = () => {
     }
   };
 
-  // async function fetchData() {
-  //   const payLoad = {
-  //     user: {
-  //       id: adminId,
-  //     },
-
-  //     fromDate:"2023-07-13",
-  //     toDate:"2023-11-19",
-  //   };
-  //   try {
-  //     setLoading(true);
-  //     // const dashboardResponse = await axios.get(
-  //     //   `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
-  //     // );
-
-  //     const dashboardResponse = await axios.post(
-  //       `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
-  //       payLoad
-  //     );
-
-  //     const dashboardTimelineResponse = await axios.post(
-  //       `${BASE_URL1}/meeting/meetingfordashboard`,
-  //       payLoad
-  //     );
-
-  //     // const dashboardTimelineResponse = await axios.get(
-  //     //   `${BASE_URL1}/meeting/vis?id=${adminId}`
-  //     // );
-
-  //     const dashboardApiData = dashboardResponse.data.data;
-  //     const timelineApiData = dashboardTimelineResponse.data.data;
-
-  //     console.log("DB API DATA", timelineApiData);
-  //     // console.log("Timeline API DATA", dashboardTimelineResponse.data.data)
-
-  //     const transformedData = Object.keys(
-  //       dashboardApiData.meetingsContextDate
-  //     ).map((date) => ({
-  //       date: date,
-  //       ...dashboardApiData[date],
-  //     }));
-
-  //     if (dashboardResponse.status === 200) {
-  //       setBarchartData(dashboardApiData.meetingsContextDate);
-  //       setTimelineData(timelineApiData);
-
-  //       let hours = dashboardApiData.totalHoursOfMeeting / 3600000;
-  //       let hoursFloat = Math.round(hours * 100) / 100;
-
-  //       setDashboardData({
-  //         totalMeetings: dashboardApiData.totalMeetings || "",
-  //         completedMeetings: dashboardApiData.completed || "",
-  //         pendingMeetings: dashboardApiData.pending || "",
-  //         totalMeetngHours: hoursFloat || "",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     toast.error("Something went wrong !", {
-  //       position: "top-right",
-  //       autoClose: 4000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     console.error("Error fetching data:", error);
-  //   }
-  //   setLoading(false);
-  // }
-
-  // console.log("dashboard data", dashboardData)
-
   async function fetchData(fromDate, toDate) {
     const payLoad = {
       user: {
@@ -163,7 +94,7 @@ const EmpDashboard = () => {
       toDate: toDate,
     };
 
-    console.log("dynamic payload", payLoad);
+    // console.log("dynamic payload", payLoad);
 
     try {
       setLoading(true);
@@ -180,7 +111,7 @@ const EmpDashboard = () => {
 
       const dashboardApiData = dashboardResponse.data.data;
 
-      console.log("dashboardApiData", dashboardApiData);
+      // console.log("dashboardApiData", dashboardApiData);
       const timelineApiData = dashboardTimelineResponse.data.data;
 
       const transformedData = Object.keys(
@@ -221,35 +152,6 @@ const EmpDashboard = () => {
     setLoading(false);
   }
 
-  // const handleTodayClick = async () => {
-  //   const today = new Date().toISOString().split('T')[0];
-  //   await fetchData(today, today);
-  // };
-
-  // const handleThisWeekClick = async () => {
-  //   const currentDate = new Date();
-  //   const diffFromMonday = currentDate.getDay() - 1;
-  //   const startOfWeek = new Date(currentDate);
-  //   startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
-  //   const endOfWeek = new Date(startOfWeek);
-  //   endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-  //   const fromWeek = startOfWeek.toISOString().split('T')[0];
-  //   const toWeek = endOfWeek.toISOString().split('T')[0];
-
-  //   await fetchData(fromWeek, toWeek);
-  // };
-
-  // const handleThisMonthClick = async () => {
-  //   const currentDate = new Date();
-  //   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  //   const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
-  //   const fromMonth = firstDayOfMonth.toISOString().split('T')[0];
-  //   const toMonth = lastDayOfMonth.toISOString().split('T')[0];
-
-  //   await fetchData(fromMonth, toMonth);
-  // };
 
   const options = [
     { label: "Today", value: "today" },
@@ -361,11 +263,11 @@ const EmpDashboard = () => {
       return acc;
     }, {});
 
-  console.log("VISIBLE DATA", Object.keys(visibleData || {}).length);
-  console.log("Bar chart Data", barchartData);
+  // console.log("VISIBLE DATA", Object.keys(visibleData || {}).length);
+  // console.log("Bar chart Data", barchartData);
   // console.log("Time Line Data", timelineData)
 
-  console.log("page index", pageIndex);
+  // console.log("page index", pageIndex);
 
   return (
     <>
@@ -389,7 +291,14 @@ const EmpDashboard = () => {
             >
               <Header title="Dashboard" subtitle="Welcome to dashboard" />
 
-              <Box>
+              <Box
+              sx={{
+                display:'flex',
+                flexDirection:{xs:'column', md:'row'},
+                alignItems:'center',
+                gap:'0.3em'
+              }}
+              >
                 {/* <Button
                   variant="contained"
                   size="small"
@@ -436,6 +345,7 @@ const EmpDashboard = () => {
                 >
                   Total
                 </Button> */}
+                <Typography sx={{color:'#555555'}}>Filter by</Typography>
 
                 <FormControl
                   sx={{
@@ -446,7 +356,7 @@ const EmpDashboard = () => {
                     boxShadow: "0px 2px 2px #333333",
                   }}
                 >
-                  <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel>
+                  {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
                   <Select
                     sx={{
                       color: "white",
@@ -664,9 +574,15 @@ const EmpDashboard = () => {
                                   Object.keys(barchartData).length <= 15)
                                   ? "none"
                                   : "auto",
+                                  minWidth: 'unset',
+                                  width: '5px',
+                                  height: '30px',  
+                                  mr:'0.5em'
                             }}
                           >
-                            PREV
+       
+                            <NavigateBeforeIcon sx={{
+                            }} />
                           </Button>
                           <Button
                             variant="contained"
@@ -691,9 +607,12 @@ const EmpDashboard = () => {
                                     Object.keys(barchartData || {}).length
                                   ? "none"
                                   : "auto",
+                                  minWidth: 'unset',
+                                  width: '5px',
+                                  height: '30px',  
                             }}
                           >
-                            NEXT
+                            <NavigateNextIcon />
                           </Button>
                         </Box>
                       </Box>

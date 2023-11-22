@@ -28,6 +28,35 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] = useState(false)
   const [isItemVisible1, setItemVisible1] = useState(false);
   const [isItemVisible2, setItemVisible2] = useState(true);
+  const [usernameErrors, setUsernameErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
+
+  const [passwordErrors, setPasswordErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
+
+  const [changeUserErrors, setChangeUserErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
+
+  const [otpErrors, setOtpErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
+
+  const [newPasswordErrors, setNewPasswordErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
+
+  const [confirmPasswordErrors, setConfirmPasswordErrors] = useState({
+    errorMessage: "",
+    warningMessage: "",
+  });
 
   const [credentials, setCredentials] = useState({
     username: '',
@@ -47,24 +76,244 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
       setShowPassword(!showPassword);
   };
 
+  const handleCustomChange = (e) => {
+    let { name, value } = e.target;
+    let errorMessage = "";
+    let warningMessage = "";
+  
+    // Logic for username
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  
+    if (name === "username") {
+      if (/^\d{0,10}$/.test(value) || value === "") {
+        if (value.length === 10) {
+          warningMessage = "";
+        } else if (value.length > 0) {
+          warningMessage = "Username must contain exactly 10 digits.";
+        } else if (value.length < 10) {
+          warningMessage = "Username must contain exactly 10 digits.";
+        } else {
+          warningMessage = "";
+        }
+      } else {
+        errorMessage = "Username must contain exactly 10 digits.";
+      }
+      setUsernameErrors({
+        errorMessage,
+        warningMessage,
+      });
+    }
+  
+  
+  
+    // Logic for password
+    if (name === "password") {
+      if(value){
+        if (value.length === 16) {
+          // Additional conditions based on your requirements
+          // Add more conditions if needed for custom warnings
+          warningMessage = "";
+        }else if(value.length < 4){
+          errorMessage = "Password must be at least 4 characters.";
+        } else if(value.length <16){
+          warningMessage = 'Password must be at least 4 characters.'
+        } else {
+          warningMessage = ''
+        }
+      } else {
+        errorMessage = "Password must be at least 4 characters.";
+        
+      }
+
+
+      setPasswordErrors({
+        errorMessage,
+        warningMessage,
+      });
+    }
+  
+    // Update state based on validation and formatting logic
+  
+
+    if(name === 'username'){
+      value = value.replace(/[^0-9]/g, "")
+      if(value.length > 10){
+        value = value.slice(0, 10);
+      }
+    }
+
+    if(name ==='password'){
+      if(value.length > 16){
+        value = value.slice(0, 16);
+      }
+    }
+
+
     setCredentials({
       ...credentials,
       [name]: value,
     });
+  };
+
+
+
+
+
+
+  const handleCustomUpdateChange = (e) => {
+    let { name, value } = e.target;
+
+    let errorMessage = "";
+    let warningMessage = "";
+  
+    // Logic for username
+
+  
+    if (name === "username") {
+      if (/^\d{0,10}$/.test(value) || value === "") {
+        if (value.length === 10) {
+          warningMessage = "";
+        } else if (value.length > 0) {
+          warningMessage = "Username must contain exactly 10 digits.";
+        } else if (value.length < 10) {
+          warningMessage = "Username must contain exactly 10 digits.";
+        } else {
+          warningMessage = "";
+        }
+      } else {
+        errorMessage = "Username must contain exactly 10 digits.";
+      }
+      setChangeUserErrors({
+        errorMessage,
+        warningMessage,
+      });
+    }
+
+
+    if (name === "otp") {
+      if (/^\d{0,10}$/.test(value) || value === "") {
+        if (value.length === 6) {
+          warningMessage = "";
+        } else if (value.length > 0) {
+          warningMessage = "OTP must contain exactly 6 digits.";
+        } else if (value.length < 6) {
+          warningMessage = "OTP must contain exactly 6 digits.";
+        } else {
+          warningMessage = "";
+        }
+      } else {
+        errorMessage = "OTP must contain exactly 6 digits.";
+      }
+      setOtpErrors({
+        errorMessage,
+        warningMessage,
+      });
+    }
+  
+  
+  
+    // Logic for password
+    if (name === "newPassword") {
+      if(value){
+        if (value.length === 16) {
+          // Additional conditions based on your requirements
+          // Add more conditions if needed for custom warnings
+          warningMessage = "";
+        }else if(value.length < 4){
+          errorMessage = "Must be at least 4 characters.";
+        } else if(value.length <16){
+          warningMessage = 'Must be at least 4 characters.'
+        } else {
+          warningMessage = ''
+        }
+      } else {
+        errorMessage = "Must be at least 4 characters.";
+        
+      }
+
+
+      setNewPasswordErrors({
+        errorMessage,
+        warningMessage,
+      });
+    }
+  
+    // Update state based on validation and formatting logic
+  
+
+    if(name === 'username'){
+      value = value.replace(/[^0-9]/g, "")
+      if(value.length > 10){
+        value = value.slice(0, 10);
+      }
+    }
+
+    if (name === 'otp') {
+      value = value.replace(/[^0-9]/g, "");
+      if (value.length > 6) {
+        value = value.slice(0, 6);
+      }
+    }
+
+    if(name ==='newPassword'){
+      if(value.length > 16){
+        value = value.slice(0, 16);
+      }
+    }
+
+    if(name ==='confirmPassword'){
+      if(value.length > 16){
+        value = value.slice(0, 16);
+      }
+    }
+
 
     setUpdateCreds({
       ...updateCreds,
-      [name]:value,
-    })
+      [name]: value,
+    });
   };
+
+
+  const handleNewToConfirmPasswordCompare = () => {
+    let errorMessage = "";
+
+    if(updateCreds.confirmPassword!== updateCreds.newPassword){
+      errorMessage = 'Not matching with new password'
+    } else {
+      errorMessage = ''
+    }
+
+    setConfirmPasswordErrors({errorMessage})
+
+
+  }
+  
+  
+  
+
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   // setCredentials({
+  //   //   ...credentials,
+  //   //   [name]: value,
+  //   // });
+
+  //   setUpdateCreds({
+  //     ...updateCreds,
+  //     [name]:value,
+  //   })
+  // };
 
   useEffect(() => {
     setIsNavBar(false)
     setIsSideBar(false)
   })
+
+  useEffect(() => {
+    handleNewToConfirmPasswordCompare()
+  },[updateCreds])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,12 +367,16 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     setAuthenticated(true);
     if (loggedUserRole === 'SUPERADMIN') {
       navigate('/companyDetails');
+      sessionStorage.setItem('activeListItem', '/companyDetails')
     } else if (loggedUserRole === 'ADMIN') {
       navigate('/empdashboard');
+      sessionStorage.setItem('activeListItem', '/empdashboard')
     } else if (loggedUserRole === 'RECEPTIONIST') {
       navigate('/dashboardreceptionist')
+      sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
     } else if (loggedUserRole === 'EMPLOYEE') {
       navigate('/empdashboard')
+      sessionStorage.setItem('activeListItem', '/empdashboard')
     }
     else {
       navigate('*');
@@ -207,7 +460,7 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     try {
       setLoading(true)
       const response = await axios.get(`${BASE_URL2}/getotp?username=${getOtpPayload}`)
-      console.log("logged response", response)
+      console.log("get otp", response)
       if(response.status === 200){
         toast.success('OTP sent successfully. Please check your mail.', {
           position: "top-right",
@@ -219,7 +472,6 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
           progress: undefined,
           theme: "light",
       });
-        console.log("get otp", response)
         setItemVisible1(true)
         setItemVisible2(false)
       } else {
@@ -263,11 +515,46 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     setLoading(false)
   };
 
-  const handleUpdatePassword = async() => {
+  const handleUpdatePassword = async(e) => {
+    // debugger
+    e.preventDefault()
     const updatePasswordPayload = {
       username: updateCreds.username,
       otp: updateCreds.otp,
       newPassword: updateCreds.newPassword,
+    }
+
+    if(updatePasswordPayload.otp.trim() === '' || updatePasswordPayload.newPassword.trim() === '') {
+      toast.warn('Please fill all details !!', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
+
+    return
+    }
+
+    console.log('updatePasswordPayload.otp:', updatePasswordPayload.otp);
+console.log('updatePasswordPayload.newPassword:', updatePasswordPayload.newPassword);
+
+    if(updateCreds.newPassword != updateCreds.confirmPassword){
+        toast.error('New and Confirm passwords mismatched !!!', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      
+      return
     }
 
     try{
@@ -325,7 +612,6 @@ const OWNER = 'https://www.rapidsofttechnologies.com/'
     setItemVisible2(true)
   }
 
-  // console.log("loading btn", btnLoading)
 
   return (
     <Box sx={{
@@ -384,29 +670,49 @@ sx={{
         <TextField
             id="username"
             name="username"
-            label="Enter Username"
+            label="Username"
             variant="outlined"
+            inputProps={{
+              maxLength: 10
+            }}
             size='small'
             sx={{ 
               width: "80%",
               mt:'1em'
             }}
             value={credentials.username}
-            onChange={handleChange}
+            onChange={handleCustomChange}
+            // inputProps={{
+            //   pattern: "^[0-9]*$",
+            //   onInput: (event) => {
+            //     let value = event.target.value;
+            //     value = value.replace(/\D/g, "");
+            //     if (value.length > 10) {
+            //       value = value.slice(0, 10);
+            //     }
+            //     setCredentials({
+            //       ...credentials,
+            //       username: value,
+            //     });
+            //   },
+            // }}
+            error={Boolean(usernameErrors.errorMessage)}
+  helperText={usernameErrors.errorMessage || usernameErrors.warningMessage}
             required
         />
 
         <TextField
             id="password"
             name="password"
-            label="Enter Password"
+            label="Password"
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             size='small'
             sx={{ width: "80%", mt:'2em'  }}
             value={credentials.password}
-            onChange={handleChange}
+            onChange={handleCustomChange}
             InputProps={{
+              maxLength: 16,
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton
@@ -418,6 +724,8 @@ sx={{
                     </InputAdornment>
                 ),
             }}
+            error={Boolean(passwordErrors.errorMessage)}
+            helperText={passwordErrors.errorMessage || passwordErrors.warningMessage}
             required
         />
         <div style={{width:'80%',display:'flex', justifyContent:'end', marginTop:'1em'}}>
@@ -466,23 +774,27 @@ sx={{
         PaperProps={{ sx: { borderRadius:'5px'},}}>
         <DialogTitle sx={{textAlign:'center', fontSize:'29px', fontWeight:'600'}}>Change Password</DialogTitle>
         <DialogContent >
-            <form style={{width:'32.5em'}}>
+            <form style={{width:'380px'}}>
 
               {isItemVisible2 && (
                               <TextField
-                              sx={{ mt: '2%', mb: '2%' }}
+                              size='small'
+                              sx={{ mt: '1em', }}
                               label="Username"
                               name="username"
                               fullWidth
                               value={updateCreds.username}
                               inputProps={{ maxLength: 10, }}
-                              onChange={handleChange}
+                              onChange={handleCustomUpdateChange}
+                              error={Boolean(changeUserErrors.errorMessage)}
+                              helperText={changeUserErrors.errorMessage || changeUserErrors.warningMessage}
                               required
                             />
               )}
 
               {/* <TextField
-                sx={{ mt: '2%', mb: '2%' }}
+                              size='small'
+                sx={{ mt: '1em', }}
                 label="OTP"
                 fullWidth
                 // value={editedItem.lastName}
@@ -495,30 +807,35 @@ sx={{
 
 {isItemVisible1 && (
         <TextField
-          sx={{ mt: '2%', mb: '2%' }}
+        size='small'
+        sx={{ mt: '1em', }}
           label="OTP"
           name='otp'
           fullWidth
-          onChange={handleChange}
-          inputProps={{ maxLength: 26 }}
+          value={updateCreds.otp}
+          onChange={handleCustomUpdateChange}
+          // inputProps={{ maxLength: 4 }}
+          error={Boolean(otpErrors.errorMessage)}
+          helperText={otpErrors.errorMessage || otpErrors.warningMessage}
           required
         />
       )}
 
       {isItemVisible1 && (
                       <TextField
-                      sx={{ mt: '2%', mb: '2%' }}
+                      size='small'
+                      sx={{ mt: '1em', }}
                       label="New Password"
                       name='newPassword'
                       type={showPassword ? 'text' : 'password'}
                       fullWidth
-                      onChange={handleChange}
-                      inputProps={{ maxLength: 16 }}
-                      // value={changedItem.newPassword}
+                      onChange={handleCustomUpdateChange}
+                      value={updateCreds.newPassword}
                       // onChange={(e) =>
                       //   setChangedItem({ ...changedItem, newPassword: e.target.value })
                       // }
                       InputProps={{
+                        maxLength: 16,
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton
@@ -530,24 +847,28 @@ sx={{
                             </InputAdornment>
                         ),
                     }}
+                    error={Boolean(newPasswordErrors.errorMessage)}
+                    helperText={newPasswordErrors.errorMessage || newPasswordErrors.warningMessage}
                     required
                     />
       )}
 
       {isItemVisible1 && (
                       <TextField
-                      sx={{ mt: '2%', mb: '2%' }}
+                      size='small'
+                      sx={{ mt: '1em', }}
                       label="Confirm Password"
                       name='confirmPassword'
                       type={showPassword ? 'text' : 'password'}
                       fullWidth
-                      onChange={handleChange}
+                      onChange={handleCustomUpdateChange}
                       inputProps={{ maxLength: 16 }}
-                      // value={changedItem.confirmPassword}
+                      value={updateCreds.confirmPassword}
                       // onChange={(e) =>
                       //   setChangedItem({ ...changedItem, confirmPassword: e.target.value })
                       // }
                       InputProps={{
+                        maxLength: 16,
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton
@@ -559,6 +880,8 @@ sx={{
                             </InputAdornment>
                         ),
                     }}
+                    error={Boolean(confirmPasswordErrors.errorMessage)}
+                    helperText={confirmPasswordErrors.errorMessage || confirmPasswordErrors.warningMessage}
                     required
                     />
       )}
@@ -598,7 +921,8 @@ sx={{
           )}
 
           {isItemVisible1 && (
-                      <Button variant='contained' 
+                      <Button
+                       variant='contained' 
                       onClick={handleUpdatePassword} 
                       color="primary" sx={{width:'7em'}}>
                         Change

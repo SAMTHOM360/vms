@@ -349,6 +349,7 @@ function App() {
   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
 
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
+  {/* <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} /> */}
   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
 
   {/* <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} /> */}
