@@ -554,13 +554,15 @@ export default function Navbar({ toggleSidebar }) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block", color: "#ffffff" } }}
+            sx={{ display: { xs: "block", sm: "block",  }, color: "#ffffff", fontSize: {xs: '17px', sm: '20px'} }}
           >
             {/* <span style={{fontSize:'19px'}}>VMS</span>  */}
-            <span style={{ fontSize: "20px" }}>{companyName}</span>{" "}
+            <span style={{ 
+              // fontSize: "20px" 
+              }}>{companyName}</span>{" "}
             <span
               style={{
-                fontSize: "23px",
+                fontSize: {xs: '20px', sm:'23px' },
                 marginLeft: "0.4em",
                 marginRight: "0.4em",
                 fontWeight: "500",
@@ -571,7 +573,7 @@ export default function Navbar({ toggleSidebar }) {
             </span>{" "}
             <span
               style={{
-                fontSize: "18px",
+                // fontSize: "18px",
                 marginTop: "0.2em",
                 marginRight: "0.1em",
               }}
@@ -579,13 +581,16 @@ export default function Navbar({ toggleSidebar }) {
               VMS
             </span>
           </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <span style={{ fontSize: "20px" }}>
+          <Box sx={{ flexGrow: 1, }} />
+          <Typography 
+          sx={{ display: { xs: "block", sm: "block",  }, color: "#ffffff", fontSize: {xs: '17px', sm: '20px'} }}
+          >
+          <span style={{  }}>
             {formData.firstName} {formData.lastName}
           </span>{" "}
           <span
             style={{
-              fontSize: "23px",
+              fontSize: {xs: '20px', sm: '23px'},
               marginLeft: "0.4em",
               marginRight: "0.4em",
               fontWeight: "500",
@@ -596,17 +601,19 @@ export default function Navbar({ toggleSidebar }) {
           </span>{" "}
           <span
             style={{
-              fontSize: "18px",
-              marginTop: "0.2em",
+              // fontSize: {xs: '17px', sm: '20px'},
+              marginTop: {xs: '', sm:'0.2em'},
               marginRight: "0.1em",
             }}
           >
             {loggedUserRole}
           </span>
+          </Typography>
+
           <Box
             sx={{
               display: {
-                xs: "none",
+                xs: "flex",
                 md: "flex",
                 color: "#ffffff",
                 position: "relative",
@@ -678,7 +685,7 @@ export default function Navbar({ toggleSidebar }) {
               <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -690,7 +697,7 @@ export default function Navbar({ toggleSidebar }) {
             >
               <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
-          </Box>
+          </Box> */}
         </Toolbar>
       </AppBar>
       {/* {renderMobileMenu} */}

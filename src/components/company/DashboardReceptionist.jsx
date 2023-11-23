@@ -459,6 +459,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Dashboard() {
+    sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
 
     const [allData, setAllData] = useState(null);
 

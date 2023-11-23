@@ -72,6 +72,8 @@ const Item = styled(Paper)(({ theme }) => ({
 // ]
 
 export default function Meetings() {
+
+  sessionStorage.setItem('activeListItem', '/meetings')
     const navigate = useNavigate()
   //pagination
   const [page, setPage] = useState(0);

@@ -35,6 +35,7 @@ const Employee = () => {
   const { isLimitReached, setIsNavBar, setIsSideBar } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
+  sessionStorage.setItem('activeListItem', '/employee')
   const AuthToken = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const limit = sessionStorage.getItem("limit");

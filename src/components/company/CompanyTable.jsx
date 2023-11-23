@@ -305,6 +305,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CompanyTable = () => {
+  sessionStorage.setItem('activeListItem', '/companyDetails')
   const [page, setPage] = useState(0);
   const [companies, setCompanies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');

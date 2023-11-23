@@ -36,6 +36,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
+  sessionStorage.setItem('activeListItem', '/profile')
   const BASE_URL = "http://192.168.12.54:8080/api/user";
   // const BASE_URL = "http://192.168.12.58:8080/api/user";
   const IMG_RESPONSE_URL = "http://192.168.12.54:8080/vis/upload";

@@ -63,12 +63,16 @@ const NotFound = () => {
   let linkTo = "/";
   if (userRole === "SUPERADMIN") {
     linkTo = "/companyDetails";
+    sessionStorage.setItem('activeListItem', '/companyDetails')
   } else if (userRole === "ADMIN") {
     linkTo = "/empdashboard";
+    sessionStorage.setItem('activeListItem', '/empdashboard')
   } else if (userRole === "RECEPTIONIST") {
     linkTo = "/receptionistdashboard";
+    sessionStorage.setItem('activeListItem', '/receptionistdashboard')
   } else if (userRole === "EMPLOYEE") {
     linkTo = "/empdashboard";
+    sessionStorage.setItem('activeListItem', '/empdashboard')
   }
 
   return (
