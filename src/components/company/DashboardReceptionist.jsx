@@ -339,7 +339,7 @@
 //                                             display: 'flex',
 //                                             justifyContent: 'space-between',
 //                                             // width:'100%',
-//                                             minHeight: '4.5em',
+//                                             height: '4.5em',
 //                                             mt: '3em',
 //                                             mb: '0.5em'
 //                                         }}
@@ -459,6 +459,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Dashboard() {
+
     sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
 
     const [allData, setAllData] = useState(null);
@@ -603,31 +604,6 @@ export default function Dashboard() {
 
     return (
         <>
-<<<<<<< Updated upstream
-                <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
-
-<Grid container spacing={2}>
-<Grid item xs={12} md={12} lg={12}>
-                <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
-                    <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
-                        <Grid container>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Paper
-                                        elevation={1}
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            // width:'100%',
-                                            minHeight: '4.5em',
-                                            mt: '3em',
-                                            mb: '0.5em'
-                                        }}
-                                    >
-                                        <Header title="Dashboard" subtitle="Welcome to dashboard" />
-                                    </Paper>
-                                </Grid>
-=======
             <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
 
                 <Grid container spacing={2}>
@@ -643,7 +619,7 @@ export default function Dashboard() {
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     // width:'100%',
-                                                    height: '4.5em',
+                                                    minHeight: '4.5em',
                                                     mt: '3em',
                                                     mb: '0.5em'
                                                 }}
@@ -653,7 +629,6 @@ export default function Dashboard() {
                                         </Grid>
 
                                     </Grid>
->>>>>>> Stashed changes
 
                                 </Grid>
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >

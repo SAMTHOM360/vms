@@ -641,7 +641,7 @@
 //                                             display: 'flex',
 //                                             justifyContent: 'space-between',
 //                                             // width:'100%',
-//                                             minHeight: '4.5em',
+//                                             height: '4.5em',
 //                                             mt: '3em',
 //                                             mb: '0.5em'
 //                                         }}
@@ -1946,7 +1946,7 @@ export default function Dashboard() {
     useEffect(() => {
 
 
-       fetchData();
+        fetchData();
         getRoomsOption();
         fetchStatusOptions();
         fetchStatusOptions1();
@@ -1963,7 +1963,10 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-    
+      
+
+
+
         if (page === 0) {
             
             fetchData();
@@ -1986,7 +1989,7 @@ export default function Dashboard() {
             sessionStorage.removeItem('filters')
         }
 
-    }, [])
+    }, [selectedStatusOptions])
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
