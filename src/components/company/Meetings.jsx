@@ -971,6 +971,7 @@ const handleSearch = event => {
                               <TableCell align="left">End Time</TableCell>
                               <TableCell align="left">Remarks</TableCell>
                               <TableCell align="left">Status</TableCell>
+                              <TableCell align="left">Room</TableCell>
 
                               <TableCell align="left">Actions</TableCell>
                             </TableRow>
@@ -1018,6 +1019,9 @@ const handleSearch = event => {
                                   </TableCell>
                                   <TableCell align="left">
                                     {visitor.status}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {visitor.room !== null ?visitor.room.roomName : ''}
                                   </TableCell>
                                   <TableCell align="left">
                                     {/*                                                            
