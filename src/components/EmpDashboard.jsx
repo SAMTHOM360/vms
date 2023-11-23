@@ -212,7 +212,6 @@ const EmpDashboard = () => {
 
   useEffect(() => {
     // fetchData();
-    console.log("whyyyyyy")
     handleTodayClick();
     setIsNavBar(true);
     setIsSideBar(true);
