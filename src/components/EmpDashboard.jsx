@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import Navbar from "../global/Navbar";
-import Sidebar from "../global/Sidebar";
+// import Navbar from "../global/Navbar";
+// import Sidebar from "../global/Sidebar";
 import Grid from "@mui/material/Grid";
 import {
   Paper,
@@ -9,8 +9,6 @@ import {
   Typography,
   Button,
   FormControl,
-  InputLabel,
-  IconButton,
 } from "@mui/material";
 import Header from "./Header";
 import StatBox from "./StatBox";
@@ -24,12 +22,10 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 
-import MeetList from "./experimentals/MeetList";
 import MeetBarChart from "./experimentals/MeetBarChart";
 import MeetingTimeline from "./experimentals/MeetingTimeline";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import TimelineDot from "@mui/lab/TimelineDot";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -45,17 +41,16 @@ const EmpDashboard = () => {
 
   sessionStorage.setItem('activeListItem', '/empdashboard')
   const adminId = sessionStorage.getItem("adminId");
-  const token = sessionStorage.getItem("token");
+  // const token = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
+  // const headers = {
+  //   Authorization: `Bearer ${token}`,
+  // };
   
   const navigate = useNavigate();
 
   const { setIsNavBar, setIsSideBar } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     totalMeetings: "",
     completedMeetings: "",
@@ -66,13 +61,7 @@ const EmpDashboard = () => {
   const [timelineData, setTimelineData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [isTodayBtn, setIsTodayBtn] = useState(true);
-  const [isWeekBtn, setIsWeekBtn] = useState(false);
-  const [isMonthBtn, setIsMonthBtn] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const handleNavigateMeeting = () => {
     if (loggedUserRole) {
@@ -114,13 +103,6 @@ const EmpDashboard = () => {
 
       // console.log("dashboardApiData", dashboardApiData);
       const timelineApiData = dashboardTimelineResponse.data.data;
-
-      const transformedData = Object.keys(
-        dashboardApiData.meetingsContextDate
-      ).map((date) => ({
-        date: date,
-        ...dashboardApiData[date],
-      }));
 
       if (dashboardResponse.status === 200) {
         setBarchartData(dashboardApiData.meetingsContextDate);
@@ -186,9 +168,6 @@ const EmpDashboard = () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
     await fetchData(formattedToday, formattedToday);
-    setIsTodayBtn(true);
-    setIsWeekBtn(false);
-    setIsMonthBtn(false);
   };
 
   const handleThisWeekClick = async () => {
@@ -203,9 +182,6 @@ const EmpDashboard = () => {
     const formattedToWeek = formatDateForServer(endOfWeek);
 
     await fetchData(formattedFromWeek, formattedToWeek);
-    setIsTodayBtn(false);
-    setIsWeekBtn(true);
-    setIsMonthBtn(false);
   };
 
   const handleThisMonthClick = async () => {
@@ -225,9 +201,6 @@ const EmpDashboard = () => {
     const formattedToMonth = formatDateForServer(lastDayOfMonth);
 
     await fetchData(formattedFromMonth, formattedToMonth);
-    setIsTodayBtn(false);
-    setIsWeekBtn(false);
-    setIsMonthBtn(true);
   };
 
   const formatDateForServer = (date) => {
@@ -239,6 +212,7 @@ const EmpDashboard = () => {
 
   useEffect(() => {
     // fetchData();
+    console.log("whyyyyyy")
     handleTodayClick();
     setIsNavBar(true);
     setIsSideBar(true);
@@ -427,8 +401,6 @@ const EmpDashboard = () => {
                       <StatBox
                         title={dashboardData.totalMeetings || "0"}
                         subtitle="Total Meetings"
-                        // progress="0.75"
-                        // increase="+14%"
                         icon={
                           <Diversity2Icon
                             sx={{ color: "#3da58a", fontSize: "36px" }}
@@ -451,8 +423,6 @@ const EmpDashboard = () => {
                       <StatBox
                         title={dashboardData.pendingMeetings || "0"}
                         subtitle="Pending Meetings"
-                        // progress="0.75"
-                        // increase="+14%"
                         icon={
                           <PendingActionsIcon
                             sx={{ color: "#3da58a", fontSize: "36px" }}
@@ -475,8 +445,6 @@ const EmpDashboard = () => {
                       <StatBox
                         title={dashboardData.completedMeetings || "0"}
                         subtitle="Completed Meetings"
-                        // progress="0.75"
-                        // increase="+14%"
                         icon={
                           <HandshakeIcon
                             sx={{ color: "#3da58a", fontSize: "36px" }}
@@ -499,8 +467,6 @@ const EmpDashboard = () => {
                       <StatBox
                         title={dashboardData.totalMeetngHours || "0"}
                         subtitle="Total Meeting Hours"
-                        // progress="0.75"
-                        // increase="+14%"
                         icon={
                           <HourglassBottomIcon
                             sx={{ color: "#3da58a", fontSize: "36px" }}
@@ -638,7 +604,6 @@ const EmpDashboard = () => {
                         flexDirection: "column",
                       }}
                     >
-                      {/* Recent meetings tickets (with explore more dialog) */}
                       <Box
                         sx={{
                           display: "flex",
@@ -697,7 +662,6 @@ const EmpDashboard = () => {
                         </Box>
                       </Box>
                       <Box sx={{ overflowY: "auto", width: "100%", mb: "1em" }}>
-                        {/* <MeetList /> */}
                         <MeetingTimeline timelineApiData={timelineData} />
                       </Box>
                     </Box>
