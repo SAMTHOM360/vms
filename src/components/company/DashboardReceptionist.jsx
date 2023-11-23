@@ -542,7 +542,7 @@ export default function Dashboard() {
                 setAllData(response.data.data);
                 const responseData = response.data.data.meetings;
 
-                console.log(response.data.data.status,"statusssss");
+                console.log(response.data.data.status, "statusssss");
 
 
 
@@ -584,7 +584,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const routeChange = (filteredVisitors) => {
         let path = `/receptionistdashboard`;
-       
+
 
 
         if (filteredVisitors) {
@@ -592,7 +592,7 @@ export default function Dashboard() {
             navigate(path);
 
         }
-        else{
+        else {
             navigate(path);
         }
     }
@@ -603,6 +603,7 @@ export default function Dashboard() {
 
     return (
         <>
+<<<<<<< Updated upstream
                 <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
 
 <Grid container spacing={2}>
@@ -626,292 +627,317 @@ export default function Dashboard() {
                                         <Header title="Dashboard" subtitle="Welcome to dashboard" />
                                     </Paper>
                                 </Grid>
+=======
+            <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
 
-                            </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={12} lg={12}>
+                        <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
+                            <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
+                                <Grid container>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <Paper
+                                                elevation={1}
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    // width:'100%',
+                                                    height: '4.5em',
+                                                    mt: '3em',
+                                                    mb: '0.5em'
+                                                }}
+                                            >
+                                                <Header title="Dashboard" subtitle="Welcome to dashboard" />
+                                            </Paper>
+                                        </Grid>
 
-                        </Grid>
-                        <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-                            <Grid item xs={12} style={{ backgroundColor: "" }}>
-                                <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                    <Paper onClick={routeChange} elevation={1} sx={{
-                                        height: 150,
-                                        width: 300,
-                                        // display: 'flex', // Use flex display
-                                        // alignItems: 'center',// Vertically center content
-                                        // borderRadius:"40px",
-                                        backgroundColor: "#32577e",
-                                        cursor:"pointer"
-
-
-
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-
-
-                                    }}>
-
-
-                                        {/* <h2>Total Meetings</h2> */}
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", backgroundColor: "" }}>
-
-
-                                            <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "20px" }}>
-                                                <PersonOutlineIcon style={{ fontSize: "50px", color: "" }} />
-
-
-
-                                            </div>
-
-
-
-                                            <div className='info' style={{ marginRight: "50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
-                                                <h3>Total Meetings:</h3>
-                                                <h2>{totalVisitors}</h2>
-
-                                            </div>
-
-                                        </div>
-                                        {/* {isOpen && <ReceptionistDashboard />} */}
-
-                                    </Paper>
-                                    <Paper  onClick={() => routeChange('PENDING' )} elevation={1} sx={{
-                                        height: 150,
-                                        width: 300,
-                                        backgroundColor: "#32577e",
-                                        cursor:"pointer"
-
-
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-
-
-                                        {/* <PendingIcon /> */}
-                                        {/* <h2>Pending Meetings</h2> */}
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <PendingIcon style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", backgroundColor: "" }}>
-                                                <div><h3>Pending Meetings:</h3></div>
-                                                <div><h2>{pendingVisitors}</h2></div>
-
-                                            </div>
-
-                                        </div>
-                                    </Paper>
-                                    <Paper  onClick={() => routeChange('APPROVED' )} elevation={1} sx={{
-                                        height: 150,
-                                        width: 300,
-                                        backgroundColor: "#32577e",
-                                        cursor:"pointer"
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-
-
-
-
-                                        {/* <h2>Approved Meetings</h2> */}
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <HowToRegIcon style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
-                                                <div><h3>Approved Meetings:</h3></div>
-                                                <div><h2>{approvedVisitors}</h2></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </Paper>
-
-                                    <Paper  onClick={() => routeChange('INPROCESS' )} elevation={1} sx={{
-                                        height: 150,
-                                        width: 300,
-                                        backgroundColor: "#32577e",
-                                        cursor:"pointer"
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-
-
-                                        {/* <h2>Inprocess Meetings</h2> */}
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <WatchLaterIcon style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
-                                                <div><h3>Inprocess Meetings:</h3></div>
-                                                <div><h2>{inProcessVisitors}</h2></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </Paper>
-                                    <Paper   onClick={() => routeChange('COMPLETED' )}elevation={1} sx={{
-                                        height: 150,
-                                        width: 300,
-                                        backgroundColor: "#32577e",
-                                        cursor:"pointer"
-
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-
-
-                                        {/* <h2>Completed Meetings</h2> */}
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <LibraryAddCheckIcon style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
-                                                <div><h3>Completed Meetings:</h3></div>
-                                                <div><h2>{completedVisitors}</h2></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </Paper>
-
-
-
+                                    </Grid>
+>>>>>>> Stashed changes
 
                                 </Grid>
-                            </Grid>
-
-                        </Grid>
-
-
-                        {/* code */}
-
-                        <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-                            <Grid item xs={12} style={{ backgroundColor: "" }}>
-                                <Grid style={{ gap: "20px", marginTop: "20px" }} container justifyContent="space-between" >
-                                    <Paper style={{ backgroundColor: "", display: "flex", justifyContent: "center" }} elevation={7} sx={{
-                                        height: 570,
-                                        width: 900,
-                                        flexGrow: 1,
-
-                                        // border:
-                                        // display: 'flex', // Use flex display
-                                        // alignItems: 'center',// Vertically center content
-                                        // borderRadius:"40px",
-                                        backgroundColor: "",
-
-
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-
-
-                                    }}>
-
-
-                                        {/* <h2>Today Meetings Chart</h2> */}
-                                        <div>
-                                            {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
-                                            <ProgressBar />
-                                        </div>
-
-
-                                    </Paper>
-                                    <Paper elevation={7} sx={{
-                                        height: 570,
-                                        width: 550,
-                                        flexGrow: 1,
-                                        // backgroundColor: "#32577e",
-                                        // boxShadow: "5px 5px 10px grey",
-
-                                        // ":hover": {
-                                        //     boxShadow: "10px 10px 20px grey",
-                                        //     cursor: "pointer"
-                                        // },
-
-                                        // backgroundColor: (theme) =>
-                                        //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-
-
-                                        <div className="rooms">
-                                            <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
-                                            <DoughnutChart allData={allData} />
-
-                                        </div>
-                                        {/* <PieChart/> */}
+                                <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
+                                    <Grid item xs={12} style={{ backgroundColor: "" }}>
+                                        <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
+                                            <Paper onClick={routeChange} elevation={1} sx={{
+                                                height: 150,
+                                                width: 300,
+                                                // display: 'flex', // Use flex display
+                                                // alignItems: 'center',// Vertically center content
+                                                // borderRadius:"40px",
+                                                backgroundColor: "#32577e",
+                                                cursor: "pointer"
 
 
 
+                                                // boxShadow: "5px 5px 10px grey",
 
-                                    </Paper>
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+
+
+                                            }}>
+
+
+                                                {/* <h2>Total Meetings</h2> */}
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", backgroundColor: "" }}>
+
+
+                                                    <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "20px" }}>
+                                                        <PersonOutlineIcon style={{ fontSize: "50px", color: "" }} />
+
+
+
+                                                    </div>
+
+
+
+                                                    <div className='info' style={{ marginRight: "50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
+                                                        <h3>Total Meetings:</h3>
+                                                        <h2>{totalVisitors}</h2>
+
+                                                    </div>
+
+                                                </div>
+                                                {/* {isOpen && <ReceptionistDashboard />} */}
+
+                                            </Paper>
+                                            <Paper onClick={() => routeChange('PENDING')} elevation={1} sx={{
+                                                height: 150,
+                                                width: 300,
+                                                backgroundColor: "#32577e",
+                                                cursor: "pointer"
+
+
+                                                // boxShadow: "5px 5px 10px grey",
+
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                            }}>
+
+
+                                                {/* <PendingIcon /> */}
+                                                {/* <h2>Pending Meetings</h2> */}
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                        <PendingIcon style={{ fontSize: "50px" }} />
+
+                                                    </div>
+                                                    <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", backgroundColor: "" }}>
+                                                        <div><h3>Pending Meetings:</h3></div>
+                                                        <div><h2>{pendingVisitors}</h2></div>
+
+                                                    </div>
+
+                                                </div>
+                                            </Paper>
+                                            <Paper onClick={() => routeChange('APPROVED')} elevation={1} sx={{
+                                                height: 150,
+                                                width: 300,
+                                                backgroundColor: "#32577e",
+                                                cursor: "pointer"
+                                                // boxShadow: "5px 5px 10px grey",
+
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                            }}>
 
 
 
 
+                                                {/* <h2>Approved Meetings</h2> */}
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                        <HowToRegIcon style={{ fontSize: "50px" }} />
+
+                                                    </div>
+                                                    <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
+                                                        <div><h3>Approved Meetings:</h3></div>
+                                                        <div><h2>{approvedVisitors}</h2></div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </Paper>
+
+                                            <Paper onClick={() => routeChange('INPROCESS')} elevation={1} sx={{
+                                                height: 150,
+                                                width: 300,
+                                                backgroundColor: "#32577e",
+                                                cursor: "pointer"
+                                                // boxShadow: "5px 5px 10px grey",
+
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                            }}>
+
+
+                                                {/* <h2>Inprocess Meetings</h2> */}
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                        <WatchLaterIcon style={{ fontSize: "50px" }} />
+
+                                                    </div>
+                                                    <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
+                                                        <div><h3>Inprocess Meetings:</h3></div>
+                                                        <div><h2>{inProcessVisitors}</h2></div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </Paper>
+                                            <Paper onClick={() => routeChange('COMPLETED')} elevation={1} sx={{
+                                                height: 150,
+                                                width: 300,
+                                                backgroundColor: "#32577e",
+                                                cursor: "pointer"
+
+                                                // boxShadow: "5px 5px 10px grey",
+
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                            }}>
+
+
+                                                {/* <h2>Completed Meetings</h2> */}
+                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                        <LibraryAddCheckIcon style={{ fontSize: "50px" }} />
+
+                                                    </div>
+                                                    <div className='info' style={{ marginRight: "30px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "" }}>
+                                                        <div><h3>Completed Meetings:</h3></div>
+                                                        <div><h2>{completedVisitors}</h2></div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </Paper>
+
+
+
+
+                                        </Grid>
+                                    </Grid>
 
                                 </Grid>
-                            </Grid>
-
-                        </Grid>
 
 
+                                {/* code */}
+
+                                <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
+                                    <Grid item xs={12} style={{ backgroundColor: "" }}>
+                                        <Grid style={{ gap: "20px", marginTop: "20px" }} container justifyContent="space-between" >
+                                            <Paper style={{ backgroundColor: "", display: "flex", justifyContent: "center" }} elevation={7} sx={{
+                                                height: 570,
+                                                width: 900,
+                                                flexGrow: 1,
+
+                                                // border:
+                                                // display: 'flex', // Use flex display
+                                                // alignItems: 'center',// Vertically center content
+                                                // borderRadius:"40px",
+                                                backgroundColor: "",
 
 
-                    </div>
+                                                // boxShadow: "5px 5px 10px grey",
 
-                </div>
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+
+
+                                            }}>
+
+
+                                                {/* <h2>Today Meetings Chart</h2> */}
+                                                <div>
+                                                    {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
+                                                    <ProgressBar />
+                                                </div>
+
+
+                                            </Paper>
+                                            <Paper elevation={7} sx={{
+                                                height: 570,
+                                                width: 550,
+                                                flexGrow: 1,
+                                                // backgroundColor: "#32577e",
+                                                // boxShadow: "5px 5px 10px grey",
+
+                                                // ":hover": {
+                                                //     boxShadow: "10px 10px 20px grey",
+                                                //     cursor: "pointer"
+                                                // },
+
+                                                // backgroundColor: (theme) =>
+                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                            }}>
+
+
+                                                <div className="rooms">
+                                                    <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
+                                                    <DoughnutChart allData={allData} />
+
+                                                </div>
+                                                {/* <PieChart/> */}
+
+
+
+
+                                            </Paper>
+
+
+
+
+
+                                        </Grid>
+                                    </Grid>
+
+                                </Grid>
+
+
+
+
+                            </div>
+
+                        </div>
+                    </Grid>
                 </Grid>
-                </Grid>
-                </Box>
-                
+            </Box>
+
 
         </>
     )

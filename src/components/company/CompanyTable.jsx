@@ -428,15 +428,15 @@ const CompanyTable = () => {
           <Grid item xs={12}>
             <Item elevation={3} style={{ height: '', margin: '10px' }}>
 
-              {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Link to="/companyreg">
+              <div style={{ display: "flex", justifyContent: "right"}}>
+                {/* <Link to="/companyreg">
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ marginTop: "10px", marginBottom: "10px", marginLeft: "10px" }}
                   >      Add Company
                   </Button>
-                </Link>
+                </Link> */}
                 <input
                   type="text"
                   placeholder="Search..."
@@ -453,7 +453,7 @@ const CompanyTable = () => {
                   }}
                 />
 
-              </div> */}
+              </div>
               <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
                 <Table aria-label="simple table">
                   <TableHead style={{ backgroundColor: '#2b345386' }}>

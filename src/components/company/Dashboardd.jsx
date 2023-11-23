@@ -404,8 +404,10 @@ export default function Dashboard() {
       .then((response) => {
         // handleCloseModal();
         // setSelectedRoom('');
-        setStatus("");
+        // setStatus("");
 
+
+       
         if (response.data.data.status === "CANCELLED") {
           alert("Meeting cancelled succesfully");
         } else {
@@ -548,23 +550,6 @@ function formatMeetingDuration(meeting) {
         return `${formattedDate}, ${formattedTime}`;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   //room

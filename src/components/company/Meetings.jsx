@@ -209,7 +209,7 @@ export default function Meetings() {
 
   //phonefilter
   const [phoneNumberFilter, setPhoneNumberFilter] = useState("");
-  const [meetings, setMeetings] = useState([]);
+  const [meetings, setMeetings] = useState(0);
 
   // now previous
   function fetchData() {
@@ -551,19 +551,33 @@ function formatMeetingDuration(meeting) {
     }
 }
 
+console.log(meetings,"whyyyyy")
 
 
+//universal search
+
+const [searchQuery, setSearchQuery] = useState('');
+
+const filteredCompanies = visitors.filter(company => {
+  const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
+  return (
+    (company.visitor.name?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.email?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.phoneNumber?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.companyName?.toLowerCase()?.includes(searchTerm) || '') ||
+   
+    (company.visitor.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.remarks?.toLowerCase()?.includes(searchTerm) || '') ||
+    (company.visitor.status?.toLowerCase()?.includes(searchTerm) || '') 
+    // (company.createdBy?.toLowerCase()?.includes(searchTerm) || '')
+  );
+});
 
 
-
-
-
-
-
-
-
-
-
+const handleSearch = event => {
+  setSearchQuery(event.target.value); // Update search query state
+};
 
 
 
@@ -589,7 +603,19 @@ function formatMeetingDuration(meeting) {
     phoneNumberFilter,
     startDate,
     endDate,
+    searchQuery
   ]);
+
+
+
+
+
+
+
+
+
+
+
 
   const handleOpenAppointMeetingForm = () => {
     // setAddUserDialogOpen(true)
@@ -809,7 +835,7 @@ function formatMeetingDuration(meeting) {
                                 }}
                               >
                                 <TextField
-                                  id="outlined-select-currency"
+                                  // id="outlined-select-currency"
                                   select
                                   label="Search by Status"
                                   value={selectedStatusOptions}
@@ -900,6 +926,9 @@ function formatMeetingDuration(meeting) {
                                 <TextField
                                   id="outlined-search"
                                   label="Search"
+
+                                  value={searchQuery}
+                                  onChange={handleSearch}
                                   //  value={phoneNumberFilter}
                                   // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
                                   // onKeyPress={handlePhoneNumberSearch}
@@ -947,7 +976,7 @@ function formatMeetingDuration(meeting) {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {visitors
+                            {filteredCompanies
                               // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((visitor, index) => (
                                 <TableRow key={index}>

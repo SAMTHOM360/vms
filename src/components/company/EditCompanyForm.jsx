@@ -41,6 +41,12 @@ export default function EditCompanyForm() {
   });
   console.log(companyData, "companydata");
 
+
+  const [disabled, setDisabled] = useState(true);
+
+
+
+
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedState, setSelectedState] = useState("");
@@ -246,7 +252,7 @@ export default function EditCompanyForm() {
           flexDirection="column"
           maxWidth={800}
           margin="auto"
-          marginTop={3}
+          marginTop={8}
           padding={3}
           borderRadius={2}
           gap={5}
@@ -275,6 +281,8 @@ export default function EditCompanyForm() {
               onChange={(e) =>
                 setCompanyData({ ...companyData, name: e.target.value })
               }
+              disabled={disabled}
+
             ></TextField>
 
             {/* <label></label>
@@ -290,6 +298,7 @@ export default function EditCompanyForm() {
                   type="file"
                   id="file-input"
                   onChange={handleLogoChange}
+                  disabled={disabled}
                 />
                 Upload Company Logo
               </label>
@@ -304,6 +313,7 @@ export default function EditCompanyForm() {
             onChange={(e) =>
               setCompanyData({ ...companyData, address: e.target.value })
             }
+            disabled={disabled}
           ></TextField>
           <div
             className="input"
@@ -328,6 +338,7 @@ export default function EditCompanyForm() {
                     label="Select State"
                     name="state"
                     value={companyData.state}
+                    disabled={disabled}
                   >
                     <MenuItem value="-" placeholder="Select State"></MenuItem>
                     {states.map((state) => (
@@ -353,6 +364,7 @@ export default function EditCompanyForm() {
                   label="Select City"
                   name="city"
                   value={companyData.city}
+                  disabled={disabled}
                 >
                   <MenuItem value="-" placeholder="Select City"></MenuItem>
                   {cities.map((city) => (
@@ -371,6 +383,7 @@ export default function EditCompanyForm() {
             onChange={(e) =>
               setCompanyData({ ...companyData, pincode: e.target.value })
             }
+            disabled={disabled}
           ></TextField>
 
           <div
@@ -384,19 +397,20 @@ export default function EditCompanyForm() {
             <TextField
               sx={{
                 width: "47%",
-                backgroundColor: "lightgray",
+                backgroundColor: "",
                 color: "white",
               }}
               placeholder=" Email"
               type="email"
               name="email"
               value={companyData.email}
-              InputProps={{
-                readOnly: true,
-              }}
+              // InputProps={{
+              //   readOnly: true,
+              // }}
               onChange={(e) =>
                 setCompanyData({ ...companyData, email: e.target.value })
               }
+              disabled={disabled}
             ></TextField>
             <TextField
               sx={{ width: "47%" }}
@@ -407,10 +421,11 @@ export default function EditCompanyForm() {
               onChange={(e) =>
                 setCompanyData({ ...companyData, phoneNumber: e.target.value })
               }
+              disabled={disabled}
             ></TextField>
           </div>
 
-          <TextField
+          {/* <TextField
             placeholder="Industry"
             type="text"
             name="industry"
@@ -418,7 +433,8 @@ export default function EditCompanyForm() {
             onChange={(e) =>
               setCompanyData({ ...companyData, industry: e.target.value })
             }
-          ></TextField>
+            disabled={disabled}
+          ></TextField> */}
 
           <div
             className="input"
@@ -436,6 +452,7 @@ export default function EditCompanyForm() {
               onChange={(e) =>
                 setCompanyData({ ...companyData, industry: e.target.value })
               }
+              disabled={disabled}
             ></TextField>
 
             <TextField
@@ -457,6 +474,7 @@ export default function EditCompanyForm() {
             onChange={(e) =>
               setCompanyData({ ...companyData, aboutUs: e.target.value })
             }
+            disabled={disabled}
           ></TextField>
           <div
             style={{

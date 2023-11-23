@@ -1231,7 +1231,7 @@ export default function Dashboard() {
 
     const [passVisitors, setPassVisitors] = useState([]);
 
-    const [meetings, setMeetings] = useState([]);
+    const [meetings, setMeetings] = useState(0);
     const [meetingsLength, setMeetingsLength] = useState(0);
     const [meetingsPerPage, setMeetingsPerPage] = useState([]);
 
@@ -1250,6 +1250,10 @@ export default function Dashboard() {
 
 
     const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
+
+
+
+
     const [searchQuery, setSearchQuery] = useState('');
 
 
@@ -1504,7 +1508,8 @@ export default function Dashboard() {
         const meetingData = {
 
             id: item.id,
-            status: item.user.role.name === 'ADMIN' ? selectedStatusModal : item.status,
+            status: item.user.role.name === 'ADMIN' && item.room === null && item.status === "PENDING" ? selectedStatusModal : item.status,
+         
             // user: {
             //     id: adminId
             // },
@@ -1531,7 +1536,7 @@ export default function Dashboard() {
                 // handleCloseModal();
                 setSelectedRoom('');
                 setSelectedStatusModal('');
-               
+
                 // setStatus('')
 
                 if (response.data.message === "Meeting is cancelled") {
@@ -1941,7 +1946,7 @@ export default function Dashboard() {
     useEffect(() => {
 
 
-        fetchData();
+       fetchData();
         getRoomsOption();
         fetchStatusOptions();
         fetchStatusOptions1();
@@ -1958,11 +1963,9 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-
-
-
-
+    
         if (page === 0) {
+            
             fetchData();
 
         } else {
@@ -1979,11 +1982,11 @@ export default function Dashboard() {
         if (filter) {
 
             setSelectedStatusOptions(filter)
-            fetchData()
+            // fetchData()
             sessionStorage.removeItem('filters')
         }
 
-    }, [selectedStatusOptions])
+    }, [])
 
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -2393,8 +2396,8 @@ export default function Dashboard() {
 
 
                                                                         {/* //zzzzz */}
-
-                                                                        {/* {visitor.status === 'APPROVED' && visitor.room !== null || visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />) : visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'CANCELLED_BY_VISITOR' ? (
+                                                                        {/* 
+                                                                        {visitor.status === 'APPROVED' && visitor.room !== null || visitor.status === 'INPROCESS' && visitor.room !== null ? (<DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />) : visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' || visitor.status === 'PENDING' || visitor.status === 'CANCELLED_BY_VISITOR' ? (
 
                                                                             <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
                                                                         ) : (
@@ -2402,27 +2405,47 @@ export default function Dashboard() {
                                                                             <EditIcon onClick={() => handleOpenModal(visitor)} />
                                                                         )}  */}
 
-
-                                                                        {/* {visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (<EditIcon onClick={() => handleOpenModal(visitor)} />) :   <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />}  */}
+                                                                        {/* 
+                                                                        {visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (<EditIcon onClick={() => handleOpenModal(visitor)} />) :   <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />}  */}
 
 
 
                                                                         {
-                                                                            (visitor.status === 'APPROVED' && visitor.room !== null) ||
-                                                                                (visitor.status === 'INPROCESS' && visitor.room !== null) ? (
-                                                                                <DownloadIcon style={{ cursor: "pointer" }} onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
-                                                                            ) : (visitor.status === 'COMPLETED' ||
-                                                                                visitor.status === 'CANCELLED' ||
-                                                                                visitor.status === 'CANCELLED_BY_VISITOR') ? (
-                                                                                <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
-                                                                            ) : (
-                                                                                visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (
+                                                                            (visitor.status === 'APPROVED') ? (
+                                                                                visitor.room ?
+                                                                                    <DownloadIcon 
+                                                                                    style={{cursor:"pointer"}} 
+                                                                                    
+                                                                                    onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
+                                                                                    :
                                                                                     <EditIcon onClick={() => handleOpenModal(visitor)} />
-                                                                                ) : (
-                                                                                    <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
-                                                                                )
-                                                                            )
+                                                                            ) :
+
+                                                                                (visitor.status === 'INPROCESS' && visitor.room) ? (
+                                                                                    <DownloadIcon 
+
+                                                                                    style={{cursor:"pointer"}}
+                                                                                    
+                                                                                    onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
+                                                                                ) :
+
+                                                                                    ['COMPLETED', 'CANCELLED', 'CANCELLED_BY_VISITOR'].includes(visitor.status) ? (
+                                                                                        <EditIcon style={{ color: 'lightgray' }} disabled />
+                                                                                    ) :
+
+                                                                                        visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (
+                                                                                            <EditIcon 
+                                                                                            style={{cursor:"pointer"}}
+                                                                                            
+                                                                                            onClick={() => handleOpenModal(visitor)} />
+                                                                                        ) : (
+                                                                                            <EditIcon style={{ color: 'lightgray' }} disabled />
+                                                                                        )
                                                                         }
+
+
+
+
 
 
                                                                     </TableCell>
@@ -2537,8 +2560,8 @@ export default function Dashboard() {
                                                             value={selectedRoom}
                                                             label="rooms"
                                                             onChange={handleChange1}
-                                                            disabled={selectedStatusModal === "CANCELLED" }
-                                                            style={{color:selectedStatusModal === "CANCELLED" ? 'grey':'black'}}
+                                                            disabled={selectedStatusModal === "CANCELLED"}
+                                                            style={{ color: selectedStatusModal === "CANCELLED" ? 'grey' : 'black' }}
                                                             className="room-dropdown"
                                                             MenuProps={MenuProps}
                                                         >
@@ -2548,9 +2571,6 @@ export default function Dashboard() {
                                                                 <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
                                                                     style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
                                                             ))}
-
-
-
 
 
                                                         </Select>
@@ -2564,8 +2584,6 @@ export default function Dashboard() {
 
                                                         </div>
                                                         <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
-
-
 
 
                                                             {roomAdded && (
