@@ -598,6 +598,10 @@ export default function Dashboard() {
         }
     }
 
+const routeChange1 = ()=>{
+    let path1= '/receptionistdashboard';
+    navigate(path1);
+}
 
 
 
@@ -634,7 +638,7 @@ export default function Dashboard() {
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                                     <Grid item xs={12} style={{ backgroundColor: "" }}>
                                         <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                            <Paper onClick={routeChange} elevation={1} sx={{
+                                            <Paper onClick={routeChange1} elevation={1} sx={{
                                                 height: 150,
                                                 width: 300,
                                                 // display: 'flex', // Use flex display

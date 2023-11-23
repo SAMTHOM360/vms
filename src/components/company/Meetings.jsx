@@ -1033,7 +1033,10 @@ const handleSearch = event => {
                                                                 <EditIcon onClick={() => handleOpenModal(visitor)} />
                                                             )} */}
 
-                                    {visitor.status === "COMPLETED" ||
+
+                                                            {/* zzzzzzzzz */}
+
+                                    {/* {visitor.status === "COMPLETED" ||
                                     visitor.status === "CANCELLED" ||
                                     visitor.status ===
                                       "CANCELLED_BY_VISITOR"|| visitor.status ===
@@ -1083,7 +1086,80 @@ const handleSearch = event => {
                                           />
                                         </div>
                                       </>
-                                    )}
+                                    )} */}
+
+                                    {/* zzzzzz */}
+
+
+
+
+
+
+
+
+                                    {
+  visitor.status === 'APPROVED' ? (
+    <div className="status">
+       <CheckIcon
+      style={{
+        // cursor: 'pointer',
+        color: 'lightgray',
+        marginRight: '10px',
+        pointerEvents: "none"
+      }}
+    />
+    <ClearIcon
+    style={{ cursor: 'pointer' }}
+    onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+  />
+
+    </div>
+   
+
+
+
+  ) : visitor.status === 'CANCELLED' ||
+    visitor.status === 'CANCELLED_BY_VISITOR' ||
+    visitor.status === 'INPROCESS' ? (
+    <>
+      <div className="status">
+        <CheckIcon
+          style={{
+            cursor: 'pointer',
+            color: 'lightgray',
+            marginRight: '10px',
+            pointerEvents: "none"
+          }}
+          onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+        />
+        <ClearIcon
+          style={{
+            cursor: 'pointer',
+            color: 'lightgray',
+          }}
+          onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+        />
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="status">
+        <CheckIcon
+          style={{
+            cursor: 'pointer',
+            marginRight: '10px',
+          }}
+          onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+        />
+        <ClearIcon
+          style={{ cursor: 'pointer' }}
+          onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+        />
+      </div>
+    </>
+  )
+}
+
 
                                     {/* <CheckIcon style={{cursor:"pointer"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
                                                             <ClearIcon style={{cursor:"pointer"}}onClick={()=>handleAddMeeting(visitor,'CANCELLED')}/> */}
