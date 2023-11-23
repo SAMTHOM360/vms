@@ -161,6 +161,8 @@ const EmpDashboard = () => {
         break;
     }
 
+    setPageIndex(0);
+
     setSelectedFilter(selectedValue);
   };
 
@@ -271,52 +273,7 @@ const EmpDashboard = () => {
                 gap:'0.3em'
               }}
               >
-                {/* <Button
-                  variant="contained"
-                  size="small"
-                  color={isTodayBtn ? "primary" : "inherit"}
-                  sx={{
-                    height: "3em",
-                    borderRadius: "0px",
-                    width: "97px",
-                    boxShadow: "none",
-                    borderRight: "2px solid #B0B0B0",
-                  }}
-                  onClick={handleTodayClick}
-                >
-                  Today
-                </Button>
 
-                <Button
-                  color={isWeekBtn ? "primary" : "inherit"}
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    height: "3em",
-                    borderRadius: "0px",
-                    width: "97px",
-                    boxShadow: "none",
-                    borderRight: "2px solid #B0B0B0",
-                  }}
-                  onClick={handleThisWeekClick}
-                >
-                  This week
-                </Button>
-
-                <Button
-                color={isMonthBtn ? 'primary' : 'inherit'}
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    height: "3em",
-                    borderRadius: "0px",
-                    width: "97px",
-                    boxShadow: "none",
-                  }}
-                  onClick={handleThisMonthClick}
-                >
-                  Total
-                </Button> */}
                 <Typography sx={{color:'#555555'}}>Filter by</Typography>
 
                 <FormControl

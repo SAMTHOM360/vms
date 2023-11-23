@@ -482,12 +482,18 @@ if (
               width: "5px",
               height: "30px",
               mr: "-0.7em",
-              mt:'-1em',
+              mt: "-1em",
               bgcolor: "#FF3636",
+              "&:hover": {
+                backgroundColor: "#9F3327",
+                color: "white",
+              },
             }}
           >
             <CloseIcon
-              sx={{ color: "#FFFFFF", fontSize: "25px", fontWeight: "800" }}
+              sx={{ color: "#FFFFFF", fontSize: "25px", fontWeight: "800",
+            
+            }}
             />
           </Button>
         </DialogTitle>
