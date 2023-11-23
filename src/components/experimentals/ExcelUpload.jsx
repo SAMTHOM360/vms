@@ -7,7 +7,8 @@ import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 
 const ExcelUpload = () => {
-  const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  const BASE_URL = 'http://192.168.12.54:8080/api/user';
   const AuthToken = sessionStorage.getItem('token');
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -61,8 +62,12 @@ const ExcelUpload = () => {
 
   const handleDownloadExcel = () => {
     // Define the URL of the file to download
-    const fileUrl = 'http://192.168.12.58:8080/api/user/download/excel?filename=6d1b409a-58df-4797-8b7f-8720ad7fe1eb.xlsx';
-    const fileUrl2 = 'http://192.168.12.54:8080/api/user/download/excel?filename=3baa522c-f032-45e6-9787-1d14237015fb.xlsx';
+
+    // const fileUrl = 'http://192.168.12.58:8080/api/user/download/excel?filename=6d1b409a-58df-4797-8b7f-8720ad7fe1eb.xlsx';
+    const fileUrl = 'http://192.168.12.54:8080/api/user/download/excel?filename=6d1b409a-58df-4797-8b7f-8720ad7fe1eb.xlsx';
+
+
+    // const fileUrl2 = 'http://192.168.12.54:8080/api/user/download/excel?filename=3baa522c-f032-45e6-9787-1d14237015fb.xlsx';
 
     // Create an anchor element to trigger the download
     const link = document.createElement('a');

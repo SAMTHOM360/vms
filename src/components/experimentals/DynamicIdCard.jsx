@@ -14,7 +14,8 @@ import image1 from "../../assets/6173954.jpg";
 import Loader from "../Loader";
 
 const DynamicIdCard = () => {
-  const BASE_URL = `http://192.168.12.58:8080/api/meeting/meeting-details`;
+  // const BASE_URL = `http://192.168.12.58:8080/api/meeting/meeting-details`;
+  const BASE_URL = `http://192.168.12.54:8080/api/meeting/meeting-details`;
 
   const [meetingDetails, setMeetingDetails] = useState(null);
   const [isDynamicMeet, setIsDynamicMeet] = useState(false);

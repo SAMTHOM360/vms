@@ -32,7 +32,8 @@ import {
 import Loader from "../Loader";
 
 export default function MeetingTimeline({ timelineApiData }) {
-  const BASE_URL1 = "http://192.168.12.58:8080/api";
+  // const BASE_URL1 = "http://192.168.12.58:8080/api";
+  const BASE_URL1 = "http://192.168.12.54:8080/api";
 
   const token = sessionStorage.getItem("token");
 

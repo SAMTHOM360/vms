@@ -253,7 +253,8 @@ const MeetingDetails = () => {
     try {
       setLoading(false)
       const response = await axios.post(
-        "http://192.168.12.58:8080/api/meeting/add/byuser",
+        // "http://192.168.12.58:8080/api/meeting/add/byuser",
+        "http://192.168.12.54:8080/api/meeting/add/byuser",
         updatedFormData
       );
       if (response.status === 200) {

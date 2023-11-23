@@ -38,8 +38,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../routes/AuthContext";
 
 const EmpDashboard = () => {
-  const BASE_URL1 = "http://192.168.12.58:8080/api";
-  // const BASE_URL1 = 'http://192.168.12.54:8080/api'
+  // const BASE_URL1 = "http://192.168.12.58:8080/api";
+  const BASE_URL1 = 'http://192.168.12.54:8080/api'
   // const BASE_URL1 = 'http://192.168.12.60:8080/api'
   // const BASE_URL = 'http://192.168.12.54:8080/api'
 
