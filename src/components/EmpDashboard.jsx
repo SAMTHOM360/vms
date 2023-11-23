@@ -246,8 +246,6 @@ const EmpDashboard = () => {
 
   const [pageIndex, setPageIndex] = useState(0);
 
-  // ... (other code)
-
   const handleNextPage = () => {
     setPageIndex((prevIndex) => prevIndex + 1);
   };
@@ -405,21 +403,6 @@ const EmpDashboard = () => {
                 maxWidth="100%"
                 flexGrow={1}
                 height="auto"
-                // sx={{
-                //   "& .MuiDataGrid-root": {
-                //     border: 'none',
-                //   },
-                // //   "& .MuiDataGrid-cell": {
-                // //     borderBottom: 'none',
-                // //   },
-                //   "& .MuiDataGrid-columnHeaders": {
-                //     borderBottom: 'none',
-                //   },
-                // //   "& .MuiDataGrid-footerContainer": {
-                // //     borderTop: 'none',
-                // //   },
-                // }}
-
                 sx={{
                   mb: "1.5em",
                 }}

@@ -96,14 +96,12 @@ export default function Navbar({ toggleSidebar }) {
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
 
   useEffect(() => {
-    // Use useEffect to set the state after the initial render
     if (loggedUserRole === "SUPERADMIN") {
       setIsSUPERADMIN(true);
     } else {
       setIsSUPERADMIN(false);
     }
 
-    // if(loggedUserRole === 'SUPERADMIN')
   }, [loggedUserRole]);
 
   const companyName = sessionStorage.getItem("companyName");

@@ -146,7 +146,6 @@ export default function VisitorMeetTimeline({ meetData }) {
   };
 
   useEffect(() => {
-    // Check if meetData has a length greater than 0
     if (meetData && meetData.length > 0) {
       setisVisitorMeetData(true);
     } else {

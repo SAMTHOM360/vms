@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
 
 
   // useEffect(() => {
-  //   // Check if addLimit is not null and currEmpLength is less than addLimit
   //   if (
   //      parseInt(currEmpLength, 10) < parseInt(addLimit, 10)) {
   //     setIsLimitReached(false);
@@ -27,7 +26,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (addLimit !== null) {
-      // Check if currEmpLength is less than addLimit
       if (parseInt(currEmpLength, 10) >= parseInt(addLimit, 10)) {
         setIsLimitReached(true);
       } else {

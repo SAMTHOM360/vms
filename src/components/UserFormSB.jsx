@@ -14,28 +14,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Grid from "@mui/material/Grid";
 import { toast } from "react-toastify";
-import excelFile from "../assets/MultiuserTemplate.xlsx";
-
-import Navbar from "../global/Navbar";
-import Sidebar from "../global/Sidebar";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { Divider, Paper, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CircularProgress from "@mui/material/CircularProgress";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 
 function UserForm({ authenticated, closeDialog, fetchData,}) {
   const { isLimitReached } = useAuth();
-
   // console.log("isLimitReached", isLimitReached)
+
+
   // const BASE_URL = "http://192.168.12.58:8080/api/user";
   const BASE_URL = "http://192.168.12.54:8080/api/user";
   const navigate = useNavigate();
@@ -85,7 +74,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
   const [cities, setCities] = useState([]);
   const [roles, setRoles] = useState([]);
   const [companies, setCompanies] = useState([]);
-  // const [addUserDialogOpen, setAddUserDialogOpen] = useState();
   const [dobDate, setDobDate] = useState("");
   const [cleared, setCleared] = useState(false);
 
@@ -259,16 +247,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         },
       });
     }
-    // else if (name === 'company') {
-    //   const selectedCompany = companies.find((company) => company.id === value);
-    //   setFormData({
-    //     ...formData,
-    //     [name]: {
-    //       id: value,
-    //       name: selectedCompany ? selectedCompany.name : '',
-    //     },
-    //   });
-    // }
     else if (name === "company") {
       if (loggedUserRole === "SUPERADMIN") {
         const selectedCompany = companies.find(
@@ -301,7 +279,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
 
   const fetchCities = async (stateId) => {
     try {
-      // console.log("state id", stateId);
       let response = await axios.get(
         `http://192.168.12.54:8080/api/city/${stateId}`
       );
@@ -315,13 +292,10 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
   const handleDateChange = (date) => {
     const adjustedDate = date ? date.add(1, "day") : null;
 
-    // console.log("adjusted date", adjustedDate);
-
     setFormData({
       ...formData,
       dob: adjustedDate,
     });
-    // console.log("selected date", formData.dob);
   };
 
   const handleSubmit = async (e) => {
@@ -357,9 +331,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
       },
     };
 
-    // console.log("PAYLOAD USER", user);
-
-    // debugger
     try {
       setLoading(true);
       let response = await axios.post(
@@ -417,14 +388,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     navigate('/employee')
   }
 
-
-  // const handleTest = () => {
-  //   setBtnLoading(true);
-  //   setTimeout(() => {
-  //     setBtnLoading(false);
-  //   }, 2000);
-  // };
-  // console.log(excelDownData);
   return (
     <>
       <Loader isLoading={loading} />
@@ -432,7 +395,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
             <Box
-              // elevation={5}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -628,25 +590,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                         ))}
                       </Select>
                     </FormControl>
-
-                    {/* <Autocomplete
-  className='inputField'
-  options={cities}
-  getOptionLabel={(city) => city.name}
-  value={
-    cities.find((city) => city.id === formData.city.id) || { id: '', name: '' }
-  }
-  onChange={(event, newValue) => handleChange('city', newValue)}
-  isOptionEqualToValue={(option, value) => option.id === value.id}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="City"
-      name="city"
-      required
-    />
-  )}
-/> */}
                   </Grid>
 
                   <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -697,54 +640,9 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                         ))}
                       </Select>
                     </FormControl>
-
-                    {/* <Autocomplete
-  className='inputField'
-  options={roles}
-  getOptionLabel={(role) => role.name}
-  value={
-    roles.find((role) => role.id === formData.role.id) || { id: '', name: '' }
-  }
-  onChange={(event, newValue) => handleChange('role', newValue)}
-  isOptionEqualToValue={(option, value) => option.id === value.id}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Role"
-      name="role"
-      required
-    />
-  )}
-/> */}
                   </Grid>
 
                   <Grid item xs={12} sm={4} md={4} lg={4}>
-                    {/* <FormControl sx={{width:'100%', mt:'10px'}} required>
-        <InputLabel htmlFor="company">Company</InputLabel>
-        <Select
-          label="company"
-          name="company"
-          value={formData.company.id || ''}
-          onChange={handleChange}
-          disabled={loggedUserRole !== 'SUPERADMIN'}
-          required
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: '150px',
-                maxWidth:'150px'
-              },
-            },
-          }}
-        >
-          {companies.map((company) => (
-            <MenuItem key={company.id} value={company.id}>
-              {company.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
-
                     <FormControl sx={{ width: "100%", mt: "10px" }} required>
                       {loggedUserRole === "SUPERADMIN" ? (
                         <>
@@ -754,7 +652,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                             name="company"
                             value={formData.company.id || ""}
                             onChange={handleChange}
-                            // disabled={loggedUserRole !== 'SUPERADMIN'}
                             required
                             MenuProps={{
                               PaperProps: {
@@ -776,30 +673,10 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                         <TextField
                           label="company"
                           value={companyName}
-                          // onChange={handleChange}
                           aria-readonly
                         />
                       )}
                     </FormControl>
-
-                    {/* <Autocomplete
-  className='inputField'
-  options={roles}
-  getOptionLabel={(role) => role.name}
-  value={
-    roles.find((role) => role.id === formData.role.id) || { id: '', name: '' }
-  }
-  onChange={(event, newValue) => handleChange('role', newValue)}
-  isOptionEqualToValue={(option, value) => option.id === value.id}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Role"
-      name="role"
-      required
-    />
-  )}
-/> */}
                   </Grid>
 
                   <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -826,8 +703,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
                 </Grid>
-                {/* <Box sx={{display:'flex', flexDirection:'row', gap:'3em', width:'100%'}}>
-</Box > */}
 
                 <Box
                   sx={{
@@ -861,7 +736,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
 
           </>
           }
-
 
         </Grid>
         </Box>

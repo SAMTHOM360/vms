@@ -41,26 +41,17 @@ const MenuProps = {
 
 const MeetingDetails = () => {
   const navigate = useNavigate();
-  // state for disabling submit button based on employee meeting status
   const [status, setStatus] = useState("");
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  //Host Url
   const userUrl = "http://192.168.12.54:8080/api/user/alluser";
-  // fetch meeting context dropdown
   const meetingContextUrl = "http://192.168.12.54:8080/vis/meetCon";
   const adminId = sessionStorage.getItem("adminId");
 
-  // const [fetchedUserData, setFetchedUserData] = useState(null);
 
-  // console.log(fetchedUserData,"this data i sfetched user data from phone number")
-  // console.log(fetchedUserData.state.id,"state id")
-  // console.log(fetchedUserData.city.id,"city id")
-  // store hosts here
   const [users, setUsers] = useState([]);
 
-  // defining initial states
 
   const initialFormData = {
     name: "",
@@ -84,30 +75,7 @@ const MeetingDetails = () => {
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
-  // const [phoneInput, setPhoneInput] = useState("");
 
-  // function to fetch hosts
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     try {
-  //       const response = await axios.get(userUrl);
-  //       if (response.status === 200 && response.data.data) {
-  //         const userList = response.data.data.map((user) => ({
-  //           id: user.id,
-  //           username: user.name,
-  //           profilePhoto: user.image,
-  //         }));
-  //         setUsers(userList);
-  //         console.log("userlist", userList);
-  //       }
-  //       // room.roomName
-  //     } catch (error) {
-  //       console.error("Error fetching users", error);
-  //     }
-  //   };
-
-  //   fetchUsers();
-  // }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -122,13 +90,11 @@ const MeetingDetails = () => {
 
           setUsers(userList);
 
-          // Find the user with the matching adminId
           const matchedAdminUser = userList.find(
             (user) => user.id === Number(adminId)
           );
 
           if (matchedAdminUser) {
-            // Set the default host value to the matched admin user's username
             setFormData((prevData) => ({
               ...prevData,
               user: {
@@ -149,9 +115,7 @@ const MeetingDetails = () => {
   const handlePhoneNumberChange = async (event) => {
     const phone = event.target.value;
   
-    // Check if the entered value is numeric
     if (/^\d*$/.test(phone)) {
-      // Proceed only if the entered value is numeric and has a length of 10
       if (phone.length === 10) {
         try {
           setLoading(true)
@@ -201,10 +165,8 @@ const MeetingDetails = () => {
     }
   };
   
-  // state to store the meeting context dropdown
   const [meetingContextOptions, setMeetingContextOptions] = useState([]);
 
-  // fetching meeting context options from api
   const fetchMeetingContextOptions = async () => {
     try {
       const response = await axios.get(meetingContextUrl);
@@ -215,19 +177,15 @@ const MeetingDetails = () => {
       console.error("error fetching meeting context options");
     }
   };
-  // calling the meeting context options inside useeffect
   useEffect(() => {
     fetchMeetingContextOptions();
   }, []);
 
-  // console.log(formData.user.id,"accesss the user id")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("form data will be submitted");
 
     const updatedFormData = {
-      // ...formData,
       name: formData.name || "",
       phoneNumber: formData.phoneNumber || "",
 
@@ -246,9 +204,6 @@ const MeetingDetails = () => {
       context: formData.context,
       email: formData.email,
     };
-    // console.log("UPDATED FORM DATA", updatedFormData)
-    // debugger
-    // console.log(updatedFormData, "updatedFormData");
 
     try {
       setLoading(false)
@@ -258,7 +213,6 @@ const MeetingDetails = () => {
         updatedFormData
       );
       if (response.status === 200) {
-        // console.log("Form Data:", updatedFormData);
         toast.success("Meeting appointed successfully.", {
           position: "top-right",
           autoClose: 4000,
@@ -272,12 +226,10 @@ const MeetingDetails = () => {
         setFormData({ ...initialFormData });
         handleRedirectMeetings()
       } else if (response.data.data === null) {
-        // toast.warning("visitor already has pending meetings")
         console.log("visitor already has pending meetings");
       }
     } catch (err) {
       console.error(err, "There is some issue moving into the database");
-      // toast.warning("Sorry there is some issue")
     }
     setLoading(false)
   };
@@ -286,23 +238,19 @@ const MeetingDetails = () => {
     return date < new Date().setDate(new Date().getDate() - 1);
   };
 
-  // converting time to UTC format
   const formattedDateTimePicker1 = formData.meetingStartDateTime
     ? formData.meetingStartDateTime.toISOString()
     : null;
 
-  // minimum and maximum time
   const minTime = dayjs().set("hour", 9).startOf("hour");
   const maxTime = dayjs().set("hour", 18).startOf("hour");
 
   const handleDateTimePickerChange = (name, value) => {
     if (name === "meetingStartDateTime") {
-      // const maxEndTime = value ? value.add(2, 'hour') : null;
 
       setFormData({
         ...formData,
         [name]: value,
-        // meetingEndDateTime: maxEndTime,
       });
     } else {
       setFormData({
@@ -312,7 +260,6 @@ const MeetingDetails = () => {
     }
   };
 
-  // calling the city
   useEffect(() => {
     const fetchCity = async () => {
       try {
@@ -321,10 +268,6 @@ const MeetingDetails = () => {
         );
         if (response.status === 200) {
           setCities(response.data.data);
-          // console.log(
-          //   response.data.data,
-          //   "this is city data from search filter"
-          // );
         }
       } catch (error) {
         console.error(error);
@@ -336,25 +279,17 @@ const MeetingDetails = () => {
     }
   }, [formData.city.name]);
 
-  // console.log("Cities", cities);
-
-  // handle change function
-
   const handleChange = (event) => {
     const { name, value } = event.target;
 
     if (name === "user") {
       const selectedUseruser = users.find((user) => user.id === value);
-      // console.log(" selected user user", selectedUseruser);
       setFormData({
         ...formData,
         [name]: {
           id: selectedUseruser.id,
           username: selectedUseruser.username,
         },
-        // user:{
-        //   id:value
-        // }
       });
     } else {
       setFormData({
@@ -364,37 +299,10 @@ const MeetingDetails = () => {
     }
   };
 
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-
-  //   if (name === "user") {
-  //     // setFormData({
-  //     //   ...formData,
-  //     //   user: {
-  //     //     id: value.id,
-  //     //   },
-  //     // });
-
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value,
-  //     });
-
-  //   }
-
-  //   else {
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value,
-  //     });
-  //   }
-  // };
-
   const handleRedirectMeetings = () => {
     navigate("/meetings");
   };
 
-  // console.log("appoint formdata", formData);
 
   //------------------------ JSX ---------------------
 
@@ -405,7 +313,6 @@ const MeetingDetails = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
             <Box
-              // elevation={5}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -438,7 +345,6 @@ const MeetingDetails = () => {
 
                   <TextField
                   label=" Visitor's Phone Number"
-                  // type="number"
                   name="phoneNumber"
                   autoComplete="off"
                   sx={{ width: "100%", mt: "10px" }}
@@ -463,7 +369,6 @@ const MeetingDetails = () => {
                   />
                 </Grid>
 
-                {/* visitor name */}
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <TextField
                     id="outlined-basic"
@@ -478,10 +383,8 @@ const MeetingDetails = () => {
                   />
                 </Grid>
 
-                {/* email */}
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                   <TextField
-                    // placeholder=" Email*"
                     variant="outlined"
                     label="Visitor's Email"
                     type="email"
@@ -492,12 +395,10 @@ const MeetingDetails = () => {
                     error={!!formData.emailError}
                     helperText={formData.emailError}
                     inputProps={{ maxLength: 126 }}
-                    // disabled={fetchedUserData && !editMode && !editButtonClicked}
                     required
                   />
                 </Grid>
 
-                {/* city name  */}
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <Autocomplete
                     disablePortal
@@ -547,7 +448,7 @@ const MeetingDetails = () => {
                         {...params}
                         label="Visitor's City"
                         id={formData.city ? String(formData.city.id) : ""}
-                        value={formData.city ? formData.city.name : ""} // Update here
+                        value={formData.city ? formData.city.name : ""}
                         required
                       />
                     )}
@@ -557,7 +458,6 @@ const MeetingDetails = () => {
                   />
                 </Grid>
 
-                {/* company Name */}
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <TextField
                     id="outlined-basic"
@@ -612,7 +512,6 @@ const MeetingDetails = () => {
                   />
                 </Grid>
 
-                {/* Visit Type */}
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <FormControl sx={{ width: "100%", mt: "10px" }}>
                     <InputLabel required id="demo-simple-select-label">
@@ -636,7 +535,6 @@ const MeetingDetails = () => {
                   </FormControl>
                 </Grid>
 
-                {/* Remarks */}
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <TextField
                     id="outlined-basic"

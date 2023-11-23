@@ -72,7 +72,6 @@ const MeetBarChart = ({ data }) => {
       ],
     };
 
-    // console.log("DATA ENTRIES", data);
 
     const sumDataLabel = {
       id: "sumDataLabel",
@@ -109,7 +108,7 @@ const MeetBarChart = ({ data }) => {
 
             ctx.font = "10px arial";
             ctx.textAlign = "center";
-            ctx.fillStyle = "#9ca8a8"; // Set the label color to white
+            ctx.fillStyle = "#9ca8a8"; 
             // ctx.fillText(
             //   y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
             //   33,
@@ -168,7 +167,7 @@ const MeetBarChart = ({ data }) => {
 
             ctx.font = " 10px arial";
             ctx.textAlign = "center";
-            ctx.fillStyle = "#9ca8a8"; // Set the label color to white
+            ctx.fillStyle = "#9ca8a8"; 
             // ctx.fillText(
             //   y.getValueForPixel(value).toFixed(0) + "  HOURS",
             //   33,

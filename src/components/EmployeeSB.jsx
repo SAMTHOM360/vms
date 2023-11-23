@@ -112,10 +112,7 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
-    // console.log("holded id", adminId)
-    // console.log("holded id222", id)
     if (id == adminId) {
-      // window.alert(`You cannot delete yourself`)
       toast.error("You cannot delete yourself !!!", {
         position: "top-right",
         autoClose: 3000,
@@ -175,7 +172,6 @@ const Employee = () => {
 
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        // console.log("apidata", apiData)
 
         setEditedItem({
           id: apiData.id || "",
@@ -187,9 +183,6 @@ const Employee = () => {
           role: apiData.role.id || "",
           roleName: apiData.role.name || "",
         });
-
-        // console.log("logged user role", loggedUserRole)
-        // console.log("edited user role", apiData.role.name)
 
         setOpenEditDialog(true);
       } else {
@@ -252,7 +245,6 @@ const Employee = () => {
           `${BASE_URL}/getbyid/${editedItem.id}`
         );
         const updatedData = response.data.data.data;
-        // console.log("edited role name",response.data.data.data.role)
 
         const updatedRole = updatedData.role || {};
         const updatedRoleName = updatedRole.name || "";
@@ -265,7 +257,6 @@ const Employee = () => {
         });
         setRows(updatedRows);
         setOpenEditDialog(false);
-        // console.log(`Saved changes for item with ID ${editedItem.id}`);
       }
     } catch (error) {
       if (error.response.status === 401) {
@@ -289,7 +280,6 @@ const Employee = () => {
       const apiDataArray = response.data;
 
       sessionStorage.setItem("currEmpLength", apiDataArray.length);
-      // console.log("getall data ",apiDataArray)
 
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
         console.error(
@@ -435,7 +425,6 @@ const Employee = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // console.log("matched Id", matchedRole)
 
   return (
     <>
@@ -444,7 +433,6 @@ const Employee = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
             <Box
-              // elevation={5}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",

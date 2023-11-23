@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, } from "react";
 import { useAuth } from "../routes/AuthContext";
 import axios from "axios";
 import { Box } from "@mui/system";
@@ -7,10 +7,10 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { toast } from "react-toastify";
 import excelFile from "../assets/MultiuserTemplate.xlsx";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-import { Divider, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -21,7 +21,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-function BulkUserForm({}) {
+function BulkUserForm() {
   const { isLimitReached } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
@@ -30,13 +30,13 @@ function BulkUserForm({}) {
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
-  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+  // const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const companyId = sessionStorage.getItem("companyId");
-  const companyName = sessionStorage.getItem("companyName");
+  // const companyName = sessionStorage.getItem("companyName");
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
+  // const headers = {
+  //   Authorization: `Bearer ${token}`,
+  // };
 
   const excelHeaders = {
     Authorization: `Bearer ${token}`,
@@ -147,8 +147,8 @@ function BulkUserForm({}) {
         const excelApiData = response.data.data;
         // console.log("excelApiData", excelApiData);
         if (
-          excelApiData.duplicateData != 0 ||
-          excelApiData.unSuccessfullyAdded != 0
+          excelApiData.duplicateData !== 0 ||
+          excelApiData.unSuccessfullyAdded !== 0
         ) {
           setIsDownload(true);
         } else {
@@ -217,15 +217,7 @@ function BulkUserForm({}) {
     setBtnLoading(false)
   }
 
-  // console.log("excel down data", excelDownData)
 
-  // const handleDownloadExcel = () => {
-  //   const fileUrl = excelDownData.downloadLink;
-  //   const link = document.createElement("a");
-  //   link.href = fileUrl;
-  //   link.download = "excel-file.xlsx";
-  //   link.click();
-  // };
 
   const handleDownloadExcel = () => {
     const fileData = [
@@ -248,43 +240,37 @@ function BulkUserForm({}) {
 
         setTimeout(() => {
           downloadFile(index + 1);
-        }, 1000); // Delay in milliseconds
+        }, 1000); 
       }
     };
 
-    // Start the download process with the first file
     downloadFile(0);
   };
 
   //EXCEL UPLOAD ENDS -----------------------------------------------------------------------------------------------------------------
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-
-
-  const handleEmployeeRedirect = () => {
-    navigate("/employee");
-  };
 
 
   const handleRedirectEmployee =  () => {
     navigate('/employee')
   }
 
-  const handleTemplateDownload = () => {
-    const anchor = document.createElement("a");
-    anchor.style.display = "none";
-    anchor.href = excelFile;
-    anchor.download = "MultiuserTemplate.xlsx";
+  // const handleTemplateDownload = () => {
+  //   const anchor = document.createElement("a");
+  //   anchor.style.display = "none";
+  //   anchor.href = excelFile;
+  //   anchor.download = "MultiuserTemplate.xlsx";
 
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-  };
+  //   document.body.appendChild(anchor);
+  //   anchor.click();
+  //   document.body.removeChild(anchor);
+  // };
 
   return (
     <>
-      <Loader isLoading={loading} />
+      {/* <Loader isLoading={loading} /> */}
       <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
@@ -403,8 +389,8 @@ function BulkUserForm({}) {
                           boxShadow: "none",
                           elevation: 0,
                         }}
-                        // onChange={isUpload ? null : handleChooseFile } // Conditionally set onChange
-                        onClick={isUpload ? handleCancel : undefined} // Conditionally set onClick
+                        // onChange={isUpload ? null : handleChooseFile } 
+                        onClick={isUpload ? handleCancel : undefined} 
                       >
                         <AddIcon
                           sx={{
@@ -487,7 +473,7 @@ function BulkUserForm({}) {
                         "&:hover": {
                           backgroundColor: btnLoading
                             ? "rgba(0, 0, 0, 0.12)"
-                            : "primary.dark", // Change color on hover
+                            : "primary.dark", 
                         },
                       }}
                       onClick={handleSaveUpload}

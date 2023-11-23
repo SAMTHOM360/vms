@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import Navbar from '../global/Navbar';
-// import Sidebar from '../global/Sidebar';
 import Grid from "@mui/material/Grid";
 import { Paper, Box, Typography, Avatar } from "@mui/material";
 
@@ -55,8 +53,6 @@ const DynamicIdCard = () => {
       if (!apiData) {
         setIsDynamicMeet(false);
       }
-      // setMeetingDetails0(apiData[0])
-      // console.log("Dynamic Id Response", apiData0);
       console.log("Dynamic Id Response", apiData);
 
       setMeetingDetails(apiData);
@@ -153,7 +149,6 @@ const DynamicIdCard = () => {
                               // position: 'absolute',
                               // top: '50%',
                               // left: '50%',
-                              // Translate the box to center it after rotation
                               // transform: 'translate(-50%, -50%) rotate(45deg)',
                             }}
                             style={appStyle}
@@ -186,12 +181,6 @@ const DynamicIdCard = () => {
                           }}
                         />
 
-                              {/* <Skeleton
-                                variant="rectangular"
-                                width="100%"
-                                height="100%"
-                                animation="wave"
-                              /> */}
                             </Avatar>
                             <Typography
                               sx={{
@@ -241,7 +230,6 @@ const DynamicIdCard = () => {
                             <Typography>
                               Phone: {meetingDetails0.visitorPhone}
                             </Typography>
-                            {/* <Typography>Meeting Attended: 5</Typography> */}
                             <Typography></Typography>
                             <Typography></Typography>
                           </Box>
@@ -278,7 +266,6 @@ const DynamicIdCard = () => {
                             background: "hsla(0, 0%, 100%, 1)",
                             background:
                               "linear-gradient(90deg, hsla(0, 0%, 100%, 1) 0%, hsla(0, 0%, 84%, 1) 100%)",
-                            // "linear-gradient(90deg, hsla(0, 0%, 100%, 1) 0%, hsla(60, 56%, 91%, 1) 100%)",
                           }}
                         >
                           <Typography

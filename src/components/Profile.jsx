@@ -111,23 +111,6 @@ const Profile = () => {
     fetchData();
   }, []);
 
-
-  // console.log("editedBasicInfo", editedAddressInfo)
-
-  // let governmentIdType
-  // if(formData.govtId === 12){
-  //   governmentIdType = "ADHAAR CARD"
-  // } else if(formData.govtId === 10) {
-  //   governmentIdType=
-  // }
-
-  // let governmentIdType = "";
-  // if (formData.govtId.length === 12) {
-  //   governmentIdType = "ADHAAR CARD";
-  // } else if (formData.govtId.length === 10) {
-  //   governmentIdType = "PAN CARD";
-  // }
-
   const statusOnPayload = {
     id: adminId,
     isActive: true,
@@ -152,8 +135,6 @@ const Profile = () => {
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         setFormattedCreatedOn(formatCreatedOn);
         setIsPresent(apiData.isPresent)
-        // const apiData = response;
-        // console.log("apidata", apiData);
         setFormData({
           id: apiData.id || "",
           firstName: apiData.firstName || "",
@@ -188,12 +169,12 @@ const Profile = () => {
         if (apiData.govtId.length === 12) {
           setFormData((prevFormData) => ({
             ...prevFormData,
-            governmentIdType: "ADHAAR CARD" || "", // Make sure imgResponseApiData is not undefined
+            governmentIdType: "ADHAAR CARD" || "",
           }));
         } else if (apiData.govtId.length === 10) {
           setFormData((prevFormData) => ({
             ...prevFormData,
-            governmentIdType: "PAN CARD" || "", // Make sure imgResponseApiData is not undefined
+            governmentIdType: "PAN CARD" || "",
           }));
         }
       } else {
@@ -214,9 +195,6 @@ const Profile = () => {
     }
     setLoading(false)
   }
-
-  // console.log("FORM DATA", formData);
-
   const handlePresentOn = async () => {
     try {
       setLoading(true)
@@ -240,9 +218,6 @@ const Profile = () => {
         });
         setIsPresent(true);
       }
-      // const statusApiData = response;
-
-      // console.log("statusApiData", statusApiData);
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
@@ -379,7 +354,6 @@ const Profile = () => {
       videoElement.srcObject = stream;
       await videoElement.play();
 
-      // Capture a frame from the video
       const canvas = document.createElement("canvas");
       canvas.width = videoElement.videoWidth;
       canvas.height = videoElement.videoHeight;
@@ -388,13 +362,10 @@ const Profile = () => {
 
       const capturedImage = canvas.toDataURL("image/jpeg");
 
-      // console.log("captured Image", capturedImage);
 
-      // Close the camera stream and remove the video element
       videoElement.srcObject.getVideoTracks().forEach((track) => track.stop());
       document.body.removeChild(videoElement);
 
-      // Handle the captured image (e.g., display or upload it)
     } catch (error) {
       console.error("Error capturing image from camera:", error);
     }
@@ -402,7 +373,7 @@ const Profile = () => {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
-    const file = event.target.files[0]; // Get the selected file
+    const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
@@ -412,7 +383,6 @@ const Profile = () => {
         });
         const imgResponseApiData = response.data.data;
         setTempImgLink(imgResponseApiData)
-        // console.log("imgResponseApiData", imgResponseApiData);
 
         const fileInput = document.getElementById("fileInputProfilePic");
         if (fileInput) {
@@ -467,7 +437,6 @@ const Profile = () => {
         });
 
         const submitImgApiData = response;
-        // console.log("submitImgApiData", submitImgApiData);
         handleUploadImgDialogClose();
         setTempImgLink('')
         fetchData()
@@ -510,7 +479,6 @@ const Profile = () => {
         });
 
         const submitApiData = response;
-        // console.log("submitImgApiData", submitApiData);
         handleUploadImgDialogClose();
         setTempImgLink('')
         setIsEdit(false);
@@ -564,7 +532,6 @@ const Profile = () => {
         });
 
         const submitApiData = response;
-        // console.log("submitImgApiData", submitApiData);
         handleUploadImgDialogClose();
         setTempImgLink('')
         setIsAddress(false);
@@ -596,20 +563,6 @@ const Profile = () => {
       console.error("unable to submit address info  ", error);
     }
   };
-
-  // async function handleStatusUpdate() {
-
-  //   try{
-  //     const response = await axios.post(`${BASE_URL}/present`, statusPayload, {headers})
-  //     const statusApiData = response
-
-  //     console.log("statusApiData", statusApiData)
-  //   } catch(error) {
-  //     console.error("Catched Error: ", error)
-  //   }
-  // }
-
-
 
   return (
     <>
@@ -896,21 +849,6 @@ const Profile = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}>
-                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        sx={{ width: "100%", mt: "10px" }}
-                        label="Date of Birth"
-                        format="YYYY/MM/DD"
-                        disabled={!isEdit}
-                        // shouldDisableDate={shouldDisableDate}
-                        // onChange={handleDateChange}
-                        slotProps={{
-                          // field: { clearable: true, onClear: () => setCleared(true) },
-                          textField: { size: "small" },
-                        }}
-                      />
-                    </LocalizationProvider> */}
-
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Date of Birth"
@@ -926,26 +864,6 @@ const Profile = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}>
-                    {/* <FormControl sx={{ mt: "10px" }} fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Gender
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={formData.gender}
-                        label="Gender"
-                        size="small"
-                        disabled={!isEdit}
-                        // onChange={handleChangeGender}
-                        required
-                      >
-                        <MenuItem value={"Male"}>Male</MenuItem>
-                        <MenuItem value={"Female"}>Female</MenuItem>
-                        <MenuItem value={"Others"}>Others</MenuItem>
-                      </Select>
-                    </FormControl> */}
-
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Gender"
@@ -1290,7 +1208,8 @@ const Profile = () => {
                       name="empId"
                       disabled
                       value={formData.empCode}
-                      InputLabelProps={{ shrink: true }} // onChange={handleChange}
+                      InputLabelProps={{ shrink: true }} 
+                      // onChange={handleChange}
                     />
                   </Grid>
 
@@ -1302,7 +1221,8 @@ const Profile = () => {
                       name="dept"
                       disabled
                       value={formData.departmentDto.name}
-                      InputLabelProps={{ shrink: true }} // onChange={handleChange}
+                      InputLabelProps={{ shrink: true }} 
+                      // onChange={handleChange}
                     />
                   </Grid>
 
@@ -1336,8 +1256,8 @@ const Profile = () => {
               Upload from Device
               <input
                 type="file"
-                accept="image/*" // Specify that only image files are allowed
-                style={{ display: "none" }} // Hide the input element
+                accept="image/*"
+                style={{ display: "none" }}
                 id="fileInputProfilePic"
                 hidden
                 // onChange={handleFileUpload}
