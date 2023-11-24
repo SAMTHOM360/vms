@@ -1182,10 +1182,6 @@ const MenuProps = {
 
 
 
-
-
-
-
 const StyledModal = styled(Modal)({
     display: "flex",
     justifyContent: "center",
@@ -1512,6 +1508,7 @@ export default function Dashboard() {
 
             id: item.id,
             status: item.user.role.name === 'ADMIN' && item.room === null && item.status === "PENDING" ? selectedStatusModal : item.status,
+            // status: 'APPROVED',
          
             // user: {
             //     id: adminId
@@ -1986,7 +1983,7 @@ export default function Dashboard() {
     useEffect(() => {
         const filter = sessionStorage.getItem('filters')
         if (filter) {
-
+           
             setSelectedStatusOptions(filter)
             // fetchData()
             sessionStorage.removeItem('filters')
