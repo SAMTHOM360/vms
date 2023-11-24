@@ -619,7 +619,7 @@ const EmpDashboard = () => {
                         </Box>
                       </Box>
                       <Box sx={{ overflowY: "auto", width: "100%", mb: "1em" }}>
-                        <MeetingTimeline timelineApiData={timelineData} />
+                        <MeetingTimeline timelineApiData={timelineData} handleTodayClick={handleTodayClick} />
                       </Box>
                     </Box>
                     {/* <Grid container spacing={2}>

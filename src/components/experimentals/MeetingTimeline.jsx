@@ -33,7 +33,7 @@ import {
 import Loader from "../Loader";
 import { useEffect } from "react";
 
-export default function MeetingTimeline({ timelineApiData }) {
+export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
   // const BASE_URL1 = "http://192.168.12.58:8080/api";
   const BASE_URL1 = "http://192.168.12.54:8080/api";
 
@@ -64,16 +64,6 @@ export default function MeetingTimeline({ timelineApiData }) {
     remarks: "",
     status: "",
   });
-
-  const forceUpdateRef = useRef(null);
-
-  const forceUpdate = () => {
-    setMeetByIdData((prevData) => ({ ...prevData }));
-  };
-
-  useEffect(() => {
-    forceUpdateRef.current = forceUpdate;
-  }, []);
 
   const [openMeetDialog, setOpenMeetDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -156,10 +146,8 @@ export default function MeetingTimeline({ timelineApiData }) {
           theme: "light",
         });
         // console.log("Meet update response", response);
+          handleTodayClick();
         setOpenMeetDialog(false);
-        if (typeof forceUpdateRef.current === "function") {
-          forceUpdateRef.current();
-        }
       }
     } catch (error) {
       toast.error("Something went wrong !!", {
@@ -210,10 +198,9 @@ export default function MeetingTimeline({ timelineApiData }) {
         });
       }
       // console.log("Meet update response", response);
+        handleTodayClick();
+
       handleMeetDialogClose();
-      if (typeof forceUpdateRef.current === "function") {
-        forceUpdateRef.current();
-      }
     } catch (error) {
       toast.error("Something went wrong !!", {
         position: "top-right",
