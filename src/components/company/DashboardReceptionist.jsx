@@ -590,7 +590,7 @@ export default function Dashboard() {
     const routeChange = (filteredVisitors) => {
         let path = `/receptionistdashboard`;
 
-
+        navigate(path);
 
         if (filteredVisitors) {
             sessionStorage.setItem("filters", filteredVisitors)
