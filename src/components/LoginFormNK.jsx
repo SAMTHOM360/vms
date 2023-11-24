@@ -326,16 +326,16 @@ function LoginForm() {
         setAuthenticated(true);
         if (loggedUserRole === "SUPERADMIN") {
           navigate("/companyDetails");
-          sessionStorage.setItem("activeListItem", "/companyDetails");
+          // sessionStorage.setItem("activeListItem", "/companyDetails");
         } else if (loggedUserRole === "ADMIN") {
           navigate("/empdashboard");
-          sessionStorage.setItem("activeListItem", "/empdashboard");
+          // sessionStorage.setItem("activeListItem", "/empdashboard");
         } else if (loggedUserRole === "RECEPTIONIST") {
           navigate("/dashboardreceptionist");
-          sessionStorage.setItem("activeListItem", "/dashboardreceptionist");
+          // sessionStorage.setItem("activeListItem", "/dashboardreceptionist");
         } else if (loggedUserRole === "EMPLOYEE") {
           navigate("/empdashboard");
-          sessionStorage.setItem("activeListItem", "/empdashboard");
+          // sessionStorage.setItem("activeListItem", "/empdashboard");
         } else {
           navigate("*");
         }

@@ -47,6 +47,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../routes/AuthContext";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -72,9 +73,12 @@ const Item = styled(Paper)(({ theme }) => ({
 // ]
 
 export default function Meetings() {
+  const {setActiveListItem} = useAuth()
 
-  sessionStorage.setItem('activeListItem', '/meetings')
-  const navigate = useNavigate()
+  // sessionStorage.setItem('activeListItem', '/meetings')
+  setActiveListItem('/meetings')
+    const navigate = useNavigate()
+
   //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);

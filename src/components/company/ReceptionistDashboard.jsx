@@ -1167,6 +1167,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useStaticPicker } from '@mui/x-date-pickers/internals';
 import { style } from '@mui/system';
+import { useAuth } from '../../routes/AuthContext';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -1215,7 +1216,9 @@ const rowsPerPage = 10;
 
 
 export default function Dashboard() {
-    sessionStorage.setItem('activeListItem', '/receptionistdashboard')
+    const {setActiveListItem} = useAuth()
+    // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
+    setActiveListItem('/receptionistdashboard')
 
     //pagination and filter
 

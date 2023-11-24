@@ -446,6 +446,7 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import DoughnutChart from './DoughnutChart';
 import ProgressBar from './ProgressBar';
 import Loader from '../Loader';
+import { useAuth } from '../../routes/AuthContext';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -460,7 +461,10 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Dashboard() {
 
-    sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
+    const {setActiveListItem} = useAuth()
+
+    // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
+    setActiveListItem('/dashboardreceptionist')
 
     const [allData, setAllData] = useState(null);
 

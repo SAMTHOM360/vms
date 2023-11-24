@@ -286,6 +286,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Header from '../Header';
+import { useAuth } from '../../routes/AuthContext';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 const rowsPerPage = 10;
@@ -305,7 +306,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CompanyTable = () => {
-  sessionStorage.setItem('activeListItem', '/companyDetails')
+  const {setActiveListItem} = useAuth()
+  // sessionStorage.setItem('activeListItem', '/companyDetails')
+  setActiveListItem('/companyDetails')
   const [page, setPage] = useState(0);
   const [companies, setCompanies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');

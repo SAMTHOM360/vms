@@ -32,10 +32,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
 
 const Employee = () => {
-  const { isLimitReached, setIsNavBar, setIsSideBar } = useAuth();
+  const { isLimitReached, setIsNavBar, setIsSideBar, setActiveListItem } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
-  sessionStorage.setItem('activeListItem', '/employee')
+  // sessionStorage.setItem('activeListItem', '/employee')
+  setActiveListItem('/employee')
   const AuthToken = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const limit = sessionStorage.getItem("limit");

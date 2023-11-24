@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRef } from "react";
 
 import img1 from "../../assets/6173954.jpg";
 
@@ -30,6 +31,7 @@ import {
 } from "@mui/material";
 
 import Loader from "../Loader";
+import { useEffect } from "react";
 
 export default function MeetingTimeline({ timelineApiData }) {
   // const BASE_URL1 = "http://192.168.12.58:8080/api";
@@ -63,6 +65,16 @@ export default function MeetingTimeline({ timelineApiData }) {
     status: "",
   });
 
+  const forceUpdateRef = useRef(null);
+
+  const forceUpdate = () => {
+    setMeetByIdData((prevData) => ({ ...prevData }));
+  };
+
+  useEffect(() => {
+    forceUpdateRef.current = forceUpdate;
+  }, []);
+
   const [openMeetDialog, setOpenMeetDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +89,7 @@ export default function MeetingTimeline({ timelineApiData }) {
       );
       if (response.status === 200) {
         const apiData = response.data.data;
-        // console.log("Api data", apiData);
+        console.log("Api data", apiData);
         setMeetByIdData({
           meetId: apiData.id || "",
           vistorId: apiData.visitor.id || "",
@@ -89,7 +101,8 @@ export default function MeetingTimeline({ timelineApiData }) {
           userId: apiData.user.id || "",
           meetType: apiData.context || "",
           // meetTime: apiData.checkInDateTime || '',
-          meetTime: apiData.meetingStartDateTime || "",
+          meetTime:
+            formatMeetingStartDateTime(apiData.meetingStartDateTime) || "",
           remarks: apiData.remarks || "",
           status: apiData.status || "",
         });
@@ -144,6 +157,9 @@ export default function MeetingTimeline({ timelineApiData }) {
         });
         // console.log("Meet update response", response);
         setOpenMeetDialog(false);
+        if (typeof forceUpdateRef.current === "function") {
+          forceUpdateRef.current();
+        }
       }
     } catch (error) {
       toast.error("Something went wrong !!", {
@@ -195,6 +211,9 @@ export default function MeetingTimeline({ timelineApiData }) {
       }
       // console.log("Meet update response", response);
       handleMeetDialogClose();
+      if (typeof forceUpdateRef.current === "function") {
+        forceUpdateRef.current();
+      }
     } catch (error) {
       toast.error("Something went wrong !!", {
         position: "top-right",
@@ -221,11 +240,53 @@ export default function MeetingTimeline({ timelineApiData }) {
     return null;
   }
 
+  //DONT REMOVE
+
+  // function formatMeetingStartDateTime(timestamp) {
+  //   if (timestamp === "") {
+  //     return " N/A";
+  //   }
+  //   const date = new Date(timestamp);
+
+  //   const meetingDate = date.toLocaleDateString("en-US", {
+  //     day: "2-digit",
+  //     month: "short",
+  //   });
+  //   const meetingStartTime = date.toLocaleTimeString("en-US", {
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     hour12: true,
+  //   });
+
+  //   return `${meetingDate} | ${meetingStartTime}`;
+  // }
+
+  // function formatMeetingEndDateTime(timestamp) {
+  //   if (timestamp === "") {
+  //     return " N/A";
+  //   }
+
+  //   const date = new Date(timestamp);
+  //   const meetingEndTime = date.toLocaleTimeString("en-US", {
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     hour12: true,
+  //   });
+
+  //   return ` ${meetingEndTime}`;
+  // }
+
+  //DONT REMOVE
+
   function formatMeetingStartDateTime(timestamp) {
     if (timestamp === "") {
       return " N/A";
     }
     const date = new Date(timestamp);
+
+    // Convert the date to IST
+    date.setUTCHours(date.getUTCHours() + 5); // Adding 5 hours for IST
+    date.setUTCMinutes(date.getUTCMinutes() + 30); // Adding 30 minutes for IST
 
     const meetingDate = date.toLocaleDateString("en-US", {
       day: "2-digit",
@@ -246,13 +307,18 @@ export default function MeetingTimeline({ timelineApiData }) {
     }
 
     const date = new Date(timestamp);
+
+    // Convert the date to IST
+    date.setUTCHours(date.getUTCHours() + 5); // Adding 5 hours for IST
+    date.setUTCMinutes(date.getUTCMinutes() + 30); // Adding 30 minutes for IST
+
     const meetingEndTime = date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
     });
 
-    return ` ${meetingEndTime}`;
+    return `${meetingEndTime}`;
   }
 
   return (
@@ -330,21 +396,20 @@ export default function MeetingTimeline({ timelineApiData }) {
               dataItem.status === "COMPLETED" ||
               dataItem.status === "CANCELLED")
           ) {
-            // console.log("dataitem data", dataItem)
+            console.log("dataitem data", timelineApiData.length)
 
             return (
-              <TimelineItem key={index}>
+              <TimelineItem
+                key={index}
+                // onClick={() => handleMeetDialogOpen(dataItem)}
+              >
                 <TimelineSeparator>
                   <TimelineDot
                     sx={{
                       background: dotColor,
                     }}
                   />
-                  {index !== timelineApiData.length - 1 && (
-                    <TimelineConnector
-                    //  sx={{bgcolor:dotColor}}
-                    />
-                  )}
+        {index !== timelineApiData.length - 1 && <TimelineConnector />}
                 </TimelineSeparator>
                 <TimelineContent>
                   <Box
@@ -391,7 +456,7 @@ export default function MeetingTimeline({ timelineApiData }) {
                             bgcolor: "",
                           }}
                         >
-                          {formattedMeetingStartDateTime} -
+                          {formattedMeetingStartDateTime} -{" "}
                           {formattedMeetingEndDateTime} {roomNo}
                         </Typography>
                       </Box>
@@ -491,9 +556,7 @@ if (
             }}
           >
             <CloseIcon
-              sx={{ color: "#FFFFFF", fontSize: "25px", fontWeight: "800",
-            
-            }}
+              sx={{ color: "#FFFFFF", fontSize: "25px", fontWeight: "800" }}
             />
           </Button>
         </DialogTitle>

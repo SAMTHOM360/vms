@@ -90,7 +90,7 @@ export default function Navbar({ toggleSidebar }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { logout } = useAuth();
+  const { logout, autoStatusChange, setAutoStatusChange } = useAuth();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
@@ -155,10 +155,10 @@ export default function Navbar({ toggleSidebar }) {
 
 
   let statusDot = '#FFFFFF';
-  if(statusDotstatus === false){
+  if(autoStatusChange === false){
     statusDot = "#FF0000"
   }
-  if (statusDotstatus === true) {
+  if (autoStatusChange === true) {
     statusDot = "#34E60C";
   }
 
@@ -196,11 +196,13 @@ export default function Navbar({ toggleSidebar }) {
       const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        // console.log("nav data", apiData)
+        console.log("nav data", apiData)
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
         setStatusDotStatus(apiData.isPresent);
+        setAutoStatusChange(apiData.isPresent)
+        
         // const apiData = response;
         // console.log("apidata", apiData);
         setFormData({

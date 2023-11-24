@@ -11,8 +11,11 @@ export const AuthProvider = ({ children }) => {
   const [isLimitReached, setIsLimitReached] = useState(false)
   const [ isNavBar, setIsNavBar ] = useState(false)
   const [ isSideBar, setIsSideBar ] = useState(false)
+  // const [ autoStatusChange, setAutoStatusChange ] = useState(sessionStorage.getItem('autoStatusChange' || ''))
+  const [ autoStatusChange, setAutoStatusChange ] = useState()
+  const [ activeListItem, setActiveListItem ] = useState()
 
-  // console.log("Parent call", isNavBar)
+  console.log("Parent call", autoStatusChange)
 
 
   // useEffect(() => {
@@ -53,7 +56,11 @@ export const AuthProvider = ({ children }) => {
         Cookies.set('userRole', role);
       }
     }
-  }, []);
+
+
+    // setAutoStatusChange((prev) => !prev);
+    // setAutoStatusChange(sessionStorage.getItem('autoStatusChange'))
+  }, [authenticated]);
 
   const setUserRoleAndAuth = (role) => {
     setUserRole(role);
@@ -82,7 +89,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem }}>
       {children}
     </AuthContext.Provider>
   );

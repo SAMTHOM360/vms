@@ -5,19 +5,7 @@ import Sidebar from "../global/Sidebar";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
 import {
-  Paper,
-  Box,
-  Chip,
-  Typography,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControlLabel,
-  Switch,
-  Button,
-  TextField,
+  Paper,Box,Chip,Typography,Avatar,Dialog,DialogTitle,DialogContent,DialogActions,FormControlLabel,Switch,Button,TextField,
   FormControl,
   MenuItem,
   Select,
@@ -34,9 +22,10 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from "../routes/AuthContext";
 
 const Profile = () => {
-  sessionStorage.setItem('activeListItem', '/profile')
+  // sessionStorage.setItem('activeListItem', '/profile')
   const BASE_URL = "http://192.168.12.54:8080/api/user";
   // const BASE_URL = "http://192.168.12.58:8080/api/user";
   const IMG_RESPONSE_URL = "http://192.168.12.54:8080/vis/upload";
@@ -63,6 +52,7 @@ const Profile = () => {
     "Content-Type": "multipart/form-data",
   };
 
+  const {setAutoStatusChange, setActiveListItem} = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isPresent, setIsPresent] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
@@ -106,6 +96,7 @@ const Profile = () => {
   });
   const [editedBasicInfo, setEditedBasicInfo] = useState()
   const [editedAddressInfo, setEditedAddressInfo] = useState()
+  setActiveListItem('/profile')
 
   useEffect(() => {
     fetchData();
@@ -217,6 +208,7 @@ const Profile = () => {
           theme: "light",
         });
         setIsPresent(true);
+        setAutoStatusChange(true)
       }
     } catch (error) {
       toast.error('Something went wrong !', {
@@ -255,6 +247,8 @@ const Profile = () => {
           theme: "light",
         });
         setIsPresent(false);
+        setAutoStatusChange(false)
+
       }
     } catch (error) {
       toast.error('Something went wrong !', {
