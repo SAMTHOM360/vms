@@ -171,6 +171,7 @@ const EmpDashboard = () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
     await fetchData(formattedToday, formattedToday);
+    setSelectedFilter('today')
   };
 
   const handleThisWeekClick = async () => {
