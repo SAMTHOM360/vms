@@ -74,7 +74,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Meetings() {
 
   sessionStorage.setItem('activeListItem', '/meetings')
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -496,88 +496,88 @@ export default function Meetings() {
     const endTimestamp = meeting.checkOutDateTime;
 
     if (endTimestamp != null) {
-        const endDate = new Date(endTimestamp);
+      const endDate = new Date(endTimestamp);
 
-        endDate.setHours(endDate.getHours() - 5);
-        endDate.setMinutes(endDate.getMinutes() - 30);
+      endDate.setHours(endDate.getHours() - 5);
+      endDate.setMinutes(endDate.getMinutes() - 30);
 
-        const options = {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            timeZone: 'Asia/Kolkata', // Set the timezone to IST
-        };
+      const options = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        timeZone: 'Asia/Kolkata', // Set the timezone to IST
+      };
 
-        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+      const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
 
-        let hours = endDate.getHours();
-        const amPm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+      let hours = endDate.getHours();
+      const amPm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
 
-        // Manually construct the time in 12-hour format (hh:mm AM/PM)
-        const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+      // Manually construct the time in 12-hour format (hh:mm AM/PM)
+      const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
 
-        return `${formattedDate}, ${formattedTime}`;
+      return `${formattedDate}, ${formattedTime}`;
     }
-}
+  }
 
 
-function formatMeetingDuration(meeting) {
+  function formatMeetingDuration(meeting) {
     const endTimestamp = meeting.checkInDateTime;
 
     if (endTimestamp != null) {
-        const endDate = new Date(endTimestamp);
+      const endDate = new Date(endTimestamp);
 
-        endDate.setHours(endDate.getHours() - 5);
-        endDate.setMinutes(endDate.getMinutes() - 30);
+      endDate.setHours(endDate.getHours() - 5);
+      endDate.setMinutes(endDate.getMinutes() - 30);
 
-        const options = {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            timeZone: 'Asia/Kolkata', // Set the timezone to IST
-        };
+      const options = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        timeZone: 'Asia/Kolkata', // Set the timezone to IST
+      };
 
-        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+      const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
 
-        let hours = endDate.getHours();
-        const amPm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
+      let hours = endDate.getHours();
+      const amPm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
 
-        // Manually construct the time in 12-hour format (hh:mm AM/PM)
-        const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+      // Manually construct the time in 12-hour format (hh:mm AM/PM)
+      const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
 
-        return `${formattedDate}, ${formattedTime}`;
+      return `${formattedDate}, ${formattedTime}`;
     }
-}
+  }
 
-console.log(meetings,"whyyyyy")
-
-
-//universal search
-
-const [searchQuery, setSearchQuery] = useState('');
-
-const filteredCompanies = visitors.filter(company => {
-  const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
-  return (
-    (company.visitor.name?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.email?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.phoneNumber?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.companyName?.toLowerCase()?.includes(searchTerm) || '') ||
-   
-    (company.visitor.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.remarks?.toLowerCase()?.includes(searchTerm) || '') ||
-    (company.visitor.status?.toLowerCase()?.includes(searchTerm) || '') 
-    // (company.createdBy?.toLowerCase()?.includes(searchTerm) || '')
-  );
-});
+  console.log(meetings, "whyyyyy")
 
 
-const handleSearch = event => {
-  setSearchQuery(event.target.value); // Update search query state
-};
+  //universal search
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredCompanies = visitors.filter(company => {
+    const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
+    return (
+      (company.visitor.name?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.email?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.phoneNumber?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.companyName?.toLowerCase()?.includes(searchTerm) || '') ||
+
+      (company.visitor.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.remarks?.toLowerCase()?.includes(searchTerm) || '') ||
+      (company.visitor.status?.toLowerCase()?.includes(searchTerm) || '')
+      // (company.createdBy?.toLowerCase()?.includes(searchTerm) || '')
+    );
+  });
+
+
+  const handleSearch = event => {
+    setSearchQuery(event.target.value); // Update search query state
+  };
 
 
 
@@ -814,7 +814,7 @@ const handleSearch = event => {
                             }}
                             noValidate
                             autoComplete="off"
-                            // style={{display:"flex",justifyContent:"space-evenly"}}
+                          // style={{display:"flex",justifyContent:"space-evenly"}}
                           >
                             <Grid
                               style={{
@@ -916,9 +916,9 @@ const handleSearch = event => {
                                       value={endDate}
                                       onChange={handleEndDateChange}
 
-                                      //searchcriteria code
-                                      //                                                             value={searchCriteria.endDate}
-                                      //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
+                                    //searchcriteria code
+                                    //                                                             value={searchCriteria.endDate}
+                                    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
                                     />
                                   </DemoContainer>
                                 </LocalizationProvider>
@@ -1021,7 +1021,7 @@ const handleSearch = event => {
                                     {visitor.status}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {visitor.room !== null ?visitor.room.roomName : ''}
+                                    {visitor.room !== null ? visitor.room.roomName : ''}
                                   </TableCell>
                                   <TableCell align="left">
                                     {/*                                                            
@@ -1034,7 +1034,7 @@ const handleSearch = event => {
                                                             )} */}
 
 
-                                                            {/* zzzzzzzzz */}
+                                    {/* zzzzzzzzz */}
 
                                     {/* {visitor.status === "COMPLETED" ||
                                     visitor.status === "CANCELLED" ||
@@ -1098,67 +1098,67 @@ const handleSearch = event => {
 
 
                                     {
-  visitor.status === 'APPROVED' ? (
-    <div className="status">
-       <CheckIcon
-      style={{
-        // cursor: 'pointer',
-        color: 'lightgray',
-        marginRight: '10px',
-        pointerEvents: "none"
-      }}
-    />
-    <ClearIcon
-    style={{ cursor: 'pointer' }}
-    onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-  />
+                                      visitor.status === 'APPROVED' ? (
+                                        <div className="status">
+                                          <CheckIcon
+                                            style={{
+                                              // cursor: 'pointer',
+                                              color: 'lightgray',
+                                              marginRight: '10px',
+                                              pointerEvents: "none"
+                                            }}
+                                          />
+                                          <ClearIcon
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+                                          />
 
-    </div>
-   
-
+                                        </div>
 
 
-  ) : visitor.status === 'CANCELLED' ||
-    visitor.status === 'CANCELLED_BY_VISITOR' ||
-    visitor.status === 'INPROCESS' ? (
-    <>
-      <div className="status">
-        <CheckIcon
-          style={{
-            cursor: 'pointer',
-            color: 'lightgray',
-            marginRight: '10px',
-            pointerEvents: "none"
-          }}
-          onClick={() => handleAddMeeting(visitor, 'APPROVED')}
-        />
-        <ClearIcon
-          style={{
-            cursor: 'pointer',
-            color: 'lightgray',
-          }}
-          onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-        />
-      </div>
-    </>
-  ) : (
-    <>
-      <div className="status">
-        <CheckIcon
-          style={{
-            cursor: 'pointer',
-            marginRight: '10px',
-          }}
-          onClick={() => handleAddMeeting(visitor, 'APPROVED')}
-        />
-        <ClearIcon
-          style={{ cursor: 'pointer' }}
-          onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-        />
-      </div>
-    </>
-  )
-}
+
+
+                                      ) : visitor.status === 'CANCELLED' ||
+                                        visitor.status === 'CANCELLED_BY_VISITOR' ||
+                                        visitor.status === 'INPROCESS' ? (
+                                        <>
+                                          <div className="status">
+                                            <CheckIcon
+                                              style={{
+                                                cursor: 'pointer',
+                                                color: 'lightgray',
+                                                marginRight: '10px',
+                                                pointerEvents: "none"
+                                              }}
+                                              onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+                                            />
+                                            <ClearIcon
+                                              style={{
+                                                cursor: 'pointer',
+                                                color: 'lightgray',
+                                              }}
+                                              onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+                                            />
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <div className="status">
+                                            <CheckIcon
+                                              style={{
+                                                cursor: 'pointer',
+                                                marginRight: '10px',
+                                              }}
+                                              onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+                                            />
+                                            <ClearIcon
+                                              style={{ cursor: 'pointer' }}
+                                              onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+                                            />
+                                          </div>
+                                        </>
+                                      )
+                                    }
 
 
                                     {/* <CheckIcon style={{cursor:"pointer"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
