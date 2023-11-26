@@ -1,21 +1,21 @@
 import * as React from "react";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import TimelineDot from "@mui/lab/TimelineDot";
+// import TimelineSeparator from "@mui/lab/TimelineSeparator";
+// import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineContent from "@mui/lab/TimelineContent";
 import { Box, Typography } from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
+// import ImageIcon from "@mui/icons-material/Image";
 import Chip from "@mui/material/Chip";
-import { TimelineConnector } from "@mui/lab";
+// import { TimelineConnector } from "@mui/lab";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
+// import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+// import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import {
   Dialog,
   DialogTitle,
