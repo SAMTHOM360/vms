@@ -1122,7 +1122,7 @@ export default function Meetings() {
 
 
 
-                                      ) : visitor.status === 'CANCELLED' ||
+                                      ) : visitor.status === 'CANCELLED' || visitor.status === 'COMPLETED' ||
                                         visitor.status === 'CANCELLED_BY_VISITOR' ||
                                         visitor.status === 'INPROCESS' ? (
                                         <>
@@ -1134,14 +1134,14 @@ export default function Meetings() {
                                                 marginRight: '10px',
                                                 pointerEvents: "none"
                                               }}
-                                              onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+                                              // onClick={() => handleAddMeeting(visitor, 'APPROVED')}
                                             />
                                             <ClearIcon
                                               style={{
                                                 cursor: 'pointer',
                                                 color: 'lightgray',
                                               }}
-                                              onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+                                              // onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
                                             />
                                           </div>
                                         </>
