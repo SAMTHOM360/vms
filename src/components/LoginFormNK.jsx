@@ -320,7 +320,7 @@ function LoginForm() {
         // localStorage.setItem('adminId', adminId)
 
         sessionStorage.setItem("token", token);
-        sessionStorage.setItem("companyId", companyId);
+        // sessionStorage.setItem("companyId", companyId);
         sessionStorage.setItem("adminId", adminId);
 
         setAuthenticated(true);

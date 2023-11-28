@@ -96,7 +96,9 @@ const Profile = () => {
   });
   const [editedBasicInfo, setEditedBasicInfo] = useState()
   const [editedAddressInfo, setEditedAddressInfo] = useState()
-  setActiveListItem('/profile')
+  useEffect(() => {
+    setActiveListItem('/profile')
+  }, [setActiveListItem])
 
   useEffect(() => {
     fetchData();

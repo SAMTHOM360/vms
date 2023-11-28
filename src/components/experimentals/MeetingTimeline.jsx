@@ -383,7 +383,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
               dataItem.status === "COMPLETED" ||
               dataItem.status === "CANCELLED")
           ) {
-            console.log("dataitem data", timelineApiData.length)
+            // console.log("dataitem data", timelineApiData.length)
 
             return (
               <TimelineItem

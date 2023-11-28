@@ -308,7 +308,9 @@ const Item = styled(Paper)(({ theme }) => ({
 const CompanyTable = () => {
   const {setActiveListItem} = useAuth()
   // sessionStorage.setItem('activeListItem', '/companyDetails')
-  setActiveListItem('/companyDetails')
+  useEffect(() => {
+    setActiveListItem('/companyDetails')
+  }, [setActiveListItem])
   const [page, setPage] = useState(0);
   const [companies, setCompanies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');

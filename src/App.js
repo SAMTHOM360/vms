@@ -142,6 +142,7 @@ const Profile = lazy(() => import('./components/Profile'));
 const DynamicIdCard = lazy(() => import('./components/experimentals/DynamicIdCard'));
 const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
 const DemoDashboardV2 = lazy(() => import('./components/experimentals/DemoDashboardV2'));
+const Department = lazy(() => import('./components/experimentals/Department'));
 
 
 function App() {
@@ -151,7 +152,7 @@ function App() {
   // const currentPath = window.location.pathname;
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
-  const isExcludedRoute = !['/', '/lost'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRoute = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
 
   const toggleSidebar = () => {
@@ -198,6 +199,7 @@ function App() {
 {/* <Route path="/employee" element={<Employee />} /> */}
 {/* <Route path='/bulkform' element={<BulkUserForm />} /> */}
 <Route path='/demodashboard' element={<DemoDashboardV2 />} />
+<Route path='/demodept' element={<Department />} />
 
   <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />

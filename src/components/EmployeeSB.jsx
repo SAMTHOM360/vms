@@ -32,11 +32,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
 
 const Employee = () => {
-  const { isLimitReached, setIsNavBar, setIsSideBar, setActiveListItem } = useAuth();
+  const { isLimitReached, setIsNavBar, setIsSideBar, setActiveListItem } =
+    useAuth();
 
   // console.log("isLimitReached", isLimitReached)
   // sessionStorage.setItem('activeListItem', '/employee')
-  setActiveListItem('/employee')
+  useEffect(() => {
+    setActiveListItem('/employee')
+  }, [setActiveListItem])
   const AuthToken = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const limit = sessionStorage.getItem("limit");
@@ -280,6 +283,8 @@ const Employee = () => {
 
       const apiDataArray = response.data;
 
+      console.log("apidata index 0", apiDataArray[0].departmentDto);
+
       sessionStorage.setItem("currEmpLength", apiDataArray.length);
 
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
@@ -333,6 +338,13 @@ const Employee = () => {
           headerAlign: "center",
         },
         {
+          field: "dept",
+          headerName: "Department",
+          flex: 1,
+          align: "center",
+          headerAlign: "center",
+        },
+        {
           field: "role",
           headerName: "Role",
           flex: 1,
@@ -378,8 +390,9 @@ const Employee = () => {
         lastName: apiDataItem.lastName,
         phone: apiDataItem.phone,
         email: apiDataItem.email,
-        company: apiDataItem.company.name,
-        role: apiDataItem.role.name,
+        company: apiDataItem.company ? apiDataItem.company.name : "",
+        dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
+        role: apiDataItem.role ? apiDataItem.role.name : "",
       }));
 
       setColumns(gridColumns);
@@ -426,7 +439,6 @@ const Employee = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-
   return (
     <>
       <Loader isLoading={loading} />
@@ -469,7 +481,7 @@ const Employee = () => {
                     <Button
                       variant="contained"
                       size="small"
-                      sx={{ marginLeft: "1.2em", height: "3em", width:'11em' }}
+                      sx={{ marginLeft: "1.2em", height: "3em", width: "11em" }}
                       onClick={handleOpenSingleUserForm}
                     >
                       Add a User
@@ -479,7 +491,7 @@ const Employee = () => {
                       <Button
                         variant="contained"
                         size="small"
-                        sx={{ margin: "1.2em", height: "3em", width:'11em' }}
+                        sx={{ margin: "1.2em", height: "3em", width: "11em" }}
                         onClick={handleOpenBulkUsersForm}
                       >
                         Add Bulk Users
@@ -611,7 +623,7 @@ const Employee = () => {
             </DialogTitle>
             <DialogContent>
               {editedItem && (
-                <form style={{ width: "380px", }}>
+                <form style={{ width: "380px" }}>
                   <TextField
                     size="small"
                     sx={{ mt: "1em" }}
@@ -674,14 +686,10 @@ const Employee = () => {
                 required
               /> */}
 
-                  <FormControl 
-                  fullWidth 
-                  size='small'
-                  sx={{ mt: '1em', }}
-                  >
+                  <FormControl fullWidth size="small" sx={{ mt: "1em" }}>
                     <InputLabel required>Role</InputLabel>
                     <Select
-                    label='Role'
+                      label="Role"
                       value={editedItem.role}
                       required
                       onChange={(e) => {

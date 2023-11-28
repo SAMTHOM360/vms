@@ -31,7 +31,8 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
 
   const token = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
-  const companyId = sessionStorage.getItem("companyId");
+  const companyIdStr = sessionStorage.getItem("companyId");
+  const companyId = parseInt(companyIdStr,10)
   const companyName = sessionStorage.getItem("companyName");
 
   const headers = {
@@ -57,6 +58,10 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
       id: "",
       name: "",
     },
+    dept: {
+      id: '',
+      name: '',
+    },
     role: {
       id: "",
       name: "",
@@ -70,12 +75,14 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
       name: "",
     },
   });
+  console.log("form data", formData)
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [roles, setRoles] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [dobDate, setDobDate] = useState("");
   const [cleared, setCleared] = useState(false);
+  const [ depts, setDepts ] = useState([])
 
   const [loading, setLoading] = useState(false);
 
@@ -197,6 +204,10 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     }
   }, []);
 
+  useEffect(() => {
+    fetchDepts()
+  }, [companyId])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -237,7 +248,18 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
           name: selectedCity ? selectedCity.name : "",
         },
       });
-    } else if (name === "role") {
+    } 
+    else if (name === "dept") {
+      const selectedDept = depts.find((dept) => dept.id === value);
+      setFormData({
+        ...formData,
+        [name]: {
+          id: value,
+          name: selectedDept ? selectedDept.name : "",
+        },
+      });
+    }
+    else if (name === "role") {
       const selectedRole = roles.find((role) => role.id === value);
       setFormData({
         ...formData,
@@ -247,6 +269,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         },
       });
     }
+
     else if (name === "company") {
       if (loggedUserRole === "SUPERADMIN") {
         const selectedCompany = companies.find(
@@ -289,6 +312,17 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     }
   };
 
+  const fetchDepts = async () => {
+    try{
+      const response = await axios.get(`http://192.168.12.58:8080/api/department/companyId?companyId=${companyId}`)
+      const deptApiData = response.data.data
+      // console.log("dept data", response.data.data)
+      setDepts(deptApiData)
+    } catch(error) {
+      console.error("Error in fetching depts", error)
+    }
+  }
+
   const handleDateChange = (date) => {
     const adjustedDate = date ? date.add(1, "day") : null;
 
@@ -320,6 +354,9 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
       company: {
         id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
       },
+      departmentDto: {
+        id: formData.dept.id,
+      },
       role: {
         id: formData.role.id,
       },
@@ -331,10 +368,12 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
       },
     };
 
+      console.log("user" , user)
+
     try {
       setLoading(true);
       let response = await axios.post(
-        "http://192.168.12.54:8080/api/user/adduser",
+        "http://192.168.12.58:8080/api/user/adduser",
         user,
         { headers }
       );
@@ -354,10 +393,11 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
           gender: "",
           govtId: "",
           pincode: "",
-          company: { id: "" },
-          role: { id: "" },
-          state: { id: "" },
-          city: { id: "" },
+          company: { id: "", name: '' },
+          dept: {id: '', name: '',},
+          role: { id: "", name: '', },
+          state: { id: "", name: '', },
+          city: { id: "", name: '', },
         });
         toast.success("New Employee Added Successfully.", {
           position: "top-right",
@@ -369,10 +409,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
           progress: undefined,
           theme: "light",
         });
-      } else {
-        alert(
-          "Error in submitting data: " + JSON.stringify(response.data.response)
-        );
       }
     } catch (error) {
       alert("Error submitting user data", error);
@@ -441,7 +477,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                 onSubmit={handleSubmit}
               >
                 <Grid container spacing={2} sx={{ mt: "10px" }}>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="First Name"
@@ -453,7 +489,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Last Name"
@@ -465,7 +501,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Phone"
@@ -489,7 +525,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <TextField
                       sx={{ width: "100%", mt: "10px" }}
                       label="Email"
@@ -502,7 +538,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         sx={{ width: "100%", mt: "10px" }}
@@ -520,7 +556,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     </LocalizationProvider>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
                     <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Gender
@@ -540,7 +576,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={6} lg={6}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl sx={{ width: "100%", mt: "10px" }} required>
                       <InputLabel htmlFor="state">State</InputLabel>
                       <Select
@@ -566,7 +602,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={6} lg={6}>
+                  <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl sx={{ width: "100%", mt: "10px" }} required>
                       <InputLabel htmlFor="city">City</InputLabel>
                       <Select
@@ -590,6 +626,30 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                         ))}
                       </Select>
                     </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <TextField
+                      sx={{ width: "100%", mt: "10px" }}
+                      label="PIN Code"
+                      name="pincode"
+                      value={formData.pincode}
+                      inputProps={{
+                        pattern: "^[0-9]*",
+                        onInput: (event) => {
+                          let value = event.target.value;
+                          value = value.replace(/\D/g, "");
+                          if (value.length > 6) {
+                            value = value.slice(0, 6);
+                          }
+                          setFormData({
+                            ...formData,
+                            pincode: value,
+                          });
+                        },
+                      }}
+                      required
+                    />
                   </Grid>
 
                   <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -621,25 +681,6 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                       error={Boolean(error)}
                       helperText={error || warning}
                     />
-                  </Grid>
-
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <FormControl sx={{ width: "100%", mt: "10px" }} required>
-                      <InputLabel htmlFor="role">Role</InputLabel>
-                      <Select
-                        label="Role"
-                        name="role"
-                        value={formData.role.id || ""}
-                        onChange={handleChange}
-                        required
-                      >
-                        {roles.map((role) => (
-                          <MenuItem key={role.id} value={role.id}>
-                            {role.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
                   </Grid>
 
                   <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -680,28 +721,43 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
                   </Grid>
 
                   <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <TextField
-                      sx={{ width: "100%", mt: "10px" }}
-                      label="PIN Code"
-                      name="pincode"
-                      value={formData.pincode}
-                      inputProps={{
-                        pattern: "^[0-9]*",
-                        onInput: (event) => {
-                          let value = event.target.value;
-                          value = value.replace(/\D/g, "");
-                          if (value.length > 6) {
-                            value = value.slice(0, 6);
-                          }
-                          setFormData({
-                            ...formData,
-                            pincode: value,
-                          });
-                        },
-                      }}
-                      required
-                    />
+                    <FormControl sx={{ width: "100%", mt: "10px" }} required>
+                      <InputLabel htmlFor="dept">Department</InputLabel>
+                      <Select
+                        label="Department"
+                        name="dept"
+                        value={formData.dept.id || ""}
+                        onChange={handleChange}
+                        required
+                      >
+                        {depts.map((dept) => (
+                          <MenuItem key={dept.id} value={dept.id}>
+                            {dept.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
+
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <FormControl sx={{ width: "100%", mt: "10px" }} required>
+                      <InputLabel htmlFor="role">Role</InputLabel>
+                      <Select
+                        label="Role"
+                        name="role"
+                        value={formData.role.id || ""}
+                        onChange={handleChange}
+                        required
+                      >
+                        {roles.map((role) => (
+                          <MenuItem key={role.id} value={role.id}>
+                            {role.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
                 </Grid>
 
                 <Box

@@ -103,7 +103,9 @@ const rowsPerPage = 10;
 export default function Dashboard() {
     const {setActiveListItem} = useAuth()
     // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
-    setActiveListItem('/receptionistdashboard')
+    useEffect(() => {
+        setActiveListItem('/receptionistdashboard')
+      }, [setActiveListItem])
 
     //pagination and filter
 

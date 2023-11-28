@@ -76,7 +76,9 @@ export default function Meetings() {
   const {setActiveListItem} = useAuth()
 
   // sessionStorage.setItem('activeListItem', '/meetings')
-  setActiveListItem('/meetings')
+  useEffect(() => {
+    setActiveListItem('/meetings')
+  }, [setActiveListItem])
     const navigate = useNavigate()
 
   //pagination

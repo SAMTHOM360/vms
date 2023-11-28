@@ -34,14 +34,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../routes/AuthContext";
 
 const EmpDashboard = () => {
-  // const BASE_URL1 = "http://192.168.12.58:8080/api";
   const { setIsNavBar, setIsSideBar, setActiveListItem } = useAuth();
+  // const BASE_URL1 = "http://192.168.12.58:8080/api";
   const BASE_URL1 = 'http://192.168.12.54:8080/api'
   // const BASE_URL1 = 'http://192.168.12.60:8080/api'
   // const BASE_URL = 'http://192.168.12.54:8080/api'
 
   // sessionStorage.setItem('activeListItem', '/empdashboard')
-  setActiveListItem('/empdashboard')
+  useEffect(() => {
+    setActiveListItem('/empdashboard')
+  }, [setActiveListItem])
   const adminId = sessionStorage.getItem("adminId");
   // const token = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");

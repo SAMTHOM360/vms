@@ -40,3 +40,8 @@ html, body, #root, .app, .content {
 ::-webkit-scrollbar-thumb:hover{
   background: #555;
 }
+
+
+.demo{
+  color: #6c6c6c9b;
+}

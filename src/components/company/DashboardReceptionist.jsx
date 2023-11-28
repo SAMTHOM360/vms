@@ -48,7 +48,9 @@ export default function Dashboard() {
     const {setActiveListItem} = useAuth()
 
     // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
-    setActiveListItem('/dashboardreceptionist')
+    useEffect(() => {
+        setActiveListItem('/dashboardreceptionist')
+      }, [setActiveListItem])
 
     const [allData, setAllData] = useState(null);
 

@@ -9,6 +9,12 @@ import {
   DialogActions,
   Button,
   TextField,
+  List,
+  ListItem,
+  Popover,
+  Avatar,
+  Divider,
+  Tooltip,
 } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -28,6 +34,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PersonIcon from "@mui/icons-material/Person";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
@@ -82,18 +89,42 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar({ toggleSidebar }) {
+  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  const BASE_URL = "http://192.168.12.54:8080/api";
+
+  const AuthToken = sessionStorage.getItem("token");
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${AuthToken}`,
+    },
+  });
+
+  const headers = {
+    Authorization: `Bearer ${AuthToken}`,
+  };
+
   const adminId = sessionStorage.getItem("adminId");
   const loggedUserName = sessionStorage.getItem("loggedUserName");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const loggedUserUsername = sessionStorage.getItem("loggedUserUsername");
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
   const { logout, autoStatusChange, setAutoStatusChange } = useAuth();
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
+  const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false)
+
+  const [bellAnchorEl, setBellAnchorEl] = useState(null);
+  const [bellMenu, setBellMenu] = useState(false);
+  const [bellMenuItem, setBellMenuItem] = useState([]);
+  const [isBellVisible, setIsBellVisible] = useState(false);
+  const [bellBadgeCount, setBellBadgeCount] = useState();
 
   useEffect(() => {
     if (loggedUserRole === "SUPERADMIN") {
@@ -102,8 +133,22 @@ export default function Navbar({ toggleSidebar }) {
       setIsSUPERADMIN(false);
     }
 
+    if(loggedUserRole === "RECEPTIONIST"){
+      setIsRECEPTIONIST(true)
+    } else {
+      setIsRECEPTIONIST(false)
+    }
   }, [loggedUserRole]);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchNotification();
+  }, [isRECEPTIONIST])
+
+  
   const companyName = sessionStorage.getItem("companyName");
 
   const [formData, setFormData] = useState({
@@ -116,7 +161,7 @@ export default function Navbar({ toggleSidebar }) {
     gender: "",
     govtId: "",
     image: "",
-    departmentDto: {
+    dept: {
       id: "",
       name: "",
     },
@@ -152,57 +197,194 @@ export default function Navbar({ toggleSidebar }) {
     setShowPassword(!showPassword);
   };
 
-
-
-  let statusDot = '#FFFFFF';
-  if(autoStatusChange === false){
-    statusDot = "#FF0000"
+  let statusDot = "#FFFFFF";
+  if (autoStatusChange === false) {
+    statusDot = "#FF0000";
   }
   if (autoStatusChange === true) {
     statusDot = "#34E60C";
   }
 
-  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
-  const BASE_URL = "http://192.168.12.54:8080/api/user";
-
-  const AuthToken = sessionStorage.getItem("token");
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${AuthToken}`,
-    },
-  });
-
-  const headers = {
-    Authorization: `Bearer ${AuthToken}`,
-  };
-
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
-
-    setTimeout(() => {
-      setAnchorEl(null);
-    }, 4500);
+    setIsMenuOpen(true);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const calculateTimeAgo = (createdAt) => {
+    const notificationTime = new Date(createdAt);
+    const currentTime = new Date();
+
+    const timeDifference = currentTime - notificationTime;
+    const minutes = Math.floor(timeDifference / (1000 * 60));
+    const hours = Math.floor(minutes / 60);
+
+    if (minutes < 1) {
+      return "Just now";
+    } else if (hours < 1) {
+      return `${minutes} min ago`;
+    } else if (hours < 24) {
+      return `${hours} hr ago`;
+    } else {
+      return notificationTime.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+    }
+  };
+
+  async function fetchNotification() {
+    try {
+      const response = await axiosInstance.get(
+        `${BASE_URL}/notification/pending-request`,
+        { headers }
+      );
+      console.log("notfication api data", response.data.data);
+      const bellAPiData = response.data.data;
+
+      // console.log("bell api data", bellAPiData);
+      if (!bellAPiData || bellAPiData.length === 0) {
+        return null;
+      }
+
+      const unseenCount = bellAPiData.filter((item) => !item.seen).length;
+
+      const bellmenuItemm = (
+        <List
+          sx={{
+            width: "23em",
+          }}
+        >
+          {bellAPiData.map((dataItem, index) => {
+            const bellApiVisiorData = dataItem.meeting.visitor;
+            const bellApiUserData = dataItem.meeting.user;
+
+            return (
+              <Box
+                key={index}
+                sx={{
+                  width: "100%",
+                  // bgcolor: "cyan",
+                  padding: 0,
+                  userSelect: 'none',
+                }}
+              >
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    paddingX: 1,
+                    justifyContent: "space-between",
+                    bgcolor: dataItem.seen ? "#DDDDDD" : "#FFFFFF",
+                    "&:hover": {
+                      bgcolor: dataItem.seen ? "#DDDDDD" : "#E9E9E9",
+                    },
+                  }}
+                >
+                  <Avatar sx={{}}>
+                    <img
+                      src={bellApiVisiorData.imageUrl}
+                      alt="No DP"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Avatar>
+                  <Box
+                    sx={{
+                      width: "70%",
+                      // bgcolor: "orange",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        color: "#3A3E45DE",
+                      }}
+                    >
+                      {/* <Typography
+                        component="span"
+                        sx={{
+                          fontSize: "14px",
+                          fontWeight: 900,
+                        }}
+                      >
+                        {bellApiVisiorData.name}
+                      </Typography>{" "}
+                      has requested an appointment
+                      {isRECEPTIONIST && (<Typography component="span">
+                        {" "}
+                        to{" "}
+                        <Typography
+                          component="span"
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: 900,
+                          }}
+                        >
+                          {bellApiUserData.firstName}{" "}{bellApiUserData.lastName}
+                        </Typography>
+                      </Typography>)
+                       }
+                      . */}
+                      {dataItem.text}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    sx={{
+                      fontSize: "12px",
+                      color: "#959697",
+                    }}
+                  >
+                    {calculateTimeAgo(dataItem.createdAt)}
+                  </Typography>
+                </ListItem>
+                <Divider sx={{bgcolor:'#6c6c6c9b'}} />
+              </Box>
+            );
+          })}
+        </List>
+      );
+
+      if (unseenCount !== 0) {
+        setIsBellVisible(true);
+      }
+      setBellBadgeCount(unseenCount);
+      setBellMenuItem(bellmenuItemm);
+    } catch (error) {
+      console.error("unable to fecth notification apidata: ", error);
+    }
+  }
+
+  const handleMarkRead = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post(
+        `${BASE_URL}/notification/mark-seen`,
+        { headers }
+      );
+      console.log("MARK READ RESPONSE", response);
+      handleCloseBellMenu();
+    } catch (error) {
+      console.error("Unable to mark read: ", error);
+    }
+  };
 
   async function fetchData() {
     try {
-      const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
+      const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        console.log("nav data", apiData)
+        // console.log("nav data", apiData)
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
         setStatusDotStatus(apiData.isPresent);
-        setAutoStatusChange(apiData.isPresent)
-        
+        setAutoStatusChange(apiData.isPresent);
+
         // const apiData = response;
         // console.log("apidata", apiData);
         setFormData({
@@ -215,10 +397,10 @@ export default function Navbar({ toggleSidebar }) {
           // gender: apiData.gender || "",
           // govtId: apiData.govtId || "",
           // image: apiData.image || "",
-          // departmentDto: {
-          //   id: apiData.departmentDto.id || "",
-          //   name: apiData.departmentDto.name || "",
-          // },
+          dept: {
+            id: apiData.departmentDto.id || "",
+            name: apiData.departmentDto.name || "",
+          },
           // state: {
           //   id: apiData.state.id || "",
           //   name: apiData.state.name || "",
@@ -256,11 +438,42 @@ export default function Navbar({ toggleSidebar }) {
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
+
+    // setTimeout(() => {
+    //   setAnchorEl(null);
+    // }, 4500);
   };
+
+  const handleOpenBellMenu = (event) => {
+    setBellAnchorEl(event.currentTarget);
+    setBellMenu(true);
+  };
+
+  const handleCloseBellMenu = () => {
+    setBellAnchorEl(null);
+    setBellMenu(false);
+
+    // Other logic as needed
+  };
+
+  // useEffect(() => {
+  //   const handleDocumentClick = (event) => {
+  //     if (anchorEl && !anchorEl.contains(event.target)) {
+  //       handleMenuClose();
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleDocumentClick);
+
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleDocumentClick);
+  //   };
+  // }, [anchorEl]);
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
+    setIsMenuOpen(false);
+    // handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -277,6 +490,7 @@ export default function Navbar({ toggleSidebar }) {
 
   const handleProfileOpen = () => {
     navigate("/profile");
+    handleMenuClose();
   };
 
   const handleSavePasswordChange = async (e) => {
@@ -302,9 +516,13 @@ export default function Navbar({ toggleSidebar }) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${BASE_URL}/change`, changePayload, {
-        headers,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/user/change`,
+        changePayload,
+        {
+          headers,
+        }
+      );
       if (response.status === 200) {
         toast.success("Password has been successfully changed.", {
           position: "top-right",
@@ -339,7 +557,6 @@ export default function Navbar({ toggleSidebar }) {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
-          closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
@@ -379,12 +596,11 @@ export default function Navbar({ toggleSidebar }) {
     <Menu
       elevation={2}
       sx={{
+        // zIndex:1500,
         // overflow: "visible",
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
         mt: "2.6em",
         mr: "7em",
-        width: "15em",
-        height: "23em",
       }}
       anchorEl={anchorEl}
       anchorOrigin={{
@@ -400,6 +616,42 @@ export default function Navbar({ toggleSidebar }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+  
+
+<Box
+            sx={{
+              // display:'flex',
+              display: {xs: 'flex', sm:'flex', md:'none'},
+              flexDirection:'column',
+              justifyContent:'center',
+              alignItems:'center',
+              mb:'0.5em'
+              // bgcolor:'red'
+            }}
+          >
+            <Typography
+              component={"span"}
+              sx={{
+                // fontSize: { xs: "17px", sm: "20px" },
+                fontSize:'19px',
+                fontWeight:'600'
+                
+              }}
+            >
+              {formData.firstName} {formData.lastName}
+            </Typography>
+{" "}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize:'15px'
+              }}
+            >
+              ({loggedUserRole})
+            </Typography>
+          </Box>
+
+
       {isSUPERADMIN
         ? null
         : [
@@ -420,7 +672,7 @@ export default function Navbar({ toggleSidebar }) {
               >
                 <PersonIcon />
               </IconButton>
-              <p style={{ paddingLeft: "2.2em" }}>Profile</p>
+              <Typography sx={{ paddingLeft: "2.2em" }}>Profile</Typography>
             </MenuItem>,
             <hr key="profileMenuDivider" />,
           ]}
@@ -441,7 +693,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <SyncLockIcon />
         </IconButton>
-        <p>Change Password</p>
+        <Typography>Change Password</Typography>
       </MenuItem>
       <hr />
       <MenuItem
@@ -460,7 +712,7 @@ export default function Navbar({ toggleSidebar }) {
           <LogoutIcon />
         </IconButton>
 
-        <p style={{ paddingLeft: "2em" }}>Logout</p>
+        <Typography sx={{ paddingLeft: "2em" }}>Logout</Typography>
       </MenuItem>
     </Menu>
   );
@@ -503,7 +755,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <LogoutIcon />
         </IconButton>
-        <p>Notifications</p>
+        <Typography>Notifications</Typography>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -515,7 +767,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <Typography>Profile</Typography>
       </MenuItem>
       <MenuItem onClick={handleLogout}>
         <IconButton
@@ -530,7 +782,7 @@ export default function Navbar({ toggleSidebar }) {
         >
           <LogoutIcon />
         </IconButton>
-        <p>Logout</p>
+        <Typography>Logout</Typography>
       </MenuItem>
     </Menu>
   );
@@ -554,15 +806,26 @@ export default function Navbar({ toggleSidebar }) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "block", sm: "block",  }, color: "#ffffff", fontSize: {xs: '17px', sm: '20px'} }}
+            sx={{
+              display: { xs: "block", sm: "flex" },
+              alignItems: "center",
+              color: "#ffffff",
+              fontSize: { xs: "17px", sm: "20px" },
+            }}
           >
             {/* <span style={{fontSize:'19px'}}>VMS</span>  */}
-            <span style={{ 
-              // fontSize: "20px" 
-              }}>{companyName}</span>{" "}
-            <span
-              style={{
-                fontSize: {xs: '20px', sm:'23px' },
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "17px", sm: "20px" },
+              }}
+            >
+              {companyName}
+            </Typography>{" "}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "20px", sm: "23px" },
                 marginLeft: "0.4em",
                 marginRight: "0.4em",
                 fontWeight: "500",
@@ -570,45 +833,136 @@ export default function Navbar({ toggleSidebar }) {
             >
               {" "}
               |{" "}
-            </span>{" "}
-            <span
-              style={{
-                // fontSize: "18px",
-                marginTop: "0.2em",
+            </Typography>{" "}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "16px", sm: "19px" },
+                // marginTop: "0.2em",
+                // marginRight: "0.1em",
+              }}
+            >
+              {/* VMS */}
+              {formData.dept.name}
+            </Typography>
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+
+
+          <Typography
+            sx={{
+              display: {xs: 'none', sm: "none", md: "flex" },
+              alignItems: "center",
+              color: "#ffffff",
+              fontSize: { xs: "17px", sm: "20px" },
+            }}
+          >
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "17px", sm: "20px" },
+              }}
+            >
+              {formData.firstName} {formData.lastName}
+            </Typography>{" "}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "20px", sm: "23px" },
+                marginLeft: "0.4em",
+                marginRight: "0.4em",
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              |{" "}
+            </Typography>{" "}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: { xs: "16px", sm: "19px" },
+                // marginTop: {xs: '', sm:'0.2em'},
                 marginRight: "0.1em",
               }}
             >
-              VMS
-            </span>
+              {loggedUserRole}
+            </Typography>
           </Typography>
-          <Box sx={{ flexGrow: 1, }} />
-          <Typography 
-          sx={{ display: { xs: "block", sm: "block",  }, color: "#ffffff", fontSize: {xs: '17px', sm: '20px'} }}
-          >
-          <span style={{  }}>
-            {formData.firstName} {formData.lastName}
-          </span>{" "}
-          <span
-            style={{
-              fontSize: {xs: '20px', sm: '23px'},
-              marginLeft: "0.4em",
-              marginRight: "0.4em",
-              fontWeight: "500",
+
+          {isSUPERADMIN ? null :
+                    <IconButton
+                    size="large"
+                    aria-label="show 17 new notifications"
+                    color="inherit"
+                    onClick={handleOpenBellMenu}
+                    sx={{
+                      // ml: "0.5em",
+                    }}
+                  >
+                    <Badge badgeContent={bellBadgeCount} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+          }
+
+
+          <Popover
+            open={bellMenu}
+            anchorEl={bellAnchorEl}
+            onClose={handleCloseBellMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
             }}
           >
-            {" "}
-            |{" "}
-          </span>{" "}
-          <span
-            style={{
-              // fontSize: {xs: '17px', sm: '20px'},
-              marginTop: {xs: '', sm:'0.2em'},
-              marginRight: "0.1em",
-            }}
-          >
-            {loggedUserRole}
-          </span>
-          </Typography>
+            <Box
+              sx={{
+                minWidth: "100%",
+                height: "2.5em",
+                display: "flex",
+                paddingX: "0.5em",
+                justifyContent: "space-between",
+                alignItems: "center",
+                // bgcolor:'orange'
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "17px",
+                  fontWeight: 900,
+                  color: "#313541DE",
+                }}
+              >
+                Notifications
+              </Typography>
+              <Tooltip title="Mark as all read" arrow>
+                <IconButton
+                  size="small"
+                  onClick={handleMarkRead}
+                  sx={{
+                    color: "#4ECD29",
+                    "&:hover": { color: "#37981B" },
+                  }}
+                >
+                  <CheckCircleOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Box
+              sx={{
+                minWidth: "100%",
+                height: "300px",
+                overflowY: "auto",
+                // bgcolor:'cyan'
+              }}
+            >
+              {bellMenuItem}
+            </Box>
+          </Popover>
 
           <Box
             sx={{
@@ -625,34 +979,23 @@ export default function Navbar({ toggleSidebar }) {
                 <MailIcon />
               </Badge>
             </IconButton> */}
-            {/* <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
 
-            {isSUPERADMIN ? 
-            null :
-
-            <div
-              // onClick={handleStatusUpdate}
-              style={{
-                position: "absolute",
-                top: "2.2em",
-                left: "0.8em",
-                zIndex: 1,
-                width: "13px",
-                height: "13px",
-                backgroundColor: statusDot, // Change the color to represent "present" or "absent"
-                borderRadius: "50%",
-                border: "2px solid #fff",
-              }}
-            />
-          }
+            {isSUPERADMIN ? null : (
+              <div
+                // onClick={handleStatusUpdate}
+                style={{
+                  position: "absolute",
+                  top: "2.2em",
+                  left: "0.8em",
+                  zIndex: 1,
+                  width: "13px",
+                  height: "13px",
+                  backgroundColor: statusDot, // Change the color to represent "present" or "absent"
+                  borderRadius: "50%",
+                  border: "2px solid #fff",
+                }}
+              />
+            )}
 
             {/* <div
               // onClick={handleStatusUpdate}
@@ -673,7 +1016,7 @@ export default function Navbar({ toggleSidebar }) {
               size="large"
               edge="end"
               aria-label="account of current user"
-              aria-controls={menuId}
+              // aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
@@ -702,6 +1045,7 @@ export default function Navbar({ toggleSidebar }) {
       </AppBar>
       {/* {renderMobileMenu} */}
       {renderMenu}
+
       <Dialog
         open={openChangePasswordDialog}
         onClose={handleChangePasswordDialogClose}
