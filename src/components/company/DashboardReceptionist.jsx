@@ -1,7 +1,3 @@
-
-
-//again
-
 import React from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +25,8 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 import DoughnutChart from './DoughnutChart';
 import ProgressBar from './ProgressBar';
+import ReceptionistDashboard from './ReceptionistDashboard'
+import BasicTable from './BasicTable';
 import Loader from '../Loader';
 import { useAuth } from '../../routes/AuthContext';
 
@@ -70,6 +68,7 @@ export default function Dashboard() {
     const [approvedVisitors, setApprovedVisitors] = useState(0);
     const [inProcessVisitors, setInprocessVisitors] = useState(0);
     const [completedVisitors, setCompletedVisitors] = useState(0);
+    const [meetingHours, setMeetingHours] = useState()
 
     const [filteredVisitors, setFilteredVisitors] = useState([]);
 
@@ -78,6 +77,9 @@ export default function Dashboard() {
     const [approvedVisitorsStatus, setApprovedVisitorsStatus] = useState(0);
     const [inProcessVisitorsStatus, setInprocessVisitorsStatus] = useState(0);
     const [completedVisitorsStatus, setCompletedVisitorsStatus] = useState(0);
+
+
+    const[meetingHour,setMeetingHour] = useState()
 
 
 
@@ -131,7 +133,9 @@ export default function Dashboard() {
                 setApprovedVisitors(response.data.data.totalApproved);
                 setInprocessVisitors(response.data.data.totalInProcess);
                 setCompletedVisitors(response.data.data.totalCompleted);
-                setPendingVisitorsStatus(response.data.data.status)
+                setPendingVisitorsStatus(response.data.data.status);
+                setMeetingHour(response.data.data.meetingHours)
+                
 
             })
             .catch(error => {
@@ -353,15 +357,6 @@ const routeChange1 = ()=>{
                                                 backgroundColor: "#32577e",
                                                 cursor: "pointer"
 
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                                             }}>
 
 
@@ -397,25 +392,14 @@ const routeChange1 = ()=>{
                                         <Grid style={{ gap: "20px", marginTop: "20px",backgroundColor:"" }} container justifyContent="space-between" >
                                             <Paper style={{ backgroundColor: "", display: "flex", justifyContent: "center" }} elevation={7} sx={{
                                                 height: 570,
-                                                width: 900,
+                                                width: 400,
                                                 flexGrow: 1,
 
-                                                // border:
-                                                // display: 'flex', // Use flex display
-                                                // alignItems: 'center',// Vertically center content
-                                                // borderRadius:"40px",
+                                            
                                                 backgroundColor: "",
 
 
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                              
 
 
                                             }}>
@@ -424,31 +408,40 @@ const routeChange1 = ()=>{
                                                 {/* <h2>Today Meetings Chart</h2> */}
                                                 <div>
                                                     {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
-                                                    <ProgressBar />
+                                                    <ProgressBar meetingHour={meetingHour} />
                                                 </div>
 
 
                                             </Paper>
                                             <Paper elevation={7} sx={{
                                                 height: 570,
-                                                width: 550,
+                                                width: 400,
                                                 flexGrow: 1,
-                                                // backgroundColor: "#32577e",
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                  
                                             }}>
 
 
                                                 <div className="rooms">
                                                     <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
                                                     <DoughnutChart allData={allData} />
+
+                                                </div>
+                                              
+                                            </Paper>
+
+                                            <Paper elevation={7} sx={{
+                                                height: 570,
+                                                width: 400,
+                                                flexGrow: 1,
+                                  
+                                            }}>
+
+
+                                                <div >
+
+                                                   <BasicTable/>
+                                                   
+                                                   
 
                                                 </div>
                                               
