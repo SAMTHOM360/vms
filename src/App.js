@@ -123,6 +123,7 @@ import Sidebar from './global/Sidebar';
 import Loader from './components/Loader';
 import PrivateRoute from './routes/PrivateRoute';
 // import NotFound from './components/NotFound';
+import ReceptionistCompanyScreen from './components/company/ReceptionistCompanyScreen';
 
 
 const LoginForm = lazy(() => import('./components/LoginFormNK'));
@@ -135,6 +136,8 @@ const EditCompanyForm = lazy(() => import('./components/company/EditCompanyForm'
 const Meetings = lazy(() => import('./components/company/Meetings'));
 const ReceptionistDashboard = lazy(() => import('./components/company/ReceptionistDashboard'));
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
+
+
 const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
 const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
@@ -208,12 +211,16 @@ function App() {
   <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
   <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
+  {/* <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} /> */}
   <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE']} />} />
   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
   <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} />
   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
   <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
+
+  <Route path="/receptionistcompanyscreen" element={<ReceptionistCompanyScreen/>} />
+
 
 </Routes>
 </Suspense>

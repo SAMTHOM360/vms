@@ -83,6 +83,12 @@ export default function Dashboard() {
 
 
 
+    const[averageData,setAverageData] = useState('');
+    const[totalMeetingData,setTotalMeetingData] = useState('');
+
+
+
+
     const companyId = sessionStorage.getItem('companyId');
 
 
@@ -135,6 +141,11 @@ export default function Dashboard() {
                 setCompletedVisitors(response.data.data.totalCompleted);
                 setPendingVisitorsStatus(response.data.data.status);
                 setMeetingHour(response.data.data.meetingHours)
+
+
+
+                setAverageData(response.data.data.avgHoursPerWeek);
+                setTotalMeetingData(response.data.data.totalMeetingPerWeek);
                 
 
             })
@@ -408,7 +419,7 @@ const routeChange1 = ()=>{
                                                 {/* <h2>Today Meetings Chart</h2> */}
                                                 <div>
                                                     {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
-                                                    <ProgressBar meetingHour={meetingHour} />
+                                                    <ProgressBar meetingHour={meetingHour} avgData={averageData} meetingData ={totalMeetingData} />
                                                 </div>
 
 
@@ -430,17 +441,26 @@ const routeChange1 = ()=>{
                                             </Paper>
 
                                             <Paper elevation={7} sx={{
-                                                height: 570,
+                                                height: 545,
                                                 width: 400,
                                                 flexGrow: 1,
                                   
                                             }}>
 
 
-                                                <div >
+                                                {/* <div >
+
+                                                    <h2>Room Details</h2>
 
                                                    <BasicTable/>
                                                    
+                                                   
+
+                                                </div> */}
+
+                                                <div className="rooms">
+                                                    <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
+                                                    <BasicTable/>
                                                    
 
                                                 </div>

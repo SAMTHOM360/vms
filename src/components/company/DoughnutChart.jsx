@@ -185,8 +185,9 @@ useEffect(() => {
                 <Doughnut 
                 data ={data}
                 options={options}
-                width="300px"
-                 height="300px"
+                width="450px"
+                 height="450px"
+                
                 >
                     
                 </Doughnut>

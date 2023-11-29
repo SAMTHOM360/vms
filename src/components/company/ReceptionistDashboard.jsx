@@ -1343,7 +1343,7 @@ export default function Dashboard() {
                                                 </Table>
                                                 <TablePagination
                                                     //   rowsPerPageOptions={[10, 25, 50, 100]}
-                                                    rowsPerPageOptions={[5, 10, 15]}
+                                                    rowsPerPageOptions={[ 10, 15,20]}
                                                     component="div"
 
 

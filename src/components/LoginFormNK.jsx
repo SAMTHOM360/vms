@@ -304,6 +304,7 @@ function LoginForm() {
         const companyName = response.data.company_name;
         const adminId = response.data.id;
         const limit = response.data.limit;
+        const buildingId = response.data.buildingId;
 
         setUserRoleAndAuth(loggedUserRole);
 
@@ -314,6 +315,7 @@ function LoginForm() {
         sessionStorage.setItem("companyId", companyId);
         sessionStorage.setItem("companyName", companyName);
         sessionStorage.setItem("limit", limit);
+        sessionStorage.setItem("buildingId",buildingId);
 
         // localStorage.setItem('token', token);
         // localStorage.setItem('companyId', companyId);
