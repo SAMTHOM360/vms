@@ -314,7 +314,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
 
   const fetchDepts = async () => {
     try{
-      const response = await axios.get(`http://192.168.12.58:8080/api/department/companyId?companyId=${companyId}`)
+      const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
       const deptApiData = response.data.data
       // console.log("dept data", response.data.data)
       setDepts(deptApiData)
@@ -373,7 +373,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
     try {
       setLoading(true);
       let response = await axios.post(
-        "http://192.168.12.58:8080/api/user/adduser",
+        "http://192.168.12.54:8080/api/user/adduser",
         user,
         { headers }
       );

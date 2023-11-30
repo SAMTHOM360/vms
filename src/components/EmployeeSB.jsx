@@ -48,8 +48,8 @@ const Employee = () => {
   const currEmpLength = sessionStorage.getItem("currEmpLength") || "0";
   // console.log("admin id",currEmpLength)
 
-  // const BASE_URL = "http://192.168.12.54:8080/api/user";
-  const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  const BASE_URL = "http://192.168.12.54:8080/api/user";
+  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -121,7 +121,7 @@ const Employee = () => {
     if (id == adminId) {
       toast.error("You cannot delete yourself !!!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -147,7 +147,7 @@ const Employee = () => {
           if (response.status === 200) {
             toast.success("User is succesfully deleted.", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -240,7 +240,7 @@ const Employee = () => {
       if (response.status === 200) {
         toast.success("Selected user is successfully updated.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -415,7 +415,7 @@ const Employee = () => {
     } catch (error) {
       toast.error("Something went wrong !", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -474,7 +474,7 @@ const Employee = () => {
                 title={formattedHead}
                 subtitle={`List of ${formattedHead} for Future Reference`}
               />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", minWidth:'31.3em', ml:'2em' }}>
                 <Typography
                   sx={{ fontSize: "20px", fontWeight: "550", color: "#949494" }}
                 >

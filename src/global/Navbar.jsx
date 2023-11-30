@@ -679,7 +679,7 @@ export default function Navbar({ toggleSidebar }) {
               >
                 <PersonIcon />
               </IconButton>
-              <Typography sx={{ paddingLeft: "2.2em" }}>Profile</Typography>
+              <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Profile</Typography>
             </MenuItem>,
             <hr key="profileMenuDivider" />,
           ]}
@@ -707,7 +707,7 @@ export default function Navbar({ toggleSidebar }) {
             >
               <ExitToAppIcon />
             </IconButton>
-            <Typography sx={{ paddingLeft: "2.2em" }}>Change Company</Typography>
+            <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Change Company</Typography>
           </MenuItem>,
           <hr key="receptComScreenDivider" />
                     ]
@@ -731,7 +731,9 @@ export default function Navbar({ toggleSidebar }) {
         >
           <SyncLockIcon />
         </IconButton>
-        <Typography>Change Password</Typography>
+        <Typography 
+        sx={{ paddingLeft: "1.2em", width:'100%', textAlign:'center' }}
+        >Change Password</Typography>
       </MenuItem>
       <hr />
       <MenuItem
@@ -750,7 +752,7 @@ export default function Navbar({ toggleSidebar }) {
           <LogoutIcon />
         </IconButton>
 
-        <Typography sx={{ paddingLeft: "2em" }}>Logout</Typography>
+        <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Logout</Typography>
       </MenuItem>
     </Menu>
   );
