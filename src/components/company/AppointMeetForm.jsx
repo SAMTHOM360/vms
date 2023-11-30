@@ -48,6 +48,7 @@ const MeetingDetails = () => {
   const userUrl = "http://192.168.12.54:8080/api/user/alluser";
   const meetingContextUrl = "http://192.168.12.54:8080/vis/meetCon";
   const adminId = sessionStorage.getItem("adminId");
+  const companyId =sessionStorage.getItem("companyId");
 
 
   const [users, setUsers] = useState([]);
@@ -80,7 +81,7 @@ const MeetingDetails = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(userUrl);
+        const response = await axios.get(`${userUrl}?companyId=${companyId}`);
         if (response.status === 200 && response.data.data) {
           const userList = response.data.data.map((user) => ({
             id: user.id,

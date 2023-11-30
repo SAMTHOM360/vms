@@ -663,7 +663,7 @@ export default function Meetings() {
                 <Grid container>
                   <Grid container>
                     <Grid item xs={12}>
-                      <Paper
+                      <Box
                         elevation={1}
                         sx={{
                           display: "flex",
@@ -688,7 +688,7 @@ export default function Meetings() {
                             Appoint A Meeting
                           </Button>
                         </Box>
-                      </Paper>
+                      </Box>
                     </Grid>
                   </Grid>
                 </Grid>

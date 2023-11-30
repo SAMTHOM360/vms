@@ -138,7 +138,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
           sx: {
             backgroundColor: "#141b2d",
             color: "#ffffff",
-            boxShadow: isSideBarPinned ? '' : "0px 0px 10px rgba(0, 0, 0, 0.8)", // Add this line for shadow
+            boxShadow: isSideBarPinned ? '' : "0px 0px 10px rgba(0, 0, 0, 0.5)", // Add this line for shadow
             elevation: isSideBarPinned ? '' : 5,
           },
         }}
