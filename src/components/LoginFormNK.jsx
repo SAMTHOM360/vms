@@ -308,6 +308,7 @@ function LoginForm() {
         const companyName = response.data.company_name;
         const adminId = response.data.id;
         const limit = response.data.limit;
+        const buildingId = response.data.buildingId
 
         setUserRoleAndAuth(loggedUserRole);
 
