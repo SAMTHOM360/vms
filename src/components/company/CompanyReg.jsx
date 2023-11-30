@@ -132,7 +132,7 @@ export default function CompanyReg() {
                 formData.append('Industry', values.industry);
                 formData.append('aboutUs', values.aboutUs);
                 formData.append('userLimit', values.userLimit);
-                formData.append('buildingId', values.buildingId);
+                formData.append('building.id', values.buildingId);
 
                 const res = await axios.post(url, formData, {
                     headers: {
