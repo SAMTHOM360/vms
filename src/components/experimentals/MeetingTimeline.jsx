@@ -227,8 +227,15 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
     setOpenMeetDialog(false);
   };
 
-  if (!timelineApiData || timelineApiData.length === 0) {
-    return null;
+  if (!Array.isArray(timelineApiData) || timelineApiData.length === 0) {
+    // Return some default UI or message when timelineApiData is not an array or empty
+    return (
+      <Box sx={{color:'#FFFFFF', padding:0, width:'100%', height:'27em', display:'flex', justifyContent:'center',alignItems:'center',}}>
+      <Typography sx={{fontSize:'25px',}} >
+        No timeline data available.
+      </Typography>
+      </Box>
+    );
   }
 
   //DONT REMOVE

@@ -27,6 +27,7 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SyncLockIcon from "@mui/icons-material/SyncLock";
 import MailIcon from "@mui/icons-material/Mail";
@@ -235,13 +236,13 @@ export default function Navbar({ toggleSidebar }) {
   };
 
   async function fetchNotification() {
-    console.log('fetchNotification is getting called by interval')
+    // console.log('fetchNotification is getting called by interval')
     try {
       const response = await axiosInstance.get(
         `${BASE_URL}/notification/pending-request`,
         { headers }
       );
-      console.log("notfication api data", response.data.data);
+      // console.log("notfication api data", response.data.data);
       const bellAPiData = response.data.data;
 
       // console.log("bell api data", bellAPiData);
@@ -379,14 +380,14 @@ export default function Navbar({ toggleSidebar }) {
         `${BASE_URL}/notification/mark-seen`,
         { headers }
       );
-      console.log("MARK READ RESPONSE", response);
+      // console.log("MARK READ RESPONSE", response);
       // handleCloseBellMenu();
       fetchNotification()
     } catch (error) {
       console.error("Unable to mark read: ", error);
     }
   };
-
+// console.log('why should')
   async function fetchData() {
     try {
       const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
@@ -493,6 +494,11 @@ export default function Navbar({ toggleSidebar }) {
     navigate("/profile");
     handleMenuClose();
   };
+
+  const handleChangeCompanyScreen =() => {
+    navigate("/receptionistcompanyscreen");
+    handleMenuClose();
+  }
 
   const handleSavePasswordChange = async (e) => {
     e.preventDefault();
@@ -677,6 +683,37 @@ export default function Navbar({ toggleSidebar }) {
             </MenuItem>,
             <hr key="profileMenuDivider" />,
           ]}
+
+
+{isRECEPTIONIST
+        ? [
+          <MenuItem
+            key="receptComScreenItem"
+            onClick={handleChangeCompanyScreen}
+            sx={{
+              height: "2em",
+              fontSize: "15px",
+            }}
+          >
+            <IconButton
+              size="small"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit"
+              sx={{
+                transform: 'scaleX(-1)' 
+              }}
+            >
+              <ExitToAppIcon />
+            </IconButton>
+            <Typography sx={{ paddingLeft: "2.2em" }}>Change Company</Typography>
+          </MenuItem>,
+          <hr key="receptComScreenDivider" />
+                    ]
+        : 
+        null
+        }
 
       <MenuItem
         onClick={handleChangePasswordDialogOpen}

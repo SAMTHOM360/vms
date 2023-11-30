@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'true' || true)
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
 
-  console.log("Parent call", autoStatusChange)
+  // console.log("Parent call", autoStatusChange)
 
 
   // useEffect(() => {

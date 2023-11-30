@@ -168,6 +168,17 @@ export default function Meetings() {
     // fetchData();
   };
 
+  useEffect(() => {
+    const filter = sessionStorage.getItem('filters')
+    if (filter) {
+       
+        setSelectedStatusOptions(filter)
+        // fetchData()
+        sessionStorage.removeItem('filters')
+    }
+
+}, [selectedStatusOptions])
+
   function fetchStatusOptions() {
     const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
     axios

@@ -34,6 +34,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../routes/AuthContext";
 
 const EmpDashboard = () => {
+// console.log('I am imposter')
+
   const { setIsNavBar, setIsSideBar, setActiveListItem } = useAuth();
   // const BASE_URL1 = "http://192.168.12.58:8080/api";
   const BASE_URL1 = 'http://192.168.12.54:8080/api'
@@ -42,6 +44,7 @@ const EmpDashboard = () => {
 
   // sessionStorage.setItem('activeListItem', '/empdashboard')
   useEffect(() => {
+    // console.log('useeffect set active item')
     setActiveListItem('/empdashboard')
   }, [setActiveListItem])
   const adminId = sessionStorage.getItem("adminId");
@@ -62,6 +65,7 @@ const EmpDashboard = () => {
   });
   const [barchartData, setBarchartData] = useState(null);
   const [timelineData, setTimelineData] = useState(null);
+  const [visibleData, setVisibleData ] = useState()
   const [loading, setLoading] = useState(false);
 
   const [isTodayInterval, setIsTodayInterval] = useState(true);
@@ -70,14 +74,29 @@ const EmpDashboard = () => {
 
 
 
-  const handleNavigateMeeting = () => {
-    if (loggedUserRole) {
-      if (loggedUserRole === "ADMIN") {
-        navigate("/meetings");
-      } else {
-        navigate("/meetings");
-      }
-    }
+  // const handleNavigateMeeting = () => {
+  //   if (loggedUserRole) {
+  //     if (loggedUserRole === "ADMIN") {
+  //       navigate("/meetings");
+  //     } else {
+  //       navigate("/meetings");
+  //     }
+  //   }
+  // };
+
+  const handleNavigateMeeting = (filteredVisitors) => {
+    let path = `/meetings`;
+
+    navigate(path);
+
+    if (filteredVisitors) {
+      sessionStorage.setItem("filters", filteredVisitors)
+      navigate(path);
+
+  }
+  else {
+      navigate(path);
+  }
   };
 
   async function fetchData(fromDate, toDate) {
@@ -93,7 +112,7 @@ const EmpDashboard = () => {
 
     // console.log("dynamic payload", payLoad);
 
-    console.log('non dynamic data')
+    // console.log('non dynamic data')
 
     try {
       setLoading(true);
@@ -103,19 +122,19 @@ const EmpDashboard = () => {
         payLoad
       );
 
-      // const dashboardTimelineResponse = await axios.post(
-      //   `${BASE_URL1}/meeting/meetingfordashboard`,
-      //   payLoad
-      // );
+      const dashboardTimelineResponse = await axios.post(
+        `${BASE_URL1}/meeting/meetingfordashboard`,
+        payLoad
+      );
 
       const dashboardApiData = dashboardResponse.data.data;
 
       // console.log("dashboardApiData", dashboardApiData);
-      // const timelineApiData = dashboardTimelineResponse.data.data;
+      const timelineApiData = dashboardTimelineResponse.data.data;
 
       if (dashboardResponse.status === 200) {
         setBarchartData(dashboardApiData.meetingsContextDate);
-        // setTimelineData(timelineApiData);
+        setTimelineData(timelineApiData);
 
         let hours = dashboardApiData.totalHoursOfMeeting / 3600000;
         let hoursFloat = Math.round(hours * 100) / 100;
@@ -151,43 +170,48 @@ const EmpDashboard = () => {
 
 
 
-  async function fetchTimeLineData(fromDate, toDate) {
-    const payLoad = {
-      user: {
-        id: adminId,
-      },
-      fromDate: fromDate,
-      // fromDate: "2023-11-13",
-      // toDate: "2023-11-14",
-      toDate: toDate,
-    };
+  // async function fetchTimeLineData(fromDate, toDate) {
+  //   const payLoad = {
+  //     user: {
+  //       id: adminId,
+  //     },
+  //     fromDate: fromDate,
+  //     // fromDate: "2023-11-13",
+  //     // toDate: "2023-11-14",
+  //     toDate: toDate,
+  //   };
 
-    console.log("dynamic payload",);
+  //   console.log('dynamic payload',);
 
-    try {
-      const dashboardTimelineResponse = await axios.post(
-        `${BASE_URL1}/meeting/meetingfordashboard`,
-        payLoad
-      );
-      const timelineApiData = dashboardTimelineResponse.data.data;
+  //   try {
+  //     const dashboardTimelineResponse = await axios.post(
+  //       `${BASE_URL1}/meeting/meetingfordashboard`,
+  //       payLoad
+  //     );
+  //     const timelineApiData = dashboardTimelineResponse.data.data;
 
-      if (dashboardTimelineResponse.status === 200) {
-        setTimelineData(timelineApiData);
-      }
-    } catch (error) {
-      // toast.error("Something went wrong!", {
-      //   position: "top-right",
-      //   autoClose: 2000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      // });
-      console.error("Error fetching data:", error);
-    }
-  }
+  //     if (dashboardTimelineResponse.status === 200) {
+  //       setTimelineData(timelineApiData);
+
+  //       // setTimelineData((prevTimelineData) => ({
+  //       //   ...prevTimelineData,
+  //       //   ...timelineApiData,
+  //       // }));
+  //     }
+  //   } catch (error) {
+  //     // toast.error("Something went wrong!", {
+  //     //   position: "top-right",
+  //     //   autoClose: 2000,
+  //     //   hideProgressBar: false,
+  //     //   closeOnClick: true,
+  //     //   pauseOnHover: true,
+  //     //   draggable: true,
+  //     //   progress: undefined,
+  //     //   theme: "light",
+  //     // });
+  //     console.error("Error fetching data:", error);
+  //   }
+  // }
 
 
 
@@ -237,29 +261,143 @@ const EmpDashboard = () => {
     setSelectedFilter(selectedValue);
   };
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     if (isTodayInterval) {
-  //       handleIntervalToday();
-  //     } else if (isThisWeekInterval) {
-  //       handleIntervalThisWeek();
-  //     } else if (isThisMonthInterval) {
-  //       handleIntervalThisMonth();
-  //     }
-  //   }, 1000);
 
-  //   return () => clearInterval(intervalId);
-  // }, [
-  //   // isTodayInterval,
-  //   //  isThisWeekInterval,
-  //   //   isThisMonthInterval
-  //   ]);
+// BLOCK SCOPE USEEFFECT STARTS
+
+
+  useEffect(() => {
+
+
+    async function fetchTimeLineData(fromDate, toDate) {
+      const payLoad = {
+        user: {
+          id: adminId,
+        },
+        fromDate: fromDate,
+        // fromDate: "2023-11-13",
+        // toDate: "2023-11-14",
+        toDate: toDate,
+      };
+  
+      console.log('dynamic payload',);
+  
+      try {
+        const dashboardTimelineResponse = await axios.post(
+          `${BASE_URL1}/meeting/meetingfordashboard`,
+          payLoad
+        );
+        const timelineApiData = dashboardTimelineResponse.data.data;
+  
+        if (dashboardTimelineResponse.status === 200) {
+          setTimelineData(timelineApiData);
+  
+          // setTimelineData((prevTimelineData) => ({
+          //   ...prevTimelineData,
+          //   ...timelineApiData,
+          // }));
+        }
+      } catch (error) {
+        // toast.error("Something went wrong!", {
+        //   position: "top-right",
+        //   autoClose: 2000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    const formatDateForServer2 = (date) => {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+
+
+
+
+    const handleIntervalToday = async () => {
+      const today = new Date();
+      const formattedToday = formatDateForServer2(today);
+      await fetchTimeLineData(formattedToday, formattedToday);
+      console.log('today interval')
+    };
+  
+    const handleIntervalThisWeek = async () => {
+      const currentDate = new Date();
+      const diffFromMonday = currentDate.getDay() - 1;
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+      const formattedFromWeek = formatDateForServer2(startOfWeek);
+      const formattedToWeek = formatDateForServer2(endOfWeek);
+  
+      await fetchTimeLineData(formattedFromWeek, formattedToWeek);
+      console.log('this week interval')
+    };
+  
+    const handleIntervalThisMonth = async () => {
+      const currentDate = new Date();
+      const firstDayOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      const lastDayOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+      );
+  
+      const formattedFromMonth = formatDateForServer2(firstDayOfMonth);
+      const formattedToMonth = formatDateForServer2(lastDayOfMonth);
+  
+      await fetchTimeLineData(formattedFromMonth, formattedToMonth);
+      console.log('this month interval')
+    };
+
+
+
+
+
+    const intervalId = setInterval(() => {
+      if (isTodayInterval) {
+        handleIntervalToday();
+      } else if (isThisWeekInterval) {
+        handleIntervalThisWeek();
+      } else if (isThisMonthInterval) {
+        handleIntervalThisMonth();
+      }
+    }, 1000000);
+
+    return () => clearInterval(intervalId);
+  }, [
+    isTodayInterval,
+     isThisWeekInterval,
+      isThisMonthInterval
+    ]);
+
+
+
+
+    // BLOCK SCOPE USEEFFECT ENDS
+
+
+
 
   const handleTodayClick = async () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
     await fetchData(formattedToday, formattedToday);
-    await fetchTimeLineData(formattedToday, formattedToday);
+    // await fetchTimeLineData(formattedToday, formattedToday);
     setSelectedFilter('today')
   };
 
@@ -275,7 +413,7 @@ const EmpDashboard = () => {
     const formattedToWeek = formatDateForServer(endOfWeek);
 
     await fetchData(formattedFromWeek, formattedToWeek);
-    await fetchTimeLineData(formattedFromWeek, formattedToWeek);
+    // await fetchTimeLineData(formattedFromWeek, formattedToWeek);
   };
 
   const handleThisMonthClick = async () => {
@@ -295,62 +433,14 @@ const EmpDashboard = () => {
     const formattedToMonth = formatDateForServer(lastDayOfMonth);
 
     await fetchData(formattedFromMonth, formattedToMonth);
-    await fetchTimeLineData(formattedFromMonth, formattedToMonth);
-  };
-
-
-
-
-
-
-
-
-  const handleIntervalToday = async () => {
-    const today = new Date();
-    const formattedToday = formatDateForServer(today);
-    await fetchTimeLineData(formattedToday, formattedToday);
-    console.log('today interval')
-  };
-
-  const handleIntervalThisWeek = async () => {
-    const currentDate = new Date();
-    const diffFromMonday = currentDate.getDay() - 1;
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-    const formattedFromWeek = formatDateForServer(startOfWeek);
-    const formattedToWeek = formatDateForServer(endOfWeek);
-
-    await fetchTimeLineData(formattedFromWeek, formattedToWeek);
-    console.log('this week interval')
-  };
-
-  const handleIntervalThisMonth = async () => {
-    const currentDate = new Date();
-    const firstDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
-    const lastDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
-    );
-
-    const formattedFromMonth = formatDateForServer(firstDayOfMonth);
-    const formattedToMonth = formatDateForServer(lastDayOfMonth);
-
-    await fetchTimeLineData(formattedFromMonth, formattedToMonth);
-    console.log('this month interval')
+    // await fetchTimeLineData(formattedFromMonth, formattedToMonth);
   };
 
 
 
 
   const formatDateForServer = (date) => {
+    // console.log(' am i me')
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
@@ -358,6 +448,7 @@ const EmpDashboard = () => {
   };
 
   useEffect(() => {
+    // console.log('useeffect handle click')
     handleTodayClick();
     setIsNavBar(true);
     setIsSideBar(true);
@@ -373,21 +464,29 @@ const EmpDashboard = () => {
     setPageIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
-  const dates = Object.keys(barchartData || {});
-  const visibleData = dates
-    .slice(pageIndex * 15, (pageIndex + 1) * 15)
-    .reduce((acc, date) => {
+  // const dates = Object.keys(barchartData || {});
+  // const visibleData = dates.slice(pageIndex * 15, (pageIndex + 1) * 15).reduce((acc, date) => {
+  //   acc[date] = barchartData[date];
+  //   console.log("visible data",)
+  //   return acc;
+  // }, {});
+
+
+  useEffect(() => {
+    const dates = Object.keys(barchartData || {});
+    const updatedVisibleData = dates.slice(pageIndex * 15, (pageIndex + 1) * 15).reduce((acc, date) => {
       acc[date] = barchartData[date];
       return acc;
     }, {});
 
-    console.log("visible data",)
+    setVisibleData(updatedVisibleData);
+    // console.log("visible data", updatedVisibleData);
 
-  // console.log("VISIBLE DATA", Object.keys(visibleData || {}).length);
-  // console.log("Bar chart Data", barchartData);
-  // console.log("Time Line Data", timelineData)
+    // Additional logic if needed
 
-  // console.log("page index", pageIndex);
+  }, [barchartData, pageIndex]);
+  
+
 
   return (
     <>
@@ -498,7 +597,7 @@ const EmpDashboard = () => {
                           bgcolor: "#283550",
                         },
                       }}
-                      onClick={handleNavigateMeeting}
+                      onClick={() => handleNavigateMeeting()}
                     >
                       <StatBox
                         title={dashboardData.totalMeetings || "0"}
@@ -520,7 +619,12 @@ const EmpDashboard = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        cursor: "pointer",
+                        "&:hover": {
+                          bgcolor: "#283550",
+                        },
                       }}
+                      onClick={() => handleNavigateMeeting('PENDING')}
                     >
                       <StatBox
                         title={dashboardData.pendingMeetings || "0"}
@@ -542,7 +646,12 @@ const EmpDashboard = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        "&:hover": {
+                          bgcolor: "#283550",
+                        },
                       }}
+                      onClick={() => handleNavigateMeeting('COMPLETED')}
+
                     >
                       <StatBox
                         title={dashboardData.completedMeetings || "0"}
