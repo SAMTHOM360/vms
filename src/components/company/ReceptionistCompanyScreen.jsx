@@ -12,6 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Header from '../Header';
 
 
 export default function ReceptionistCompanyScreen() {
@@ -78,12 +79,69 @@ export default function ReceptionistCompanyScreen() {
 
 
     return (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <>
-
-                <Grid container spacing={3} style={{ margin: "10px", padding: "10px", display: 'flex', justifyContent: "", flexDirection: "column" ,backgroundColor:""}} > 
-
-                <h1 style={{textAlign:"center"}}>Select a Company</h1>
-                <Grid container spacing={3} style={{ margin: "10px", padding: "10px", display: 'flex', justifyContent: "space-evenly", flexDirection: "row" ,backgroundColor:""}} >
+        {/* <Navbar toggleSidebar={toggleSidebar}/> */}
+        <Box sx={{display:"flex", flexGrow: 1, p: 2, position:'relative'}}>
+            {/* <Sidebar open={sidebarOpen} /> */}
+            <Grid container spacing={2}>
+      <Grid item xs={12} md={12} lg={12}>
+      <Box
+        //   elevation={5}
+          sx={{
+            display:'flex',
+            justifyContent:'space-between',
+            // width:'100%',
+            minHeight:'4.5em',
+          mb:'0.5em',
+          mt:'3em',
+          }}
+          >
+            <Header title="Receptionist Company(s)" subtitle="Select a company of your choice" />
+        </Box>
+    
+      </Grid>
+      <Grid item xs={12} md={12} lg={12}>
+      <Box
+            // elevation={5}
+            sx={{
+              // width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              m="20px 0 0 0"
+              // display='flex'
+              // width="100%"
+              maxWidth='95%'
+              flexGrow={1}
+              minHeight="75vh"
+   
+    
+              sx={{
+                mb:'1.5em'
+              }}
+            >
+                             <Grid container spacing={3} mt='1px' >
                     
 
 
@@ -92,9 +150,10 @@ export default function ReceptionistCompanyScreen() {
                         <Grid item key={company.id} xs={12} sm={6} md={4} lg={3}>
 
 
-                            <Card className="gradient" onClick={() => handleCompanyChange(company.id, company.name)} sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: "lightblue" }}>
+                            <Card className="gradient" onClick={() => handleCompanyChange(company.id, company.name)} sx={{ height: '100%',width:'100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: "lightblue" }}>
                                 <CardMedia
-                                    sx={{ height: 130, width: 400 }}
+                                component='img'
+                                    sx={{ height: 130, width: 400, objectFit:'contain' }}
                                     image={company.logo}
                                 // title={company.name}
                                 />
@@ -110,21 +169,34 @@ export default function ReceptionistCompanyScreen() {
                             </Card>
                         </Grid>
                     ))}
-                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                        <Button variant="contained" onClick={handleBack}>Back</Button>
-                    </Grid>
 
+                    {/* <Box
+                    sx={{
+                        display:'flex',
+                        position:'absolute',
+                        bottom:'3em',
+                        justifyContent:'center',
+                        width:'96%',
+                        bgcolor:'orange',
+
+                    }}
+                    >
+
+
+                        <Button variant="contained" sx={{
+                            width:'8.5em', height:'3em',
+                        }} onClick={handleBack}>Back</Button>
+
+                    </Box> */}
                 </Grid>
-
-
-
-                </Grid>
-              
-            
+    
+            </Box>
+          </Box>
+    
+      </Grid>
+    </Grid>
+        </Box>
         </>
-
-
-
 
     )
 }
