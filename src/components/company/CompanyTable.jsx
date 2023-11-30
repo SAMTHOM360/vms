@@ -474,7 +474,7 @@ const CompanyTable = () => {
                       <TableCell align="left"><h4>City</h4></TableCell>
                       <TableCell align="left"><h4>Pin Code</h4></TableCell>
                       <TableCell align="left"><h4>About Us</h4></TableCell>
-                      <TableCell align="left"><h4>Created On</h4></TableCell>
+                      <TableCell align="left"><h4>Building Name</h4></TableCell>
                       {/* <TableCell align="left">Created By</TableCell> */}
                       <TableCell align="left"><h4>User Limit</h4></TableCell>
                       <TableCell align="left"><h4>Actions</h4></TableCell>
@@ -504,8 +504,11 @@ const CompanyTable = () => {
                           <TableCell align="left">{company.city.name}</TableCell>
                           <TableCell align="left">{company.pincode}</TableCell>
                           <TableCell align="left">{company.aboutUs}</TableCell>
-                          <TableCell align="left">{formatDate(company.createdOn)}</TableCell>
+                          {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
                           {/* <TableCell align="left">{company.createdBy}</TableCell> */}
+
+                          <TableCell align="left">{company.building.name}</TableCell>
+
                           <TableCell align="left">{company.userLimit}</TableCell>
                           <TableCell align="left">
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

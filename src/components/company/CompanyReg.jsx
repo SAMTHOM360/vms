@@ -101,8 +101,12 @@ export default function CompanyReg() {
             newErrors.industry = "Industry is required";
         }
 
-        if (!values.userLimit) {
+        if (!values.userLimit && !errors.userLimit) {
             newErrors.userLimit = "User Limit is required";
+        }
+
+        if (values.userLimit > 100) {
+            newErrors.userLimit = "User Limit cannot exceed 100";
         }
 
         if (!values.buildingId) {
@@ -229,7 +233,7 @@ export default function CompanyReg() {
     const handleLogoChange = (event) => {
         const logoFile = event.target.files[0];
         setValues({ ...values, logo: logoFile });
-        setLogoUpdated(true); 
+        setLogoUpdated(true);
         alert("Company logo updated successfully");
     };
 
@@ -260,20 +264,25 @@ export default function CompanyReg() {
 
 
 
-                                        <TextField sx={{ width: "47%" }} placeholder="Company Name " type="text" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
+                                        <TextField sx={{ width: "47%" }} label="Company Name" placeholder="Company Name " type="text" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
                                             error={Boolean(errors.name)}
                                             helperText={errors.name}
 
                                         ></TextField>
 
-                                        <label className="custom-file-upload">
+                                        {/* <label className="custom-file-upload">
+                                            <input type="file" id="file-input" onChange={handleLogoChange} />
+                                            Upload Company Logo
+                                        </label> */}
+
+                                        <label className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
                                             <input type="file" id="file-input" onChange={handleLogoChange} />
                                             Upload Company Logo
                                         </label>
                                     </div>
 
 
-                                    <TextField placeholder="Company Address" type="text" value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
+                                    <TextField placeholder="Company Address" type="text" label="Company Address" value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
                                         helperText={errors.address}></TextField>
                                     <div
                                         className="input"
@@ -385,7 +394,7 @@ export default function CompanyReg() {
                                             </FormControl>
                                         </Box>
                                     </div>
-                                    <TextField type="number" placeholder="Pincode" value={values.pincode} onChange={(e) => {
+                                    <TextField type="number" label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
                                         if (e.target.value.length <= 6) {
                                             setValues({ ...values, pincode: e.target.value });
@@ -395,14 +404,15 @@ export default function CompanyReg() {
                                         helperText={errors.pincode}></TextField>
 
                                     <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <TextField sx={{ width: "47%" }} placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
+                                        <TextField sx={{ width: "47%" }} label="Email" placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
                                             helperText={errors.email} >
                                         </TextField>
-                                        <TextField sx={{ width: "47%" }} placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
+                                        <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
 
                                             if (e.target.value.length <= 10) {
                                                 setValues({ ...values, phoneNumber: e.target.value });
                                             }
+
                                         }} error={Boolean(errors.phoneNumber)}
                                             helperText={errors.phoneNumber}></TextField>
                                     </div>
@@ -410,7 +420,7 @@ export default function CompanyReg() {
                                     <div className='input' style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
 
 
-                                        <TextField sx={{ width: "47%" }} placeholder="Building Id" type="number" value={values.buildingId} inputProps={{ maxLength: 1 }} // Set the maxLength attribute to restrict the input length to 1 digit
+                                        <TextField sx={{ width: "47%" }} label="Building Id" placeholder="Building Id" type="number" value={values.buildingId} inputProps={{ maxLength: 1 }} // Set the maxLength attribute to restrict the input length to 1 digit
 
                                             onChange={(e) => {
                                                 // Check if entered value is within 1 digit
@@ -421,19 +431,32 @@ export default function CompanyReg() {
                                             helperText={errors.buildingId}></TextField>
 
 
-                                        <TextField sx={{ width: "47%" }} placeholder="User Limit" type="number" value={values.userLimit} onChange={(e) => setValues({ ...values, userLimit: e.target.value })} error={Boolean(errors.userLimit)}
+                                        <TextField sx={{ width: "47%" }} label="User Limit" placeholder="User Limit" type="number" value={values.userLimit}
+
+                                            inputProps={{ maxLength: 3 }}
+
+                                            onChange={(e) => {
+
+                                                if (e.target.value.length <= 2) {
+                                                    setValues({ ...values, userLimit: e.target.value });
+                                                }
+                                            }}
+
+
+
+                                            error={Boolean(errors.userLimit)}
                                             helperText={errors.userLimit}></TextField>
 
                                     </div>
 
-                                    <TextField placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
+                                    <TextField label="Industry" placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
                                         helperText={errors.industry}></TextField>
 
 
 
 
 
-                                    <TextField placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
+                                    <TextField label="About" placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
                                         helperText={errors.aboutUs}></TextField>
 
                                     <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>

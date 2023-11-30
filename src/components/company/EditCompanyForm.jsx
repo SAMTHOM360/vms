@@ -274,6 +274,7 @@ export default function EditCompanyForm() {
           >
             <TextField
               sx={{ width: "47%" }}
+              label="Company Name"
               placeholder="Company Name "
               type="text"
               name="name"
@@ -377,6 +378,8 @@ export default function EditCompanyForm() {
             </Box>
           </div>
           <TextField
+
+          label="Pincode"
             placeholder="Pincode"
             name="pincode"
             value={companyData.pincode}
@@ -400,6 +403,8 @@ export default function EditCompanyForm() {
                 backgroundColor: "",
                 color: "white",
               }}
+
+              label="Email"
               placeholder=" Email"
               type="email"
               name="email"
@@ -414,6 +419,7 @@ export default function EditCompanyForm() {
             ></TextField>
             <TextField
               sx={{ width: "47%" }}
+              label="Phone Number"
               placeholder=" Phone Number "
               type="number"
               name="phoneNumber"
@@ -445,6 +451,7 @@ export default function EditCompanyForm() {
             }}
           >
             <TextField
+            label="Industry"
               placeholder="Industry"
               type="text"
               name="industry"
@@ -457,6 +464,7 @@ export default function EditCompanyForm() {
 
             <TextField
               sx={{ width: "47%" }}
+              label="User Limit"
               placeholder="User Limit"
               type="number"
               value={companyData.userLimit}
@@ -467,6 +475,7 @@ export default function EditCompanyForm() {
           </div>
 
           <TextField
+          label="About"
             placeholder="About"
             type="text"
             name="aboutUs"

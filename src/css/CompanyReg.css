@@ -20,3 +20,8 @@
   .custom-file-upload input[type="file"] {
     display: none;
   }
+
+  .custom-file-upload.updated {
+    background-color: lightblue;
+    /* Add any other styles as needed */
+}
