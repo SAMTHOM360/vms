@@ -81,22 +81,6 @@ export default function ReceptionistCompanyScreen() {
     return (
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <>
         {/* <Navbar toggleSidebar={toggleSidebar}/> */}
         <Box sx={{display:"flex", flexGrow: 1, p: 2, position:'relative'}}>
@@ -150,7 +134,7 @@ export default function ReceptionistCompanyScreen() {
                         <Grid item key={company.id} xs={12} sm={6} md={4} lg={3}>
 
 
-                            <Card className="gradient" onClick={() => handleCompanyChange(company.id, company.name)} sx={{ height: '100%',width:'100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: "lightblue" }}>
+                            <Card className="gradient" onClick={() => handleCompanyChange(company.id, company.name)} sx={{ height: '100%',width:'100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: "lightblue",cursor:"pointer" }}>
                                 <CardMedia
                                 component='img'
                                     sx={{ height: 130, width: 400, objectFit:'contain' }}

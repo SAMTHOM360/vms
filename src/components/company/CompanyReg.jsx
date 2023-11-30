@@ -127,9 +127,6 @@ export default function CompanyReg() {
                 formData.append('aboutUs', values.aboutUs);
                 formData.append('userLimit', values.userLimit);
 
-
-
-
                 const res = await axios.post(url, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
