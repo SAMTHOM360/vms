@@ -360,6 +360,7 @@ export default function Dashboard() {
 
 
     const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+    console.log(selectedCompanyId,"hello")
 
     function getRoomsOption() {
 
@@ -589,20 +590,12 @@ export default function Dashboard() {
             .then(response => {
                 const responseData = response.data.data.meetings;
                 const responseDataLength = response.data.data.meetings.length;
-                // console.log(responseData.user.id,"rolename")
+       
                 console.log(responseDataLength, "length")
                 console.log(responseData, "responseDatta")
-                // console.log(responseData.visitor.phoneNumber,"blahhhhh")
-
-                // const passResponseData = response.data.data.meetings;
-                // console.log(passResponseData,"passREsponseData");
-
-
-                // Loop through the meetings to access each one and its meetingId
+             
                 responseData.forEach(meeting => {
-                    const meetingId = meeting.id; // This is the meetingId
-                    // Now you can use the meetingId as needed
-                    // console.log("Meeting ID:", meetingId);
+                    const meetingId = meeting.id; 
                 });
 
 
@@ -610,19 +603,14 @@ export default function Dashboard() {
 
                 setMeetingsPerPage(response.data.data.totalMeeting);
                 setMeetings(response.data.data.totalElements);
-                // console.log(response.data.data.meetings.user);
-
-                // console.log(visitorId,"visitorId")
+             
                 setVisitors(responseData);
-                // setTotalMeetings(responseData.length);
+             
                 setTotalVisitors(response.data.data.totalElements);
-                //recent
+              
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
 
-
-
-                // console.log(response.data.data[0].id, "visitors");
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

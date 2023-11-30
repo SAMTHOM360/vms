@@ -975,8 +975,7 @@ export default function Meetings() {
                             }}
                           >
                             <TableRow sx={{ border: "1px solid black" }}>
-                              {/* <TableCell>Meeting ID</TableCell>
-                                                <TableCell>Visitor ID</TableCell> */}
+                        
                               <TableCell>Sl No</TableCell>
                               <TableCell align="left">Full Name</TableCell>
 
@@ -986,7 +985,7 @@ export default function Meetings() {
 
                               <TableCell align="left">Start Time</TableCell>
                               <TableCell align="left">End Time</TableCell>
-                              <TableCell align="left">Remarks</TableCell>
+                              {/* <TableCell align="left">Remarks</TableCell> */}
                               <TableCell align="left">Status</TableCell>
                               <TableCell align="left">Room</TableCell>
 
@@ -1031,9 +1030,9 @@ export default function Meetings() {
                                   <TableCell align="left">
                                     {formatMeetingDuration1(visitor)}
                                   </TableCell>
-                                  <TableCell align="left">
+                                  {/* <TableCell align="left">
                                     {visitor.remarks}
-                                  </TableCell>
+                                  </TableCell> */}
                                   <TableCell align="left">
                                     {visitor.status}
                                   </TableCell>
