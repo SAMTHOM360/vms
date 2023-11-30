@@ -651,7 +651,7 @@ if (
               }}
             >
               <Typography>Meeting Type: {meetByIdData.meetType}</Typography>
-              <Typography>Meet Time: {meetByIdData.meetTime}</Typography>
+              <Typography>Check-In Time: {meetByIdData.meetTime}</Typography>
               <Typography>Remarks: {meetByIdData.remarks}</Typography>
               <Typography>
                 Phone No.: {meetByIdData.visitorPhoneNumber}

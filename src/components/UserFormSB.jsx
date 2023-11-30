@@ -378,9 +378,18 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         { headers }
       );
       if (response.status === 200) {
+        toast.success("New Employee Added Successfully.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         // closeDialog()
         handleEmployeeRedirect();
-        fetchData();
         // setAddUserDialogOpen(false)
         setGovernmentIdType("");
         setDobDate("");
@@ -399,16 +408,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
           state: { id: "", name: '', },
           city: { id: "", name: '', },
         });
-        toast.success("New Employee Added Successfully.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // fetchData();
       }
     } catch (error) {
       toast.error("Something went wrong !!!", {
@@ -421,7 +421,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         progress: undefined,
         theme: "light",
       });
-      alert("Error submitting user data", error);
+      console.error("Error submitting user data", error);
     }
     setLoading(false);
   };
