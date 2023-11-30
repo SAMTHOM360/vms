@@ -158,7 +158,8 @@ function App() {
   // const currentPath = window.location.pathname;
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
-  const isExcludedRoute = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRouteForNavBar = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
 
   const toggleSidebar = () => {
@@ -171,7 +172,7 @@ function App() {
       <CssBaseline />
 
 
-      {isExcludedRoute && <Navbar toggleSidebar={toggleSidebar} /> }
+      {isExcludedRouteForNavBar && <Navbar toggleSidebar={toggleSidebar} /> }
       <Box
       // className='app'
       sx={{
@@ -188,7 +189,7 @@ function App() {
          }}
          >
 
-{isExcludedRoute && <Sidebar open={sidebarOpen} /> }
+{isExcludedRouteForSidebar && <Sidebar open={sidebarOpen} /> }
 <Suspense fallback={<Loader />}>
 <Routes>
 <Route path="/" element={<LoginForm />} />
