@@ -376,7 +376,7 @@ const EmpDashboard = () => {
       } else if (isThisMonthInterval) {
         handleIntervalThisMonth();
       }
-    }, 1000000);
+    }, 500000);
 
     return () => clearInterval(intervalId);
   }, [

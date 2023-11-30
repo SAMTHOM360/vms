@@ -81,7 +81,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       );
       if (response.status === 200) {
         const apiData = response.data.data;
-        console.log("Api data", apiData);
+        console.log("Api dataaaaa", apiData);
         setMeetByIdData({
           meetId: apiData.id || "",
           vistorId: apiData.visitor.id || "",
@@ -94,7 +94,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
           meetType: apiData.context || "",
           // meetTime: apiData.checkInDateTime || '',
           meetTime:
-            formatMeetingStartDateTime(apiData.meetingStartDateTime) || "",
+            formatMeetingStartDateTime(apiData.checkInDateTime) || "",
           remarks: apiData.remarks || "",
           status: apiData.status || "",
         });
@@ -283,17 +283,19 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
     const date = new Date(timestamp);
 
     // Convert the date to IST
-    date.setUTCHours(date.getUTCHours() + 5); // Adding 5 hours for IST
-    date.setUTCMinutes(date.getUTCMinutes() + 30); // Adding 30 minutes for IST
+    date.setUTCHours(date.getUTCHours() - 5); // Adding 5 hours for IST
+    date.setUTCMinutes(date.getUTCMinutes() - 30); // Adding 30 minutes for IST
 
     const meetingDate = date.toLocaleDateString("en-US", {
       day: "2-digit",
       month: "short",
+      timeZone: 'Asia/Kolkata',
     });
     const meetingStartTime = date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
+      timeZone: 'Asia/Kolkata',
     });
 
     return `${meetingDate} | ${meetingStartTime}`;
@@ -307,13 +309,14 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
     const date = new Date(timestamp);
 
     // Convert the date to IST
-    date.setUTCHours(date.getUTCHours() + 5); // Adding 5 hours for IST
-    date.setUTCMinutes(date.getUTCMinutes() + 30); // Adding 30 minutes for IST
+    date.setUTCHours(date.getUTCHours() - 5); // Adding 5 hours for IST
+    date.setUTCMinutes(date.getUTCMinutes() - 30); // Adding 30 minutes for IST
 
     const meetingEndTime = date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
+      timeZone: 'Asia/Kolkata',
     });
 
     return `${meetingEndTime}`;
