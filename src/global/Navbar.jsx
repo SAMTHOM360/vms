@@ -115,7 +115,7 @@ export default function Navbar({ toggleSidebar }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { logout, autoStatusChange, setAutoStatusChange } = useAuth();
+  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
   const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false)
@@ -235,6 +235,7 @@ export default function Navbar({ toggleSidebar }) {
   };
 
   async function fetchNotification() {
+    console.log('fetchNotification is getting called by interval')
     try {
       const response = await axiosInstance.get(
         `${BASE_URL}/notification/pending-request`,
@@ -359,15 +360,28 @@ export default function Navbar({ toggleSidebar }) {
     }
   }
 
-  const handleMarkRead = async (e) => {
-    e.preventDefault();
+  // useEffect(() => {
+  //   const IntervalFetchNotification = setInterval(() => {
+  //     fetchNotification()
+  //   }, 5000);
+
+  //   return () => clearInterval(IntervalFetchNotification)
+  // },[])
+
+  useEffect(() => {
+    fetchNotification()
+  },[bellItemChanged])
+
+  const handleMarkRead = async () => {
+    // e.preventDefault();
     try {
       const response = await axiosInstance.post(
         `${BASE_URL}/notification/mark-seen`,
         { headers }
       );
       console.log("MARK READ RESPONSE", response);
-      handleCloseBellMenu();
+      // handleCloseBellMenu();
+      fetchNotification()
     } catch (error) {
       console.error("Unable to mark read: ", error);
     }
@@ -425,23 +439,9 @@ export default function Navbar({ toggleSidebar }) {
     }
   }
 
-  // useEffect(() => {
-  //   const fetchDataInterval = setInterval(() => {
-  //     fetchData();
-  //   }, 2000); // 1500 milliseconds (1.5 seconds)
-
-  //   return () => {
-  //     // Clear the interval when the component unmounts
-  //     clearInterval(fetchDataInterval);
-  //   };
-  // }, []);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-
-    // setTimeout(() => {
-    //   setAnchorEl(null);
-    // }, 4500);
   };
 
   const handleOpenBellMenu = (event) => {
@@ -452,6 +452,7 @@ export default function Navbar({ toggleSidebar }) {
   const handleCloseBellMenu = () => {
     setBellAnchorEl(null);
     setBellMenu(false);
+    handleMarkRead()
 
     // Other logic as needed
   };
@@ -504,7 +505,7 @@ export default function Navbar({ toggleSidebar }) {
     if (changedItem.newPassword != changedItem.confirmPassword) {
       toast.warn("Confirm Password mismatched !", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -526,7 +527,7 @@ export default function Navbar({ toggleSidebar }) {
       if (response.status === 200) {
         toast.success("Password has been successfully changed.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -544,7 +545,7 @@ export default function Navbar({ toggleSidebar }) {
       if (error.response.status === 400) {
         toast.warn("Old " + JSON.parse(cleanedMessage) + ".", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -555,7 +556,7 @@ export default function Navbar({ toggleSidebar }) {
       } else {
         toast.error("Something went Wrong !", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           pauseOnHover: true,
           draggable: true,
@@ -577,7 +578,7 @@ export default function Navbar({ toggleSidebar }) {
     if (confirmLogout) {
       toast.success("Successfully logged out.", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -625,8 +626,9 @@ export default function Navbar({ toggleSidebar }) {
               flexDirection:'column',
               justifyContent:'center',
               alignItems:'center',
-              mb:'0.5em'
+              mb:'0.5em',
               // bgcolor:'red'
+              userSelect:'none',
             }}
           >
             <Typography
@@ -640,7 +642,6 @@ export default function Navbar({ toggleSidebar }) {
             >
               {formData.firstName} {formData.lastName}
             </Typography>
-{" "}
             <Typography
               component={"span"}
               sx={{
@@ -811,6 +812,7 @@ export default function Navbar({ toggleSidebar }) {
               alignItems: "center",
               color: "#ffffff",
               fontSize: { xs: "17px", sm: "20px" },
+              userSelect:'none'
             }}
           >
             {/* <span style={{fontSize:'19px'}}>VMS</span>  */}
@@ -855,6 +857,7 @@ export default function Navbar({ toggleSidebar }) {
               alignItems: "center",
               color: "#ffffff",
               fontSize: { xs: "17px", sm: "20px" },
+              userSelect:'none'
             }}
           >
             <Typography
@@ -892,7 +895,7 @@ export default function Navbar({ toggleSidebar }) {
           {isSUPERADMIN ? null :
                     <IconButton
                     size="large"
-                    aria-label="show 17 new notifications"
+                    // aria-label="show 17 new notifications"
                     color="inherit"
                     onClick={handleOpenBellMenu}
                     sx={{

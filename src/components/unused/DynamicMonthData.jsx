@@ -116,7 +116,7 @@ const data = [
   }
 ];
 
-const CustomTable = ({ data }) => {
+const  CustomTable = ({ data }) => {
   const months = ['NOV', 'DEC', 'JAN'];
 
   return (
@@ -158,7 +158,7 @@ const CustomTable = ({ data }) => {
   );
 };
 
-export default function App() {
+export default function DynamicMonthData() {
   return (
     <div>
       <h1>Material-UI Table Example</h1>

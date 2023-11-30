@@ -30,7 +30,11 @@ function LoginForm() {
   const navigate = useNavigate();
   const BASE_URL = "http://192.168.12.54:8080";
   // const BASE_URL = 'http://192.168.12.58:8080';
-  const BASE_URL2 = "http://192.168.12.54:8080/api/user";
+
+
+  const OTP_URL = "http://192.168.12.54:8080/api/user";
+  // const OTP_URL = "http://192.168.12.58:8080/api/user";
+
   const OWNER = "https://www.rapidsofttechnologies.com/";
 
   const { authenticated, setAuthenticated, logout, setIsNavBar, setIsSideBar } =
@@ -287,7 +291,7 @@ function LoginForm() {
       if (response.status === 200) {
         toast.success("Successfully Logged In", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -304,7 +308,6 @@ function LoginForm() {
         const companyName = response.data.company_name;
         const adminId = response.data.id;
         const limit = response.data.limit;
-        const buildingId = response.data.buildingId;
 
         setUserRoleAndAuth(loggedUserRole);
 
@@ -315,6 +318,7 @@ function LoginForm() {
         sessionStorage.setItem("companyId", companyId);
         sessionStorage.setItem("companyName", companyName);
         sessionStorage.setItem("limit", limit);
+        sessionStorage.setItem('isSideBarPinned', true)
         sessionStorage.setItem("buildingId",buildingId);
 
         // localStorage.setItem('token', token);
@@ -333,7 +337,7 @@ function LoginForm() {
           navigate("/empdashboard");
           // sessionStorage.setItem("activeListItem", "/empdashboard");
         } else if (loggedUserRole === "RECEPTIONIST") {
-          navigate("/dashboardreceptionist");
+          navigate("/receptionistcompanyscreen");
           // sessionStorage.setItem("activeListItem", "/dashboardreceptionist");
         } else if (loggedUserRole === "EMPLOYEE") {
           navigate("/empdashboard");
@@ -346,7 +350,7 @@ function LoginForm() {
       if (error.request.status === 400) {
         toast.error("Incorrect username or password", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -357,7 +361,7 @@ function LoginForm() {
       } else {
         toast.error("Something went wrong !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -398,7 +402,7 @@ function LoginForm() {
     if (!updateCreds.username) {
       toast.warn("Username can't be empty.", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -415,13 +419,13 @@ function LoginForm() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BASE_URL2}/getotp?username=${getOtpPayload}`
+        `${OTP_URL}/getotp?username=${getOtpPayload}`
       );
       console.log("get otp", response);
       if (response.status === 200) {
         toast.success("OTP sent successfully. Please check your mail.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -434,7 +438,7 @@ function LoginForm() {
       } else {
         toast.error("Something went wrong !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -447,7 +451,7 @@ function LoginForm() {
       if (error.request.status === 400) {
         toast.error("User not found !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -458,7 +462,7 @@ function LoginForm() {
       } else {
         toast.error("Something went wrong !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -485,7 +489,7 @@ function LoginForm() {
     ) {
       toast.warn("Please fill all details !!", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -506,7 +510,7 @@ function LoginForm() {
     if (updateCreds.newPassword != updateCreds.confirmPassword) {
       toast.error("New and Confirm passwords mismatched !!!", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -521,13 +525,13 @@ function LoginForm() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${BASE_URL2}/forgot`,
+        `${OTP_URL}/forgot`,
         updatePasswordPayload
       );
       if (response.status === 200) {
         toast.success("Password updated succesfully.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -545,7 +549,7 @@ function LoginForm() {
         const cleanedMessage = JSON.stringify(errMessage);
         toast.error(JSON.parse(cleanedMessage) + " !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -556,7 +560,7 @@ function LoginForm() {
       } else {
         toast.error("Something went wrong !!!", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -825,7 +829,7 @@ function LoginForm() {
                     fullWidth
                     value={updateCreds.otp}
                     onChange={handleCustomUpdateChange}
-                    inputProps={{ maxLength: 4 }}
+                    inputProps={{ maxLength: 6 }}
                     error={Boolean(otpErrors.errorMessage)}
                     helperText={
                       otpErrors.errorMessage || otpErrors.warningMessage

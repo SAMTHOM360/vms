@@ -401,7 +401,7 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         });
         toast.success("New Employee Added Successfully.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -411,6 +411,16 @@ function UserForm({ authenticated, closeDialog, fetchData,}) {
         });
       }
     } catch (error) {
+      toast.error("Something went wrong !!!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       alert("Error submitting user data", error);
     }
     setLoading(false);

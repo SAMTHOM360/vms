@@ -109,7 +109,7 @@
 
 
 
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useContext, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
@@ -122,8 +122,9 @@ import Navbar from './global/Navbar';
 import Sidebar from './global/Sidebar';
 import Loader from './components/Loader';
 import PrivateRoute from './routes/PrivateRoute';
+import { useAuth } from './routes/AuthContext';
 // import NotFound from './components/NotFound';
-import ReceptionistCompanyScreen from './components/company/ReceptionistCompanyScreen';
+import DynamicMonthData from './components/unused/DynamicMonthData';
 
 
 const LoginForm = lazy(() => import('./components/LoginFormNK'));
@@ -135,9 +136,8 @@ const CompanyTable = lazy(() => import('./components/company/CompanyTable'));
 const EditCompanyForm = lazy(() => import('./components/company/EditCompanyForm'));
 const Meetings = lazy(() => import('./components/company/Meetings'));
 const ReceptionistDashboard = lazy(() => import('./components/company/ReceptionistDashboard'));
+const ReceptionistCompanyScreen = lazy(() => import('./components/company/ReceptionistCompanyScreen'));
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
-
-
 const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
 const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
@@ -149,13 +149,16 @@ const Department = lazy(() => import('./components/experimentals/Department'));
 
 
 function App() {
+  const { isSideBarPinned } = useAuth()
+  // const isSideBarPinned = isSideBarPinnedValue === 'true'
+  // console.log("isSideBarPinned", isSideBarPinned)
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // const currentPath = window.location.pathname;
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
-  const isExcludedRoute = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRoute = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
 
   const toggleSidebar = () => {
@@ -172,15 +175,18 @@ function App() {
       <Box
       // className='app'
       sx={{
-         display: "flex", // Comment it for overlay Sidebar
-        //  display:'',  // Uncomment for overlay Sidebar
+         display: isSideBarPinned ? 'flex' : '', // Comment it for unpinned Sidebar
+        //  display:'',  // Uncomment for unpinned Sidebar
          flexGrow: 1, 
         //  p: 3, 
-        //  pl:'5em',    // Uncomment for overlay Sidebar
+        pl: isSideBarPinned ? '' : '4em',
+        mt: isSideBarPinned ? '' : 0
+        //  pl:'4em',    // Uncomment for unpinned Sidebar
         // bgcolor:'green',
         // width:'100vw',
         // height:'auto'
-         }}>
+         }}
+         >
 
 {isExcludedRoute && <Sidebar open={sidebarOpen} /> }
 <Suspense fallback={<Loader />}>
@@ -203,6 +209,7 @@ function App() {
 {/* <Route path='/bulkform' element={<BulkUserForm />} /> */}
 <Route path='/demodashboard' element={<DemoDashboardV2 />} />
 <Route path='/demodept' element={<Department />} />
+<Route path='/demodata' element={<DynamicMonthData />} />
 
   <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
@@ -211,16 +218,13 @@ function App() {
   <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
   <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
-  {/* <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} /> */}
+  <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} />
   <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE']} />} />
   <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
   <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} />
   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
   <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
-
-  <Route path="/receptionistcompanyscreen" element={<ReceptionistCompanyScreen/>} />
-
 
 </Routes>
 </Suspense>

@@ -17,6 +17,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRef } from "react";
+import { useAuth } from "../../routes/AuthContext";
 
 import img1 from "../../assets/6173954.jpg";
 
@@ -36,6 +37,7 @@ import { useEffect } from "react";
 export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
   // const BASE_URL1 = "http://192.168.12.58:8080/api";
   const BASE_URL1 = "http://192.168.12.54:8080/api";
+  const { bellItemChanged, setBellItemChanged } = useAuth()
 
   const token = sessionStorage.getItem("token");
 
@@ -101,7 +103,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
     } catch (error) {
       toast.error("Something went wrong !!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -137,7 +139,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       if (response.status === 200) {
         toast.success("Meeting has been APPROVED !!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -148,11 +150,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         // console.log("Meet update response", response);
           handleTodayClick();
         setOpenMeetDialog(false);
+        setBellItemChanged((prev) => !prev);
       }
     } catch (error) {
       toast.error("Something went wrong !!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -183,12 +186,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       const response = await axios.post(
         `${BASE_URL1}/meeting/update/meeting`,
         payLoad,
-        { headers }
+        { headers: headers }
       );
       if (response.status === 200) {
         toast.warning("Meeting Has been REJECTED !!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -201,10 +204,11 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         handleTodayClick();
 
       handleMeetDialogClose();
+      setBellItemChanged((prev) => !prev);
     } catch (error) {
       toast.error("Something went wrong !!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

@@ -176,7 +176,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -201,7 +201,7 @@ const Profile = () => {
       {
         toast.success('Status updated successfully', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -215,7 +215,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -234,13 +234,13 @@ const Profile = () => {
       const response = await axios.post(
         `${BASE_URL}/present`,
         statusOffPayload,
-        { headers }
+        { headers: headers }
       );
       if(response.status === 200) 
       {
         toast.success('Status updated successfully', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -255,7 +255,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -388,7 +388,7 @@ const Profile = () => {
       } catch (error) {
         toast.error('Something went wrong !', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -423,7 +423,7 @@ const Profile = () => {
       {
         toast.success('Profile Picture updated successfully', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -442,7 +442,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -465,7 +465,7 @@ const Profile = () => {
       {
         toast.success('Basic info updated successfully', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -494,7 +494,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -518,7 +518,7 @@ const Profile = () => {
       {
         toast.success('Address info updated successfully', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -548,7 +548,7 @@ const Profile = () => {
     } catch (error) {
       toast.error('Something went wrong !', {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

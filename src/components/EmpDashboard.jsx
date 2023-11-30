@@ -64,6 +64,10 @@ const EmpDashboard = () => {
   const [timelineData, setTimelineData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [isTodayInterval, setIsTodayInterval] = useState(true);
+  const [isThisWeekInterval, setIsThisWeekInterval] = useState(false);
+  const [isThisMonthInterval, setIsThisMonthInterval] = useState(false);
+
 
 
   const handleNavigateMeeting = () => {
@@ -89,6 +93,8 @@ const EmpDashboard = () => {
 
     // console.log("dynamic payload", payLoad);
 
+    console.log('non dynamic data')
+
     try {
       setLoading(true);
 
@@ -97,19 +103,19 @@ const EmpDashboard = () => {
         payLoad
       );
 
-      const dashboardTimelineResponse = await axios.post(
-        `${BASE_URL1}/meeting/meetingfordashboard`,
-        payLoad
-      );
+      // const dashboardTimelineResponse = await axios.post(
+      //   `${BASE_URL1}/meeting/meetingfordashboard`,
+      //   payLoad
+      // );
 
       const dashboardApiData = dashboardResponse.data.data;
 
       // console.log("dashboardApiData", dashboardApiData);
-      const timelineApiData = dashboardTimelineResponse.data.data;
+      // const timelineApiData = dashboardTimelineResponse.data.data;
 
       if (dashboardResponse.status === 200) {
         setBarchartData(dashboardApiData.meetingsContextDate);
-        setTimelineData(timelineApiData);
+        // setTimelineData(timelineApiData);
 
         let hours = dashboardApiData.totalHoursOfMeeting / 3600000;
         let hoursFloat = Math.round(hours * 100) / 100;
@@ -124,7 +130,7 @@ const EmpDashboard = () => {
     } catch (error) {
       toast.error("Something went wrong!", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -139,6 +145,59 @@ const EmpDashboard = () => {
   }
 
 
+
+
+
+
+
+
+  async function fetchTimeLineData(fromDate, toDate) {
+    const payLoad = {
+      user: {
+        id: adminId,
+      },
+      fromDate: fromDate,
+      // fromDate: "2023-11-13",
+      // toDate: "2023-11-14",
+      toDate: toDate,
+    };
+
+    console.log("dynamic payload",);
+
+    try {
+      const dashboardTimelineResponse = await axios.post(
+        `${BASE_URL1}/meeting/meetingfordashboard`,
+        payLoad
+      );
+      const timelineApiData = dashboardTimelineResponse.data.data;
+
+      if (dashboardTimelineResponse.status === 200) {
+        setTimelineData(timelineApiData);
+      }
+    } catch (error) {
+      // toast.error("Something went wrong!", {
+      //   position: "top-right",
+      //   autoClose: 2000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "light",
+      // });
+      console.error("Error fetching data:", error);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
   const options = [
     { label: "Today", value: "today" },
     { label: "This Week", value: "thisWeek" },
@@ -151,13 +210,22 @@ const EmpDashboard = () => {
     const selectedValue = event.target.value;
 
     switch (selectedValue) {
-      case "today":
+      case 'today':
+        setIsTodayInterval(true);
+        setIsThisWeekInterval(false);
+        setIsThisMonthInterval(false);
         handleTodayClick();
         break;
-      case "thisWeek":
+      case 'thisWeek':
+        setIsTodayInterval(false);
+        setIsThisWeekInterval(true);
+        setIsThisMonthInterval(false);
         handleThisWeekClick();
         break;
-      case "thisMonth":
+      case 'thisMonth':
+        setIsTodayInterval(false);
+        setIsThisWeekInterval(false);
+        setIsThisMonthInterval(true);
         handleThisMonthClick();
         break;
       default:
@@ -169,10 +237,29 @@ const EmpDashboard = () => {
     setSelectedFilter(selectedValue);
   };
 
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (isTodayInterval) {
+  //       handleIntervalToday();
+  //     } else if (isThisWeekInterval) {
+  //       handleIntervalThisWeek();
+  //     } else if (isThisMonthInterval) {
+  //       handleIntervalThisMonth();
+  //     }
+  //   }, 1000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [
+  //   // isTodayInterval,
+  //   //  isThisWeekInterval,
+  //   //   isThisMonthInterval
+  //   ]);
+
   const handleTodayClick = async () => {
     const today = new Date();
     const formattedToday = formatDateForServer(today);
     await fetchData(formattedToday, formattedToday);
+    await fetchTimeLineData(formattedToday, formattedToday);
     setSelectedFilter('today')
   };
 
@@ -188,6 +275,7 @@ const EmpDashboard = () => {
     const formattedToWeek = formatDateForServer(endOfWeek);
 
     await fetchData(formattedFromWeek, formattedToWeek);
+    await fetchTimeLineData(formattedFromWeek, formattedToWeek);
   };
 
   const handleThisMonthClick = async () => {
@@ -207,7 +295,60 @@ const EmpDashboard = () => {
     const formattedToMonth = formatDateForServer(lastDayOfMonth);
 
     await fetchData(formattedFromMonth, formattedToMonth);
+    await fetchTimeLineData(formattedFromMonth, formattedToMonth);
   };
+
+
+
+
+
+
+
+
+  const handleIntervalToday = async () => {
+    const today = new Date();
+    const formattedToday = formatDateForServer(today);
+    await fetchTimeLineData(formattedToday, formattedToday);
+    console.log('today interval')
+  };
+
+  const handleIntervalThisWeek = async () => {
+    const currentDate = new Date();
+    const diffFromMonday = currentDate.getDay() - 1;
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - diffFromMonday);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const formattedFromWeek = formatDateForServer(startOfWeek);
+    const formattedToWeek = formatDateForServer(endOfWeek);
+
+    await fetchTimeLineData(formattedFromWeek, formattedToWeek);
+    console.log('this week interval')
+  };
+
+  const handleIntervalThisMonth = async () => {
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const lastDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+
+    const formattedFromMonth = formatDateForServer(firstDayOfMonth);
+    const formattedToMonth = formatDateForServer(lastDayOfMonth);
+
+    await fetchTimeLineData(formattedFromMonth, formattedToMonth);
+    console.log('this month interval')
+  };
+
+
+
 
   const formatDateForServer = (date) => {
     const year = date.getFullYear();
@@ -217,7 +358,6 @@ const EmpDashboard = () => {
   };
 
   useEffect(() => {
-    // fetchData();
     handleTodayClick();
     setIsNavBar(true);
     setIsSideBar(true);
@@ -240,6 +380,8 @@ const EmpDashboard = () => {
       acc[date] = barchartData[date];
       return acc;
     }, {});
+
+    console.log("visible data",)
 
   // console.log("VISIBLE DATA", Object.keys(visibleData || {}).length);
   // console.log("Bar chart Data", barchartData);
@@ -625,24 +767,9 @@ const EmpDashboard = () => {
                         <MeetingTimeline timelineApiData={timelineData} handleTodayClick={handleTodayClick} />
                       </Box>
                     </Box>
-                    {/* <Grid container spacing={2}>
-                      <Grid item xs={12} md={6} lg={12}>
-                    <Box sx={{width:'100%', background:'#1F2A40', height:'15.5em', maxHeight:'15.5em', display:'flex',flexDirection:'column', }}>
-                      <Typography variant='h5' sx={{color:'#4cceac', mt:'10px', ml:'10px'}}>Activity Timeline</Typography>
-                      <Box sx={{overflowY:'auto', width:'100%', mb:'1em',}}>
-                      <MeetingTimeline />
-                      </Box>
-                      
-                    </Box>
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={12}>
-                    <Box sx={{width:'100%', background:'blue', height:'15.5em', color:'#fff'}}>
-                      Meeting types count PIECHART
-                    </Box>
-                        </Grid>
-                      </Grid> */}
                   </Grid>
+
+                  
                 </Grid>
               </Box>
             </Paper>

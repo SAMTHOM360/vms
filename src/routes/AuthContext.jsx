@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
   // const [ autoStatusChange, setAutoStatusChange ] = useState(sessionStorage.getItem('autoStatusChange' || ''))
   const [ autoStatusChange, setAutoStatusChange ] = useState()
   const [ activeListItem, setActiveListItem ] = useState()
+  const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'true' || true)
+  const [ bellItemChanged, setBellItemChanged ] = useState(false)
 
   console.log("Parent call", autoStatusChange)
 
@@ -62,6 +64,10 @@ export const AuthProvider = ({ children }) => {
     // setAutoStatusChange(sessionStorage.getItem('autoStatusChange'))
   }, [authenticated]);
 
+  useEffect(() => {
+    setIsSideBarPinned(sessionStorage.getItem('isSideBarPinned') === 'true')
+  }, [sessionStorage.getItem('isSideBarPinned')])
+
   const setUserRoleAndAuth = (role) => {
     setUserRole(role);
     Cookies.set('userRole', role);
@@ -81,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('limit')
     sessionStorage.removeItem('currEmpLength')
     sessionStorage.removeItem('activeListItem')
+    sessionStorage.removeItem('isSideBarPinnedValue')
 
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('adminId')
@@ -89,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged }}>
       {children}
     </AuthContext.Provider>
   );

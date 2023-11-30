@@ -135,7 +135,7 @@ function BulkUserForm() {
       if(response.status === 200) {
         toast.success("File uploaded Successfully. Please check for faulty data.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -174,7 +174,7 @@ function BulkUserForm() {
         // console.log("400 response", response)
         // toast.error("New Employee Added Successfully.", {
         //   position: "top-right",
-        //   autoClose: 4000,
+        //   autoClose: 2000,
         //   hideProgressBar: false,
         //   closeOnClick: true,
         //   pauseOnHover: true,
@@ -192,7 +192,7 @@ function BulkUserForm() {
         const cleanedMessage = JSON.stringify(errMessage);
         toast.error(JSON.parse(cleanedMessage)+' !!!', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -204,7 +204,7 @@ function BulkUserForm() {
        else {
         toast.error('Something went wrong !!!', {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

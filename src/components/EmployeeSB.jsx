@@ -19,6 +19,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -47,8 +48,8 @@ const Employee = () => {
   const currEmpLength = sessionStorage.getItem("currEmpLength") || "0";
   // console.log("admin id",currEmpLength)
 
-  const BASE_URL = "http://192.168.12.54:8080/api/user";
-  // const BASE_URL = 'http://192.168.12.58:8080/api/user';
+  // const BASE_URL = "http://192.168.12.54:8080/api/user";
+  const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -71,6 +72,7 @@ const Employee = () => {
   const [columns, setColumns] = useState([]);
   const [divText, setDivText] = useState("");
   const [isSUPERADMINAllowed, setIsSUPERADMINAllowed] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   let formattedHead;
 
@@ -229,6 +231,7 @@ const Employee = () => {
       },
     };
     try {
+      setBtnLoading(true);
       setLoading(true);
 
       const response = await axios.post(`${BASE_URL}/adduser`, payload, {
@@ -269,9 +272,20 @@ const Employee = () => {
             JSON.stringify(error.response.data.message)
         );
       } else {
+        toast.error("Something went wrong !", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         console.error("Error saving changes:", error);
       }
     }
+    setBtnLoading(false);
     setLoading(false);
   };
 
@@ -664,7 +678,7 @@ const Employee = () => {
                     }
                     required
                   />
-                  {/* <TextField
+                  <TextField
                 sx={{ mt: '2%', mb: '2%' }}
                 label="Phone"
                 fullWidth
@@ -684,7 +698,7 @@ const Employee = () => {
                   },
                 }}
                 required
-              /> */}
+              />
 
                   <FormControl fullWidth size="small" sx={{ mt: "1em" }}>
                     <InputLabel required>Role</InputLabel>
@@ -737,8 +751,9 @@ const Employee = () => {
                 onClick={handleSaveEdit}
                 color="primary"
                 sx={{ width: "6em" }}
+                disabled={btnLoading}
               >
-                Save
+                              {btnLoading ? <CircularProgress size="2em" /> : "Save"}
               </Button>
             </DialogActions>
           </Dialog>
