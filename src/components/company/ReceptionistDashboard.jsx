@@ -269,7 +269,7 @@ export default function Dashboard() {
 
     function fetchHostOptions() {
 
-        const hostUrl = `http://192.168.12.54:8080/api/user/alluser`;
+        const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
         axios.get(hostUrl)
             .then(response => {
                 const data = response.data.data;
@@ -358,12 +358,16 @@ export default function Dashboard() {
 
     };
 
+
+    const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+
     function getRoomsOption() {
 
 
-        const companyId = sessionStorage.getItem('companyId');
+        // const companyId = sessionStorage.getItem('companyId');
+       
 
-        const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
+        const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`;
 
         axios.get(roomUrl, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
@@ -466,7 +470,7 @@ export default function Dashboard() {
 
     function excelExport() {
 
-        const companyId = sessionStorage.getItem('companyId');
+        // const selectedCompanyId = sessionStorage.getItem('companyId');
 
         const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
 
@@ -477,7 +481,7 @@ export default function Dashboard() {
             fromDate: startDate,
             toDate: endDate,
 
-            companyId: companyId,
+            companyId: selectedCompanyId,
             user: {
 
                 id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
@@ -554,7 +558,7 @@ export default function Dashboard() {
 
 
 
-        const companyId = sessionStorage.getItem('companyId');
+        // const companyId = sessionStorage.getItem('companyId');
 
 
 
@@ -562,7 +566,7 @@ export default function Dashboard() {
             page: page,
             size: rowsPerPage,
             phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
-            companyId: companyId,
+            companyId: selectedCompanyId,
             fromDate: startDate,
             toDate: endDate,
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,

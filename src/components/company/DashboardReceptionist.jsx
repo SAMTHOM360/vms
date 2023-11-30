@@ -89,7 +89,9 @@ export default function Dashboard() {
 
 
 
-    const companyId = sessionStorage.getItem('companyId');
+    // const companyId = sessionStorage.getItem('companyId');
+    const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+    console.log(selectedCompanyId,"selectedCompanyId");
 
 
 
@@ -109,7 +111,7 @@ export default function Dashboard() {
             size: 1000,
             // phoneNumber: '',
             // searchQuery: '',
-            companyId: companyId,
+            companyId: selectedCompanyId,
             fromDate: eightDaysAgoFormatted,
             toDate: today
             // status:status,
@@ -441,7 +443,7 @@ const routeChange1 = ()=>{
                                             </Paper>
 
                                             <Paper elevation={7} sx={{
-                                                height: 545,
+                                                height: 570,
                                                 width: 400,
                                                 flexGrow: 1,
                                   

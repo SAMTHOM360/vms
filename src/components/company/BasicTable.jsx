@@ -107,7 +107,9 @@ import { blue } from '@mui/material/colors';
 
 export default function BasicTable() {
 
-  const companyId = sessionStorage.getItem('companyId');
+  // const companyId = sessionStorage.getItem('companyId');
+  const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -139,7 +141,7 @@ export default function BasicTable() {
 
 
 
-  const roomDetailsUrl = `http://192.168.12.54:8080/api/room/getroomfordashboard/?companyId=${companyId}`
+  const roomDetailsUrl = `http://192.168.12.54:8080/api/room/getroomfordashboard/?companyId=${selectedCompanyId}`
 
 
 
@@ -178,16 +180,6 @@ export default function BasicTable() {
   function calculateSerialNumber(index) {
     return index + 1 + page * rowsPerPage;
   }
-
-
-
-
-
-
-
-
-
-
 
 
   //format time
@@ -288,7 +280,7 @@ export default function BasicTable() {
       })
       .then(response => {
 
-        setRoomDetails(response.data.data);
+        response.data.data?setRoomDetails(response.data.data) : console.log("no rooms");
 
         // console.log(response.data.data,"roomdetailsdata")
 
