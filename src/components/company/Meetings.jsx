@@ -875,14 +875,19 @@ export default function Meetings() {
                                   id="outlined-search"
                                   label="Search By Phone Number"
                                   value={phoneNumberFilter}
-                                  onChange={(e) =>
-                                    setPhoneNumberFilter(e.target.value)
-                                  } // Update phone number filter state
-                                  // onKeyPress={handlePhoneNumberSearch}
 
-                                  //searchcriteria code
-                                  // value={searchCriteria.phoneNumber}
-                                  // onChange={(e) => setSearchCriteria({ ...searchCriteria, phoneNumber: e.target.value })}
+                                  inputProps={{ maxLength: 10 }} 
+
+
+                                  onChange={(e) => {
+
+                                    if (e.target.value.length <= 10) {
+                                        setPhoneNumberFilter(e.target.value)} 
+                                       
+                                    
+                                }}
+                                
+                               
                                   type="search"
                                   style={{ top: "10px" }}
                                 />

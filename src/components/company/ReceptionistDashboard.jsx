@@ -1054,7 +1054,25 @@ export default function Dashboard() {
 
 
                                                                 <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
-                                                                    onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
+
+inputProps={{ maxLength: 10 }} 
+
+
+                                                                   
+
+                                                                    onChange={(e) => {
+
+                                                                        if (e.target.value.length <= 10) {
+                                                                            setPhoneNumberFilter(e.target.value)} 
+                                                                           
+                                                                        
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    
+                                                                    
+                                                                    
+                                                                    // Update phone number filter state
                                                                     onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px" }} />
 
 
