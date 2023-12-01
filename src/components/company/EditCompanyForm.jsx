@@ -59,10 +59,8 @@ export default function EditCompanyForm() {
       })
       .then((response) => {
         const company = response.data.data;
-        console.log(company);
-        // console.log(response.data.data.city.name,"city")
-        // const companyLogo = response.data.data.logo;
-        // console.log(companyLogo,"companyLogo")
+        console.log(response.data.data);
+      
 
         setCompanyData({
           name: company.name,
@@ -77,6 +75,7 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
+          buildingId:company.buildingId
         });
         // console.log(company.city.id,"city");
 
@@ -165,6 +164,7 @@ export default function EditCompanyForm() {
       formData.append("phoneNumber", companyData.phoneNumber);
       formData.append("industry", companyData.industry);
       formData.append("userLimit", companyData.userLimit);
+      formData.append("buildingId", companyData.buildingId);
       formData.append("aboutUs", companyData.aboutUs);
       if (companyData.logo) {
         formData.append("image", companyData.logo);
@@ -222,10 +222,6 @@ export default function EditCompanyForm() {
   };
 
   const handleLogoChange = (event) => {
-    // const selectedImage = event.target.files[0];
-    // setCompanyData({ ...companyData, logo: selectedImage || null });
-
-    // setCompanyData({ ...companyData, logo: event.target.files[0] });
 
     const logoFile = event.target.files[0];
     setCompanyData({ ...companyData, logo: logoFile });
@@ -243,277 +239,280 @@ export default function EditCompanyForm() {
 
   return (
     <>
-    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
-            <Grid container spacing={2}>
-  <Grid item xs={12} md={12} lg={12}>
-      <form>
-        <Box
-          display="flex"
-          flexDirection="column"
-          maxWidth={800}
-          margin="auto"
-          marginTop={8}
-          padding={3}
-          borderRadius={2}
-          gap={5}
-          elevation={2}
-          // align-alignItems={'center'}
-          // justifyContent={"center"}
-          boxShadow={"5px 5px 10px #ccc"}
-        >
-          <Typography sx={{ margin: "auto" }} fontSize={20} variant={"h1"}>
-            Edit Company Registration Form
-          </Typography>
-          <div
-            className="input"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TextField
-              sx={{ width: "47%" }}
-              label="Company Name"
-              placeholder="Company Name "
-              type="text"
-              name="name"
-              value={companyData.name}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, name: e.target.value })
-              }
-              disabled={disabled}
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} lg={12}>
+            <form>
+              <Box
+                display="flex"
+                flexDirection="column"
+                maxWidth={800}
+                margin="auto"
+                marginTop={8}
+                padding={3}
+                borderRadius={2}
+                gap={5}
+                elevation={2}
+                // align-alignItems={'center'}
+                // justifyContent={"center"}
+                boxShadow={"5px 5px 10px #ccc"}
+              >
+                <Typography sx={{ margin: "auto" }} fontSize={20} variant={"h1"}>
+                  Edit Company Registration Form
+                </Typography>
+                <div
+                  className="input"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <TextField
+                    sx={{ width: "47%" }}
+                    label="Company Name"
+                    placeholder="Company Name "
+                    type="text"
+                    name="name"
+                    value={companyData.name}
+                    onChange={(e) =>
+                      setCompanyData({ ...companyData, name: e.target.value })
+                    }
+                    disabled={disabled}
 
-            ></TextField>
+                  ></TextField>
 
-            {/* <label></label>
+                  {/* <label></label>
             <TextField className="fileInput" type="file" label="Upload Company Logo" InputLabelProps={{ shrink: true }} id="logo" style={{ width: "47%", height: "50px", color: "blue" }} name="logo" value={companyData.logo} onChange={handleInputChange}></TextField> */}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {/* <label>Upload company Logo</label><br></br> */}
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {/* <label>Upload company Logo</label><br></br> */}
 
-              {/* <input type="file" value={companyData.logo} onChange={(e) => setCompanyData({ ...companyData, logo: e.target.value })} ></input> */}
+                    {/* <input type="file" value={companyData.logo} onChange={(e) => setCompanyData({ ...companyData, logo: e.target.value })} ></input> */}
 
-              <label className="custom-file-upload">
-                <input
-                  type="file"
-                  id="file-input"
-                  onChange={handleLogoChange}
+                    <label className="custom-file-upload">
+                      <input
+                        type="file"
+                        id="file-input"
+                        onChange={handleLogoChange}
+                        disabled={disabled}
+                      />
+                      Upload Company Logo
+                    </label>
+                  </div>
+                </div>
+
+                <TextField
+                  label="Company Address"
+                  type="text"
+                  name="address"
+                  value={companyData.address}
+                  onChange={(e) =>
+                    setCompanyData({ ...companyData, address: e.target.value })
+                  }
                   disabled={disabled}
-                />
-                Upload Company Logo
-              </label>
-            </div>
-          </div>
-
-          <TextField
-            label="Company Address"
-            type="text"
-            name="address"
-            value={companyData.address}
-            onChange={(e) =>
-              setCompanyData({ ...companyData, address: e.target.value })
-            }
-            disabled={disabled}
-          ></TextField>
-          <div
-            className="input"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              gap: "10px",
-            }}
-          >
-            <div>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Select State
-                  </InputLabel>
-                  <Select
-                    sx={{ width: "350px" }}
-                    onChange={handleStateChange}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Select State"
-                    name="state"
-                    value={companyData.state}
-                    disabled={disabled}
-                  >
-                    <MenuItem value="-" placeholder="Select State"></MenuItem>
-                    {states.map((state) => (
-                      <MenuItem key={state.id} value={state.id}>
-                        {state.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-            </div>
-
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Select City
-                </InputLabel>
-                <Select
-                  sx={{ width: "350px" }}
-                  onChange={handleCityChange}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Select City"
-                  name="city"
-                  value={companyData.city}
-                  disabled={disabled}
+                ></TextField>
+                <div
+                  className="input"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    gap: "10px",
+                  }}
                 >
-                  <MenuItem value="-" placeholder="Select City"></MenuItem>
-                  {cities.map((city) => (
-                    <MenuItem key={city.id} value={city.id}>
-                      {city.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          </div>
-          <TextField
+                  <div>
+                    <Box sx={{ minWidth: 120 }}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Select State
+                        </InputLabel>
+                        <Select
+                          sx={{ width: "350px" }}
+                          onChange={handleStateChange}
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Select State"
+                          name="state"
+                          value={companyData.state}
+                          disabled={disabled}
+                        >
+                          <MenuItem value="-" placeholder="Select State"></MenuItem>
+                          {states.map((state) => (
+                            <MenuItem key={state.id} value={state.id}>
+                              {state.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </div>
 
-          label="Pincode"
-            placeholder="Pincode"
-            name="pincode"
-            value={companyData.pincode}
-            onChange={(e) =>
-              setCompanyData({ ...companyData, pincode: e.target.value })
-            }
-            disabled={disabled}
-          ></TextField>
+                  <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Select City
+                      </InputLabel>
+                      <Select
+                        sx={{ width: "350px" }}
+                        onChange={handleCityChange}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Select City"
+                        name="city"
+                        value={companyData.city}
+                        disabled={disabled}
+                      >
+                        <MenuItem value="-" placeholder="Select City"></MenuItem>
+                        {cities.map((city) => (
+                          <MenuItem key={city.id} value={city.id}>
+                            {city.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </div>
+                <TextField
 
-          <div
-            className="input"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TextField
-              sx={{
-                width: "47%",
-                backgroundColor: "",
-                color: "white",
-              }}
+                  label="Pincode"
+                  placeholder="Pincode"
+                  name="pincode"
+                  value={companyData.pincode}
+                  onChange={(e) =>
+                    setCompanyData({ ...companyData, pincode: e.target.value })
+                  }
+                  disabled={disabled}
+                ></TextField>
 
-              label="Email"
-              placeholder=" Email"
-              type="email"
-              name="email"
-              value={companyData.email}
-              // InputProps={{
-              //   readOnly: true,
-              // }}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, email: e.target.value })
-              }
-              disabled={disabled}
-            ></TextField>
-            <TextField
-              sx={{ width: "47%" }}
-              label="Phone Number"
-              placeholder=" Phone Number "
-              type="number"
-              name="phoneNumber"
-              value={companyData.phoneNumber}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, phoneNumber: e.target.value })
-              }
-              disabled={disabled}
-            ></TextField>
-          </div>
+                <div
+                  className="input"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <TextField
+                    sx={{
+                      width: "47%",
+                      backgroundColor: "",
+                      color: "white",
+                    }}
 
-          {/* <TextField
-            placeholder="Industry"
-            type="text"
-            name="industry"
-            value={companyData.industry}
-            onChange={(e) =>
-              setCompanyData({ ...companyData, industry: e.target.value })
-            }
-            disabled={disabled}
-          ></TextField> */}
+                    label="Email"
+                    placeholder=" Email"
+                    type="email"
+                    name="email"
+                    value={companyData.email}
+                    // InputProps={{
+                    //   readOnly: true,
+                    // }}
+                    onChange={(e) =>
+                      setCompanyData({ ...companyData, email: e.target.value })
+                    }
+                    disabled={disabled}
+                  ></TextField>
+                  <TextField
+                    sx={{ width: "47%" }}
+                    label="Phone Number"
+                    placeholder=" Phone Number "
+                    type="number"
+                    name="phoneNumber"
+                    value={companyData.phoneNumber}
+                    onChange={(e) =>
+                      setCompanyData({ ...companyData, phoneNumber: e.target.value })
+                    }
+                    disabled={disabled}
+                  ></TextField>
+                </div>
 
-          <div
-            className="input"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TextField
-            label="Industry"
-              placeholder="Industry"
-              type="text"
-              name="industry"
-              value={companyData.industry}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, industry: e.target.value })
-              }
-              disabled={disabled}
-            ></TextField>
+             
+                <TextField
+                  label="Industry"
+                  placeholder="Industry"
+                  type="text"
+                  name="industry"
+                  value={companyData.industry}
+                  onChange={(e) =>
+                    setCompanyData({ ...companyData, industry: e.target.value })
+                  }
+                  disabled={disabled}
+                ></TextField>
 
-            <TextField
-              sx={{ width: "47%" }}
-              label="User Limit"
-              placeholder="User Limit"
-              type="number"
-              value={companyData.userLimit}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, userLimit: e.target.value })
-              }
-            ></TextField>
-          </div>
+                <div
+                  className="input"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
 
-          <TextField
-          label="About"
-            placeholder="About"
-            type="text"
-            name="aboutUs"
-            value={companyData.aboutUs}
-            onChange={(e) =>
-              setCompanyData({ ...companyData, aboutUs: e.target.value })
-            }
-            disabled={disabled}
-          ></TextField>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "15px",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              type="button"
-              variant="contained"
-              sx={{ width: 130, height: 50 }}
-              onClick={handleSave}
-            >
-              Update
-            </Button>
-            <Button
-              onClick={handleCancel}
-              type="button"
-              variant="contained"
-              sx={{ width: 130, height: 50 }}
-            >
-              Back
-            </Button>
-          </div>
-        </Box>
-      </form>
-      </Grid>
-      </Grid>
+                  <TextField
+                    sx={{ width: "47%" }}
+                    label="Building Id"
+                    placeholder="Building Id"
+                    type="number"
+                    value={companyData.buildingId}
+                    onChange={(e) =>
+                      setCompanyData({ ...companyData, buildingId: e.target.value })
+                    }
+                  ></TextField>
+
+
+                  <TextField
+                    sx={{ width: "47%" }}
+                    label="User Limit"
+                    placeholder="User Limit"
+                    type="number"
+                    value={companyData.userLimit}
+                    onChange={(e) =>
+                      setCompanyData({ ...companyData, userLimit: e.target.value })
+                    }
+                  ></TextField>
+                </div>
+
+                <TextField
+                  label="About"
+                  placeholder="About"
+                  type="text"
+                  name="aboutUs"
+                  value={companyData.aboutUs}
+                  onChange={(e) =>
+                    setCompanyData({ ...companyData, aboutUs: e.target.value })
+                  }
+                  disabled={disabled}
+                ></TextField>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "15px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    type="button"
+                    variant="contained"
+                    sx={{ width: 130, height: 50 }}
+                    onClick={handleSave}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    onClick={handleCancel}
+                    type="button"
+                    variant="contained"
+                    sx={{ width: 130, height: 50 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </form>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

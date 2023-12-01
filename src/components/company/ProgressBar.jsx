@@ -285,7 +285,7 @@ const ProgressBar = ({meetingHour,avgData,meetingData}) => {
 
                   <div className="chartCard">
                 <div className="chartBox">
-                    <canvas id="myChart"  ref={chartRef}style={{ height: "30%", width: "70%", marginTop: "4.5%", backgroundColor: "" ,padding:"4.5%",}}></canvas>
+                    <canvas id="myChart"  ref={chartRef} style={{ height: "30%", width: "70%", marginTop: "4.5%", backgroundColor: "" ,padding:"4.5%",}}></canvas>
                 </div>
             </div>
 

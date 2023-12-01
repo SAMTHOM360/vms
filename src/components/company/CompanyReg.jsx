@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Loader from '../Loader';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 
 export default function CompanyReg() {
@@ -179,8 +181,8 @@ export default function CompanyReg() {
 
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
-    const [selectedState, setSelectedState] = useState('');
-    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
 
 
 
@@ -230,11 +232,23 @@ export default function CompanyReg() {
         // setSelectedCity(selectedCity);
     };
 
+
+    const [imageUrl, setImageUrl] = useState('');
+
+
     const handleLogoChange = (event) => {
         const logoFile = event.target.files[0];
         setValues({ ...values, logo: logoFile });
         setLogoUpdated(true);
         alert("Company logo updated successfully");
+
+
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImageUrl(reader.result);
+        };
+        reader.readAsDataURL(logoFile);
     };
 
     return (
@@ -274,11 +288,28 @@ export default function CompanyReg() {
                                             <input type="file" id="file-input" onChange={handleLogoChange} />
                                             Upload Company Logo
                                         </label> */}
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: "10px" }}>
 
-                                        <label className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                                            <input type="file" id="file-input" onChange={handleLogoChange} />
-                                            Upload Company Logo
+                                            {imageUrl && (
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Uploaded Logo"
+                                                    style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px' }}
+                                                />
+                                            )}
+                                            <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
+                                                <input type="file" id="file-input" onChange={handleLogoChange} />
+                                                Upload Company Logo
+                                            </span>
+
+
                                         </label>
+
+
+
+
+
+
                                     </div>
 
 
@@ -317,53 +348,47 @@ export default function CompanyReg() {
                                                         ))}
 
                                                     </Select>
+
+                                                    {/* <Autocomplete sx={{ width: '300px' }}
+                                                        options={states}
+                                                        getOptionLabel={(option) => option.name}
+                                                        value={selectedState}
+                                                        onChange={(event, newValue) => {
+                                                            setSelectedState(newValue);
+                                                            setValues({ ...values, state: newValue ? newValue.id : '' });
+                                                            if (newValue) {
+                                                                axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
+                                                                    .then((response) => {
+                                                                        setCities(response.data.data);
+                                                                    })
+                                                                    .catch((error) => {
+                                                                        console.error(error);
+                                                                    });
+                                                            } else {
+                                                                setCities([]);
+                                                            }
+                                                        }}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Select State"
+                                                                error={Boolean(errors.state)}
+                                                                helperText={errors.state}
+                                                                InputLabelProps={{
+                                                                    shrink: selectedState !== null || params.inputProps?.value,
+                                                                }}></TextField>
+                                                        )}
+                                                    /> */}
                                                 </FormControl>
                                             </Box>
+
+
+
 
                                         </div>
 
 
 
-
-                                        {/* <Select
-
-            sx={{ width: '47%' }}
-            id="state-select"
-            value={selectedState}
-            // onChange={(e) => setValues({...values,state:e.target.value})}
-            // value={selectedState}
-            onChange={handleStateChange}
-        >
-
-
-            <MenuItem value="-"
-                placeholder='Select State' >
-                <em>Select State</em>
-            </MenuItem>
-            {states.map((state) => (
-                <MenuItem key={state.id} value={state.id}>
-                    {state.name}
-                </MenuItem>
-            ))}
-        </Select>
-
-        <Select
-            sx={{ width: '47%' }}
-
-
-            value={selectedCity}
-            onChange={handleCityChange}
-
-        >
-
-            <MenuItem value="-" placeholder='Select City'>
-                <em>Select City</em>
-            </MenuItem>
-            {cities.map((city) => (
-
-                <MenuItem key={city.id} value={city.id}>{city.name}</MenuItem>
-            ))}
-        </Select> */}
 
 
                                         <Box sx={{ minWidth: 120 }}>
@@ -391,6 +416,25 @@ export default function CompanyReg() {
                                                     ))}
 
                                                 </Select>
+{/* 
+                                                <Autocomplete sx={{ width: '300px' }}
+                                                    options={cities}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={selectedCity}
+                                                    onChange={(event, newValue) => {
+                                                        setSelectedCity(newValue);
+                                                        setValues({ ...values, city: newValue ? newValue.id : '' });
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Select City"
+                                                            error={Boolean(errors.city)}
+                                                            helperText={errors.city}
+                                                        />
+                                                    )}
+                                                /> */}
+
                                             </FormControl>
                                         </Box>
                                     </div>

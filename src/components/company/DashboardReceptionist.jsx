@@ -218,23 +218,9 @@ const routeChange1 = ()=>{
                                             <Paper onClick={routeChange1} elevation={1} sx={{
                                                 height: 150,
                                                 width: 300,
-                                                // display: 'flex', // Use flex display
-                                                // alignItems: 'center',// Vertically center content
-                                                // borderRadius:"40px",
+                                             
                                                 backgroundColor: "#32577e",
                                                 cursor: "pointer"
-
-
-
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 
 
                                             }}>
@@ -247,11 +233,7 @@ const routeChange1 = ()=>{
                                                     <div className='icon' style={{ height: "150px", width: "70px", backgroundColor: "#618fbed9", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "20px" }}>
                                                         <PersonOutlineIcon style={{ fontSize: "50px", color: "" }} />
 
-
-
                                                     </div>
-
-
 
                                                     <div className='info' style={{ marginRight: "50px", display: "flex", flexDirection: "column", backgroundColor: "", alignItems: "center", textAlign: "center" }}>
                                                         <h3>Total Meetings:</h3>
@@ -260,7 +242,7 @@ const routeChange1 = ()=>{
                                                     </div>
 
                                                 </div>
-                                                {/* {isOpen && <ReceptionistDashboard />} */}
+                                              
 
                                             </Paper>
                                             <Paper onClick={() => routeChange('PENDING')} elevation={1} sx={{
@@ -270,15 +252,6 @@ const routeChange1 = ()=>{
                                                 cursor: "pointer"
 
 
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                                             }}>
 
 
@@ -302,15 +275,7 @@ const routeChange1 = ()=>{
                                                 width: 300,
                                                 backgroundColor: "#32577e",
                                                 cursor: "pointer"
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                              
                                             }}>
 
 
@@ -337,15 +302,7 @@ const routeChange1 = ()=>{
                                                 width: 300,
                                                 backgroundColor: "#32577e",
                                                 cursor: "pointer"
-                                                // boxShadow: "5px 5px 10px grey",
-
-                                                // ":hover": {
-                                                //     boxShadow: "10px 10px 20px grey",
-                                                //     cursor: "pointer"
-                                                // },
-
-                                                // backgroundColor: (theme) =>
-                                                //     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                             
                                             }}>
 
 
@@ -404,7 +361,7 @@ const routeChange1 = ()=>{
                                     <Grid item xs={12} style={{ backgroundColor: "" }}>
                                         <Grid style={{ gap: "20px", marginTop: "20px",backgroundColor:"" }} container justifyContent="space-between" >
                                             <Paper style={{ backgroundColor: "", display: "flex", justifyContent: "center" }} elevation={7} sx={{
-                                                height: 570,
+                                                height: 575,
                                                 width: 400,
                                                 flexGrow: 1,
 
@@ -427,7 +384,7 @@ const routeChange1 = ()=>{
 
                                             </Paper>
                                             <Paper elevation={7} sx={{
-                                                height: 570,
+                                                height: 575,
                                                 width: 400,
                                                 flexGrow: 1,
                                   
@@ -435,7 +392,7 @@ const routeChange1 = ()=>{
 
 
                                                 <div className="rooms">
-                                                    <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
+                                                    <h2 style={{ color: "black", bottom: "" }}>Room Status</h2>
                                                     <DoughnutChart allData={allData} />
 
                                                 </div>
@@ -443,22 +400,12 @@ const routeChange1 = ()=>{
                                             </Paper>
 
                                             <Paper elevation={7} sx={{
-                                                height: 570,
+                                                height: 550,
                                                 width: 400,
                                                 flexGrow: 1,
+                                                backgroundColor:""
                                   
                                             }}>
-
-
-                                                {/* <div >
-
-                                                    <h2>Room Details</h2>
-
-                                                   <BasicTable/>
-                                                   
-                                                   
-
-                                                </div> */}
 
                                                 <div className="rooms">
                                                     <h2 style={{ color: "black", bottom: "" }}>Room Details</h2>
@@ -473,9 +420,6 @@ const routeChange1 = ()=>{
                                     </Grid>
 
                                 </Grid>
-
-
-
 
                             </div>
 
