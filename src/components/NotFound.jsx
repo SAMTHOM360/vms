@@ -230,6 +230,7 @@
 
 
 import React from "react";
+import '../css/NotFoundOriginals.css'
 import { Box } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import Lost404 from "./Lost404";
@@ -321,14 +322,20 @@ const NotFound = () => {
               to our home page, and use the menus to navigate to a specific
               section.
             </p>
-            <Link to={linkTo}>Go to Home</Link>
+            {/* <Link to={linkTo}>Go to Home</Link>
             <Button
             variant="contained"
             color="primary"
             onClick={handleNavigate}
             >
               Go to home
-            </Button>
+            </Button> */}
+
+            <Box className='NotFoundBtnContainer'>
+            {/* <button className="right" onClick={handleNavigate}><span>Home</span></button> */}
+
+            <button class="button-49" role="button" onClick={handleNavigate}>Home</button>
+            </Box>
           </div>
         </Box>
       </Grid>

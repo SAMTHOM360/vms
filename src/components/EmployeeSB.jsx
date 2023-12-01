@@ -46,6 +46,8 @@ const Employee = () => {
   const limit = sessionStorage.getItem("limit");
   const adminId = sessionStorage.getItem("adminId");
   const currEmpLength = sessionStorage.getItem("currEmpLength") || "0";
+  const companyIdStr = sessionStorage.getItem("companyId");
+  const companyId = parseInt(companyIdStr,10)
   // console.log("admin id",currEmpLength)
 
   const BASE_URL = "http://192.168.12.54:8080/api/user";
@@ -69,11 +71,14 @@ const Employee = () => {
   const [editedItem, setEditedItem] = useState(null);
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
+  const [selectedDept, setSelectedDept] = useState("");
   const [columns, setColumns] = useState([]);
   const [divText, setDivText] = useState("");
   const [isSUPERADMINAllowed, setIsSUPERADMINAllowed] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [ isReceptAllowed, setIsReceptAllowed ] = useState()
   const navigate = useNavigate();
+  const [ depts, setDepts ] = useState([])
   let formattedHead;
 
   if (loggedUserRole === "SUPERADMIN") {
@@ -179,15 +184,22 @@ const Employee = () => {
       if (response.status === 200) {
         const apiData = response.data.data.data;
 
+        console.log('handle edit api data', apiData)
+
         setEditedItem({
           id: apiData.id || "",
           firstName: apiData.firstName || "",
           lastName: apiData.lastName || "",
           email: apiData.email || "",
           phone: apiData.phone || "",
+          dept: {
+            id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
+            name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
+          },
 
-          role: apiData.role.id || "",
-          roleName: apiData.role.name || "",
+          role: apiData.role ?  apiData.role.id || "" : "",
+          roleName: apiData.role ? apiData.role.name || "" : "",
+          isPermission: apiData.isPermission || "",
         });
 
         setOpenEditDialog(true);
@@ -229,6 +241,10 @@ const Employee = () => {
       role: {
         id: editedItem.role,
       },
+      departmentDto: {
+        id: editedItem.dept.id,
+      },
+      isPermission: editedItem.isPermission,
     };
     try {
       setBtnLoading(true);
@@ -252,13 +268,17 @@ const Employee = () => {
           `${BASE_URL}/getbyid/${editedItem.id}`
         );
         const updatedData = response.data.data.data;
+        console.log(" updated data", updatedData)
 
         const updatedRole = updatedData.role || {};
         const updatedRoleName = updatedRole.name || "";
+        const updatedDept = updatedData.departmentDto || {}
+        const updatedIsPermission= updatedData.isPermission || ""
 
         const updatedRows = rows.map((row) => {
           if (row.id === editedItem.id) {
-            return { ...row, ...payload, role: updatedRoleName };
+            return { ...row, ...payload, role: updatedRoleName, dept: updatedDept.name, isPermission: updatedIsPermission
+          };
           }
           return row;
         });
@@ -297,7 +317,8 @@ const Employee = () => {
 
       const apiDataArray = response.data;
 
-      console.log("apidata index 0", apiDataArray[0].departmentDto);
+      // console.log("apidata index 0", apiDataArray[0].departmentDto);
+      console.log("apidata ", apiDataArray);
 
       sessionStorage.setItem("currEmpLength", apiDataArray.length);
 
@@ -366,6 +387,13 @@ const Employee = () => {
           headerAlign: "center",
         },
         {
+          field: "isPermission",
+          headerName: "Meet Crosscheck",
+          flex: 1,
+          align: "center",
+          headerAlign: "center",
+        },
+        {
           field: "actions",
           align: "center",
           headerAlign: "center",
@@ -407,6 +435,7 @@ const Employee = () => {
         company: apiDataItem.company ? apiDataItem.company.name : "",
         dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
         role: apiDataItem.role ? apiDataItem.role.name : "",
+        isPermission: apiDataItem.isPermission
       }));
 
       setColumns(gridColumns);
@@ -432,13 +461,27 @@ const Employee = () => {
   async function fetchRoles() {
     try {
       const response = await axios.get(
-        "http://192.168.12.54:8080/api/role/getall"
+        "http://192.168.12.54:8080/api/role/getall", { headers }
       );
       setRoles(response.data.data);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
   }
+  const fetchDepts = async () => {
+    try{
+      const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
+      const deptApiData = response.data.data
+      // console.log("dept data", response.data.data)
+      setDepts(deptApiData)
+    } catch(error) {
+      console.error("Error in fetching depts", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchDepts()
+  }, [companyId])
 
   useEffect(() => {
     fetchData();
@@ -700,6 +743,27 @@ const Employee = () => {
                 required
               />
 
+<FormControl sx={{ width: "100%", mt: "10px" }} required>
+                      <InputLabel htmlFor="dept">Department</InputLabel>
+                      <Select
+                        label="Department"
+                        name="dept"
+                        value={editedItem.dept.id || ""}
+                        required
+                        onChange={(e) => {
+                          const updatedItem = { ...editedItem, dept: { ...editedItem.dept, id: e.target.value } };
+                          setSelectedDept(e.target.value);
+                          setEditedItem(updatedItem);
+                        }}
+                      >
+                        {depts.map((dept) => (
+                          <MenuItem key={dept.id} value={dept.id}>
+                            {dept.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
                   <FormControl fullWidth size="small" sx={{ mt: "1em" }}>
                     <InputLabel required>Role</InputLabel>
                     <Select
@@ -723,9 +787,30 @@ const Employee = () => {
                           <MenuItem key={role.id} value={role.id}>
                             {role.name}
                           </MenuItem>
+                          
                         ))}
                     </Select>
                   </FormControl>
+
+
+                  <FormControl fullWidth>
+                        <InputLabel id="approval-label">
+                          Can Receptionist approve meet?
+                        </InputLabel>
+                        <Select
+                          labelId="approval-label"
+                          name="isPermission"
+                          value={editedItem.isPermission}
+                          label="Can Receptionist approve meet?"
+                          onChange={(e) => {
+                            setIsReceptAllowed(e.target.value);
+                            setEditedItem({ ...editedItem, isPermission: e.target.value });
+                          }}
+                        >
+                          <MenuItem value="true">True</MenuItem>
+                          <MenuItem value="false">False</MenuItem>
+                        </Select>
+                      </FormControl>
                 </form>
               )}
             </DialogContent>

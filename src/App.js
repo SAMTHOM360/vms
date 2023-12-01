@@ -109,7 +109,7 @@
 
 
 
-import { lazy, Suspense, useContext, useState } from 'react';
+import { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
@@ -161,7 +161,8 @@ function App() {
   const isExcludedRouteForNavBar = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
   const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
-
+  console.log('isExcludedRouteForSidebar',isExcludedRouteForSidebar)
+  console.log('isSideBarPinned', isSideBarPinned)
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -180,7 +181,7 @@ function App() {
         //  display:'',  // Uncomment for unpinned Sidebar
          flexGrow: 1, 
         //  p: 3, 
-        pl: isSideBarPinned ? '' : '4em',
+        pl: isSideBarPinned ? '' : isExcludedRouteForSidebar ? '' : '4em',
         mt: isSideBarPinned ? '' : 0
         //  pl:'4em',    // Uncomment for unpinned Sidebar
         // bgcolor:'green',
@@ -217,7 +218,7 @@ function App() {
   <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
   <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
   <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
-  <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST']} />} />
+  <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST','ADMIN']} />} />
 
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 

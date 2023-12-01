@@ -624,12 +624,44 @@ export default function Meetings() {
   ]);
 
 
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+
+  const [selectedFilter, setSelectedFilter] = useState("personalMeets");
+
+  const [ isADMIN, setIsADMIN ] = useState(false)
 
 
+  useEffect(() => {
+    if (loggedUserRole === "ADMIN") {
+      setIsADMIN(true);
+    } else {
+      setIsADMIN(false);
+    }
+  }, [loggedUserRole]);
+
+  const meetOptions = [
+    { label: "Personal Meets", value: "personalMeets" },
+    { label: "Company Meets", value: "companyMeets" },
+  ];
 
 
+  const handleFilterChange = (event) => {
+    const selectedValue = event.target.value;
+
+    switch (selectedValue) {
+      case 'personalMeets':
+        navigate('/meetings')
+        break;
+      case 'companyMeets':
+        navigate('/receptionistdashboard')
+        break;
+      default:
+        break;
+    }
 
 
+    setSelectedFilter(selectedValue);
+  };
 
 
 
@@ -675,10 +707,10 @@ export default function Meetings() {
                         }}
                       >
                         <Header
-                          title="Meetings"
+                          title="Personal Meetings"
                           subtitle="Get all updates about your meetings"
                         />
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap:'1em' }}>
                           <Button
                             variant="contained"
                             size="small"
@@ -687,6 +719,57 @@ export default function Meetings() {
                           >
                             Appoint A Meeting
                           </Button>
+
+                          {isADMIN ? (<Box
+              sx={{
+                display:'flex',
+                flexDirection:{xs:'column', md:'row'},
+                alignItems:'center',
+                gap:'0.3em'
+              }}
+              >
+
+                <Typography sx={{color:'#555555'}}>Filter by</Typography>
+
+                <FormControl
+                  sx={{
+                    border: "none",
+                    borderRadius: "5px",
+                    // width: "130px !important",
+                    // height: '50px !important',
+                    boxShadow: "0px 2px 2px #333333",
+                  }}
+                >
+                  {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
+                  <Select
+                    sx={{
+                      color: "white",
+                      bgcolor: "#1976d2",
+                      width: "165px !important",
+                      height: '40px !important',
+                      border: "none",
+                      "&:hover": {
+                        bgcolor: "#1565c0",
+                      },
+                      "& .MuiSelect-icon": {
+                        color: "white",
+                      },
+                    }}
+                    label="Select a filter"
+                    value={selectedFilter}
+                    onChange={handleFilterChange}
+                    elevation={3}
+                  >
+                    {meetOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>)  : ''}
+
+                          
                         </Box>
                       </Box>
                     </Grid>

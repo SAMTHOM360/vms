@@ -88,10 +88,13 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('currEmpLength')
     sessionStorage.removeItem('activeListItem')
     sessionStorage.removeItem('isSideBarPinnedValue')
+    sessionStorage.removeItem('isSideBarPinned')
+    
 
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('adminId')
     sessionStorage.removeItem('companyId')
+    sessionStorage.removeItem('buildingId')
 
   };
 

@@ -235,8 +235,29 @@ const MeetingDetails = () => {
     setLoading(false)
   };
 
+  // const shouldDisableDate = (date) => {
+  //   return date < new Date().setDate(new Date().getDate() - 1);
+  // };
+
+  // const shouldDisableDate = (date) => {
+  //   const today = new Date();
+  //   const differenceInDays = Math.floor(
+  //     (date - today) / (1000 * 60 * 60 * 24)
+  //   );
+  
+  //   return differenceInDays > 90 || date < today;
+  // };
+
   const shouldDisableDate = (date) => {
-    return date < new Date().setDate(new Date().getDate() - 1);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set current date to midnight
+  
+    const differenceInDays = Math.floor(
+      (date - today) / (1000 * 60 * 60 * 24)
+    );
+  
+    // Disable dates more than 90 days in the future or before today
+    return differenceInDays > 90 || date < today;
   };
 
   const formattedDateTimePicker1 = formData.meetingStartDateTime

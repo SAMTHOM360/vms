@@ -139,20 +139,20 @@ const Profile = () => {
           govtId: apiData.govtId || "",
           image: apiData.image || "",
           departmentDto: {
-            id: apiData.departmentDto.id || "",
-            name: apiData.departmentDto.name || "",
+            id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
+            name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
           },
           state: {
-            id: apiData.state.id || "",
-            name: apiData.state.name || "",
+            id: apiData.state ? apiData.state.id || "" : "",
+            name: apiData.state ? apiData.state.name || "" : "",
           },
           city: {
-            id: apiData.city.id || "",
-            name: apiData.city.name || "",
+            id: apiData.city ? apiData.city.id || "" : "",
+            name: apiData.city ? apiData.city.name || "" : "",
           },
           role: {
-            id: apiData.role.id || "",
-            name: apiData.role.name || "",
+            id: apiData.role ? apiData.role.id || "" : "",
+            name: apiData.role ? apiData.role.name || "" : "",
           },
           pincode: apiData.pincode || "",
           empCode: apiData.empCode || "",

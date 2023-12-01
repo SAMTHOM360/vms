@@ -413,8 +413,8 @@ export default function Navbar({ toggleSidebar }) {
           // govtId: apiData.govtId || "",
           // image: apiData.image || "",
           dept: {
-            id: apiData.departmentDto.id || "",
-            name: apiData.departmentDto.name || "",
+            id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
+            name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
           },
           // state: {
           //   id: apiData.state.id || "",
