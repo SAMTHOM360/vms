@@ -227,6 +227,10 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
     setOpenMeetDialog(false);
   };
 
+  const formatMeetType = (meetType) => {
+    return meetType.charAt(0).toUpperCase() + meetType.slice(1).toLowerCase();
+  }
+
   if (!Array.isArray(timelineApiData) || timelineApiData.length === 0) {
     // Return some default UI or message when timelineApiData is not an array or empty
     return (
@@ -475,6 +479,10 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
                         label={chipText}
                         sx={{ color: chipColor, bgcolor: chipBgColor }}
                       />
+
+                      {/* DONT REMOVE THIS COMMENTED BLOCK !!! THIS FOR FUTURE USE . . . */}
+
+
                       {info ? (
                         <IconButton
                           onClick={() => handleMeetDialogOpen(dataItem)}
@@ -484,6 +492,10 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
                       ) : (
                         ""
                       )}
+
+
+                      {/* DONT REMOVE THIS COMMENTED BLOCK !!! THIS FOR FUTURE USE . . . */}
+
                     </Box>
                   </Box>
                 </TimelineContent>
@@ -650,13 +662,16 @@ if (
                 wordBreak: "break-word",
               }}
             >
-              <Typography>Meeting Type: {meetByIdData.meetType}</Typography>
-              <Typography>Check-In Time: {meetByIdData.meetTime}</Typography>
-              <Typography>Remarks: {meetByIdData.remarks}</Typography>
-              <Typography>
-                Phone No.: {meetByIdData.visitorPhoneNumber}
+              <Typography sx={{fontWeight:600, fontSize:'17.5px'}}>Meeting Type: <Typography component='span' sx={{fontSize:'18px'}}> {formatMeetType(meetByIdData.meetType)}</Typography></Typography>
+              <Typography sx={{fontWeight:600, fontSize:'17.5px'}}>Check-In Time: <Typography component='span' sx={{fontSize:'16px'}}> {meetByIdData.meetTime} </Typography></Typography>
+              {/* <Typography>Remarks: {meetByIdData.remarks}</Typography> */}
+              <Typography sx={{fontWeight:600, fontSize:'17.5px'}}>
+                Phone No.: 
+                <Typography component='span' sx={{fontSize:'16px'}}>
+                {meetByIdData.visitorPhoneNumber}
+                </Typography>
               </Typography>
-              <Typography>Email: {meetByIdData.visitorEmail}</Typography>
+              <Typography sx={{fontWeight:600, fontSize:'17.5px'}}>Email:  <Typography component='span' sx={{fontSize:'16.5px'}}> {meetByIdData.visitorEmail} </Typography></Typography>
             </Box>
           </Box>
         </DialogContent>

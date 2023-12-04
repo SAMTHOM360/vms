@@ -125,6 +125,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import { useAuth } from './routes/AuthContext';
 // import NotFound from './components/NotFound';
 import DynamicMonthData from './components/unused/DynamicMonthData';
+import RolesAndDepartments from './components/RolesAndDepartments';
 
 
 const LoginForm = lazy(() => import('./components/LoginFormNK'));
@@ -149,11 +150,12 @@ const Department = lazy(() => import('./components/experimentals/Department'));
 
 
 function App() {
-  const { isSideBarPinned } = useAuth()
-  // const isSideBarPinned = isSideBarPinnedValue === 'true'
-  // console.log("isSideBarPinned", isSideBarPinned)
+  const { isSideBarPinned,isHoverOpen } = useAuth()
+
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  // const [sidebarOpen, setSidebarOpen] = useState(sessionStorage.getItem('isHoverOpen') === 'true' || true);
+  const [ navPlFix, setNavPlFix ] = useState()
 
   // const currentPath = window.location.pathname;
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
@@ -161,11 +163,17 @@ function App() {
   const isExcludedRouteForNavBar = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
   const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
-  console.log('isExcludedRouteForSidebar',isExcludedRouteForSidebar)
-  console.log('isSideBarPinned', isSideBarPinned)
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+   const toggleSidebar = () => {
+    setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
   };
+  
+  console.log('sidebarOpen', sidebarOpen)
+
+
+
+  // const toggleSidebar = () => {
+  //   setSidebarOpen(!sidebarOpen);
+  // };
 
   return (
     <>
@@ -181,7 +189,7 @@ function App() {
         //  display:'',  // Uncomment for unpinned Sidebar
          flexGrow: 1, 
         //  p: 3, 
-        pl: isSideBarPinned ? '' : isExcludedRouteForSidebar ? '' : '4em',
+        pl: isExcludedRouteForSidebar ? isSideBarPinned ? '' : '4em' : '',
         mt: isSideBarPinned ? '' : 0
         //  pl:'4em',    // Uncomment for unpinned Sidebar
         // bgcolor:'green',
@@ -197,6 +205,7 @@ function App() {
 <Route path="*" element={<Navigate to="/lost" />} />
               <Route path="/lost" element={<NotFound />} />
 <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
+
 {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
 {/* <Route path="/profile" element={<Profile />} /> */}
 {/* <Route path="/userform" element={<UserForm />} /> */}
@@ -209,9 +218,11 @@ function App() {
 {/* <Route path="/companyreg" element={<CompanyReg />} /> */}
 {/* <Route path="/employee" element={<Employee />} /> */}
 {/* <Route path='/bulkform' element={<BulkUserForm />} /> */}
+
 <Route path='/demodashboard' element={<DemoDashboardV2 />} />
 <Route path='/demodept' element={<Department />} />
 <Route path='/demodata' element={<DynamicMonthData />} />
+<Route path='/rolesanddepts' element={<RolesAndDepartments />} />
 
   <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />

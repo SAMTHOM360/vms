@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [ autoStatusChange, setAutoStatusChange ] = useState()
   const [ activeListItem, setActiveListItem ] = useState()
   const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'true' || true)
+  const [isHoverOpen, setIsHoverOpen] = useState(sessionStorage.getItem('isHoverOpen') === 'true' || true)
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
 
   // console.log("Parent call", autoStatusChange)
@@ -68,6 +69,10 @@ export const AuthProvider = ({ children }) => {
     setIsSideBarPinned(sessionStorage.getItem('isSideBarPinned') === 'true')
   }, [sessionStorage.getItem('isSideBarPinned')])
 
+  useEffect(() => {
+    setIsHoverOpen(sessionStorage.getItem('isHoverOpen') === 'true')
+  }, [sessionStorage.getItem('isHoverOpen')])
+
   const setUserRoleAndAuth = (role) => {
     setUserRole(role);
     Cookies.set('userRole', role);
@@ -89,6 +94,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('activeListItem')
     sessionStorage.removeItem('isSideBarPinnedValue')
     sessionStorage.removeItem('isSideBarPinned')
+    sessionStorage.removeItem('isHoverOpen')
     
 
     sessionStorage.removeItem('token');
@@ -99,7 +105,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen }}>
       {children}
     </AuthContext.Provider>
   );

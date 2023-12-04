@@ -71,6 +71,8 @@ const EmpDashboard = () => {
   const [isTodayInterval, setIsTodayInterval] = useState(true);
   const [isThisWeekInterval, setIsThisWeekInterval] = useState(false);
   const [isThisMonthInterval, setIsThisMonthInterval] = useState(false);
+  const [empFilteredFromDate, setEmpFilteredFromDate] = useState()
+  const [empFilteredToDate, setEmpFilteredToDate] = useState()
 
 
 
@@ -87,10 +89,14 @@ const EmpDashboard = () => {
   const handleNavigateMeeting = (filteredVisitors) => {
     let path = `/meetings`;
 
-    navigate(path);
+    // navigate(path);
+    // console.log('empFilteredFromDate', empFilteredFromDate)
+    // console.log('empFilteredToDate', empFilteredToDate)
 
-    if (filteredVisitors) {
+    if (empFilteredFromDate && empFilteredToDate) {
       sessionStorage.setItem("filters", filteredVisitors)
+      sessionStorage.setItem("empFilteredFromDate", empFilteredFromDate)
+      sessionStorage.setItem("empFilteredToDate", empFilteredToDate)
       navigate(path);
 
   }
@@ -98,6 +104,9 @@ const EmpDashboard = () => {
       navigate(path);
   }
   };
+
+  // console.log('from date',empFilteredFromDate)
+  // console.log('to date', empFilteredToDate)
 
   async function fetchData(fromDate, toDate) {
     const payLoad = {
@@ -279,7 +288,7 @@ const EmpDashboard = () => {
         toDate: toDate,
       };
   
-      console.log('dynamic payload',);
+      // console.log('dynamic payload',);
   
       try {
         const dashboardTimelineResponse = await axios.post(
@@ -326,7 +335,7 @@ const EmpDashboard = () => {
       const today = new Date();
       const formattedToday = formatDateForServer2(today);
       await fetchTimeLineData(formattedToday, formattedToday);
-      console.log('today interval')
+      // console.log('today interval')
     };
   
     const handleIntervalThisWeek = async () => {
@@ -341,7 +350,7 @@ const EmpDashboard = () => {
       const formattedToWeek = formatDateForServer2(endOfWeek);
   
       await fetchTimeLineData(formattedFromWeek, formattedToWeek);
-      console.log('this week interval')
+      // console.log('this week interval')
     };
   
     const handleIntervalThisMonth = async () => {
@@ -361,7 +370,7 @@ const EmpDashboard = () => {
       const formattedToMonth = formatDateForServer2(lastDayOfMonth);
   
       await fetchTimeLineData(formattedFromMonth, formattedToMonth);
-      console.log('this month interval')
+      // console.log('this month interval')
     };
 
 
@@ -399,6 +408,8 @@ const EmpDashboard = () => {
     await fetchData(formattedToday, formattedToday);
     // await fetchTimeLineData(formattedToday, formattedToday);
     setSelectedFilter('today')
+    setEmpFilteredFromDate(formattedToday)
+    setEmpFilteredToDate(formattedToday)
   };
 
   const handleThisWeekClick = async () => {
@@ -414,6 +425,8 @@ const EmpDashboard = () => {
 
     await fetchData(formattedFromWeek, formattedToWeek);
     // await fetchTimeLineData(formattedFromWeek, formattedToWeek);
+    setEmpFilteredFromDate(formattedFromWeek)
+    setEmpFilteredToDate(formattedToWeek)
   };
 
   const handleThisMonthClick = async () => {
@@ -434,6 +447,8 @@ const EmpDashboard = () => {
 
     await fetchData(formattedFromMonth, formattedToMonth);
     // await fetchTimeLineData(formattedFromMonth, formattedToMonth);
+    setEmpFilteredFromDate(formattedFromMonth)
+    setEmpFilteredToDate(formattedFromMonth)
   };
 
 
@@ -597,7 +612,7 @@ const EmpDashboard = () => {
                           bgcolor: "#283550",
                         },
                       }}
-                      onClick={() => handleNavigateMeeting()}
+                      onClick={() => handleNavigateMeeting('')}
                     >
                       <StatBox
                         title={dashboardData.totalMeetings || "0"}

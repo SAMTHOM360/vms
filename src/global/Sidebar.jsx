@@ -7,6 +7,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import BuildIcon from '@mui/icons-material/Build';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+import NearMeIcon from '@mui/icons-material/NearMe';
+import NearMeDisabledIcon from '@mui/icons-material/NearMeDisabled';
 // import FeedIcon from "@mui/icons-material/Feed";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -16,6 +20,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+import JoinInnerIcon from '@mui/icons-material/JoinInner';
 // import AnalyticsIcon from "@mui/icons-material/Analytics";
 // import SettingsIcon from "@mui/icons-material/Settings";
 // import InfoIcon from "@mui/icons-material/Info";
@@ -80,8 +85,10 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function Sidenav({ open: propOpen, onClose }) {
-  const { userRole, activeListItem, isSideBarPinned, setIsSideBarPinned } =
+  const { userRole, activeListItem, isSideBarPinned, setIsSideBarPinned, isHoverOpen, setIsHoverOpen } =
     useAuth();
+
+  const [isSideBarSettings, setIsSideBarSettings] = useState(false)
 
   const theme = useTheme();
   const navigate = useNavigate();
@@ -126,12 +133,41 @@ export default function Sidenav({ open: propOpen, onClose }) {
     }
   };
 
+  const handleChangeIsHoverOpen = () => {
+    if (isHoverOpen) {
+      sessionStorage.setItem("isHoverOpen", "false");
+      setIsHoverOpen(false);
+
+      // setIsSideBar(true)
+    } else {
+      // If the current value is anything other than 'true', set it to 'true'
+      sessionStorage.setItem("isHoverOpen", "true");
+      setIsHoverOpen(true);
+      // setIsSideBar(true)
+    }
+  };
+
+  const toggleSidebarOpenOnHover = () => {
+    setOpen(true)
+  }
+
+  const toggleSidebarCloseOnHover = () => {
+    setOpen(false)
+    setIsSideBarSettings(false)
+  }
+  const toggleSideBarSettings = () => {
+    setIsSideBarSettings(!isSideBarSettings)
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
       <Drawer
       // elevation={2}
+      onMouseEnter={isHoverOpen ? toggleSidebarOpenOnHover : undefined}
+      onMouseLeave={isHoverOpen ? toggleSidebarCloseOnHover : undefined}
+      // onClose={toggleSidebarCloseOnHover}
         variant="permanent"
         open={open}
         PaperProps={{
@@ -150,7 +186,6 @@ export default function Sidenav({ open: propOpen, onClose }) {
         </DrawerHeader>
 
         <Box
-          onClick={handleChangeIsSideBarPinnedValue}
           sx={{
             // position: "absolute",
             // bottom: "0.3em",
@@ -160,8 +195,56 @@ export default function Sidenav({ open: propOpen, onClose }) {
           
           }}
         >
-          <ListItem
+
+<ListItem
             disablePadding
+            onClick={toggleSideBarSettings}
+            sx={{
+              display: "flex",
+              justifyContent:'space-between',
+              width:'100%',
+              '&:hover': {
+                bgcolor:'#399CB69b'
+              },
+              // bgcolor:'green'
+            }}
+          >
+            {/* <Typography sx={{fontSize:'13px', pl:1}}>{pintext}</Typography> */}
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                display:'flex',
+                justifyContent: open ? "initial" : "flex-end",
+                px: 1,
+                fontSize:'10px',
+                // bgcolor:'orange'
+              }}
+            >
+                            <Typography sx={{fontSize:'13px', pr: 12.5}}>Sidebar Settings</Typography>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "end",
+                  color:'#FFFFFF',
+                  // bgcolor:'red'
+                }}
+              >
+                {isSideBarSettings ? <BuildOutlinedIcon /> : <BuildIcon />}
+              </ListItemIcon>
+              {/* <ListItemText
+                primary= {pintext}
+                sx={{ opacity: open ? 1 : 0, }}
+              /> */}
+            </ListItemButton>
+          </ListItem>
+
+          {isSideBarSettings && <>
+
+
+            <ListItem
+            disablePadding
+            onClick={handleChangeIsSideBarPinnedValue}
             sx={{
               display: "flex",
               justifyContent:'space-between',
@@ -201,6 +284,48 @@ export default function Sidenav({ open: propOpen, onClose }) {
               /> */}
             </ListItemButton>
           </ListItem>
+
+          <ListItem
+            disablePadding
+            onClick={handleChangeIsHoverOpen}
+            sx={{
+              display: "flex",
+              justifyContent:'space-between',
+              width:'100%',
+              '&:hover': {
+                bgcolor:'#399CB69b'
+              },
+            }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                display:'flex',
+                justifyContent: open ? "initial" : "flex-end",
+                px: 1,
+                fontSize:'10px',
+              }}
+            >
+                            <Typography sx={{fontSize:'13px', pr: 16}}>Hover Open</Typography>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "end",
+                  color:'#FFFFFF',
+                  transform:'rotate(-90deg)'
+                }}
+              >
+                {isHoverOpen ? <NearMeIcon /> : <NearMeDisabledIcon />}
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          
+          
+          </>}
+
+
+      
         </Box>
 
         <List>
@@ -360,6 +485,45 @@ export default function Sidenav({ open: propOpen, onClose }) {
                 </ListItemButton>
               </ListItem>
 
+
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/rolesanddepts"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+   
+                }}
+                onClick={() => handleSelectListItem("/rolesanddepts")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <JoinInnerIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Roles & Depts"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
               <ListItem
                 disablePadding
                 sx={{
@@ -396,27 +560,6 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   />
                 </ListItemButton>
               </ListItem>
-
-              {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/userform')}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <ListAltIcon sx={{color:'#ffffff'}} />
-              </ListItemIcon>
-              <ListItemText primary='Employee Form' sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem> */}
 
               <ListItem
                 disablePadding
@@ -532,27 +675,6 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   />
                 </ListItemButton>
               </ListItem>
-
-              {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/meetingDetails')}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <FeedIcon sx={{color:'#ffffff'}} />
-              </ListItemIcon>
-              <ListItemText primary='Meeting Form' sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem> */}
 
               <ListItem
                 disablePadding

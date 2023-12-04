@@ -191,11 +191,21 @@ export default function Navbar({ toggleSidebar }) {
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [statusDotstatus, setStatusDotStatus] = useState();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword2, setShowPassword2] = useState(false);
+    const [showPassword3, setShowPassword3] = useState(false);
+    const [statusDotstatus, setStatusDotStatus] = useState();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const togglePasswordVisibility2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+
+  const togglePasswordVisibility3 = () => {
+    setShowPassword3(!showPassword3);
   };
 
   let statusDot = "#FFFFFF";
@@ -1134,7 +1144,7 @@ export default function Navbar({ toggleSidebar }) {
                 size="small"
                 sx={{ mt: "1em" }}
                 label="New Password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword2 ? "text" : "password"}
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.newPassword}
@@ -1147,8 +1157,8 @@ export default function Navbar({ toggleSidebar }) {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility} edge="end">
-                        {showPassword ? (
+                      <IconButton onClick={togglePasswordVisibility2} edge="end">
+                        {showPassword2 ? (
                           <VisibilityOffIcon />
                         ) : (
                           <VisibilityIcon />
@@ -1163,7 +1173,7 @@ export default function Navbar({ toggleSidebar }) {
                 size="small"
                 sx={{ mt: "1em" }}
                 label="Confirm Password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword3 ? "text" : "password"}
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.confirmPassword}
@@ -1176,8 +1186,8 @@ export default function Navbar({ toggleSidebar }) {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility} edge="end">
-                        {showPassword ? (
+                      <IconButton onClick={togglePasswordVisibility3} edge="end">
+                        {showPassword3 ? (
                           <VisibilityOffIcon />
                         ) : (
                           <VisibilityIcon />

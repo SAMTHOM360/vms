@@ -21,6 +21,7 @@ import TablePagination from "@mui/material/TablePagination";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import dayjs from "dayjs";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -74,6 +75,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Meetings() {
   const {setActiveListItem} = useAuth()
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   // sessionStorage.setItem('activeListItem', '/meetings')
   useEffect(() => {
@@ -168,16 +171,36 @@ export default function Meetings() {
     // fetchData();
   };
 
-  useEffect(() => {
-    const filter = sessionStorage.getItem('filters')
-    if (filter) {
-       
-        setSelectedStatusOptions(filter)
-        // fetchData()
-        sessionStorage.removeItem('filters')
-    }
+  //  console.log('status option', statusOptions);
 
-}, [selectedStatusOptions])
+useEffect(() => {
+  const filter = sessionStorage.getItem('filters');
+  const empFilteredFromDate = sessionStorage.getItem('empFilteredFromDate');
+  const empFilteredToDate = sessionStorage.getItem('empFilteredToDate');
+
+  if (filter && Array.isArray(statusOptions) && statusOptions.length > 0) {
+    setSelectedStatusOptions(filter);
+    sessionStorage.removeItem('filters');
+  }
+
+  if (empFilteredFromDate && empFilteredToDate) {
+    const startDate = dayjs(empFilteredFromDate);
+    const endDate = dayjs(empFilteredToDate);
+
+    // console.log('useeffect start date', startDate);
+    // console.log('useeffect end date', endDate);
+
+    setStartDate(startDate);
+    setEndDate(endDate);
+
+    sessionStorage.removeItem('empFilteredFromDate');
+    sessionStorage.removeItem('empFilteredToDate');
+  }
+}, [statusOptions]);
+
+
+// console.log('calender start date',startDate)
+// console.log('calender end date',endDate)
 
   function fetchStatusOptions() {
     const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
@@ -202,8 +225,6 @@ export default function Meetings() {
   }
 
   //calender
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -222,7 +243,7 @@ export default function Meetings() {
   // const { id } = useParams();
 
   const adminId = sessionStorage.getItem("adminId");
-  console.log(adminId, "adminId");
+  // console.log(adminId, "adminId");
 
   //phonefilter
   const [phoneNumberFilter, setPhoneNumberFilter] = useState("");
@@ -260,7 +281,7 @@ export default function Meetings() {
 
       .then((response) => {
         const responseData = response.data.data.meetings;
-        console.log(" meet all payload", responseData);
+        // console.log(" meet all payload", responseData);
 
         setVisitors(responseData);
         setMeetings(response.data.data.totalElements);
@@ -414,7 +435,7 @@ export default function Meetings() {
 
     const addMeetingUrl =
       "http://192.168.12.54:8080/api/meeting/update/meeting";
-    console.log("before axios post");
+    // console.log("before axios post");
 
     axios
       .post(addMeetingUrl, meetingData, {
@@ -568,7 +589,7 @@ export default function Meetings() {
     }
   }
 
-  console.log(meetings, "whyyyyy")
+  // console.log(meetings, "whyyyyy")
 
 
   //universal search
@@ -663,6 +684,18 @@ export default function Meetings() {
     setSelectedFilter(selectedValue);
   };
 
+  const handleClearFilters = () => {
+    setSelectedStatusOptions('')
+    setPhoneNumberFilter('')
+    setSelectedRoom('')
+    setStartDate(null)
+    setEndDate(null)
+    setSearchQuery('')
+    sessionStorage.removeItem('filters')
+      sessionStorage.removeItem('empFilteredFromDate');
+    sessionStorage.removeItem('empFilteredToDate');
+  }
+
 
 
 
@@ -673,25 +706,11 @@ export default function Meetings() {
 
   return (
     <>
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3,}}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "",
-                flexGrow: 1,
-              }}
-            >
-              <div
-                className="one"
-                style={{
-                  backgroundColor: "",
-                  border: "1px solid offwhite",
-                  flexGrow: 1,
-                }}
-              >
+
+                
                 <Grid container>
                   <Grid container>
                     <Grid item xs={12}>
@@ -909,9 +928,10 @@ export default function Meetings() {
                         <Grid>
                           <Box
                             component="form"
-                            sx={{
-                              "& .MuiTextField-root": { m: 1, width: "25ch" },
-                            }}
+                            // sx={{
+                            //   "& .MuiTextField-root": { m: 1, width: "25ch" },
+                            // }}
+                            sx={{width:"95%", mb:'1em'}}
                             noValidate
                             autoComplete="off"
                           // style={{display:"flex",justifyContent:"space-evenly"}}
@@ -932,6 +952,7 @@ export default function Meetings() {
                                   backgroundColor: "",
                                   display: "flex",
                                   flexDirection: "row",
+                                  gap:5
                                 }}
                               >
                                 <TextField
@@ -940,7 +961,7 @@ export default function Meetings() {
                                   label="Search by Status"
                                   value={selectedStatusOptions}
                                   onChange={handleChangeStatus}
-                                  style={{ top: "10px" }}
+                                  style={{ top: "10px", width:'17em' }}
                                 >
                                   <MenuItem value="">
                                     <em>None</em>
@@ -981,10 +1002,12 @@ export default function Meetings() {
                                   label="Search by Room"
                                   value={selectedRoom}
                                   onChange={handleChange1}
+                                  sx={{    width:'17em'}}
                                   SelectProps={{
                                     MenuProps: {
                                       style: {
-                                        maxHeight: "400px", // Adjust the height as per your requirement
+                                        maxHeight: "300px",
+                                    
                                       },
                                     },
                                   }}
@@ -1042,8 +1065,21 @@ export default function Meetings() {
                                 />
                               </Grid>
                             </Grid>
+                            
                           </Box>
+
                         </Grid>
+                        <Box sx={{ display: "flex", alignItems: "center", gap:'1em', }}>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            sx={{ marginLeft: "1.2em", width:'10em', height: "3em" }}
+                            onClick={handleClearFilters}
+                          >
+                            Clear Filters
+                          </Button>
+                          </Box>
                       </div>
 
                       <TableContainer
@@ -1361,8 +1397,7 @@ export default function Meetings() {
                     </Box>
                   </Box>
                 </StyledModal>
-              </div>
-            </div>
+          
           </Grid>
         </Grid>
       </Box>

@@ -517,7 +517,7 @@ const Employee = () => {
                 title={formattedHead}
                 subtitle={`List of ${formattedHead} for Future Reference`}
               />
-              <Box sx={{ display: "flex", alignItems: "center", minWidth:'31.3em', ml:'2em' }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent:'end', minWidth:'31.3em', ml:'2em' }}>
                 <Typography
                   sx={{ fontSize: "20px", fontWeight: "550", color: "#949494" }}
                 >

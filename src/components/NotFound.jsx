@@ -334,7 +334,7 @@ const NotFound = () => {
             <Box className='NotFoundBtnContainer'>
             {/* <button className="right" onClick={handleNavigate}><span>Home</span></button> */}
 
-            <button class="button-49" role="button" onClick={handleNavigate}>Home</button>
+            <button className="button-49" role="button" onClick={handleNavigate}>Home</button>
             </Box>
           </div>
         </Box>

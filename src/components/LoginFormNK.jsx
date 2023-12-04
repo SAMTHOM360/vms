@@ -89,10 +89,30 @@ function LoginForm() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotNewPassword, setShowForgotNewPassword] = useState(false);
+  const [showForgotConfirmPassword, setShowForgotConfirmPassword] = useState(false);
+ 
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+
+  const togglePasswordVisibility2 = () => {
+
+   
+    setShowForgotNewPassword(!showForgotNewPassword);
+  };
+
+  const togglePasswordVisibility3 = () => {
+
+ 
+    setShowForgotConfirmPassword(!showForgotConfirmPassword);
+};
+
+  // console.log('showForgotNewPassword', showForgotNewPassword)
+  // console.log('showForgotConfirmPassword', showForgotConfirmPassword)
+
 
   const handleCustomChange = (e) => {
     let { name, value } = e.target;
@@ -321,6 +341,7 @@ function LoginForm() {
         sessionStorage.setItem("limit", limit);
         sessionStorage.setItem('isSideBarPinned', true)
         sessionStorage.setItem("buildingId",buildingId);
+        sessionStorage.setItem('isHoverOpen', true)
 
         // localStorage.setItem('token', token);
         // localStorage.setItem('companyId', companyId);
@@ -629,6 +650,7 @@ function LoginForm() {
                 justifyContent: "center",
                 alignItems: "center",
                 marginTop: "1em",
+                userSelect:'none'
               }}
             >
               <img
@@ -638,6 +660,8 @@ function LoginForm() {
                   width: "280.90px",
                   height: "80px",
                   marginTop: "1.2em",
+                  userSelect:'none',
+                  pointerEvents:'none'
                 }}
               />
               <hr style={{ width: "100%" }} />
@@ -670,6 +694,7 @@ function LoginForm() {
                   // fontWeight:'550',
                   fontWeight: "bold",
                   color: "#66666",
+                  userSelect:'none'
                 }}
               >
                 SIGN IN
@@ -741,6 +766,7 @@ function LoginForm() {
                   cursor: "pointer",
                   fontSize: "15px",
                   textDecoration: "none",
+                  userSelect:'none',
                   "&:hover": {
                     textDecoration: "underline",
                   },
@@ -769,7 +795,7 @@ function LoginForm() {
                 mt: "3em",
               }}
             >
-              <Typography sx={{ fontSize: "14px", color: "#0000008a" }}>
+              <Typography sx={{ fontSize: "14px", color: "#0000008a", userSelect:'none' }}>
                 Copyright ©{" "}
                 <Link
                   href={OWNER}
@@ -845,7 +871,7 @@ function LoginForm() {
                     sx={{ mt: "1em" }}
                     label="New Password"
                     name="newPassword"
-                    type={showPassword ? "text" : "password"}
+                    type={showForgotNewPassword ? "text" : "password"}
                     fullWidth
                     onChange={handleCustomUpdateChange}
                     value={updateCreds.newPassword}
@@ -854,10 +880,10 @@ function LoginForm() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={togglePasswordVisibility}
+                            onClick={togglePasswordVisibility2}
                             edge="end"
                           >
-                            {showPassword ? (
+                            {showForgotNewPassword ? (
                               <VisibilityOffIcon />
                             ) : (
                               <VisibilityIcon />
@@ -881,7 +907,7 @@ function LoginForm() {
                     sx={{ mt: "1em" }}
                     label="Confirm Password"
                     name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
+                    type={showForgotConfirmPassword ? "text" : "password"}
                     fullWidth
                     onChange={handleCustomUpdateChange}
                     inputProps={{ maxLength: 16 }}
@@ -891,10 +917,10 @@ function LoginForm() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={togglePasswordVisibility}
+                            onClick={togglePasswordVisibility3}
                             edge="end"
                           >
-                            {showPassword ? (
+                            {showForgotConfirmPassword ? (
                               <VisibilityOffIcon />
                             ) : (
                               <VisibilityIcon />
