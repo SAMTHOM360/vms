@@ -20,6 +20,7 @@ import Navbar from "../../global/Navbar";
 import Sidebar from "../../global/Sidebar";
 import Loader from "../Loader";
 import Grid from '@mui/material/Grid';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export default function EditCompanyForm() {
   const { companyId } = useParams();
@@ -75,14 +76,15 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
-          buildingId:company.buildingId
+          buildingId:company.building.name,
         });
         // console.log(company.city.id,"city");
 
         setSelectedState(company.state.id); // Set the initial selected state
         setSelectedCity(company.city.id);
         fetchCity(company.state.id);
-        // console.log(selectedCity,"selectedstate")
+        setSelectedBuildingId(company.building.buildingId);
+        console.log(company.building.buildingId,"buildingId")
       })
       .catch((error) => {
         console.log(error);
@@ -109,6 +111,7 @@ export default function EditCompanyForm() {
   useEffect(() => {
     fetchStates();
     fetchData();
+    fetchBuildingNames();
 
     // fetchCity(selectedState);
   }, []);
@@ -164,7 +167,7 @@ export default function EditCompanyForm() {
       formData.append("phoneNumber", companyData.phoneNumber);
       formData.append("industry", companyData.industry);
       formData.append("userLimit", companyData.userLimit);
-      formData.append("buildingId", companyData.buildingId);
+      formData.append("building.buildingId", companyData.buildingId);
       formData.append("aboutUs", companyData.aboutUs);
       if (companyData.logo) {
         formData.append("image", companyData.logo);
@@ -226,6 +229,63 @@ export default function EditCompanyForm() {
     const logoFile = event.target.files[0];
     setCompanyData({ ...companyData, logo: logoFile });
   };
+
+
+  //buildingId
+  const [buildingOptions, setBuildingOptions] = useState([]);
+  const [selectedBuildingId, setSelectedBuildingId] = useState(null);
+
+  const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+
+  function fetchBuildingNames() {
+
+      axios
+          .get(buildingUrl)
+          .then(response => {
+              console.log(response.data.data, "buildings")
+
+              
+              setBuildingOptions(response.data.data);
+          })
+          .catch((error) => {
+              console.log(error, "Error fetching data");
+          })
+
+
+
+  }
+
+
+  console.log(buildingOptions, "hhh")
+  // console.log(selectedBuildingId,"mickey")
+
+  // const handleBuildingChange = (event) => {
+  //     const selectedBuildingId= event.target.value;
+  //     // console.log(selectedState)
+  //     setSelectedBuildingId(selectedBuildingId);
+  //     setValues({ ...values, buildingId: selectedBuildingId });
+
+
+
+  // };
+  const handleBuildingChange = (event, newValue) => {
+
+  
+    
+      if (newValue) {
+          setSelectedBuildingId(newValue.id);
+          setCompanyData({ ...companyData, buildingId: newValue.id });
+      } else {
+          setSelectedBuildingId(null);
+          setCompanyData({ ...companyData, buildingId: "" });
+      }
+  };
+
+
+
+
+
+
 
   function handleCancel() {
     navigate("/companyDetails");
@@ -449,7 +509,7 @@ export default function EditCompanyForm() {
                   }}
                 >
 
-                  <TextField
+                  {/* <TextField
                     sx={{ width: "47%" }}
                     label="Building Id"
                     placeholder="Building Id"
@@ -458,7 +518,22 @@ export default function EditCompanyForm() {
                     onChange={(e) =>
                       setCompanyData({ ...companyData, buildingId: e.target.value })
                     }
-                  ></TextField>
+                  ></TextField> */}
+
+
+<Autocomplete sx={{ width: "47%" }}
+                                            options={buildingOptions}
+                                            getOptionLabel={(option) => option !== null ?option.name:""} // Assuming 'name' is the property containing the building name
+                                            onChange={handleBuildingChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Select Building"
+                                                    variant="outlined"
+                                                />
+                                            )}
+                                        />
+
 
 
                   <TextField

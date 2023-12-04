@@ -16,6 +16,18 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 export default function CompanyReg() {
 
+
+
+
+    const menuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: 200, // Adjust the max height as needed
+                width: 250,
+            },
+        },
+    };
+
     const url = "http://192.168.12.54:8080/com/add";
     const navigate = useNavigate();
     const [values, setValues] = useState({
@@ -56,6 +68,8 @@ export default function CompanyReg() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+
 
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -103,13 +117,13 @@ export default function CompanyReg() {
             newErrors.industry = "Industry is required";
         }
 
-        if (!values.userLimit && !errors.userLimit) {
-            newErrors.userLimit = "User Limit is required";
-        }
+        // if (!values.userLimit && !errors.userLimit) {
+        //     newErrors.userLimit = "User Limit is required";
+        // }
 
-        if (values.userLimit > 100) {
-            newErrors.userLimit = "User Limit cannot exceed 100";
-        }
+        // if (values.userLimit > 100) {
+        //     newErrors.userLimit = "User Limit cannot exceed 100";
+        // }
 
         if (!values.buildingId) {
             newErrors.userLimit = "User Limit is required";
@@ -138,7 +152,7 @@ export default function CompanyReg() {
                 formData.append('Industry', values.industry);
                 formData.append('aboutUs', values.aboutUs);
                 formData.append('userLimit', values.userLimit);
-                formData.append('building.id', values.buildingId);
+                formData.append('building.buildingId', values.buildingId);
 
                 const res = await axios.post(url, formData, {
                     headers: {
@@ -204,6 +218,7 @@ export default function CompanyReg() {
     useEffect(() => {
 
         fetchStates();
+        fetchBuildingNames();
     }, []);
 
 
@@ -233,16 +248,40 @@ export default function CompanyReg() {
     };
 
 
+
+
+
     const [imageUrl, setImageUrl] = useState('');
 
 
+    // const handleLogoChange = (event) => {
+    //     const logoFile = event.target.files[0];
+    //     setValues({ ...values, logo: logoFile });
+    //     setLogoUpdated(true);
+    //     alert("Company logo updated successfully");
+
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //         setImageUrl(reader.result);
+    //     };
+    //     reader.readAsDataURL(logoFile);
+    // };
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+
     const handleLogoChange = (event) => {
         const logoFile = event.target.files[0];
+
+        // Check if file size exceeds the limit
+        if (logoFile.size > MAX_FILE_SIZE) {
+            alert("Maximum file size exceeded (5MB)");
+            setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+            return;
+        }
+
+        // Proceed with normal logo upload process
         setValues({ ...values, logo: logoFile });
         setLogoUpdated(true);
         alert("Company logo updated successfully");
-
-
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -250,6 +289,61 @@ export default function CompanyReg() {
         };
         reader.readAsDataURL(logoFile);
     };
+
+
+    //building options
+
+    const [buildingOptions, setBuildingOptions] = useState([]);
+    const [selectedBuildingId, setSelectedBuildingId] = useState(null);
+
+    const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+
+    function fetchBuildingNames() {
+
+        axios
+            .get(buildingUrl)
+            .then(response => {
+                console.log(response.data.data, "buildings")
+
+                
+                setBuildingOptions(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error, "Error fetching data");
+            })
+
+
+
+    }
+
+
+    console.log(buildingOptions, "hhh")
+
+    // const handleBuildingChange = (event) => {
+    //     const selectedBuildingId= event.target.value;
+    //     // console.log(selectedState)
+    //     setSelectedBuildingId(selectedBuildingId);
+    //     setValues({ ...values, buildingId: selectedBuildingId });
+
+
+
+    // };
+    const handleBuildingChange = (event, newValue) => {
+        if (newValue) {
+            setSelectedBuildingId(newValue.id);
+            setValues({ ...values, buildingId: newValue.id });
+        } else {
+            setSelectedBuildingId(null);
+            setValues({ ...values, buildingId: "" });
+        }
+    };
+
+
+
+
+
+
+
 
     return (
         <>
@@ -305,11 +399,6 @@ export default function CompanyReg() {
 
                                         </label>
 
-
-
-
-
-
                                     </div>
 
 
@@ -320,9 +409,9 @@ export default function CompanyReg() {
                                         style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px" }}
                                     >
 
-                                        <div>
+                                        {/* <div> */}
 
-                                            <Box sx={{ minWidth: 120 }}>
+                                            {/* <Box sx={{ minWidth: 120 }}>
                                                 <FormControl fullWidth>
                                                     <InputLabel id="demo-simple-select-label">Select State</InputLabel>
                                                     <Select
@@ -336,6 +425,7 @@ export default function CompanyReg() {
                                                         id="demo-simple-select"
 
                                                         label="Select State"
+                                                        MenuProps={menuProps}
                                                     >
                                                         <MenuItem value="-"
                                                             placeholder='Select State' >
@@ -349,7 +439,15 @@ export default function CompanyReg() {
 
                                                     </Select>
 
-                                                    {/* <Autocomplete sx={{ width: '300px' }}
+                                                   
+                                                </FormControl>
+                                            </Box> */}
+
+                                            <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
+                                                    <Autocomplete
+                                                        sx={{ width: '350px' }}
                                                         options={states}
                                                         getOptionLabel={(option) => option.name}
                                                         value={selectedState}
@@ -376,21 +474,45 @@ export default function CompanyReg() {
                                                                 helperText={errors.state}
                                                                 InputLabelProps={{
                                                                     shrink: selectedState !== null || params.inputProps?.value,
-                                                                }}></TextField>
+                                                                }}
+                                                            />
                                                         )}
-                                                    /> */}
+                                                    />
+                                                </FormControl>
+                                            </Box>
+
+                                            <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
+                                                    <Autocomplete
+
+                                                        sx={{ width: '350px' }}
+                                                        options={cities}
+                                                        getOptionLabel={(option) => option.name}
+                                                        value={selectedCity}
+                                                        onChange={(event, newValue) => {
+                                                            setSelectedCity(newValue);
+                                                            setValues({ ...values, city: newValue ? newValue.id : '' });
+                                                        }}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Select City"
+                                                                error={Boolean(errors.city)}
+                                                                helperText={errors.city}
+                                                            />
+                                                        )}
+                                                    />
                                                 </FormControl>
                                             </Box>
 
 
-
-
-                                        </div>
-
+                                        {/* </div> */}
 
 
 
 
+                                        {/* 
                                         <Box sx={{ minWidth: 120 }}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Select City</InputLabel>
@@ -403,7 +525,8 @@ export default function CompanyReg() {
                                                     onChange={handleCityChange}
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
-                                                    label="Select City">
+                                                    label="Select City"
+                                                    MenuProps={menuProps} >
 
                                                     <MenuItem value="-"
                                                         placeholder='Select City' >
@@ -416,27 +539,10 @@ export default function CompanyReg() {
                                                     ))}
 
                                                 </Select>
-{/* 
-                                                <Autocomplete sx={{ width: '300px' }}
-                                                    options={cities}
-                                                    getOptionLabel={(option) => option.name}
-                                                    value={selectedCity}
-                                                    onChange={(event, newValue) => {
-                                                        setSelectedCity(newValue);
-                                                        setValues({ ...values, city: newValue ? newValue.id : '' });
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Select City"
-                                                            error={Boolean(errors.city)}
-                                                            helperText={errors.city}
-                                                        />
-                                                    )}
-                                                /> */}
+                                           
 
                                             </FormControl>
-                                        </Box>
+                                        </Box> */}
                                     </div>
                                     <TextField type="number" label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
@@ -464,7 +570,7 @@ export default function CompanyReg() {
                                     <div className='input' style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
 
 
-                                        <TextField sx={{ width: "47%" }} label="Building Id" placeholder="Building Id" type="number" value={values.buildingId} inputProps={{ maxLength: 1 }} // Set the maxLength attribute to restrict the input length to 1 digit
+                                        {/* <TextField sx={{ width: "47%" }} label="Building Id" placeholder="Building Id" type="number" value={values.buildingId} inputProps={{ maxLength: 1 }} // Set the maxLength attribute to restrict the input length to 1 digit
 
                                             onChange={(e) => {
                                                 // Check if entered value is within 1 digit
@@ -472,32 +578,61 @@ export default function CompanyReg() {
                                                     setValues({ ...values, buildingId: e.target.value });
                                                 }
                                             }} error={Boolean(errors.buildingId)}
-                                            helperText={errors.buildingId}></TextField>
+                                            helperText={errors.buildingId}></TextField> */}
+
+
+                                        <Autocomplete sx={{ width: "47%" }}
+                                            options={buildingOptions}
+                                            getOptionLabel={(option) => option !== null ?option.name:""} // Assuming 'name' is the property containing the building name
+                                            onChange={handleBuildingChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Select Building"
+                                                    variant="outlined"
+                                                />
+                                            )}
+                                        />
+
 
 
                                         <TextField sx={{ width: "47%" }} label="User Limit" placeholder="User Limit" type="number" value={values.userLimit}
 
-                                            inputProps={{ maxLength: 3 }}
+
+
+
+                                            // inputProps={{ maxLength: 2 }}
 
                                             onChange={(e) => {
+                                                // setValues({ ...values, userLimit: e.target.value });
 
-                                                if (e.target.value.length <= 2) {
-                                                    setValues({ ...values, userLimit: e.target.value });
+                                               
+                                                    // Check if the entered value is within the range of 1 to 100
+                                                    const enteredValue = e.target.value;
+                                                    const numericValue = parseInt(enteredValue);
+                                            
+                                                    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
+                                                        setValues({ ...values, userLimit: numericValue });
+                                                    } else {
+                                                        // If the entered value is not within the range, do not update the state
+                                                        setValues({ ...values, userLimit: '' }); // Set userLimit to empty string or another appropriate value
+                                                    
                                                 }
+
+
+
                                             }}
 
 
 
-                                            error={Boolean(errors.userLimit)}
-                                            helperText={errors.userLimit}></TextField>
+                                        // error={Boolean(errors.userLimit)}
+                                        // helperText={errors.userLimit}
+                                        ></TextField>
 
                                     </div>
 
                                     <TextField label="Industry" placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
                                         helperText={errors.industry}></TextField>
-
-
-
 
 
                                     <TextField label="About" placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
@@ -521,14 +656,6 @@ export default function CompanyReg() {
 
                 </Grid>
 
-                {/* {isSubmitted && (
-                <div style={{ textAlign: 'center' }}>
-                    <ToastContainer position="top-center"  />
-                    {toast.success('Company added successfully')}
-                </div>
-            )} */}
-
-                {/* <ToastContainer position="top-center" /> */}
 
             </Box>
 

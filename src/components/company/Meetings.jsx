@@ -34,6 +34,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -65,13 +66,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-// const columns = [
-//     { field: "id", headerName: "ID", flex: 0.5 },
-//     { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
-//     { field: "meetings", headerName: "Number of meetings", flex: 1 },
-//     { field: "meetingHours", headerName: "Meeting hours", flex: 1 },
-
-// ]
 
 export default function Meetings() {
   const {setActiveListItem} = useAuth()
@@ -236,6 +230,71 @@ useEffect(() => {
     //  fetchData();
   };
 
+  //export
+
+
+  function downloadFile(url) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'meeting_details.xlsx');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+  function excelExport() {
+
+    const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+
+    const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+
+    const payload = {
+        page: 0,
+        size: 1000,
+        phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+        fromDate: startDate,
+        toDate: endDate,
+
+        companyId: selectedCompanyId,
+        user: {
+          id:adminId,
+
+            // id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+        },
+
+        room: {
+            // id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+            id:selectedRoom.length === 0 ? null : selectedRoom,
+          },
+        
+
+        status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+        // date:'2023-10-18T11:00:00'
+
+    }
+
+    axios.post(exportUrl, payload, {
+
+        // responseType: 'blob', // important
+    })
+        .then(response => {
+            const url = response.data.data;
+            // console.log(url, "files")
+            downloadFile(url)
+
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+}
+
+
+
+
+
+
+
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -268,6 +327,7 @@ useEffect(() => {
       room: {
         id: selectedRoom.length === 0 ? null : selectedRoom,
       },
+      
 
       //         // date:'2023-10-18T11:00:00'
 
@@ -964,7 +1024,7 @@ useEffect(() => {
                                   style={{ top: "10px", width:'17em' }}
                                 >
                                   <MenuItem value="">
-                                    <em>None</em>
+                                    <em>Cancel</em>
                                   </MenuItem>
 
                                   {Array.isArray(statusOptions) &&
@@ -1014,7 +1074,7 @@ useEffect(() => {
                                   style={{ top: "10px" }}
                                 >
                                   <MenuItem value="">
-                                    <em>None</em>
+                                    <em>Cancel</em>
                                   </MenuItem>
 
                                   {/* {Array.isArray(rooms) && rooms.map((room) => (
@@ -1038,20 +1098,27 @@ useEffect(() => {
                                       label="Start Date"
                                       value={startDate}
                                       onChange={handleStartDateChange}
+                                      renderInput={(params) => <TextField {...params} />}
+                                      format="DD/MM/YYYY"
                                     />
                                     <DatePicker
                                       label="End Date"
                                       value={endDate}
                                       onChange={handleEndDateChange}
+                                      renderInput={(params) => <TextField {...params} />}
+                                      format="DD/MM/YYYY"
 
-                                    //searchcriteria code
-                                    //                                                             value={searchCriteria.endDate}
-                                    //   onChange={(date) => setSearchCriteria({ ...searchCriteria, endDate: date })}
                                     />
                                   </DemoContainer>
                                 </LocalizationProvider>
+                                <Grid style={{ backgroundColor: "", right: 0 }}>
+                                                                <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
 
-                                <TextField
+                                                            </Grid>
+
+                                                            {/* universal search */}
+
+                                {/* <TextField
                                   id="outlined-search"
                                   label="Search"
 
@@ -1062,7 +1129,7 @@ useEffect(() => {
                                   // onKeyPress={handlePhoneNumberSearch}
                                   type="search"
                                   style={{ top: "10px" }}
-                                />
+                                /> */}
                               </Grid>
                             </Grid>
                             

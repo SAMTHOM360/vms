@@ -265,6 +265,9 @@ export default function Dashboard() {
 
     const [roomAdded, setRoomAdded] = useState(false);
 
+
+
+
     //     function calculateSerialNumber(page, rowsPerPage, index) {
     //     if (phoneNumberFilter || startDate || endDate || selectedStatusOptions) {
     //         return 0 * rowsPerPage + index + 1;
@@ -355,7 +358,7 @@ export default function Dashboard() {
         const meetingData = {
 
             id: item.id,
-            status: item.user.role.name === 'ADMIN' && item.room === null && item.status === "PENDING" ? selectedStatusModal : item.status,
+            status: item.user.isPermission === true && item.room === null && item.status === "PENDING" ? selectedStatusModal : item.status,
             // status: 'APPROVED',
 
             // user: {
@@ -503,9 +506,6 @@ export default function Dashboard() {
 
 
         // const companyId = sessionStorage.getItem('companyId');
-
-
-
         const payload = {
             page: page,
             size: rowsPerPage,
@@ -532,6 +532,7 @@ export default function Dashboard() {
                 payload)
             .then(response => {
                 const responseData = response.data.data.meetings;
+                console.log(response.data.data.meetings[0].user.isPermission, "isPermission")
                 const responseDataLength = response.data.data.meetings.length;
 
                 console.log(responseDataLength, "length")
@@ -671,11 +672,13 @@ export default function Dashboard() {
         const passApiEndpoint = `http://192.168.12.54:8080/api/meeting/downloadPass?meetingId=${meetingId}`;
 
         axios
-            .get(passApiEndpoint, {
-                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+            .get(passApiEndpoint,
+                {
+                    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
 
-                responseType: 'blob',
-            })
+                    responseType: 'blob',
+                }
+            )
             .then((response) => {
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
                 const url = window.URL.createObjectURL(blob);
@@ -777,42 +780,42 @@ export default function Dashboard() {
     const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
     const [selectedFilter, setSelectedFilter] = useState("companyMeets");
-  
-    const [ isADMIN, setIsADMIN ] = useState(false)
-  
-  
+
+    const [isADMIN, setIsADMIN] = useState(false)
+
+
     useEffect(() => {
-      if (loggedUserRole === "ADMIN") {
-        setIsADMIN(true);
-      } else {
-        setIsADMIN(false);
-      }
+        if (loggedUserRole === "ADMIN") {
+            setIsADMIN(true);
+        } else {
+            setIsADMIN(false);
+        }
     }, [loggedUserRole]);
-  
+
     const meetOptions = [
-      { label: "Personal Meets", value: "personalMeets" },
-      { label: "Company Meets", value: "companyMeets" },
+        { label: "Personal Meets", value: "personalMeets" },
+        { label: "Company Meets", value: "companyMeets" },
     ];
-  
-  
+
+
     const handleFilterChange = (event) => {
-      const selectedValue = event.target.value;
-  
-      switch (selectedValue) {
-        case 'personalMeets':
-          navigate('/meetings')
-          break;
-        case 'companyMeets':
-          navigate('/receptionistdashboard')
-          break;
-        default:
-          break;
-      }
-  
-  
-      setSelectedFilter(selectedValue);
+        const selectedValue = event.target.value;
+
+        switch (selectedValue) {
+            case 'personalMeets':
+                navigate('/meetings')
+                break;
+            case 'companyMeets':
+                navigate('/receptionistdashboard')
+                break;
+            default:
+                break;
+        }
+
+
+        setSelectedFilter(selectedValue);
     };
-    
+
 
 
 
@@ -846,54 +849,54 @@ export default function Dashboard() {
 
 
 
-                            {isADMIN ? (<Box
-              sx={{
-                display:'flex',
-                flexDirection:{xs:'column', md:'row'},
-                alignItems:'center',
-                gap:'0.3em'
-              }}
-              >
+                                                {isADMIN ? (<Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: { xs: 'column', md: 'row' },
+                                                        alignItems: 'center',
+                                                        gap: '0.3em'
+                                                    }}
+                                                >
 
-                <Typography sx={{color:'#555555'}}>Filter by</Typography>
+                                                    <Typography sx={{ color: '#555555' }}>Filter by</Typography>
 
-                <FormControl
-                  sx={{
-                    border: "none",
-                    borderRadius: "5px",
-                    // width: "130px !important",
-                    // height: '50px !important',
-                    boxShadow: "0px 2px 2px #333333",
-                  }}
-                >
-                  {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
-                  <Select
-                    sx={{
-                      color: "white",
-                      bgcolor: "#1976d2",
-                      width: "165px !important",
-                      height: '40px !important',
-                      border: "none",
-                      "&:hover": {
-                        bgcolor: "#1565c0",
-                      },
-                      "& .MuiSelect-icon": {
-                        color: "white",
-                      },
-                    }}
-                    label="Select a filter"
-                    value={selectedFilter}
-                    onChange={handleFilterChange}
-                    elevation={3}
-                  >
-                    {meetOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>)  : ''}
+                                                    <FormControl
+                                                        sx={{
+                                                            border: "none",
+                                                            borderRadius: "5px",
+                                                            // width: "130px !important",
+                                                            // height: '50px !important',
+                                                            boxShadow: "0px 2px 2px #333333",
+                                                        }}
+                                                    >
+                                                        {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
+                                                        <Select
+                                                            sx={{
+                                                                color: "white",
+                                                                bgcolor: "#1976d2",
+                                                                width: "165px !important",
+                                                                height: '40px !important',
+                                                                border: "none",
+                                                                "&:hover": {
+                                                                    bgcolor: "#1565c0",
+                                                                },
+                                                                "& .MuiSelect-icon": {
+                                                                    color: "white",
+                                                                },
+                                                            }}
+                                                            label="Select a filter"
+                                                            value={selectedFilter}
+                                                            onChange={handleFilterChange}
+                                                            elevation={3}
+                                                        >
+                                                            {meetOptions.map((option) => (
+                                                                <MenuItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Box>) : ''}
                                             </Paper>
                                         </Grid>
 
@@ -917,7 +920,7 @@ export default function Dashboard() {
                                                             '& .MuiTextField-root': { m: 1, width: '25ch' },
                                                         }}
                                                         noValidate
-                                                        autoComplete="off"
+                                                        autoComplete="on"
                                                     // style={{display:"flex",justifyContent:"space-evenly"}}
                                                     >
                                                         <Grid style={{ display: "flex", flexDirection: "", justifyContent: "space-between", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
@@ -964,7 +967,7 @@ export default function Dashboard() {
                                                                 >
 
                                                                     <MenuItem value="">
-                                                                        <em>None</em>
+                                                                        <em>Cancel</em>
                                                                     </MenuItem>
 
 
@@ -996,7 +999,7 @@ export default function Dashboard() {
                                                                 >
 
                                                                     <MenuItem value="">
-                                                                        <em>None</em>
+                                                                        <em>Cancel</em>
                                                                     </MenuItem>
 
 
@@ -1049,15 +1052,43 @@ export default function Dashboard() {
                                                                             value={startDate}
                                                                             // onChange={(newValue) => setStartDate(newValue)}
                                                                             onChange={handleStartDateChange}
+                                                                            renderInput={(params) => <TextField {...params} />}
+                                                                            format="DD/MM/YYYY"
                                                                         />
                                                                         <DatePicker
                                                                             label="End Date"
                                                                             value={endDate}
                                                                             // onChange={(newValue) => setEndDate(newValue)}
                                                                             onChange={handleEndDateChange}
+                                                                            renderInput={(params) => <TextField {...params} />}
+                                                                            format="DD/MM/YYYY"
                                                                         />
                                                                     </DemoContainer>
                                                                 </LocalizationProvider>
+
+{/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+    <DatePicker
+      label="Start Date"
+      value={startDate}
+      onChange={handleStartDateChange}
+      renderInput={(params) => <TextField {...params} />}
+      format="dd/MM/yy" // Set the desired date format
+    />
+    <DatePicker
+      label="End Date"
+      value={endDate}
+      onChange={handleEndDateChange}
+      renderInput={(params) => <TextField {...params} />}
+      format="dd/MM/yy" // Set the desired date format
+    />
+  
+</LocalizationProvider> */}
+
+
+
+
+
                                                             </Grid>
 
                                                             <Grid style={{ backgroundColor: "", right: 0 }}>
@@ -1154,29 +1185,25 @@ export default function Dashboard() {
                                                                     <TableCell align="left">
                                                                         {
                                                                             visitor.remarks !== "" ?
-                                                                            <InfoIcon
-                                                                            style={{ fontSize: "20px", color: "", marginTop: "5px", cursor: "pointer" }}
-                                                                            onClick={() => handleClickOpenDialog(visitor)}
-                                                                        /> :
-                                                                        <InfoIcon
-                                                                        style={{ fontSize: "20px", color: "lightgrey", marginTop: "5px", cursor: "",pointerEvents:"none" }}
-                                                                        disabled
-                                                                        
+                                                                                <InfoIcon
+                                                                                    style={{ fontSize: "20px", color: "", marginTop: "5px", cursor: "pointer" }}
+                                                                                    onClick={() => handleClickOpenDialog(visitor)}
+                                                                                /> :
+                                                                                <InfoIcon
+                                                                                    style={{ fontSize: "20px", color: "lightgrey", marginTop: "5px", cursor: "", pointerEvents: "none" }}
+                                                                                    disabled
 
-                                                                      
-                                                                    /> 
+
+
+                                                                                />
                                                                         }
-                                                                     
+
 
 
 
                                                                     </TableCell>
 
 
-                                                                    {/* Dialog component */}
-                                                                    {/* {Array.isArray(selectedValue) && selectedValue.map((meeting, index) => ( */}
-
-                                                                    {/* ))} */}
 
 
                                                                     <TableCell align="left">
@@ -1204,7 +1231,7 @@ export default function Dashboard() {
                                                                                         <EditIcon style={{ color: 'lightgray' }} disabled />
                                                                                     ) :
 
-                                                                                        visitor.status === 'PENDING' && visitor.user.role.name === 'ADMIN' ? (
+                                                                                        visitor.status === 'PENDING' && visitor.user.isPermission === true ? (
                                                                                             <EditIcon
                                                                                                 style={{ cursor: "pointer" }}
 
@@ -1265,7 +1292,7 @@ export default function Dashboard() {
                                         >
                                             <CloseIcon onClick={handleCloseModal} style={{ backgroundColor: "", color: "grey", cursor: "pointer", marginBottom: "10px", marginLeft: "400px" }} />
 
-                                            {item.status === 'PENDING' && item.user.role.name === 'ADMIN' ?
+                                            {item.status === 'PENDING' && item.user.isPermission === true ?
                                                 <>
                                                     <FormControl fullWidth>
                                                         <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -1281,7 +1308,7 @@ export default function Dashboard() {
                                                         >
 
                                                             <MenuItem value="">
-                                                                <em>None</em>
+                                                                <em>Cancel</em>
                                                             </MenuItem>
 
                                                             {Array.isArray(statusModal) && statusModal.map((options, index) => (
@@ -1307,15 +1334,25 @@ export default function Dashboard() {
 
                                                             {Array.isArray(rooms) && rooms.map((room) => (
 
-                                                                <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
-                                                                    style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}</MenuItem>
+                                                                // <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
+                                                                //     style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}       Capacity:{room.capacity}</MenuItem>
+                                                                <MenuItem
+                                                                    key={room.id}
+                                                                    value={room.id}
+                                                                    disabled={!room.isAvailable}
+                                                                    style={{ display: 'flex', justifyContent: 'space-between', color: room.isAvailable ? 'black' : 'grey' }}
+                                                                >
+                                                                    <div>{room.roomName}</div>
+                                                                    <div>Capacity: {room.capacity}</div>
+                                                                </MenuItem>
                                                             ))}
                                                         </Select>
                                                     </FormControl>
 
                                                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                                         <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
-                                                            <Button variant='contained' onClick={handleAddMeeting} >Add </Button>
+                                                            <Button variant='contained' onClick={handleAddMeeting} disabled={roomAdded}
+                                                                className={roomAdded ? 'disabledButton' : ''} >Add </Button>
 
                                                         </div>
                                                         <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
@@ -1352,6 +1389,7 @@ export default function Dashboard() {
                                                     </FormControl>
 
                                                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+
                                                         <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
                                                             <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
 
@@ -1361,6 +1399,7 @@ export default function Dashboard() {
                                                         <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
 
                                                             {roomAdded && (
+
                                                                 <Button variant="contained" onClick={() => handleDownloadPass(item.id, item.visitor.name, item.visitor.phoneNumber)}>Generate Pass</Button>
                                                             )}
                                                         </div>
@@ -1373,21 +1412,51 @@ export default function Dashboard() {
                                     </Box>
                                 </StyledModal>
 
-                      
 
-                                    {openDialog && (
-                                        <Dialog onClose={handleCloseDialog} open={openDialog}
-                                        >
-                                            <DialogTitle style={{ color: "black" }}>Remarks</DialogTitle>
-                                            <List sx={{ width: "300px" }}>
-                                                <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
-                                                    <ListItemText primary={`${selectedValue.remarks !== null && selectedValue.remarks !== "" ? selectedValue.remarks : '-'}`} />
-                                                </ListItem>
 
-                                            </List>
-                                        </Dialog>
+                                {openDialog && (
+                                    <Dialog onClose={handleCloseDialog} open={openDialog}
+                                    >
+                                        <DialogTitle sx={{ color: "black", backgroundColor: "lightblue",textAlign:"center" }}>INFO</DialogTitle>
+                                        <List sx={{ width: "300px" }}>
+                                            <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
+                                                <ListItemText primary={`Remarks: ${selectedValue.remarks !== null && selectedValue.remarks !== "" ? selectedValue.remarks : '-'}`}  sx={{ color: "blue",fontSize:"20px" }}/>
+                                               
+                                            </ListItem>
+                                            <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
+                                                <ListItemText primary={`Permission: ${selectedValue.user.isPermission !== 'null' || selectedValue.user.isPermission !== ""? selectedValue.user.isPermission : ""}`}  sx={{ color: "green" }} />
+                                               
+                                            </ListItem>
 
-                                    )}
+                                        </List>
+                                    </Dialog>
+
+                                )}
+{/* 
+{openDialog && (
+  <Dialog onClose={handleCloseDialog} open={openDialog}>
+    <DialogTitle style={{ color: "black" ,textAlign:"center"}}>INFO</DialogTitle>
+    <List sx={{ width: "300px" }}>
+      <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
+        <ListItemText
+          primary="Remarks:"
+          secondary={selectedValue.remarks !== null && selectedValue.remarks !== "" ? selectedValue.remarks : '-'}
+          primaryTypographyProps={{ sx: { color: "blue" } }} // Style for the label "Remarks"
+          secondaryTypographyProps={{ sx: { color: "green" } }} // Style for the value of Remarks
+        />
+      </ListItem>
+      <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
+        <ListItemText
+          primary="Permission:"
+          secondary={selectedValue.user.isPermission !== 'null' && selectedValue.user.isPermission !== "" ? selectedValue.user.isPermission : ""}
+          primaryTypographyProps={{ sx: { color: "red" } }} // Style for the label "Permission"
+          secondaryTypographyProps={{ sx: { color: "purple" } }} // Style for the value of Permission
+        />
+      </ListItem>
+    </List>
+  </Dialog>
+)} */}
+
 
 
                                 {/* </div> */}

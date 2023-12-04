@@ -19,6 +19,14 @@ th{
     color:white
 }
 
+/* CSS */
+.disabledButton {
+    color: grey !important; /* Change text color to grey */
+    background-color: #f0f0f0 !important; /* Change background color */
+    /* Add any additional styles for the disabled button */
+  }
+  
+
 /* rgb(147, 241, 227) */
 
 
