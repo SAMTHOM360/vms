@@ -121,7 +121,7 @@
 //             elevation={2}
 //               style={{
 //                 height: '70px',
-                
+
 //                 margin: "10px 0",
 //                 backgroundColor: 'aliceblue',
 //                 marginTop:"10px"
@@ -213,7 +213,7 @@
 //                             <Link to={`/editcompanyform/${company.id}`}>
 //                                    <EditIcon />
 //                                  </Link>
-                                
+
 //                               <Switch
 //                                 {...label}
 //                                 defaultChecked={company.active}
@@ -306,7 +306,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CompanyTable = () => {
-  const {setActiveListItem} = useAuth()
+  const { setActiveListItem } = useAuth()
   // sessionStorage.setItem('activeListItem', '/companyDetails')
   useEffect(() => {
     setActiveListItem('/companyDetails')
@@ -338,10 +338,10 @@ const CompanyTable = () => {
 
   function calculateSerialNumber(index) {
     return page * rowsPerPage + index + 1;
-}
+  }
 
 
-    const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
 
     const date = new Date(dateString);
     return date.toLocaleString();
@@ -388,53 +388,53 @@ const CompanyTable = () => {
     );
   });
 
-   const [sidebarOpen, setSidebarOpen] = useState(true)
-   const toggleSidebar = () => {
-     setSidebarOpen(!sidebarOpen);
-   };
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
-<>
-<Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+    <>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3, backgroundColor: "" }}>
 
-<Grid container spacing={2}>
-<Grid item xs={12} md={12} lg={12}>
-<div style={{ display: 'flex', justifyContent: 'center',backgroundColor:"",top:0, flexGrow:1 }}>
-      <div style={{ backgroundColor:"" }}>
-        <Grid container>
-          <Grid item xs={12}>
-          <Paper
-      elevation={5}
-      sx={{
-        display:'flex',
-        justifyContent:'space-between',
-        // width:'100%',
-      minHeight:'4.5em',
-      mt:'3em',
-      mb:'0.5em' 
-      }}
-      >
-        
-        <Header title="Companies" subtitle="Get all updates of the companies here." />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} lg={12}>
+            <div style={{ display: 'flex', justifyContent: 'center', backgroundColor: "", top: 0, flexGrow: 1 }}>
+              <div style={{ backgroundColor: "", width: "100%" }}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Paper
+                      elevation={5}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        // width:'100%',
+                        minHeight: '4.5em',
+                        mt: '3em',
+                        mb: '0.5em'
+                      }}
+                    >
 
-        <Link to="/companyreg">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin:'1.2em', height:'3em'}}
-                  >      Add Company
-                  </Button>
-                </Link>
-    </Paper>
-          </Grid>
-        </Grid>
+                      <Header title="Companies" subtitle="Get all updates of the companies here." />
 
-        <Grid container style={{ marginTop: '30px' }}>
-          <Grid item xs={12}>
-            <Item elevation={3} style={{ height: '', margin: '10px' }}>
+                      <Link to="/companyreg">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ margin: '1.2em', height: '3em' }}
+                        >      Add Company
+                        </Button>
+                      </Link>
+                    </Paper>
+                  </Grid>
+                </Grid>
 
-              <div style={{ display: "flex", justifyContent: "right"}}>
-                {/* <Link to="/companyreg">
+                <Grid container style={{ marginTop: '30px' }}>
+                  <Grid item xs={12}>
+                    <Item elevation={3} style={{ height: '', margin: '10px' }}>
+
+                      <div style={{ display: "flex", justifyContent: "right" }}>
+                        {/* <Link to="/companyreg">
                   <Button
                     variant="contained"
                     color="primary"
@@ -442,122 +442,124 @@ const CompanyTable = () => {
                   >      Add Company
                   </Button>
                 </Link> */}
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  style={{
-                    position: '',
-                    right: 0,
-                    marginTop:"10px",
-                    marginBottom: "15px",
-                    height: "30px",
-                    marginRight: "10px",
-                    borderRadius: "10px"
-                  }}
-                />
+                        <input
+                          type="text"
+                          placeholder="Search..."
+                          value={searchQuery}
+                          onChange={handleSearch}
+                          style={{
+                            position: '',
+                            right: 0,
+                            marginTop: "10px",
+                            marginBottom: "15px",
+                            height: "30px",
+                            marginRight: "10px",
+                            borderRadius: "10px"
+                          }}
+                        />
 
+                      </div>
+                      <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
+                        <Table aria-label="simple table">
+                          <TableHead style={{ backgroundColor: '#2b345386' }}>
+                            <TableRow>
+                              <TableCell><h4>ID</h4></TableCell>
+                              <TableCell align="left"><h4>Company Name</h4></TableCell>
+                              <TableCell align="left"><h4>Email</h4></TableCell>
+                              <TableCell align="left"><h4>Phone No.</h4></TableCell>
+                              <TableCell align="left"><h4>Address</h4></TableCell>
+                              <TableCell align="left" sx={{width:"10 em"}}><h4>Logo</h4></TableCell>
+                              <TableCell align="left"><h4>Industry</h4></TableCell>
+                              <TableCell align="left"><h4>State</h4></TableCell>
+                              <TableCell align="left"><h4>City</h4></TableCell>
+                              <TableCell align="left"><h4>Pin Code</h4></TableCell>
+                              <TableCell align="left"><h4>About Us</h4></TableCell>
+                              <TableCell align="left"><h4>Building Name</h4></TableCell>
+                              {/* <TableCell align="left">Created By</TableCell> */}
+                              <TableCell align="left"><h4>User Limit</h4></TableCell>
+                              <TableCell align="left"><h4>Actions</h4></TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {filteredCompanies
+                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                              .map((company, index) => (
+                                <TableRow key={company.id}>
+                                  <TableCell>{calculateSerialNumber(index)}</TableCell>
+                                  <TableCell align="left">{company.name}</TableCell>
+                                  <TableCell align="left">{company.email}</TableCell>
+                                  <TableCell align="left">{company.phoneNumber}</TableCell>
+                                  <TableCell align="left">{company.address}</TableCell>
+                                  <TableCell align="left">
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <a href={company.logo} target="_blank" rel="noopener noreferrer">
+      <img
+        src={company.logo}
+        alt="Company Logo"
+        style={{ width: '40px', height: '40px', marginLeft: '10px', cursor: 'pointer' }}
+      />
+    </a>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell align="left">{company.industry}</TableCell>
+                                  <TableCell align="left">{company.state.name}</TableCell>
+                                  <TableCell align="left">{company.city.name}</TableCell>
+                                  <TableCell align="left">{company.pincode}</TableCell>
+                                  <TableCell align="left">{company.aboutUs}</TableCell>
+                                  {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
+                                  {/* <TableCell align="left">{company.createdBy}</TableCell> */}
+
+                                  <TableCell align="left">{company.building.name}</TableCell>
+
+                                  <TableCell align="left">{company.userLimit}</TableCell>
+                                  <TableCell align="left">
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                      <Link to={`/edit/${company.id}`}>
+                                        <EditIcon />
+                                      </Link>
+
+                                      <Switch
+                                        {...label}
+                                        defaultChecked={company.active}
+                                        onChange={() => {
+                                          const newActiveStatus = !company.active;
+                                          handleSwitchToggle(company.id, newActiveStatus);
+
+                                          // Update the local state with the new active status
+                                          const updatedCompanies = companies.map(c => {
+                                            if (c.id === company.id) {
+                                              return { ...c, active: newActiveStatus };
+                                            }
+                                            return c;
+                                          });
+                                          setCompanies(updatedCompanies);
+                                        }}
+                                      />
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                        <TablePagination
+                          rowsPerPageOptions={[]}
+                          component="div"
+                          count={filteredCompanies.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          onPageChange={handleChangePage}
+                        />
+                      </TableContainer>
+                    </Item>
+                  </Grid>
+                </Grid>
               </div>
-              <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
-                <Table aria-label="simple table">
-                  <TableHead style={{ backgroundColor: '#2b345386' }}>
-                    <TableRow>
-                      <TableCell><h4>ID</h4></TableCell>
-                      <TableCell align="left"><h4>Company Name</h4></TableCell>
-                      <TableCell align="left"><h4>Email</h4></TableCell>
-                      <TableCell align="left"><h4>Phone No.</h4></TableCell>
-                      <TableCell align="left"><h4>Address</h4></TableCell>
-                      <TableCell align="left"><h4>Logo</h4></TableCell>
-                      <TableCell align="left"><h4>Industry</h4></TableCell>
-                      <TableCell align="left"><h4>State</h4></TableCell>
-                      <TableCell align="left"><h4>City</h4></TableCell>
-                      <TableCell align="left"><h4>Pin Code</h4></TableCell>
-                      <TableCell align="left"><h4>About Us</h4></TableCell>
-                      <TableCell align="left"><h4>Building Name</h4></TableCell>
-                      {/* <TableCell align="left">Created By</TableCell> */}
-                      <TableCell align="left"><h4>User Limit</h4></TableCell>
-                      <TableCell align="left"><h4>Actions</h4></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filteredCompanies
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((company,index) => (
-                        <TableRow key={company.id}>
-                          <TableCell>{calculateSerialNumber(index)}</TableCell>
-                          <TableCell align="left">{company.name}</TableCell>
-                          <TableCell align="left">{company.email}</TableCell>
-                          <TableCell align="left">{company.phoneNumber}</TableCell>
-                          <TableCell align="left">{company.address}</TableCell>
-                          <TableCell align="left">
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                              <img
-                                src={company.logo}
-                                alt="Company Logo"
-                                style={{ width: '40px', height: '40px', marginLeft: '10px' }}
-                              />
-                            </div>
-                          </TableCell>
-                          <TableCell align="left">{company.industry}</TableCell>
-                          <TableCell align="left">{company.state.name}</TableCell>
-                          <TableCell align="left">{company.city.name}</TableCell>
-                          <TableCell align="left">{company.pincode}</TableCell>
-                          <TableCell align="left">{company.aboutUs}</TableCell>
-                          {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
-                          {/* <TableCell align="left">{company.createdBy}</TableCell> */}
-
-                          <TableCell align="left">{company.building.name}</TableCell>
-
-                          <TableCell align="left">{company.userLimit}</TableCell>
-                          <TableCell align="left">
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <Link to={`/edit/${company.id}`}>
-                                   <EditIcon />
-                                 </Link>
-                                
-                              <Switch
-                                {...label}
-                                defaultChecked={company.active}
-                                onChange={() => {
-                                  const newActiveStatus = !company.active;
-                                  handleSwitchToggle(company.id, newActiveStatus);
-
-                                  // Update the local state with the new active status
-                                  const updatedCompanies = companies.map(c => {
-                                    if (c.id === company.id) {
-                                      return { ...c, active: newActiveStatus };
-                                    }
-                                    return c;
-                                  });
-                                  setCompanies(updatedCompanies);
-                                }}
-                              />
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  rowsPerPageOptions={[]}
-                  component="div"
-                  count={filteredCompanies.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                />
-              </TableContainer>
-            </Item>
+              <ToastContainer />
+            </div>
           </Grid>
         </Grid>
-      </div>
-      <ToastContainer />
-    </div>
-    </Grid>
-    </Grid>
-    </Box>
-</>
+      </Box>
+    </>
   );
 };
 

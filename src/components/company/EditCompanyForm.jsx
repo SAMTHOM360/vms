@@ -39,7 +39,7 @@ export default function EditCompanyForm() {
     industry: "",
     aboutUs: "",
     userLimit: "",
-    buildingId:"",
+    buildingId: "",
   });
   console.log(companyData, "companydata");
 
@@ -62,7 +62,7 @@ export default function EditCompanyForm() {
       .then((response) => {
         const company = response.data.data;
         console.log(response.data.data);
-      
+
 
         setCompanyData({
           name: company.name,
@@ -77,7 +77,7 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
-          buildingId:company.building.buildingId,
+          buildingId: company.building.buildingId,
         });
         // console.log(company.city.id,"city");
 
@@ -85,7 +85,7 @@ export default function EditCompanyForm() {
         setSelectedCity(company.city.id);
         fetchCity(company.state.id);
         setSelectedBuildingId(company.building.buildingId);
-        console.log(company.building.buildingId,"buildingId")
+        console.log(company.building.buildingId, "buildingId")
       })
       .catch((error) => {
         console.log(error);
@@ -117,7 +117,7 @@ export default function EditCompanyForm() {
     // fetchCity(selectedState);
   }, []);
 
- 
+
 
   const handleStateChange = (event) => {
     const selectedState = event.target.value;
@@ -242,17 +242,17 @@ export default function EditCompanyForm() {
 
   function fetchBuildingNames() {
 
-      axios
-          .get(buildingUrl)
-          .then(response => {
-              console.log(response.data.data, "buildings")
+    axios
+      .get(buildingUrl)
+      .then(response => {
+        console.log(response.data.data, "buildings")
 
-              
-              setBuildingOptions(response.data.data);
-          })
-          .catch((error) => {
-              console.log(error, "Error fetching data");
-          })
+
+        setBuildingOptions(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error, "Error fetching data");
+      })
 
 
 
@@ -260,7 +260,7 @@ export default function EditCompanyForm() {
 
 
   console.log(buildingOptions, "hhh")
-  console.log(selectedBuildingId,"mickey")
+  console.log(selectedBuildingId, "mickey")
 
   // const handleBuildingChange = (event) => {
   //     const selectedBuildingId= event.target.value;
@@ -273,25 +273,14 @@ export default function EditCompanyForm() {
   // };
   const handleBuildingChange = (event, newValue) => {
 
-  
-    
-      if (newValue) {
-          setSelectedBuildingId(newValue.id);
-          setCompanyData({ ...companyData, buildingId: newValue.id });
-      } else {
-          setSelectedBuildingId(null);
-          setCompanyData({ ...companyData, buildingId: "" });
-      }
+    if (newValue) {
+      setSelectedBuildingId(newValue.id);
+      setCompanyData({ ...companyData, buildingId: newValue.id });
+    } else {
+      setSelectedBuildingId(null);
+      setCompanyData({ ...companyData, buildingId: "" });
+    }
   };
-
-
-
-  
-
-
-
-
-
 
 
 
@@ -496,7 +485,7 @@ export default function EditCompanyForm() {
                   ></TextField>
                 </div>
 
-             
+
                 <TextField
                   label="Industry"
                   placeholder="Industry"
@@ -518,7 +507,7 @@ export default function EditCompanyForm() {
                   }}
                 >
 
-                  {/* <TextField
+                  <TextField
                     sx={{ width: "47%" }}
                     label="Building Id"
                     placeholder="Building Id"
@@ -527,22 +516,27 @@ export default function EditCompanyForm() {
                     onChange={(e) =>
                       setCompanyData({ ...companyData, buildingId: e.target.value })
                     }
-                  ></TextField> */}
+                    disabled={disabled}
+                  ></TextField>
 
 
-<Autocomplete sx={{ width: "47%" }}
-                                            options={buildingOptions}
-                                            getOptionLabel={(option) => option !== null ?option.name:""} // Assuming 'name' is the property containing the building name
-                                            // value={companyData.buildingId}
-                                            onChange={handleBuildingChange}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Select Building"
-                                                    variant="outlined"
-                                                />
-                                            )}
-                                        />
+                  {/* <Autocomplete sx={{ width: "47%" }}
+                    options={buildingOptions}
+                    getOptionLabel={(option) => option !== null ? option.name : ""}
+                    value={null}
+                    // onChange={(e, newVal)=> {}}
+                    inputValue={""}
+                    // onInputChange={(e, newVal)=>{}}
+                    onChange={handleBuildingChange}
+
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Building"
+                        variant="outlined"
+                      />
+                    )}
+                  /> */}
 
 
 

@@ -268,8 +268,40 @@ export default function CompanyReg() {
     // };
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
 
+    // const handleLogoChange = (event) => {
+    //     const logoFile = event.target.files[0];
+
+    //     // Check if file size exceeds the limit
+    //     if (logoFile.size > MAX_FILE_SIZE) {
+    //         alert("Maximum file size exceeded (5MB)");
+    //         setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+    //         return;
+    //     }
+
+    //     // Proceed with normal logo upload process
+    //     setValues({ ...values, logo: logoFile });
+    //     setLogoUpdated(true);
+    //     alert("Company logo updated successfully");
+
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //         setImageUrl(reader.result);
+    //     };
+    //     reader.readAsDataURL(logoFile);
+    // };
+
     const handleLogoChange = (event) => {
+        const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
         const logoFile = event.target.files[0];
+
+        // Check if file format is allowed
+        if (!allowedExtensions.includes(logoFile.type)) {
+            setErrors({
+                ...errors,
+                logo: "Allowed file formats: .jpg, .jpeg, .png"
+            });
+            return;
+        }
 
         // Check if file size exceeds the limit
         if (logoFile.size > MAX_FILE_SIZE) {
@@ -291,6 +323,7 @@ export default function CompanyReg() {
     };
 
 
+
     //building options
 
     const [buildingOptions, setBuildingOptions] = useState([]);
@@ -305,7 +338,7 @@ export default function CompanyReg() {
             .then(response => {
                 console.log(response.data.data, "buildings")
 
-                
+
                 setBuildingOptions(response.data.data);
             })
             .catch((error) => {
@@ -339,9 +372,17 @@ export default function CompanyReg() {
     };
 
 
+    const handleImageClick = () => {
+        if (imageUrl) {
+            const newWindow = window.open();
+            newWindow.document.write(`<img src="${imageUrl}" alt="Uploaded Logo"/>`);
+        }
+    };
 
 
 
+
+    console.log(imageUrl, "imageURl")
 
 
 
@@ -382,22 +423,41 @@ export default function CompanyReg() {
                                             <input type="file" id="file-input" onChange={handleLogoChange} />
                                             Upload Company Logo
                                         </label> */}
-                                        <label style={{ display: 'flex', alignItems: 'center', gap: "10px" }}>
 
-                                            {imageUrl && (
-                                                <img
-                                                    src={imageUrl}
-                                                    alt="Uploaded Logo"
-                                                    style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px' }}
-                                                />
-                                            )}
-                                            <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                                                <input type="file" id="file-input" onChange={handleLogoChange} />
-                                                Upload Company Logo
-                                            </span>
+                                        <div >
+                                            <label >
+
+                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                                                    {imageUrl && (
+
+                                                        <img
+                                                            src={imageUrl}
+                                                            alt="Uploaded Logo"
+                                                            style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px', cursor: 'pointer' }}
+                                                            onClick={handleImageClick}
+                                                        />
+
+                                                    )}
+                                                    <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
+                                                        <input type="file" id="file-input" onChange={handleLogoChange} />
+                                                        Upload Company Logo
+                                                    </span>
+
+                                                </div>
 
 
-                                        </label>
+
+                                                {/* {errors.logo && ( */}
+                                                <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
+                                                    Allowed file formats: .jpg, .jpeg, .png
+                                                </Typography>
+                                                {/* )} */}
+
+
+                                            </label>
+
+                                        </div>
+
 
                                     </div>
 
@@ -411,7 +471,7 @@ export default function CompanyReg() {
 
                                         {/* <div> */}
 
-                                            {/* <Box sx={{ minWidth: 120 }}>
+                                        {/* <Box sx={{ minWidth: 120 }}>
                                                 <FormControl fullWidth>
                                                     <InputLabel id="demo-simple-select-label">Select State</InputLabel>
                                                     <Select
@@ -443,68 +503,68 @@ export default function CompanyReg() {
                                                 </FormControl>
                                             </Box> */}
 
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
-                                                    <Autocomplete
-                                                        sx={{ width: '350px' }}
-                                                        options={states}
-                                                        getOptionLabel={(option) => option.name}
-                                                        value={selectedState}
-                                                        onChange={(event, newValue) => {
-                                                            setSelectedState(newValue);
-                                                            setValues({ ...values, state: newValue ? newValue.id : '' });
-                                                            if (newValue) {
-                                                                axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
-                                                                    .then((response) => {
-                                                                        setCities(response.data.data);
-                                                                    })
-                                                                    .catch((error) => {
-                                                                        console.error(error);
-                                                                    });
-                                                            } else {
-                                                                setCities([]);
-                                                            }
-                                                        }}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                {...params}
-                                                                label="Select State"
-                                                                error={Boolean(errors.state)}
-                                                                helperText={errors.state}
-                                                                InputLabelProps={{
-                                                                    shrink: selectedState !== null || params.inputProps?.value,
-                                                                }}
-                                                            />
-                                                        )}
-                                                    />
-                                                </FormControl>
-                                            </Box>
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
+                                                <Autocomplete
+                                                    sx={{ width: '350px' }}
+                                                    options={states}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={selectedState}
+                                                    onChange={(event, newValue) => {
+                                                        setSelectedState(newValue);
+                                                        setValues({ ...values, state: newValue ? newValue.id : '' });
+                                                        if (newValue) {
+                                                            axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
+                                                                .then((response) => {
+                                                                    setCities(response.data.data);
+                                                                })
+                                                                .catch((error) => {
+                                                                    console.error(error);
+                                                                });
+                                                        } else {
+                                                            setCities([]);
+                                                        }
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Select State"
+                                                            error={Boolean(errors.state)}
+                                                            helperText={errors.state}
+                                                            InputLabelProps={{
+                                                                shrink: selectedState !== null || params.inputProps?.value,
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box>
 
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
-                                                    <Autocomplete
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
+                                                <Autocomplete
 
-                                                        sx={{ width: '350px' }}
-                                                        options={cities}
-                                                        getOptionLabel={(option) => option.name}
-                                                        value={selectedCity}
-                                                        onChange={(event, newValue) => {
-                                                            setSelectedCity(newValue);
-                                                            setValues({ ...values, city: newValue ? newValue.id : '' });
-                                                        }}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                {...params}
-                                                                label="Select City"
-                                                                error={Boolean(errors.city)}
-                                                                helperText={errors.city}
-                                                            />
-                                                        )}
-                                                    />
-                                                </FormControl>
-                                            </Box>
+                                                    sx={{ width: '350px' }}
+                                                    options={cities}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={selectedCity}
+                                                    onChange={(event, newValue) => {
+                                                        setSelectedCity(newValue);
+                                                        setValues({ ...values, city: newValue ? newValue.id : '' });
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Select City"
+                                                            error={Boolean(errors.city)}
+                                                            helperText={errors.city}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box>
 
 
                                         {/* </div> */}
@@ -583,7 +643,7 @@ export default function CompanyReg() {
 
                                         <Autocomplete sx={{ width: "47%" }}
                                             options={buildingOptions}
-                                            getOptionLabel={(option) => option !== null ?option.name:""} // Assuming 'name' is the property containing the building name
+                                            getOptionLabel={(option) => option !== null ? option.name : ""} // Assuming 'name' is the property containing the building name
                                             onChange={handleBuildingChange}
                                             renderInput={(params) => (
                                                 <TextField
@@ -606,17 +666,17 @@ export default function CompanyReg() {
                                             onChange={(e) => {
                                                 // setValues({ ...values, userLimit: e.target.value });
 
-                                               
-                                                    // Check if the entered value is within the range of 1 to 100
-                                                    const enteredValue = e.target.value;
-                                                    const numericValue = parseInt(enteredValue);
-                                            
-                                                    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
-                                                        setValues({ ...values, userLimit: numericValue });
-                                                    } else {
-                                                        // If the entered value is not within the range, do not update the state
-                                                        setValues({ ...values, userLimit: '' }); // Set userLimit to empty string or another appropriate value
-                                                    
+
+                                                // Check if the entered value is within the range of 1 to 100
+                                                const enteredValue = e.target.value;
+                                                const numericValue = parseInt(enteredValue);
+
+                                                if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
+                                                    setValues({ ...values, userLimit: numericValue });
+                                                } else {
+                                                    // If the entered value is not within the range, do not update the state
+                                                    setValues({ ...values, userLimit: '' }); // Set userLimit to empty string or another appropriate value
+
                                                 }
 
 
