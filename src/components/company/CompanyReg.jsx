@@ -125,8 +125,12 @@ export default function CompanyReg() {
         //     newErrors.userLimit = "User Limit cannot exceed 100";
         // }
 
-        if (!values.buildingId) {
+        if (!values.userLimit) {
             newErrors.userLimit = "User Limit is required";
+        }
+
+        if (!values.buildingId) {
+            newErrors.buildingId= "Building Id is required";
         }
 
         if (!values.aboutUs) {
@@ -652,11 +656,16 @@ export default function CompanyReg() {
                                                     variant="outlined"
                                                 />
                                             )}
+
+                                            error={Boolean(errors.buildingId)}
+                                            helperText={errors.buildingId}
                                         />
 
 
 
                                         <TextField sx={{ width: "47%" }} label="User Limit" placeholder="User Limit" type="number" value={values.userLimit}
+
+
 
 
 
@@ -685,8 +694,8 @@ export default function CompanyReg() {
 
 
 
-                                        // error={Boolean(errors.userLimit)}
-                                        // helperText={errors.userLimit}
+                                        error={Boolean(errors.userLimit)}
+                                        helperText={errors.userLimit}
                                         ></TextField>
 
                                     </div>
