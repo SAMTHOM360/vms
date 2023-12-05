@@ -617,7 +617,8 @@ export default function Navbar({ toggleSidebar }) {
         // overflow: "visible",
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
         mt: "2.6em",
-        mr: "7em",
+        // bgcolor:'red'
+        // mr: "7em",
       }}
       anchorEl={anchorEl}
       anchorOrigin={{
@@ -840,8 +841,15 @@ export default function Navbar({ toggleSidebar }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
-      <AppBar position="fixed" elevation={4} sx={{ background: "#141b2d" }}>
+      <AppBar position="fixed" elevation={4} sx={{ background: "#141b2d", }}>
         <Toolbar>
+          <Box sx={{
+            display:'flex',
+            flexDirection:'row',
+            alignItems:'center',
+          }}>
+
+       
           <IconButton
             size="large"
             edge="start"
@@ -852,6 +860,7 @@ export default function Navbar({ toggleSidebar }) {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
             variant="h6"
             noWrap
@@ -897,9 +906,23 @@ export default function Navbar({ toggleSidebar }) {
               {formData.dept.name}
             </Typography>
           </Typography>
-          <Box sx={{ flexGrow: 1 }} />
+
+          </Box>
 
 
+          <Box sx={{ flexGrow: 1,
+             bgcolor:'cyan',
+              minWidth:'12em',
+               }} />
+
+          <Box sx={{
+            display:'flex',
+            flexDirection:'row',
+            alignItems:'center',
+            // bgcolor:'red',
+          }}>
+
+         
           <Typography
             sx={{
               display: {xs: 'none', sm: "none", md: "flex" },
@@ -963,12 +986,12 @@ export default function Navbar({ toggleSidebar }) {
             anchorEl={bellAnchorEl}
             onClose={handleCloseBellMenu}
             anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
+              vertical: 'bottom',
+              horizontal: 'right',
             }}
             transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
+              vertical: 'top',
+              horizontal: 'right',
             }}
           >
             <Box
@@ -991,7 +1014,7 @@ export default function Navbar({ toggleSidebar }) {
               >
                 Notifications
               </Typography>
-              <Tooltip title="Mark as all read" arrow>
+              {/* <Tooltip title="Mark as all read" arrow>
                 <IconButton
                   size="small"
                   onClick={handleMarkRead}
@@ -1002,7 +1025,7 @@ export default function Navbar({ toggleSidebar }) {
                 >
                   <CheckCircleOutlineIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </Box>
             <Box
               sx={{
@@ -1023,6 +1046,7 @@ export default function Navbar({ toggleSidebar }) {
                 md: "flex",
                 color: "#ffffff",
                 position: "relative",
+                bgcolor:'orange'
               },
             }}
           >
@@ -1093,6 +1117,7 @@ export default function Navbar({ toggleSidebar }) {
               <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
           </Box> */}
+           </Box>
         </Toolbar>
       </AppBar>
       {/* {renderMobileMenu} */}

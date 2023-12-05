@@ -267,6 +267,10 @@ const NotFound = () => {
     } else if (userRole === "ADMIN") {
       navigate('/empdashboard')
       // sessionStorage.setItem('activeListItem', '/empdashboard')
+    }
+    else if (userRole === "HR") {
+      navigate('/empdashboard')
+      // sessionStorage.setItem('activeListItem', '/empdashboard')
     } else if (userRole === "RECEPTIONIST") {
       navigate('/dashboardreceptionist')
       // sessionStorage.setItem('activeListItem', '/receptionistdashboard')

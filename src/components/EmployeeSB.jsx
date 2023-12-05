@@ -277,7 +277,7 @@ const Employee = () => {
 
         const updatedRows = rows.map((row) => {
           if (row.id === editedItem.id) {
-            return { ...row, ...payload, role: updatedRoleName, dept: updatedDept.name, isPermission: updatedIsPermission
+            return { ...row, ...payload, role: updatedRoleName, dept: updatedDept.name, isPermission: updatedIsPermission ? 'YES' : 'NO'
           };
           }
           return row;
@@ -318,7 +318,7 @@ const Employee = () => {
       const apiDataArray = response.data;
 
       // console.log("apidata index 0", apiDataArray[0].departmentDto);
-      console.log("apidata ", apiDataArray);
+      // console.log("apidata ", apiDataArray);
 
       sessionStorage.setItem("currEmpLength", apiDataArray.length);
 
@@ -435,7 +435,8 @@ const Employee = () => {
         company: apiDataItem.company ? apiDataItem.company.name : "",
         dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
         role: apiDataItem.role ? apiDataItem.role.name : "",
-        isPermission: apiDataItem.isPermission
+        // isPermission: apiDataItem.isPermission
+        isPermission: apiDataItem.isPermission ? "YES" : "NO",
       }));
 
       setColumns(gridColumns);
@@ -722,8 +723,9 @@ const Employee = () => {
                     required
                   />
                   <TextField
-                sx={{ mt: '2%', mb: '2%' }}
+                sx={{ mt: "1em" }}
                 label="Phone"
+                size="small"
                 fullWidth
                 value={editedItem.phone}
                 inputProps={{
@@ -743,18 +745,27 @@ const Employee = () => {
                 required
               />
 
-<FormControl sx={{ width: "100%", mt: "10px" }} required>
+<FormControl sx={{ width: "100%", mt: "1em" }} size="small" required>
                       <InputLabel htmlFor="dept">Department</InputLabel>
                       <Select
                         label="Department"
                         name="dept"
                         value={editedItem.dept.id || ""}
+                        
                         required
                         onChange={(e) => {
                           const updatedItem = { ...editedItem, dept: { ...editedItem.dept, id: e.target.value } };
                           setSelectedDept(e.target.value);
                           setEditedItem(updatedItem);
                         }}
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: 150,
+                            },
+                          },
+                        }}
+                    
                       >
                         {depts.map((dept) => (
                           <MenuItem key={dept.id} value={dept.id}>
@@ -793,7 +804,7 @@ const Employee = () => {
                   </FormControl>
 
 
-                  <FormControl fullWidth>
+                  <FormControl sx={{ width: "100%", mt: "1em" }} size="small" fullWidth>
                         <InputLabel id="approval-label">
                           Can Receptionist approve meet?
                         </InputLabel>
@@ -807,8 +818,11 @@ const Employee = () => {
                             setEditedItem({ ...editedItem, isPermission: e.target.value });
                           }}
                         >
-                          <MenuItem value="true">True</MenuItem>
-                          <MenuItem value="false">False</MenuItem>
+                          {/* <MenuItem value="true">True</MenuItem>
+                          <MenuItem value="false">False</MenuItem> */}
+
+                          <MenuItem value="true">YES</MenuItem>
+                          <MenuItem value="false">NO</MenuItem>
                         </Select>
                       </FormControl>
                 </form>

@@ -600,6 +600,127 @@ export default function Sidenav({ open: propOpen, onClose }) {
             </>
           )}
 
+
+
+{userRole === "HR" && (
+            <>
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/empdashboard"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+   
+                }}
+                onClick={() => handleSelectListItem("/empdashboard")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <HomeIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Dashboard"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/meetings"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+                }}
+                onClick={() => handleSelectListItem("/meetings")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DashboardIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Meetings"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
+
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/profile"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+                }}
+                onClick={() => handleSelectListItem("/profile")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PersonIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Profile"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </>
+          )}
+
+
+
           {userRole === "RECEPTIONIST" && (
             <>
               <ListItem

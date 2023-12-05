@@ -105,7 +105,7 @@ async function fetchRoles() {
     );
 
     const roleApiData = response.data.data
-    console.log('roleApiData',roleApiData)
+    // console.log('roleApiData',roleApiData)
 
 
     if (!Array.isArray(roleApiData) || roleApiData.length === 0) {
@@ -149,7 +149,7 @@ const fetchDepts = async () => {
   try{
     const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
     const deptApiData = response.data.data
-    console.log('deptApiData',deptApiData)
+    // console.log('deptApiData',deptApiData)
 
     if (!Array.isArray(deptApiData) || deptApiData.length === 0) {
       console.error(
@@ -217,7 +217,7 @@ const handleSubmitAddDept = async(e) => {
   try{
     setBtnLoading(true)
     const response = axiosInstance.post('http://192.168.12.54:8080/api/department/create', payload, {headers})
-    console.log('role submit response', response)
+    // console.log('role submit response', response)
     if(response.status === '200'){
       toast.success("Dept added succesfully.", {
         position: "top-right",
@@ -252,7 +252,7 @@ const handleSubmitAddDept = async(e) => {
       progress: undefined,
       theme: "light",
     });
-    console.error("unable to add role: ", error)
+    console.error("unable to add Dept: ", error)
   }
 
   setBtnLoading(false)
@@ -277,7 +277,7 @@ const handleSubmitAddRole = async(e) => {
   try{
     setBtnLoading(true)
     const response = axiosInstance.post('http://192.168.12.54:8080/api/add', payload, {headers})
-    console.log('role submit response', response)
+    // console.log('role submit response', response)
     if(response.status === '200'){
       toast.success("Role added succesfully.", {
         position: "top-right",
@@ -335,14 +335,14 @@ const handleSubmitAddRole = async(e) => {
       >
         <Header title="Dashboard" subtitle="Welcome to dashboard" />
         <Box sx={{ display: "flex", alignItems: "center", justifyContent:'end', minWidth:'31.3em', ml:'2em' }}> 
-        <Button
+        {/* <Button
                       variant="contained"
                       size="small"
                       sx={{ marginLeft: "1.2em", height: "3em", width: "11em" }}
                       onClick={handleRoleDialogOpen}
                     >
                       Add a Role
-                    </Button>
+                    </Button> */}
 
                     <Button
                       variant="contained"

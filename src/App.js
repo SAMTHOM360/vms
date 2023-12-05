@@ -141,7 +141,7 @@ const ReceptionistCompanyScreen = lazy(() => import('./components/company/Recept
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
 const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
-const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
+// const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
 const Profile = lazy(() => import('./components/Profile'));
 const DynamicIdCard = lazy(() => import('./components/experimentals/DynamicIdCard'));
 const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
@@ -167,7 +167,7 @@ function App() {
     setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
   };
   
-  console.log('sidebarOpen', sidebarOpen)
+  // console.log('sidebarOpen', sidebarOpen)
 
 
 
@@ -228,19 +228,19 @@ function App() {
   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
   <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
   <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
-  <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE']} />} />
+  <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE','HR']} />} />
   <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST','ADMIN']} />} />
 
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
   <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} />
   
-  <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE']} />} />
-  <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} />
+  <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE','HR']} />} />
+  {/* <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} /> */}
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
   <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} />
-  <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN']} />} />
-  <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN']} />} />
+  <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN','RECEPTIONIST','HR']} />} />
+  <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN', 'HR']} />} />
 
 </Routes>
 </Suspense>

@@ -358,6 +358,9 @@ function LoginForm() {
         } else if (loggedUserRole === "ADMIN") {
           navigate("/empdashboard");
           // sessionStorage.setItem("activeListItem", "/empdashboard");
+        } else if (loggedUserRole === "HR") {
+          navigate("/empdashboard");
+          // sessionStorage.setItem("activeListItem", "/empdashboard");
         } else if (loggedUserRole === "RECEPTIONIST") {
           navigate("/receptionistcompanyscreen");
           // sessionStorage.setItem("activeListItem", "/dashboardreceptionist");
