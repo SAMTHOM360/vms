@@ -824,13 +824,11 @@ export default function Dashboard() {
 
     console.log(openDialog, "opendialog")
     return (
-        <>
-            <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
-                <Grid container spacing={2}>
+            <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
+                <Grid container spacing={2} style={{}} >
                     <Grid item xs={12} md={12} lg={12}>
                         <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
                             <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
-                                <Grid container>
                                     <Grid container>
                                         <Grid item xs={12}>
                                             <Paper
@@ -899,8 +897,6 @@ export default function Dashboard() {
                                                 </Box>) : ''}
                                             </Paper>
                                         </Grid>
-
-                                    </Grid>
 
                                 </Grid>
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
@@ -1468,9 +1464,5 @@ export default function Dashboard() {
                     </Grid>
                 </Grid>
             </Box>
-
-
-
-        </>
     )
 }

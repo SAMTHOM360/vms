@@ -39,6 +39,7 @@ export default function EditCompanyForm() {
     industry: "",
     aboutUs: "",
     userLimit: "",
+    buildingId:"",
   });
   console.log(companyData, "companydata");
 
@@ -76,7 +77,7 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
-          buildingId:company.building.name,
+          buildingId:company.building.buildingId,
         });
         // console.log(company.city.id,"city");
 
@@ -115,6 +116,8 @@ export default function EditCompanyForm() {
 
     // fetchCity(selectedState);
   }, []);
+
+ 
 
   const handleStateChange = (event) => {
     const selectedState = event.target.value;
@@ -233,7 +236,7 @@ export default function EditCompanyForm() {
 
   //buildingId
   const [buildingOptions, setBuildingOptions] = useState([]);
-  const [selectedBuildingId, setSelectedBuildingId] = useState(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState('');
 
   const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
 
@@ -257,7 +260,7 @@ export default function EditCompanyForm() {
 
 
   console.log(buildingOptions, "hhh")
-  // console.log(selectedBuildingId,"mickey")
+  console.log(selectedBuildingId,"mickey")
 
   // const handleBuildingChange = (event) => {
   //     const selectedBuildingId= event.target.value;
@@ -280,6 +283,12 @@ export default function EditCompanyForm() {
           setCompanyData({ ...companyData, buildingId: "" });
       }
   };
+
+
+
+  
+
+
 
 
 
@@ -524,6 +533,7 @@ export default function EditCompanyForm() {
 <Autocomplete sx={{ width: "47%" }}
                                             options={buildingOptions}
                                             getOptionLabel={(option) => option !== null ?option.name:""} // Assuming 'name' is the property containing the building name
+                                            // value={companyData.buildingId}
                                             onChange={handleBuildingChange}
                                             renderInput={(params) => (
                                                 <TextField

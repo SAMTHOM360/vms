@@ -376,7 +376,7 @@ const routeChange1 = ()=>{
 
 
                                                 {/* <h2>Today Meetings Chart</h2> */}
-                                                <div>
+                                                <div style={{width:"90vw"}}>
                                                     {/* <h2 style={{ color: "black" }}>Meeting Hours</h2> */}
                                                     <ProgressBar meetingHour={meetingHour} avgData={averageData} meetingData ={totalMeetingData} />
                                                 </div>
