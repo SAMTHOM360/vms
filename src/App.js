@@ -128,6 +128,9 @@ import DynamicMonthData from './components/unused/DynamicMonthData';
 import RolesAndDepartments from './components/RolesAndDepartments';
 
 
+import ReceptionistAddRoom from './components/company/ReceptionistAddRoom';
+
+
 const LoginForm = lazy(() => import('./components/LoginFormNK'));
 const Employee = lazy(() => import('./components/EmployeeSB'));
 const UserForm = lazy(() => import('./components/UserFormSB'));
@@ -234,6 +237,13 @@ function App() {
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
   <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} />
+
+  {/* receptionist add room */}
+
+  <Route path="/receptionistaddroom" element={<PrivateRoute element={<ReceptionistAddRoom/>} allowedRoles={['RECEPTIONIST']} />} />
+
+
+
   
   <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE','HR']} />} />
   {/* <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} /> */}

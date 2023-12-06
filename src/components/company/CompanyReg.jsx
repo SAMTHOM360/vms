@@ -75,7 +75,8 @@ export default function CompanyReg() {
 
         const pincodeRegex = /^\d{6}$/;
 
-        const phoneNumberRegex = /^\d{10}$/;
+        const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
+        
 
 
         const newErrors = {};
@@ -109,7 +110,11 @@ export default function CompanyReg() {
             newErrors.email = "Invalid email address";
         }
 
-        if (!values.phoneNumber || !values.phoneNumber.match(phoneNumberRegex)) {
+        if (!values.phoneNumber ) {
+            newErrors.phoneNumber = "Phone number is required";
+        }
+
+        if (!phoneNumberRegex.test(values.phoneNumber) ) {
             newErrors.phoneNumber = "Phone number must be exactly 10 digits";
         }
 
@@ -190,6 +195,8 @@ export default function CompanyReg() {
 
             } catch (error) {
 
+                // alert(error)
+
                 console.log(error)
             }
         }
@@ -214,6 +221,7 @@ export default function CompanyReg() {
             })
 
             .catch((error) => {
+                
                 console.log(error);
             })
 
@@ -340,7 +348,7 @@ export default function CompanyReg() {
         axios
             .get(buildingUrl)
             .then(response => {
-                console.log(response.data.data, "buildings")
+                // console.log(response.data.data, "buildings")
 
 
                 setBuildingOptions(response.data.data);
@@ -354,7 +362,7 @@ export default function CompanyReg() {
     }
 
 
-    console.log(buildingOptions, "hhh")
+    // console.log(buildingOptions, "hhh")
 
     // const handleBuildingChange = (event) => {
     //     const selectedBuildingId= event.target.value;
@@ -386,7 +394,7 @@ export default function CompanyReg() {
 
 
 
-    console.log(imageUrl, "imageURl")
+    // console.log(imageUrl, "imageURl")
 
 
 
@@ -621,14 +629,30 @@ export default function CompanyReg() {
                                         <TextField sx={{ width: "47%" }} label="Email" placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
                                             helperText={errors.email} >
                                         </TextField>
-                                        <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
+                                        {/* <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
 
                                             if (e.target.value.length <= 10) {
                                                 setValues({ ...values, phoneNumber: e.target.value });
                                             }
 
                                         }} error={Boolean(errors.phoneNumber)}
+                                            helperText={errors.phoneNumber}></TextField> */}
+
+
+                                             <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber}
+                                             
+                                             onChange={(e) => {
+                                                const input = e.target.value;
+                                                const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
+                                                if (numericValue.length > 10) {
+                                                    return;
+                                                }
+                                                setValues({ ...values, phoneNumber: numericValue });
+                                            }}
+                                             error={Boolean(errors.phoneNumber)}
                                             helperText={errors.phoneNumber}></TextField>
+
+
                                     </div>
 
                                     <div className='input' style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
