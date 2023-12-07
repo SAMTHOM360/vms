@@ -474,6 +474,7 @@ const CompanyTable = () => {
                               <TableCell align="left"><h4>City</h4></TableCell>
                               <TableCell align="left"><h4>Pin Code</h4></TableCell>
                               <TableCell align="left"><h4>About Us</h4></TableCell>
+                              <TableCell align="left"><h4>Building Id</h4></TableCell>
                               <TableCell align="left"><h4>Building Name</h4></TableCell>
                               {/* <TableCell align="left">Created By</TableCell> */}
                               <TableCell align="left"><h4>User Limit</h4></TableCell>
@@ -509,6 +510,8 @@ const CompanyTable = () => {
                                   {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
                                   {/* <TableCell align="left">{company.createdBy}</TableCell> */}
 
+                                
+                                  <TableCell align="left">{company.building.buildingId}</TableCell>
                                   <TableCell align="left">{company.building.name}</TableCell>
 
                                   <TableCell align="left">{company.userLimit}</TableCell>
@@ -564,7 +567,6 @@ const CompanyTable = () => {
 };
 
 export default CompanyTable;
-
 
 
 

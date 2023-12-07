@@ -29,6 +29,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
+import { useAuth } from "../../routes/AuthContext";
 
 // import DialogContent from '@material-ui/core/DialogContent';
 
@@ -39,6 +40,11 @@ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 export default function ReceptionistAddRoom() {
 
     const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+    const { setActiveListItem } = useAuth()
+
+    useEffect(() => {
+        setActiveListItem('/receptionistaddroom')
+    }, [setActiveListItem])
 
 
     const roomDetailsUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`
@@ -386,8 +392,8 @@ export default function ReceptionistAddRoom() {
             <Grid container spacing={2} style={{}} >
                 <Grid item xs={12} md={12} lg={12}>
 
-                    <Paper
-                        elevation={5}
+                    <Box
+                        // elevation={5}
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -416,7 +422,7 @@ export default function ReceptionistAddRoom() {
 
                         {/* </Link> */}
 
-                    </Paper>
+                    </Box>
 
 
 
@@ -439,7 +445,7 @@ export default function ReceptionistAddRoom() {
 
                     </Paper> */}
 
-                    <Paper sx={{ width: '100%' }} elevation={7}>
+                    <Paper sx={{ width: '100%' }} elevation={2}>
                         <TableContainer sx={{ height: "100%", overflow: "auto" }}>
                             <Table stickyHeader aria-label="sticky table">
 

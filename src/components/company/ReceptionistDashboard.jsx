@@ -577,34 +577,63 @@ export default function Dashboard() {
         return `${user.firstName} ${user.lastName}`;
     }
 
+    function formatMeetingDurationStartTime(meeting) {
+        const endTimestamp = meeting.meetingStartDateTime;
+        if (endTimestamp != null) {
+            const endDate = new Date(endTimestamp);
+
+            endDate.setHours(endDate.getHours() - 5);
+            endDate.setMinutes(endDate.getMinutes() - 30);
+
+            const options = {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                timeZone: 'Asia/Kolkata',
+            };
+
+            const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+
+            let hours = endDate.getHours();
+            const amPm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
 
 
-    function formatMeetingDuration(meeting) {
-        const startTimestamp = meeting.checkInDateTime;
-        const endTimestamp = meeting.checkOutDateTime;
+            const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
 
-        const startDate = new Date(startTimestamp);
-        startDate.setHours(startDate.getHours() - 5);
-        startDate.setMinutes(startDate.getMinutes() - 30);
-        const endDate = new Date(endTimestamp);
+            return `${formattedDate}, ${formattedTime}`;
 
-
-        const options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            // second: 'numeric',
-            timeZone: 'Asia/Kolkata', // Set the timezone to IST
-        };
-
-
-        const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
-
-
-        return `${formattedStart}`;
+        }
     }
+
+
+
+    // function formatMeetingDuration(meeting) {
+    //     const startTimestamp = meeting.checkInDateTime;
+    //     const endTimestamp = meeting.checkOutDateTime;
+
+    //     const startDate = new Date(startTimestamp);
+    //     startDate.setHours(startDate.getHours() - 5);
+    //     startDate.setMinutes(startDate.getMinutes() - 30);
+    //     const endDate = new Date(endTimestamp);
+
+
+    //     const options = {
+    //         year: 'numeric',
+    //         month: 'numeric',
+    //         day: 'numeric',
+    //         hour: 'numeric',
+    //         minute: 'numeric',
+    //         // second: 'numeric',
+    //         timeZone: 'Asia/Kolkata', // Set the timezone to IST
+    //     };
+
+
+    //     const formattedStart = new Intl.DateTimeFormat('en-US', options).format(startDate);
+
+
+    //     return `${formattedStart}`;
+    // }
 
 
     function formatMeetingDuration1(meeting) {
@@ -1176,11 +1205,11 @@ export default function Dashboard() {
 
                                                                 {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
                                                                 <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
-                                                                <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
+                                                                <TableCell align="left">{visitor.meetingStartDateTime !== null ?formatMeetingDurationStartTime(visitor):"NA"}</TableCell>
                                                                 {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
 
-                                                                <TableCell align="left">{formatMeetingDuration(visitor)}</TableCell>
-                                                                <TableCell align="left">{formatMeetingDuration1(visitor)}</TableCell>
+                                                                <TableCell align="left">{visitor.checkInDateTime !== null ?formatMeetingDuration(visitor):"NA"}</TableCell>
+                                                                <TableCell align="left">{visitor.checkOutDateTime !== null ?formatMeetingDuration1(visitor):"NA"}</TableCell>
                                                                 {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                                                                 <TableCell align="left">{visitor.status}</TableCell>
                                                                 {/* <TableCell align="left"><InfoIcon style={{ fontSize: "20px", color: "grey", marginTop: "5px", cursor: "pointer" }} onClick={() => handleClickOpenDialog(visitor)} /></TableCell> */}
@@ -1308,6 +1337,8 @@ export default function Dashboard() {
                                                         }
                                                         label="status"
                                                         onChange={handleChangeStatusModal}
+                                                        disabled={roomAdded}
+                                                            className={roomAdded ? 'disabledButton' : ''}
                                                     >
 
                                                         <MenuItem value="">
@@ -1327,11 +1358,14 @@ export default function Dashboard() {
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         value={selectedRoom}
+                                                        
                                                         label="rooms"
                                                         onChange={handleChange1}
-                                                        disabled={selectedStatusModal === "CANCELLED"}
+                                                        disabled={selectedStatusModal === "CANCELLED" || roomAdded}
+className={roomAdded ? 'disabledButton' : ''}
+
                                                         style={{ color: selectedStatusModal === "CANCELLED" ? 'grey' : 'black' }}
-                                                        className="room-dropdown"
+                                                        // className="room-dropdown"
                                                         MenuProps={MenuProps}
                                                     >
 

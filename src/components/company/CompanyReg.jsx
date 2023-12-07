@@ -29,6 +29,7 @@ export default function CompanyReg() {
     };
 
     const url = "http://192.168.12.54:8080/com/add";
+
     const navigate = useNavigate();
     const [values, setValues] = useState({
         name: "",
@@ -75,8 +76,9 @@ export default function CompanyReg() {
 
         const pincodeRegex = /^\d{6}$/;
 
-        const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
-        
+        // const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
+        const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;;
+
 
 
         const newErrors = {};
@@ -85,10 +87,10 @@ export default function CompanyReg() {
         if (!values.name) {
             newErrors.name = "Name is required";
         }
-
         if (!values.logo) {
-            newErrors.logo = "Logo is required";
+            newErrors.logo = "Company Logo is required";
         }
+
 
         if (!values.address) {
             newErrors.address = "Address is required";
@@ -110,11 +112,11 @@ export default function CompanyReg() {
             newErrors.email = "Invalid email address";
         }
 
-        if (!values.phoneNumber ) {
+        if (!values.phoneNumber) {
             newErrors.phoneNumber = "Phone number is required";
         }
 
-        if (!phoneNumberRegex.test(values.phoneNumber) ) {
+        if (!phoneNumberRegex.test(values.phoneNumber)) {
             newErrors.phoneNumber = "Phone number must be exactly 10 digits";
         }
 
@@ -135,7 +137,7 @@ export default function CompanyReg() {
         }
 
         if (!values.buildingId) {
-            newErrors.buildingId= "Building Id is required";
+            newErrors.buildingId = "Building Id is required";
         }
 
         if (!values.aboutUs) {
@@ -151,7 +153,10 @@ export default function CompanyReg() {
 
                 const formData = new FormData();
                 formData.append('name', values.name);
-                formData.append('image', values.logo);
+                if (values.logo) {
+                    // Only append the image if it exists
+                    formData.append('image', values.logo);
+                }
                 formData.append('address', values.address);
                 formData.append('state.id', values.state);
                 formData.append('city.id', values.city);
@@ -170,32 +175,72 @@ export default function CompanyReg() {
                     },
 
                 });
-                alert("form submitted");
-                navigate('/companyDetails')
-                console.log()
-                // setIsSubmitted(true);
-                setValues({
-                    name: "",
-                    logo: "",
-                    address: "",
-                    state: "",
-                    city: "",
-                    pincode: "",
-                    email: "",
-                    phoneNumber: "",
-                    industry: "",
-                    aboutUs: "",
-                    userLimit: "",
-                    buildingId: "",
 
-                });
-                setLogoUpdated(false);
+                // if(res.status === 409){
+                //     alert(res.data.error)
+                // }
+                // alert("form submitted");
+                // navigate('/companyDetails')
+                // console.log()
+                // // setIsSubmitted(true);
+                // setValues({
+                //     name: "",
+                //     logo: "",
+                //     address: "",
+                //     state: "",
+                //     city: "",
+                //     pincode: "",
+                //     email: "",
+                //     phoneNumber: "",
+                //     industry: "",
+                //     aboutUs: "",
+                //     userLimit: "",
+                //     buildingId: "",
+
+                // });
+                // setLogoUpdated(false);
+
+                if (res.status === 200) {
+                    alert("Form submitted successfully");
+
+                    setValues({
+                        name: "",
+                        logo: "",
+                        address: "",
+                        state: "",
+                        city: "",
+                        pincode: "",
+                        email: "",
+                        phoneNumber: "",
+                        industry: "",
+                        aboutUs: "",
+                        userLimit: "",
+                        buildingId: "",
+
+                    });
+                    setLogoUpdated(false);
+                    navigate('/companyDetails');
+
+                } else if (res.status === 409) {
+                    console.log(res.data.message, 'inside');
+                    toast(res.data.message);
+                } else {
+                    alert("An unexpected error occurred");
+                }
+
 
 
 
             } catch (error) {
 
-                // alert(error)
+                if (error.response && error.response.status === 409) {
+                    console.log(error.response.data.message, 'inside');
+                    alert(error.response.data.message);
+                } else {
+                    alert("An unexpected error occurred");
+                }
+                console.error("Error during form submission:", error);
+
 
                 console.log(error)
             }
@@ -221,7 +266,7 @@ export default function CompanyReg() {
             })
 
             .catch((error) => {
-                
+
                 console.log(error);
             })
 
@@ -436,10 +481,11 @@ export default function CompanyReg() {
                                             Upload Company Logo
                                         </label> */}
 
-                                        <div >
-                                            <label >
+                                        <div style={{ display: "flex", flexDirection: "column", gap: "" }} >
+                                            <label 
+                                            >
 
-                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                                                {/* <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}> */}
                                                     {imageUrl && (
 
                                                         <img
@@ -455,18 +501,25 @@ export default function CompanyReg() {
                                                         Upload Company Logo
                                                     </span>
 
-                                                </div>
+                                                {/* </div> */}
 
 
 
-                                                {/* {errors.logo && ( */}
+                                                </label>
                                                 <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
                                                     Allowed file formats: .jpg, .jpeg, .png
                                                 </Typography>
-                                                {/* )} */}
+
+                                                {errors.logo && (
+                                                    <Typography variant="caption" color="error" sx={{ fontSize: "15px" }}>
+                                                        {errors.logo}
+                                                    </Typography>
+                                                )}
+                                                
 
 
-                                            </label>
+
+                                          
 
                                         </div>
 
@@ -616,7 +669,7 @@ export default function CompanyReg() {
                                             </FormControl>
                                         </Box> */}
                                     </div>
-                                    <TextField type="number" label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
+                                    <TextField  label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
                                         if (e.target.value.length <= 6) {
                                             setValues({ ...values, pincode: e.target.value });
@@ -639,9 +692,9 @@ export default function CompanyReg() {
                                             helperText={errors.phoneNumber}></TextField> */}
 
 
-                                             <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber}
-                                             
-                                             onChange={(e) => {
+                                        <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " inputProps={{ maxLength: 10 }} value={values.phoneNumber}
+
+                                            onChange={(e) => {
                                                 const input = e.target.value;
                                                 const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
                                                 if (numericValue.length > 10) {
@@ -649,7 +702,7 @@ export default function CompanyReg() {
                                                 }
                                                 setValues({ ...values, phoneNumber: numericValue });
                                             }}
-                                             error={Boolean(errors.phoneNumber)}
+                                            error={Boolean(errors.phoneNumber)}
                                             helperText={errors.phoneNumber}></TextField>
 
 
@@ -671,8 +724,15 @@ export default function CompanyReg() {
 
                                         <Autocomplete sx={{ width: "47%" }}
                                             options={buildingOptions}
-                                            getOptionLabel={(option) => option !== null ? option.name : ""} // Assuming 'name' is the property containing the building name
+                                            getOptionLabel={(option) => option !== null ? `Id-${option.id}   ${option.name}` : ""} // Assuming 'name' is the property containing the building name
                                             onChange={handleBuildingChange}
+                                            // renderInput={(params) => (
+                                            //     <TextField
+                                            //         {...params}
+                                            //         label="Select Building"
+                                            //         variant="outlined"
+                                            //     />
+                                            // )}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
@@ -680,47 +740,49 @@ export default function CompanyReg() {
                                                     variant="outlined"
                                                 />
                                             )}
+                                            renderOption={(props, option) => (
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}{...props}>
+                                                    <div>Id-{option.id}</div>
+                                                    <div>{option.name}</div>
+                                                </div>
+                                            )}
 
                                             error={Boolean(errors.buildingId)}
                                             helperText={errors.buildingId}
                                         />
 
 
-
-                                        <TextField sx={{ width: "47%" }} label="User Limit" placeholder="User Limit" type="number" value={values.userLimit}
-
+                                        <div style={{ display: "flex", flexDirection: "column", width: "47%" }}>
 
 
 
+                                            <TextField sx={{ width: "100%", margingRight: "20px" }} label="User Limit" placeholder="User Limit" type="" value={values.userLimit}
+                                                onChange={(e) => {
 
+                                                    const enteredValue = e.target.value;
+                                                    const numericValue = parseInt(enteredValue);
 
-                                            // inputProps={{ maxLength: 2 }}
+                                                    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 1000) {
+                                                        setValues({ ...values, userLimit: numericValue });
+                                                    } else {
 
-                                            onChange={(e) => {
-                                                // setValues({ ...values, userLimit: e.target.value });
+                                                        setValues({ ...values, userLimit: '' });
 
-
-                                                // Check if the entered value is within the range of 1 to 100
-                                                const enteredValue = e.target.value;
-                                                const numericValue = parseInt(enteredValue);
-
-                                                if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
-                                                    setValues({ ...values, userLimit: numericValue });
-                                                } else {
-                                                    // If the entered value is not within the range, do not update the state
-                                                    setValues({ ...values, userLimit: '' }); // Set userLimit to empty string or another appropriate value
-
-                                                }
+                                                    }
 
 
 
-                                            }}
+                                                }}
 
 
+                                                error={Boolean(errors.userLimit)}
+                                                helperText={errors.userLimit}
+                                            ></TextField>
+                                            <Typography variant="body2" color="textSecondary">
+                                                Maximum value for User Limit: 1000
+                                            </Typography>
 
-                                        error={Boolean(errors.userLimit)}
-                                        helperText={errors.userLimit}
-                                        ></TextField>
+                                        </div>
 
                                     </div>
 
@@ -756,7 +818,6 @@ export default function CompanyReg() {
 
     )
 }
-
 
 
 

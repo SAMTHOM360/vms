@@ -20,6 +20,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import JoinInnerIcon from '@mui/icons-material/JoinInner';
 // import AnalyticsIcon from "@mui/icons-material/Analytics";
 // import SettingsIcon from "@mui/icons-material/Settings";
@@ -796,6 +797,47 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   />
                 </ListItemButton>
               </ListItem>
+
+
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/receptionistaddroom"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+                }}
+                onClick={() => handleSelectListItem("/receptionistaddroom")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RoomPreferencesIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Rooms"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
+
+
 
               <ListItem
                 disablePadding

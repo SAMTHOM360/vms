@@ -128,7 +128,7 @@ import DynamicMonthData from './components/unused/DynamicMonthData';
 import RolesAndDepartments from './components/RolesAndDepartments';
 
 
-import ReceptionistAddRoom from './components/company/ReceptionistAddRoom';
+// import ReceptionistAddRoom from './components/company/ReceptionistAddRoom';
 
 
 const LoginForm = lazy(() => import('./components/LoginFormNK'));
@@ -150,6 +150,7 @@ const DynamicIdCard = lazy(() => import('./components/experimentals/DynamicIdCar
 const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
 const DemoDashboardV2 = lazy(() => import('./components/experimentals/DemoDashboardV2'));
 const Department = lazy(() => import('./components/experimentals/Department'));
+const ReceptionistAddRoom = lazy(() => import('./components/company/ReceptionistAddRoom'));
 
 
 function App() {
