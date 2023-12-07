@@ -596,8 +596,8 @@ const Profile = () => {
     }
   };
 
-  console.log('basic data', editedBasicInfo)
-  console.log('add data', editedAddressInfo)
+  // console.log('basic data', editedBasicInfo)
+  // console.log('add data', editedAddressInfo)
 
   return (
     <>

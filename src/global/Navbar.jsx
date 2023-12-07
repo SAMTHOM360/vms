@@ -42,6 +42,7 @@ import { useAuth } from "../routes/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import Config from "../Config/Config";
 
 const AppBar = styled(
   MuiAppBar,
@@ -95,8 +96,12 @@ export default function Navbar({ toggleSidebar }) {
 
   const AuthToken = sessionStorage.getItem("token");
 
+  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.navbarAxiosInstance
+
+
   const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    // baseURL: BASE_URL,
+    baseURL: urlAxiosInstance,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${AuthToken}`,
@@ -247,11 +252,18 @@ export default function Navbar({ toggleSidebar }) {
 
   async function fetchNotification() {
     // console.log('fetchNotification is getting called by interval')
+    let url = Config.baseUrl + Config.apiEndPoints.navbarPendingRequest
     try {
+      // const response = await axiosInstance.get(
+      //   `${BASE_URL}/notification/pending-request`,
+      //   { headers }
+      // );
+
       const response = await axiosInstance.get(
-        `${BASE_URL}/notification/pending-request`,
+        `${url}`,
         { headers }
       );
+
       // console.log("notfication api data", response.data.data);
       const bellAPiData = response.data.data;
 
@@ -398,13 +410,13 @@ export default function Navbar({ toggleSidebar }) {
     }
   }
 
-  // useEffect(() => {
-  //   const IntervalFetchNotification = setInterval(() => {
-  //     fetchNotification()
-  //   }, 5000);
+  useEffect(() => {
+    const IntervalFetchNotification = setInterval(() => {
+      fetchNotification()
+    }, 5000);
 
-  //   return () => clearInterval(IntervalFetchNotification)
-  // },[])
+    return () => clearInterval(IntervalFetchNotification)
+  },[])
 
   useEffect(() => {
     fetchNotification()
@@ -412,9 +424,15 @@ export default function Navbar({ toggleSidebar }) {
 
   const handleMarkRead = async () => {
     // e.preventDefault();
+    let url = Config.baseUrl + Config.apiEndPoints.navbarMarkSeen
     try {
+      // const response = await axiosInstance.post(
+      //   `${BASE_URL}/notification/mark-seen`,
+      //   { headers }
+      // );
+
       const response = await axiosInstance.post(
-        `${BASE_URL}/notification/mark-seen`,
+        `${url}`,
         { headers }
       );
       // console.log("MARK READ RESPONSE", response);
@@ -426,8 +444,10 @@ export default function Navbar({ toggleSidebar }) {
   };
 // console.log('why should')
   async function fetchData() {
+    let url = Config.baseUrl + Config.apiEndPoints.navbarFetchGetById
     try {
-      const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
+      // const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
+      const response = await axios.get(`${url}/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
         // console.log("nav data", apiData)
@@ -545,6 +565,8 @@ export default function Navbar({ toggleSidebar }) {
       newPassword: changedItem.confirmPassword,
     };
 
+    let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword
+
     if (changedItem.newPassword != changedItem.confirmPassword) {
       toast.warn("Confirm Password mismatched !", {
         position: "top-right",
@@ -560,8 +582,15 @@ export default function Navbar({ toggleSidebar }) {
     }
     try {
       setLoading(true);
+      // const response = await axios.post(
+      //   `${BASE_URL}/user/change`,
+      //   changePayload,
+      //   {
+      //     headers,
+      //   }
+      // );
       const response = await axios.post(
-        `${BASE_URL}/user/change`,
+        `${url}`,
         changePayload,
         {
           headers,

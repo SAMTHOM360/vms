@@ -455,7 +455,7 @@ function LoginForm() {
       const response = await axios.get(
         `${url}?username=${getOtpPayload}`
       );
-      console.log("get otp", response);
+      // console.log("get otp", response);
       if (response.status === 200) {
         toast.success("OTP sent successfully. Please check your mail.", {
           position: "top-right",

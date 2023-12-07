@@ -83,7 +83,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       );
       if (response.status === 200) {
         const apiData = response.data.data;
-        console.log("Api dataaaaa", apiData);
+        // console.log("Api dataaaaa", apiData);
         setMeetByIdData({
           meetId: apiData.id || "",
           vistorId: apiData.visitor.id || "",

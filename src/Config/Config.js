@@ -6,6 +6,17 @@ const Config = Object.freeze({
     //    buildingEndPoint:"com/getByBuildingId",
 
 
+    //AppointMeetForm.jsx
+    appointMeetFormFetchUsers:"api/user/alluser",
+    appointMeetFormContextOptions:"vis/meetCon",
+    appointMeetFormGetVisitorByPhone:"vis/getVisitorByPhone",
+    appointMeetFormSubmitForm:"api/meeting/add/byuser",
+    appointMeetFormGetAllCity:"api/cityByName",
+    // appointMeetFormGetAllCity:"api/cityByName",
+    // appointMeetFormGetAllCity:"api/cityByName",
+    // appointMeetFormGetAllCity:"api/cityByName",
+
+
     //DynamicIdCard.jsx
     dynamicIdCardMeetDetails:"api/meeting/meeting-details",
 
@@ -59,6 +70,25 @@ const Config = Object.freeze({
     rolesAndDeptsGetAllDept:"api/department/companyId",
     rolesAndDeptsCreateDept:"api/department/create",
     rolesAndDeptsCreateRole:"api/add",
+
+
+    //UserFormSB.jsx
+    userformSBAxiosInstance:"api/user",
+    userformSBAddUser:"api/user/adduser",
+    userformSBGetAllState:"api/state/all",
+    userformSBGetAllCity:"api/city",
+    userformSBGetAllRole:"api/role/getall",
+    userformSBGetAllDept:"api/department/companyId",
+    userformSBGetCompanyAll:"com/all",
+
+
+    //Navbar.jsx
+    navbarAxiosInstance:"api",
+    navbarPendingRequest:"api/notification/pending-request",
+    navbarMarkSeen:"api/notification/mark-seen",
+    navbarFetchGetById:"api/user/getbyid",
+    navbarChangePassword:"api/user/change",
+    // navbar:"api",
 
 
 

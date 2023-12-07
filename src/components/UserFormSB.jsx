@@ -18,6 +18,7 @@ import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { Divider, Paper, Typography } from "@mui/material";
+import Config from "../Config/Config";
 
 function UserForm({ authenticated, closeDialog }) {
   const { isLimitReached } = useAuth();
@@ -73,8 +74,9 @@ function UserForm({ authenticated, closeDialog }) {
       name: "",
     },
     isPermission: "",
+    empCode:'',
   });
-  console.log("form data", formData);
+  // console.log("form data", formData);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -173,9 +175,13 @@ function UserForm({ authenticated, closeDialog }) {
   //ADHAAR ENDS
 
   useEffect(() => {
+    let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState
+    let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole
+    let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll
     axios
-      .get("http://192.168.12.54:8080/api/state/all")
-      .then((response) => {
+    // .get("http://192.168.12.54:8080/api/state/all")
+    .get(url1)
+    .then((response) => {
         setStates(response.data.data);
       })
       .catch((error) => {
@@ -183,8 +189,9 @@ function UserForm({ authenticated, closeDialog }) {
       });
 
     axios
-      .get("http://192.168.12.54:8080/api/role/getall", { headers })
-      .then((response) => {
+    // .get("http://192.168.12.54:8080/api/role/getall", { headers })
+    .get(url2, { headers })
+    .then((response) => {
         setRoles(response.data.data);
       })
       .catch((error) => {
@@ -193,8 +200,9 @@ function UserForm({ authenticated, closeDialog }) {
 
     if (loggedUserRole === "SUPERADMIN") {
       axios
-        .get("http://192.168.12.54:8080/com/all", { headers })
-        .then((response) => {
+      // .get("http://192.168.12.54:8080/com/all", { headers })
+      .get(url3, { headers })
+      .then((response) => {
           setCompanies(response.data.data);
         })
         .catch((error) => {
@@ -296,9 +304,10 @@ function UserForm({ authenticated, closeDialog }) {
   };
 
   const fetchCities = async (stateId) => {
+    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllCity
     try {
       let response = await axios.get(
-        `http://192.168.12.54:8080/api/city/${stateId}`
+        `${url}/${stateId}`
       );
       setCities(response.data.data);
     } catch (error) {
@@ -308,12 +317,13 @@ function UserForm({ authenticated, closeDialog }) {
   };
 
   const fetchDepts = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllDept
     try {
       const response = await axios.get(
-        `http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`
+        `${url}?companyId=${companyId}`
       );
       const deptApiData = response.data.data;
-      console.log("dept data", response.data.data);
+      // console.log("dept data", response.data.data);
       setDepts(deptApiData);
     } catch (error) {
       console.error("Error in fetching depts", error);
@@ -451,14 +461,13 @@ function UserForm({ authenticated, closeDialog }) {
 //     setLoading(false);
 //   };
 
-console.log(' formdata ', formData)
+// console.log('formdata', formData)
 
 
 const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!formData.dob) {
-    alert("Date of birth is required");
     toast.warn("Date of birth is required !!!", {
       position: "top-right",
       autoClose: 2000,
@@ -493,6 +502,20 @@ dob.setDate(dob.getDate() + 1);
 
 const dobISOString = dob.toISOString().split("T")[0];
 
+if (formData.empCode.length < 4) {
+  toast.warn("Employee Code must be at least 4 characters !!!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  return;
+}
+
 
   const user = {
     id: null,
@@ -521,14 +544,21 @@ const dobISOString = dob.toISOString().split("T")[0];
       id: formData.city.id,
     },
     isPermission: formData.isPermission,
+    empCode: formData.empCode,
   };
 
-  console.log("user", user);
+  // console.log("user", user);
+  let url = Config.baseUrl + Config.apiEndPoints.userformSBAddUser
 
   try {
     setLoading(true);
+    // let response = await axios.post(
+    //   `${BASE_URL}/adduser`,
+    //   user,
+    //   { headers }
+    // );
     let response = await axios.post(
-      `${BASE_URL}/adduser`,
+      `${url}`,
       user,
       { headers }
     );
@@ -563,6 +593,7 @@ const dobISOString = dob.toISOString().split("T")[0];
         role: { id: "", name: "" },
         state: { id: "", name: "" },
         city: { id: "", name: "" },
+        empCode: '',
       });
     }
   } catch (error) {
@@ -586,17 +617,17 @@ const dobISOString = dob.toISOString().split("T")[0];
 
 
 
-  async function fetchData() {
-    try {
-      const response = await axios.get(`${BASE_URL}/getall`, { headers });
+  // async function fetchData() {
+  //   try {
+  //     const response = await axios.get(`${BASE_URL}/getall`, { headers });
   
-      const apiDataArray = response.data;
+  //     const apiDataArray = response.data;
   
-      sessionStorage.setItem("currEmpLength", apiDataArray.length);
-    } catch(error) {
-      console.error('Error in getting data: ', error)
-    }
-  }
+  //     sessionStorage.setItem("currEmpLength", apiDataArray.length);
+  //   } catch(error) {
+  //     console.error('Error in getting data: ', error)
+  //   }
+  // }
 
 
 
@@ -1032,6 +1063,37 @@ const dobISOString = dob.toISOString().split("T")[0];
                           ))}
                         </Select>
                       </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                      <TextField
+                        sx={{ width: "100%", mt: "10px" }}
+                        label="Employee Code"
+                        name="empCode"
+                        value={formData.empCode}
+                        // inputProps={{ maxLength: 26 ,}}
+                        inputProps={{
+                          maxLength: 10,
+                          onInput: (event) => {
+                            let value = event.target.value;
+                    
+                            // Remove characters other than lowercase, uppercase, and numbers
+                            value = value.replace(/[^a-zA-Z0-9]/g, '');
+                    
+                            // Ensure the length does not exceed 10
+                            if (value.length > 10) {
+                              value = value.slice(0, 10);
+                            }
+                    
+                            setFormData({
+                              ...formData,
+                              empCode: value,
+                            });
+                          },
+                        }}
+                        // onChange={handleChange}
+                        required
+                      />
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={4} lg={4}>

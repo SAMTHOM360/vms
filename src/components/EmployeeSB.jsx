@@ -280,7 +280,7 @@ const Employee = () => {
           `${url2}/${editedItem.id}`
         );
         const updatedData = response.data.data.data;
-        console.log(" updated data", updatedData)
+        // console.log(" updated data", updatedData)
 
         const updatedRole = updatedData.role || {};
         const updatedRoleName = updatedRole.name || "";

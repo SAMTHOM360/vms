@@ -27,6 +27,7 @@ import Grid from "@mui/material/Grid";
 import Header from "../Header";
 import Loader from "../Loader";
 import { useNavigate } from "react-router-dom";
+import Config from "../../Config/Config";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -81,8 +82,10 @@ const MeetingDetails = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormFetchUsers
       try {
-        const response = await axios.get(`${userUrl}?companyId=${companyId}`);
+        // const response = await axios.get(`${userUrl}?companyId=${companyId}`);
+        const response = await axios.get(`${url}?companyId=${companyId}`);
         if (response.status === 200 && response.data.data) {
           const userList = response.data.data.map((user) => ({
             id: user.id,
@@ -116,13 +119,18 @@ const MeetingDetails = () => {
 
   const handlePhoneNumberChange = async (event) => {
     const phone = event.target.value;
+    let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormGetVisitorByPhone
   
     if (/^\d*$/.test(phone)) {
       if (phone.length === 10) {
         try {
           setLoading(true)
+          // const response = await axios.get(
+          //   `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
+          // );
+
           const response = await axios.get(
-            `http://192.168.12.54:8080/vis/getVisitorByPhone?phoneNumber=${phone}`
+            `${url}?phoneNumber=${phone}`
           );
   
           if (response.status === 200 && response.data.data) {
@@ -143,16 +151,67 @@ const MeetingDetails = () => {
             setLoading(false)
           }
         } catch (error) {
-          console.error(error);
-          toast.error("User doesn't exist!", {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+          // console.error(error);
+          // toast.error("User doesn't exist!", {
+          //   position: "top-right",
+          //   autoClose: 4000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "light",
+          // });
+          // setFormData({
+          //   ...initialFormData,
+          //   phoneNumber: phone,
+          //   user: {
+          //     id: formData.user.id || "",
+          //     username: formData.user.username || "",
+          //   },
+          // });
+
+          if(error.request.status === 400){
+
+            let errMessage = '';
+    
+    
+            if (error.response && error.response.data && error.response.data.message) {
+              errMessage = error.response.data.message;
+              const cleanedMessage = JSON.stringify(errMessage);
+              toast.error(JSON.parse(cleanedMessage)+' !!!', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+
+            setFormData({
+              ...initialFormData,
+              phoneNumber: phone,
+              user: {
+                id: formData.user.id || "",
+                username: formData.user.username || "",
+              },
+            });
+            }
+     
+     
+          }
+           else {
+            toast.error('Something went wrong !!!', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
           });
           setFormData({
             ...initialFormData,
@@ -162,6 +221,7 @@ const MeetingDetails = () => {
               username: formData.user.username || "",
             },
           });
+          }
         }
         setLoading(false)
       }
@@ -171,8 +231,9 @@ const MeetingDetails = () => {
   const [meetingContextOptions, setMeetingContextOptions] = useState([]);
 
   const fetchMeetingContextOptions = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormContextOptions
     try {
-      const response = await axios.get(meetingContextUrl);
+      const response = await axios.get(url);
       if (response.status === 200 && response.data.data) {
         setMeetingContextOptions(response.data.data);
       }
@@ -227,12 +288,13 @@ const MeetingDetails = () => {
       context: formData.context,
       email: formData.email,
     };
+    let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormSubmitForm
 
     try {
       setLoading(true)
       const response = await axios.post(
         // "http://192.168.12.58:8080/api/meeting/add/byuser",
-        "http://192.168.12.54:8080/api/meeting/add/byuser",
+        url,
         updatedFormData
       );
       if (response.status === 200) {
@@ -322,7 +384,7 @@ const MeetingDetails = () => {
 
   const handleDateTimePickerChange = (name, value) => {
   if (name === "meetingStartDateTime") {
-    console.log('if hit');
+    // console.log('if hit');
     const selectedDateTime = value instanceof Date && !isNaN(value) ? value : new Date(value);
     
     // Check if the parsed date is valid
@@ -335,7 +397,7 @@ const MeetingDetails = () => {
       console.error("Invalid date/time selected.");
     }
   } else {
-    console.log('else hit');
+    // console.log('else hit');
     setFormData({
       ...formData,
       [name]: value,
@@ -343,7 +405,7 @@ const MeetingDetails = () => {
   }
 };
 
-  console.log('form data', formData)
+  // console.log('form data', formData)
 
   const handleDateChange = (date) => {
     const adjustedDate = date ? date.add(1, "day") : null;
@@ -356,10 +418,18 @@ const MeetingDetails = () => {
 
   useEffect(() => {
     const fetchCity = async () => {
+      let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormGetAllCity
+
       try {
+        // const response = await axios.get(
+        //   `http://192.168.12.54:8080/api/cityByName?cityName=${formData.city.name}`
+        // );
+
         const response = await axios.get(
-          `http://192.168.12.54:8080/api/cityByName?cityName=${formData.city.name}`
+          `${url}?cityName=${formData.city.name}`
         );
+
+
         if (response.status === 200) {
           setCities(response.data.data);
         }
@@ -656,7 +726,7 @@ const MeetingDetails = () => {
                         maxTime={maxTime}
                         name='meetingStartDateTime'
                         onChange={(value) => {
-                          console.log('Selected date:', value); // Add this line for debugging
+                          // console.log('Selected date:', value); // Add this line for debugging
                           handleDateTimePickerChange("meetingStartDateTime", value);
                         }}
                         // onChange={handleDateChange}

@@ -66,7 +66,7 @@ export default function VisitorMeetTimeline({ meetData }) {
         `${url}/${meetById}`
       );
       const apiData = response.data.data;
-      console.log("Api data", apiData);
+      // console.log("Api data", apiData);
       setMeetByIdData({
         meetId: apiData.id || "",
         vistorId: apiData.visitor.id || "",
@@ -88,7 +88,7 @@ export default function VisitorMeetTimeline({ meetData }) {
     setOpenMeetDialog(true);
   };
 
-  console.log("isVisitorMeetData", isVisitorMeetData);
+  // console.log("isVisitorMeetData", isVisitorMeetData);
 
   // console.log("meet by id data", meetByIdData)
 
