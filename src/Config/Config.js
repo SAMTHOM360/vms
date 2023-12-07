@@ -135,7 +135,6 @@ const Config = Object.freeze({
 
 
 
-<<<<<<< Updated upstream
     //UserFormSB.jsx
     userformSBAxiosInstance:"api/user",
     userformSBAddUser:"api/user/adduser",
@@ -155,9 +154,7 @@ const Config = Object.freeze({
     // navbar:"api",
 
 
-=======
   },
 });
->>>>>>> Stashed changes
 
 export default Config;
