@@ -177,14 +177,23 @@ export default function ReceptionistAddRoom() {
 
         axios
             .post(updateRoomUrl, payload)
-            .then(resposne => {
+            .then(response => {
 
-                handleCloseAddRoomDialog()
+                if(response.status === 200){
 
-                setReload(!reload);
-                setPage(0)
+                    alert("Room updated succesfully")
 
-                console.log(resposne);
+                    handleCloseAddRoomDialog()
+
+                    setReload(!reload);
+                    setPage(0)
+    
+                    console.log(response);
+
+
+                }
+
+              
             })
             .catch(error => {
                 console.log(error);
@@ -377,10 +386,6 @@ export default function ReceptionistAddRoom() {
         fetchRoomDetails();
 
     }, [reload])
-
-
-
-
 
     console.log(selectedRoomId, "room")
 

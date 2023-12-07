@@ -16,13 +16,10 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 export default function CompanyReg() {
 
-
-
-
     const menuProps = {
         PaperProps: {
             style: {
-                maxHeight: 200, // Adjust the max height as needed
+                maxHeight: 200, 
                 width: 250,
             },
         },
@@ -124,13 +121,8 @@ export default function CompanyReg() {
             newErrors.industry = "Industry is required";
         }
 
-        // if (!values.userLimit && !errors.userLimit) {
-        //     newErrors.userLimit = "User Limit is required";
-        // }
-
-        // if (values.userLimit > 100) {
-        //     newErrors.userLimit = "User Limit cannot exceed 100";
-        // }
+        
+    
 
         if (!values.userLimit) {
             newErrors.userLimit = "User Limit is required";
@@ -176,29 +168,6 @@ export default function CompanyReg() {
 
                 });
 
-                // if(res.status === 409){
-                //     alert(res.data.error)
-                // }
-                // alert("form submitted");
-                // navigate('/companyDetails')
-                // console.log()
-                // // setIsSubmitted(true);
-                // setValues({
-                //     name: "",
-                //     logo: "",
-                //     address: "",
-                //     state: "",
-                //     city: "",
-                //     pincode: "",
-                //     email: "",
-                //     phoneNumber: "",
-                //     industry: "",
-                //     aboutUs: "",
-                //     userLimit: "",
-                //     buildingId: "",
-
-                // });
-                // setLogoUpdated(false);
 
                 if (res.status === 200) {
                     alert("Form submitted successfully");
@@ -223,7 +192,7 @@ export default function CompanyReg() {
 
                 } else if (res.status === 409) {
                     console.log(res.data.message, 'inside');
-                    toast(res.data.message);
+                    alert(res.data.message);
                 } else {
                     alert("An unexpected error occurred");
                 }
@@ -351,19 +320,29 @@ export default function CompanyReg() {
         const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
         const logoFile = event.target.files[0];
 
+
+        if (!logoFile) {
+            // User clicked cancel without selecting a file
+            return;
+        }
+    
+
         // Check if file format is allowed
         if (!allowedExtensions.includes(logoFile.type)) {
-            setErrors({
-                ...errors,
-                logo: "Allowed file formats: .jpg, .jpeg, .png"
-            });
+
+
+            alert("Allowed file formats: .jpg, .jpeg, .png")
+            // setErrors({
+            //     ...errors,
+            //     logo: "Allowed file formats: .jpg, .jpeg, .png"
+            // });
             return;
         }
 
         // Check if file size exceeds the limit
         if (logoFile.size > MAX_FILE_SIZE) {
             alert("Maximum file size exceeded (5MB)");
-            setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+            // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
             return;
         }
 
@@ -485,7 +464,7 @@ export default function CompanyReg() {
                                             <label 
                                             >
 
-                                                {/* <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}> */}
+                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
                                                     {imageUrl && (
 
                                                         <img
@@ -501,7 +480,7 @@ export default function CompanyReg() {
                                                         Upload Company Logo
                                                     </span>
 
-                                                {/* </div> */}
+                                                </div>
 
 
 
@@ -516,11 +495,6 @@ export default function CompanyReg() {
                                                     </Typography>
                                                 )}
                                                 
-
-
-
-                                          
-
                                         </div>
 
 
