@@ -37,6 +37,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import InfoIcon from '@mui/icons-material/Info';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import { Tooltip } from "@mui/material";
 
 import { useParams } from 'react-router-dom';
 //modal
@@ -170,6 +172,23 @@ export default function Dashboard() {
         setEndDate(date);
         //  fetchData();
     };
+
+
+
+    //handleclearfilters
+    const handleClearFilters = () => {
+        setSelectedStatusOptions('')
+        setSelectedHostOptions('')
+        setPhoneNumberFilter('')
+        setSelectedRoom('')
+        setStartDate(null)
+        setEndDate(null)
+        setSearchQuery('')
+        sessionStorage.removeItem('filters')
+        sessionStorage.removeItem('empFilteredFromDate');
+        sessionStorage.removeItem('empFilteredToDate');
+    }
+
 
 
 
@@ -812,6 +831,8 @@ export default function Dashboard() {
 
     const [isADMIN, setIsADMIN] = useState(false)
 
+    const [isReceptionist,setIsReceptionist] = useState(false)
+
 
     useEffect(() => {
         if (loggedUserRole === "ADMIN") {
@@ -819,6 +840,18 @@ export default function Dashboard() {
         } else {
             setIsADMIN(false);
         }
+
+        if (loggedUserRole === "RECEPTIONIST") {
+            setIsReceptionist(true);
+        } else {
+            setIsReceptionist(false);
+        }
+
+        
+
+
+
+
     }, [loggedUserRole]);
 
     const meetOptions = [
@@ -991,9 +1024,9 @@ export default function Dashboard() {
 
                                                             >
 
-                                                                <MenuItem value="">
+                                                                {/* <MenuItem value="">
                                                                     <em>Cancel</em>
-                                                                </MenuItem>
+                                                                </MenuItem> */}
 
 
 
@@ -1023,9 +1056,9 @@ export default function Dashboard() {
 
                                                             >
 
-                                                                <MenuItem value="">
+                                                                {/* <MenuItem value="">
                                                                     <em>Cancel</em>
-                                                                </MenuItem>
+                                                                </MenuItem> */}
 
 
 
@@ -1057,9 +1090,9 @@ export default function Dashboard() {
 
                                                             >
 
-                                                                <MenuItem value="">
+                                                                {/* <MenuItem value="">
                                                                     <em>Cancel</em>
-                                                                </MenuItem>
+                                                                </MenuItem> */}
 
 
 
@@ -1121,6 +1154,21 @@ export default function Dashboard() {
 
                                                         </Grid>
 
+                                                        <Box sx={{ display: "flex", alignItems: "center", gap: '1em', }}>
+                                                            <Tooltip title={<p style={{ fontSize: '12px', fontWeight: 600 }}>Clear filters</p>} >
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="error"
+                                                                    size="small"
+                                                                    sx={{ minWidth: "unset", marginLeft: "1.2em", width: '3.9em', height: "3.9em", top: "5px" }}
+                                                                    onClick={handleClearFilters}
+                                                                >
+                                                                    <RotateLeftIcon />
+                                                                    {/* Clear Filters */}
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </Box>
+
 
 
 
@@ -1166,11 +1214,11 @@ export default function Dashboard() {
 
                                                         {/* <TableCell sx={{color:"white"}}align="left">Actions</TableCell> */}
 
-                                                        {isADMIN ? null : (
+                                                        {!isADMIN && <TableCell sx={{color:"white"}}>Actions</TableCell>}
 
-                                                            <TableCell sx={{ color: "white" }} align="left">Actions</TableCell>
+                                                            {/* <TableCell sx={{ color: "white" }} align="left">Actions</TableCell> */}
 
-                                                        )}
+                                                        
 
 
                                                     </TableRow>
@@ -1205,11 +1253,11 @@ export default function Dashboard() {
 
                                                                 {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
                                                                 <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
-                                                                <TableCell align="left">{visitor.meetingStartDateTime !== null ?formatMeetingDurationStartTime(visitor):"NA"}</TableCell>
+                                                                <TableCell align="left">{visitor.meetingStartDateTime !== null ? formatMeetingDurationStartTime(visitor) : "NA"}</TableCell>
                                                                 {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
 
-                                                                <TableCell align="left">{visitor.checkInDateTime !== null ?formatMeetingDuration(visitor):"NA"}</TableCell>
-                                                                <TableCell align="left">{visitor.checkOutDateTime !== null ?formatMeetingDuration1(visitor):"NA"}</TableCell>
+                                                                <TableCell align="left">{visitor.checkInDateTime !== null ? formatMeetingDuration(visitor) : "NA"}</TableCell>
+                                                                <TableCell align="left">{visitor.checkOutDateTime !== null ? formatMeetingDuration1(visitor) : "NA"}</TableCell>
                                                                 {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                                                                 <TableCell align="left">{visitor.status}</TableCell>
                                                                 {/* <TableCell align="left"><InfoIcon style={{ fontSize: "20px", color: "grey", marginTop: "5px", cursor: "pointer" }} onClick={() => handleClickOpenDialog(visitor)} /></TableCell> */}
@@ -1236,7 +1284,15 @@ export default function Dashboard() {
                                                                 </TableCell>
 
 
+{/*                                                                
+                                                                  {!isADMIN && (
+                                                                    <TableCell sx={{ color: "white" }} align="left">Actions</TableCell>
 
+                                                                  )}
+                                                                     */}
+
+                                                                
+                                                                {!isADMIN && (
 
                                                                 <TableCell align="left">
 
@@ -1277,6 +1333,8 @@ export default function Dashboard() {
 
 
                                                                 </TableCell>
+
+)}
 
                                                             </TableRow>
                                                         ))}
@@ -1338,12 +1396,12 @@ export default function Dashboard() {
                                                         label="status"
                                                         onChange={handleChangeStatusModal}
                                                         disabled={roomAdded}
-                                                            className={roomAdded ? 'disabledButton' : ''}
+                                                        className={roomAdded ? 'disabledButton' : ''}
                                                     >
 
-                                                        <MenuItem value="">
+                                                        {/* <MenuItem value="">
                                                             <em>Cancel</em>
-                                                        </MenuItem>
+                                                        </MenuItem> */}
 
                                                         {Array.isArray(statusModal) && statusModal.map((options, index) => (
                                                             <MenuItem key={index} value={options} >{options}</MenuItem>
@@ -1358,11 +1416,11 @@ export default function Dashboard() {
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         value={selectedRoom}
-                                                        
+
                                                         label="rooms"
                                                         onChange={handleChange1}
                                                         disabled={selectedStatusModal === "CANCELLED" || roomAdded}
-className={roomAdded ? 'disabledButton' : ''}
+                                                        className={roomAdded ? 'disabledButton' : ''}
 
                                                         style={{ color: selectedStatusModal === "CANCELLED" ? 'grey' : 'black' }}
                                                         // className="room-dropdown"
@@ -1388,7 +1446,7 @@ className={roomAdded ? 'disabledButton' : ''}
 
                                                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                                     <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
-                                                        <Button variant='contained' onClick={handleAddMeeting} disabled={roomAdded}
+                                                        <Button variant='contained' onClick={handleAddMeeting}
                                                             className={roomAdded ? 'disabledButton' : ''} >Add </Button>
 
                                                     </div>
@@ -1428,7 +1486,14 @@ className={roomAdded ? 'disabledButton' : ''}
                                                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 
                                                     <div style={{ display: "flex", justifyContent: "", gap: "7px" }}>
-                                                        <Button variant='contained' onClick={handleAddMeeting} >Add Room</Button>
+                                                        <Button variant='contained' onClick={handleAddMeeting}
+
+disabled={roomAdded}
+className={roomAdded ? 'disabledButton' : ''}
+                                                        
+                                                        
+                                                        
+                                                        >Add Room</Button>
 
 
 

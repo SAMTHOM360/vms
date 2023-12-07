@@ -317,6 +317,7 @@ const CompanyTable = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    fetchData(searchQuery, newPage); 
   };
 
   useEffect(() => {
@@ -333,6 +334,25 @@ const CompanyTable = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
+  const fetchData = (searchTerm, pageNumber) => {
+    const apiUrl = `http://192.168.12.54:8080/com/all?search=${searchTerm}&page=${pageNumber}`;
+    axios
+      .get(apiUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+      })
+      .then(response => {
+        const responseData = response.data.data;
+        setCompanies(responseData);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+
+
+
 
 
 
@@ -369,24 +389,81 @@ const CompanyTable = () => {
   };
 
   const handleSearch = event => {
-    setSearchQuery(event.target.value); // Update search query state
+    setPage(0)
+    setSearchQuery(event.target.value); 
+    // Update search query state
+    fetchData(event.target.value, 0); //
   };
+
+  // const filteredCompanies = companies.filter(company => {
+
+  //   const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
+
+  //   const cleanPhoneNumber = (company.phoneNumber || '').replace(/\D/g, ''); // Remove non-digit characters
+  //   const formattedPhoneNumber = cleanPhoneNumber.toLowerCase(); // Convert to lowercase for comparison
+  
+  //   const formattedEmail = (company.email || '').trim().toLowerCase(); 
+
+  //   const cleanPincode = (company.pincode || '').toLowerCase().trim(); // Trim and convert pincode to lowercase
+  //   const cleanBuildingId = (company.buildingId || '').toLowerCase().trim(); //
+
+
+  //   // const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
+  //   return (
+  //     (company.name?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (formattedEmail.includes(searchTerm) || '') ||
+  //   (formattedPhoneNumber.includes(searchTerm) || '') ||
+  //   (company.address?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (company.industry?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (company.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (company.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
+  //    (cleanPincode.includes(searchTerm) || '') || 
+  //   (company.aboutUs?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (company.createdBy?.toLowerCase()?.includes(searchTerm) || '') ||
+  //   (company.buildingId?.toLowerCase()?.includes(searchTerm) || '')
+  //   );
+  // });
+
+
 
   const filteredCompanies = companies.filter(company => {
     const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
-    return (
-      (company.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.email?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.phoneNumber?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.address?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.industry?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.pincode?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.aboutUs?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.createdBy?.toLowerCase()?.includes(searchTerm) || '')
-    );
+  
+    const dataString = `
+      ID: ${company.id}
+      Company Name: ${company.name}
+      Email: ${company.email}
+      Phone No.: ${company.phoneNumber}
+      Address: ${company.address}
+      Logo: ${company.logo}
+      Industry: ${company.industry}
+      State: ${company.state?.name}
+      City: ${company.city?.name}
+      Pin Code: ${company.pincode}
+      About Us: ${company.aboutUs}
+      Building Id: ${company.building?.buildingId}
+      Building Name: ${company.building?.name}
+      User Limit: ${company.userLimit}
+    `;
+  
+    const cleanData = dataString.toLowerCase(); // Convert data string to lowercase
+  
+    return cleanData.includes(searchTerm);
   });
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const toggleSidebar = () => {

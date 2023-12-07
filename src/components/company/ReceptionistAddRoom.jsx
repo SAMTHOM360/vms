@@ -109,7 +109,20 @@ export default function ReceptionistAddRoom() {
 
     // Function to handle changes in the capacity field
     const handleCapacityChange = (event) => {
-        setCapacity(event.target.value);
+
+       
+
+            const enteredValue = event.target.value;
+            const numericValue = parseInt(enteredValue);
+
+            if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
+                setCapacity(event.target.value);
+            } else {
+
+                setCapacity(''); 
+
+            }
+        
     };
 
 
@@ -275,17 +288,13 @@ export default function ReceptionistAddRoom() {
     }
 
 
-
-
-
-
     const [roomDetails, setRoomDetails] = useState({});
     const customRows = Object.keys(roomDetails).map((key, index) => ({
         'Sl No': index + 1,
         room_Id: roomDetails[key].id,
         room_isActive: roomDetails[key].isActive,
         room: roomDetails[key].roomName,
-        status: roomDetails[key].status ? 'Available' : 'Occupied',
+        status: roomDetails[key].isAvailable === true ? 'Available' : 'Occupied',
         capacity: roomDetails[key].capacity,
         // info: 'info',
         actions: roomDetails[key].actions,
@@ -350,11 +359,6 @@ export default function ReceptionistAddRoom() {
         setOpenDialog(false);
         setSelectedValue(value);
     };
-
-
-
-
-
 
 
 

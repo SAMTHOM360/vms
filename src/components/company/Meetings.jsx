@@ -1029,9 +1029,9 @@ useEffect(() => {
                                   onChange={handleChangeStatus}
                                   style={{ top: "10px", width:'17em' }}
                                 >
-                                  <MenuItem value="">
+                                  {/* <MenuItem value="">
                                     <em>Cancel</em>
-                                  </MenuItem>
+                                  </MenuItem> */}
 
                                   {Array.isArray(statusOptions) &&
                                     statusOptions.map((options, index) => (
@@ -1079,9 +1079,9 @@ useEffect(() => {
                                   }}
                                   style={{ top: "10px" }}
                                 >
-                                  <MenuItem value="">
+                                  {/* <MenuItem value="">
                                     <em>Cancel</em>
-                                  </MenuItem>
+                                  </MenuItem> */}
 
                                   {/* {Array.isArray(rooms) && rooms.map((room) => (
                                                                 <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
@@ -1138,7 +1138,7 @@ useEffect(() => {
 </LocalizationProvider>
 
                                 <Grid style={{ backgroundColor: "", right: 0 }}>
-                                                                <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+                                                                <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "55px", top: "9px", gap: "5px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
 
                                                             </Grid>
 
@@ -1244,11 +1244,11 @@ useEffect(() => {
                                   </TableCell>
 
                                   <TableCell align="left">
-                                    {formatMeetingDuration(visitor)}
+                                    {visitor.meetingStartDateTime !== null ?formatMeetingDuration(visitor) :"NA"}
                                   </TableCell>
                                   {/* <TableCell align="left">{formatDate(visitor.checkInDateTime)}</TableCell> */}
                                   <TableCell align="left">
-                                    {formatMeetingDuration1(visitor)}
+                                    {visitor.meetingEndDateTime !== null ?formatMeetingDuration1(visitor) :"NA"}
                                   </TableCell>
                                   {/* <TableCell align="left">
                                     {visitor.remarks}
@@ -1257,7 +1257,7 @@ useEffect(() => {
                                     {visitor.status}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {visitor.room !== null ? visitor.room.roomName : ''}
+                                    {visitor.room !== null ? visitor.room.roomName : 'NA'}
                                   </TableCell>
                                   <TableCell align="left">
                                     {/*                                                            
