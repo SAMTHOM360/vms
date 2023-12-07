@@ -13,11 +13,13 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Header from '../Header';
+import Config from '../../Config/Config';
 
 
 export default function ReceptionistCompanyScreen() {
     const buildingId = sessionStorage.getItem('buildingId');
-    const buildingUrl = `http://192.168.12.54:8080/com/getByBuildingId?buildingId=${buildingId}`
+    // const buildingUrl = `http://192.168.12.54:8080/com/getByBuildingId?buildingId=${buildingId}`
+    const buildingUrl = Config.baseUrl + Config.apiEndPoints.buildingEndPoint + "?buildingId=" + buildingId
 
     const [companyName, setCompanyName] = useState([]);
 

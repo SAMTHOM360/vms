@@ -76,6 +76,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useStaticPicker } from '@mui/x-date-pickers/internals';
 import { style } from '@mui/system';
 import { useAuth } from '../../routes/AuthContext';
+import Config from '../../Config/Config';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -222,7 +223,8 @@ export default function Dashboard() {
 
     function fetchStatusOptions() {
 
-        const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+        // const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+        const statusUrl = Config.baseUrl + Config.apiEndPoints.statusRecepEndPoint;
         axios.get(statusUrl)
             .then(response => {
                 const data = response.data.data;
@@ -237,7 +239,9 @@ export default function Dashboard() {
 
     function fetchStatusOptions1() {
 
-        const statusUrl = `http://192.168.12.54:8080/vis/meetstatusadmin`;
+        // const statusUrl = `http://192.168.12.54:8080/vis/meetstatusadmin`;
+        const statusUrl = Config.baseUrl + Config.apiEndPoints.statusAdminEndPoint
+
         axios.get(statusUrl)
             .then(response => {
                 const data = response.data.data;
@@ -266,7 +270,10 @@ export default function Dashboard() {
 
     function fetchHostOptions() {
 
-        const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
+        // const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
+
+        const hostUrl = Config.baseUrl + Config.apiEndPoints.hostEndPoint + "?companyId=" + selectedCompanyId
+
         axios.get(hostUrl)
             .then(response => {
                 const data = response.data.data;
@@ -347,7 +354,8 @@ export default function Dashboard() {
         // const companyId = sessionStorage.getItem('companyId');
 
 
-        const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`;
+        // const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`;
+        const roomUrl =Config.baseUrl +Config.apiEndPoints.roomDetailsRecepEndPoint +"?id=" + selectedCompanyId
 
         axios.get(roomUrl, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
@@ -394,7 +402,9 @@ export default function Dashboard() {
 
         };
 
-        const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
+        // const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
+
+        const addMeetingUrl = Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint
 
         axios.post(addMeetingUrl, meetingData, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
@@ -452,7 +462,8 @@ export default function Dashboard() {
 
         // const selectedCompanyId = sessionStorage.getItem('companyId');
 
-        const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+        // const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+        const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint
 
         const payload = {
             page: 0,
@@ -545,7 +556,8 @@ export default function Dashboard() {
             // date:'2023-10-18T11:00:00'
 
         }
-        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+        const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint
         axios
             .post(getVisitorUrl,
                 payload)
@@ -717,7 +729,9 @@ export default function Dashboard() {
 
     const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
 
-        const passApiEndpoint = `http://192.168.12.54:8080/api/meeting/downloadPass?meetingId=${meetingId}`;
+        // const passApiEndpoint = `http://192.168.12.54:8080/api/meeting/downloadPass?meetingId=${meetingId}`;
+
+        const passApiEndpoint = Config.baseUrl +Config.apiEndPoints.passApiEndPoint + "?meetingId=" + meetingId
 
         axios
             .get(passApiEndpoint,

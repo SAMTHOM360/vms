@@ -30,6 +30,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
+import Config from '../../Config/Config';
 
 export default function BasicTable() {
 
@@ -67,9 +68,12 @@ export default function BasicTable() {
 
 
 
-  const roomDetailsUrl = `http://192.168.12.54:8080/api/room/getroomfordashboard/?companyId=${selectedCompanyId}`
+  // const roomDetailsUrl = `http://192.168.12.54:8080/api/room/getroomfordashboard/?companyId=${selectedCompanyId}`
+
+const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointdashboard + "?companyId=" + selectedCompanyId
 
 
+console.log(roomDetailsUrl,"roomDetailsUrl")
 
   //dialog
 

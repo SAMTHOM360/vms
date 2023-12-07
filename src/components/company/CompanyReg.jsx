@@ -12,20 +12,22 @@ import Sidebar from '../../global/Sidebar';
 import Loader from '../Loader';
 import Autocomplete from '@mui/material/Autocomplete';
 
-
+import Config from '../../Config/Config';
 
 export default function CompanyReg() {
 
     const menuProps = {
         PaperProps: {
             style: {
-                maxHeight: 200, 
+                maxHeight: 200,
                 width: 250,
             },
         },
     };
 
-    const url = "http://192.168.12.54:8080/com/add";
+    // const url = "http://192.168.12.54:8080/com/add";
+
+
 
     const navigate = useNavigate();
     const [values, setValues] = useState({
@@ -65,6 +67,10 @@ export default function CompanyReg() {
 
 
     const handleSubmit = async (e) => {
+
+        const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint
+
+        console.log("companyUrl", companyUrl)
         e.preventDefault();
 
 
@@ -121,8 +127,8 @@ export default function CompanyReg() {
             newErrors.industry = "Industry is required";
         }
 
-        
-    
+
+
 
         if (!values.userLimit) {
             newErrors.userLimit = "User Limit is required";
@@ -160,7 +166,7 @@ export default function CompanyReg() {
                 formData.append('userLimit', values.userLimit);
                 formData.append('building.buildingId', values.buildingId);
 
-                const res = await axios.post(url, formData, {
+                const res = await axios.post(companyUrl, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`
@@ -227,7 +233,10 @@ export default function CompanyReg() {
 
     function fetchStates() {
 
-        axios.get("http://192.168.12.54:8080/sc/states")
+        const stateUrl = Config.baseUrl + Config.apiEndPoints.statesEndPoint
+
+        // console.log(stateUrl,"stateUrl")
+        axios.get(stateUrl)
 
             .then((response) => {
                 setStates(response.data.data);
@@ -249,12 +258,18 @@ export default function CompanyReg() {
 
 
     const handleStateChange = (event) => {
+
+
+
+        const cityUrl = Config.baseUrl + Config.apiEndPoints.cityEndPoint + selectedState;
         const selectedState = event.target.value;
         // console.log(selectedState)
         setSelectedState(selectedState);
         setValues({ ...values, state: selectedState });
 
-        axios.get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+        // axios.get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+
+        axios.get(cityUrl)
 
             .then((response) => {
                 setCities(response.data.data);
@@ -325,7 +340,7 @@ export default function CompanyReg() {
             // User clicked cancel without selecting a file
             return;
         }
-    
+
 
         // Check if file format is allowed
         if (!allowedExtensions.includes(logoFile.type)) {
@@ -365,9 +380,15 @@ export default function CompanyReg() {
     const [buildingOptions, setBuildingOptions] = useState([]);
     const [selectedBuildingId, setSelectedBuildingId] = useState(null);
 
-    const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+    // const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+
+
 
     function fetchBuildingNames() {
+
+        const buildingUrl = Config.baseUrl + Config.apiEndPoints.getBuildingEndPoint
+
+        console.log(Config.apiEndPoints, "builddd")
 
         axios
             .get(buildingUrl)
@@ -461,7 +482,7 @@ export default function CompanyReg() {
                                         </label> */}
 
                                         <div style={{ display: "flex", flexDirection: "column", gap: "" }} >
-                                            <label 
+                                            <label
                                             >
 
                                                 <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
@@ -484,17 +505,17 @@ export default function CompanyReg() {
 
 
 
-                                                </label>
-                                                <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
-                                                    Allowed file formats: .jpg, .jpeg, .png
-                                                </Typography>
+                                            </label>
+                                            <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
+                                                Allowed file formats: .jpg, .jpeg, .png
+                                            </Typography>
 
-                                                {errors.logo && (
-                                                    <Typography variant="caption" color="error" sx={{ fontSize: "15px" }}>
-                                                        {errors.logo}
-                                                    </Typography>
-                                                )}
-                                                
+                                            {errors.logo && (
+                                                <Typography variant="caption" color="error" sx={{ fontSize: "15px" }}>
+                                                    {errors.logo}
+                                                </Typography>
+                                            )}
+
                                         </div>
 
 
@@ -553,8 +574,12 @@ export default function CompanyReg() {
                                                     onChange={(event, newValue) => {
                                                         setSelectedState(newValue);
                                                         setValues({ ...values, state: newValue ? newValue.id : '' });
+
+
                                                         if (newValue) {
-                                                            axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
+                                                            // axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
+                                                         
+                                                            axios.get(Config.baseUrl + Config.apiEndPoints.cityEndPoint + `/${newValue.id}`)
                                                                 .then((response) => {
                                                                     setCities(response.data.data);
                                                                 })
@@ -643,7 +668,7 @@ export default function CompanyReg() {
                                             </FormControl>
                                         </Box> */}
                                     </div>
-                                    <TextField  label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
+                                    <TextField label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
                                         if (e.target.value.length <= 6) {
                                             setValues({ ...values, pincode: e.target.value });

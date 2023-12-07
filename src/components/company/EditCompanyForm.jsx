@@ -21,6 +21,7 @@ import Sidebar from "../../global/Sidebar";
 import Loader from "../Loader";
 import Grid from '@mui/material/Grid';
 import Autocomplete from '@mui/material/Autocomplete';
+import Config from "../../Config/Config";
 
 export default function EditCompanyForm() {
   const { companyId } = useParams();
@@ -55,8 +56,14 @@ export default function EditCompanyForm() {
   const [selectedCity, setSelectedCity] = useState("");
 
   function fetchData() {
+
+    const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editCompanyEndPoint + companyId
     axios
-      .get(`http://192.168.12.54:8080/com/get/${companyId}`, {
+      // .get(`http://192.168.12.54:8080/com/get/${companyId}`, 
+
+      .get(editCompanyUrl,
+      
+      {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
@@ -93,8 +100,12 @@ export default function EditCompanyForm() {
   }
 
   function fetchStates() {
+
+    const stateUrl =Config.baseUrl + Config.apiEndPoints.statesEndPoint
     axios
-      .get("http://192.168.12.54:8080/sc/states")
+      // .get("http://192.168.12.54:8080/sc/states")
+
+      .get(stateUrl)
 
       .then((response) => {
         // console.log("Company Data", companyData);
@@ -123,8 +134,12 @@ export default function EditCompanyForm() {
     const selectedState = event.target.value;
     setCompanyData({ ...companyData, state: selectedState });
     setSelectedState(selectedState);
+
+
+    const cityUrl =Config.baseUrl + Config.apiEndPoints.cityEndPoint + selectedState
     axios
-      .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+      // .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+      .get(cityUrl)
 
       .then((response) => {
         setCities(response.data.data);
@@ -186,9 +201,11 @@ export default function EditCompanyForm() {
       //     //  formData.append('')
 
       // }
-
+  const editCompanyUrl = Config.baseUrl +Config.apiEndPoints.editEndPoint + companyId
       await axios.post(
-        `http://192.168.12.54:8080/com/update/${companyId}`,
+        // `http://192.168.12.54:8080/com/update/${companyId}`
+editCompanyUrl
+        ,
         formData,
         {
           headers: {
@@ -238,7 +255,10 @@ export default function EditCompanyForm() {
   const [buildingOptions, setBuildingOptions] = useState([]);
   const [selectedBuildingId, setSelectedBuildingId] = useState('');
 
-  const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+  // const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
+    // getBuildingEndPoint:"api/building/getAll",
+  const buildingUrl = Config.baseUrl +Config.apiEndPoints.getBuildingEndPoint
+  
 
   function fetchBuildingNames() {
 

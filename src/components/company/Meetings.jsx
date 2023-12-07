@@ -51,6 +51,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../routes/AuthContext";
+import Config from "../../Config/Config";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -132,7 +133,9 @@ export default function Meetings() {
   function getRoomsOption() {
     const companyId = sessionStorage.getItem("companyId");
 
-    const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
+    const roomUrl = Config.baseUrl + Config.apiEndPoints.getRoomEndPoint + "?id=" + companyId
+
+    // const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
     axios
       .get(roomUrl, {
@@ -198,7 +201,8 @@ useEffect(() => {
 // console.log('calender end date',endDate)
 
   function fetchStatusOptions() {
-    const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+    // const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
+    const statusUrl = Config.baseUrl + Config.apiEndPoints.statusEndPoint
     axios
       .get(statusUrl)
       .then((response) => {
@@ -248,7 +252,9 @@ useEffect(() => {
 
     const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
 
-    const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+    // const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
+
+    const exportUrl =Config.baseUrl + Config.apiEndPoints.exportEndPoint;
 
     const payload = {
         page: 0,
@@ -335,8 +341,9 @@ useEffect(() => {
       //     }
     };
 
-    const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`;
-    // const getVisitorUrl = `http://192.168.12.58:8080/api/meeting/paginate`
+    // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`;
+    const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.getVisitorEndPoint
+    
     axios
       .post(getVisitorUrl, payload)
 
@@ -494,9 +501,10 @@ useEffect(() => {
       // }
     };
 
-    const addMeetingUrl =
-      "http://192.168.12.54:8080/api/meeting/update/meeting";
-    // console.log("before axios post");
+    // const addMeetingUrl =
+    //   "http://192.168.12.54:8080/api/meeting/update/meeting";
+    const addMeetingUrl = Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint
+  
 
     axios
       .post(addMeetingUrl, meetingData, {

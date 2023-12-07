@@ -29,6 +29,7 @@ import ReceptionistDashboard from './ReceptionistDashboard'
 import BasicTable from './BasicTable';
 import Loader from '../Loader';
 import { useAuth } from '../../routes/AuthContext';
+import Config from '../../Config/Config';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -98,6 +99,8 @@ export default function Dashboard() {
 
     function fetchData() {
 
+        const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.RecepDashboardEndPoint
+
         const today = new Date().toISOString().split('T')[0];
 
         const eightDaysAgo = new Date();
@@ -118,7 +121,9 @@ export default function Dashboard() {
             // date:'2023-10-18T11:00:00'
 
         }
-        const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
+        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
+
+
         axios
             .post(getVisitorUrl,
                 payload)

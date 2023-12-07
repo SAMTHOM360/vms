@@ -1,8 +1,8 @@
 const Config = Object.freeze({
-    baseUrl: "http://192.168.12.54:8080/",
-    ownerSiteLink:"https://www.rapidsofttechnologies.com/", 
-  
-    apiEndPoints: {
+  baseUrl: "http://192.168.12.54:8080/",
+  ownerSiteLink: "https://www.rapidsofttechnologies.com/",
+
+  apiEndPoints: {
     //    buildingEndPoint:"com/getByBuildingId",
 
 
@@ -18,60 +18,124 @@ const Config = Object.freeze({
 
 
     //DynamicIdCard.jsx
-    dynamicIdCardMeetDetails:"api/meeting/meeting-details",
+    dynamicIdCardMeetDetails: "api/meeting/meeting-details",
 
 
     //MeetTimeLine.jsx
-    meetingTimeLineFetchData:"api/meeting/getbyid",
-    meetingTimeLineMeetUpdate:"api/meeting/update/meeting",
+    meetingTimeLineFetchData: "api/meeting/getbyid",
+    meetingTimeLineMeetUpdate: "api/meeting/update/meeting",
 
 
     //VisitorMeetTimeLine.jsx
-    visitorTimeLineFetchData:"api/meeting/getbyid",
+    visitorTimeLineFetchData: "api/meeting/getbyid",
 
 
     //BulkUserForm.jsx
-    bulkUserFormSaveUpload:"api/user/excel/upload",
+    bulkUserFormSaveUpload: "api/user/excel/upload",
 
 
     //EmpDashBoard.jsx
-    empDashboardFetchDashboard:"api/meeting/userdashboard",
-    empDashboardFetchTimeline:"api/meeting/meetingfordashboard",
+    empDashboardFetchDashboard: "api/meeting/userdashboard",
+    empDashboardFetchTimeline: "api/meeting/meetingfordashboard",
 
 
     //EmployeeSB.jsx
-    employeeSBAxiosInstance:"api/user",
-    employeeSbBDelete:"api/user/delete",
-    employeeSBUserGetById:"api/user/getbyid",
-    employeeSBAddUser:"api/user/adduser",
-    employeeSBFetchData:"api/user/getall",
-    employeeSBGetAllRole:"api/role/getall",
-    employeeSBGetAllDept:"api/department/companyId",
+    employeeSBAxiosInstance: "api/user",
+    employeeSbBDelete: "api/user/delete",
+    employeeSBUserGetById: "api/user/getbyid",
+    employeeSBAddUser: "api/user/adduser",
+    employeeSBFetchData: "api/user/getall",
+    employeeSBGetAllRole: "api/role/getall",
+    employeeSBGetAllDept: "api/department/companyId",
 
 
     //LoginFormNK.jsx
-    loginFormNKSubmit:"token",
-    loginFormNKGetOtp:"api/user/getotp",
-    loginFormNKSaveForgot:"api/user/forgot",
+    loginFormNKSubmit: "token",
+    loginFormNKGetOtp: "api/user/getotp",
+    loginFormNKSaveForgot: "api/user/forgot",
 
 
 
     //Profile.jsx
-    profileAxiosInstance:"api/user",
-    profileGetById:"api/user/getbyid",
-    profilePresent:"api/user/present",
-    profileAddUser:"api/user/adduser",
-    profileConvertImg:"vis/upload",
+    profileAxiosInstance: "api/user",
+    profileGetById: "api/user/getbyid",
+    profilePresent: "api/user/present",
+    profileAddUser: "api/user/adduser",
+    profileConvertImg: "vis/upload",
 
 
     //RolesAndDepartments.jsx
-    rolesAndDeptsAxiosInstance:"api/user",
-    rolesAndDeptsGetAllRole:"api/role/getall",
-    rolesAndDeptsGetAllDept:"api/department/companyId",
-    rolesAndDeptsCreateDept:"api/department/create",
-    rolesAndDeptsCreateRole:"api/add",
+    rolesAndDeptsAxiosInstance: "api/user",
+    rolesAndDeptsGetAllRole: "api/role/getall",
+    rolesAndDeptsGetAllDept: "api/department/companyId",
+    rolesAndDeptsCreateDept: "api/department/create",
+    rolesAndDeptsCreateRole: "api/add",
 
 
+
+    //BasicTable.jsx
+
+    roomDetailsEndPointdashboard: "api/room/getroomfordashboard/",
+    // companyTable.jsx
+
+    fetchCompanyEndPoint: "com/all",
+    activeDeactiveEndPoint:"com/active",
+    editEndPoint:"com/update/",
+    
+
+    // companyReg.jsx
+    addCompanyEndPoint: "com/add",
+    statesEndPoint: "sc/states",
+    cityEndPoint:"sc/all", 
+    getBuildingEndPoint:"api/building/getAll",
+
+
+    //DashboardReceptionist.jsx
+    RecepDashboardEndPoint:"api/meeting/paginateDashBoard",
+
+
+    //EditCompanyForm.jsx
+    editCompanyEndPoint:"com/get/",
+
+
+
+    //Meetings.jsx
+    getRoomEndPoint:"api/room/all",
+    statusEndPoint:"vis/meetstatus",
+    exportEndPoint:"api/meeting/exportdata",
+    getVisitorEndPoint:"api/meeting/paginate",
+    addMeetingEndPoint:"api/meeting/update/meeting",
+
+
+
+    //ReceptionistAddRoom.jsx
+    addRoomEndPoint:"api/room/save",
+    updateRoomEndPoint:"api/room/update",
+    isActiveRoomEndPoint:"api/room/isActive",
+    roomDetailsEndPoint:"api/room/all",
+
+
+    //ReceptionistCompanyScreen.jsx
+    buildingEndPoint:"com/getByBuildingId",
+
+
+    //ReceptionistDashboard.jsx
+    statusRecepEndPoint:"vis/meetstatus",
+    statusAdminEndPoint:"vis/meetstatusadmin",
+    hostEndPoint:"api/user/alluser",
+    roomDetailsRecepEndPoint:"api/room/all",
+    addMeetingEndPoint:"api/meeting/update/meeting",
+    exportRecepEndPoint:"api/meeting/exportdata",
+    getVisitorRecepEndPoint:"api/meeting/paginate",
+    passApiEndPoint:"api/meeting/downloadPass",
+
+
+
+
+
+
+
+<<<<<<< Updated upstream
     //UserFormSB.jsx
     userformSBAxiosInstance:"api/user",
     userformSBAddUser:"api/user/adduser",
@@ -91,9 +155,9 @@ const Config = Object.freeze({
     // navbar:"api",
 
 
+=======
+  },
+});
+>>>>>>> Stashed changes
 
-    },
-  });
-  
-  export default Config;
-  
+export default Config;

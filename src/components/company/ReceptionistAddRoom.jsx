@@ -30,6 +30,7 @@ import DialogContent from '@mui/material/DialogContent';
 import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
 import { useAuth } from "../../routes/AuthContext";
+import Config from "../../Config/Config";
 
 // import DialogContent from '@material-ui/core/DialogContent';
 
@@ -47,13 +48,13 @@ export default function ReceptionistAddRoom() {
     }, [setActiveListItem])
 
 
-    const roomDetailsUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`
+    // const roomDetailsUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`
 
-    const addRoomUrl = `http://192.168.12.54:8080/api/room/save`
+    // const addRoomUrl = `http://192.168.12.54:8080/api/room/save`
 
-    const updateRoomUrl = `http://192.168.12.54:8080/api/room/update`
+    // const updateRoomUrl = `http://192.168.12.54:8080/api/room/update`
 
-    const isActiveRoomUrl = `http://192.168.12.54:8080/api/room/isActive`
+    // const isActiveRoomUrl = `http://192.168.12.54:8080/api/room/isActive`
 
 
 
@@ -129,6 +130,8 @@ export default function ReceptionistAddRoom() {
     //save room
     function handleSaveRoom() {
 
+        const addRoomUrl=Config.baseUrl + Config.apiEndPoints.addRoomEndPoint
+
 
         const payload = {
 
@@ -177,6 +180,8 @@ export default function ReceptionistAddRoom() {
     };
 
     function handleUpdateRoom() {
+
+       const updateRoomUrl = Config.baseUrl + Config.apiEndPoints.updateRoomEndPoint
 
 
         const payload = {
@@ -247,6 +252,8 @@ export default function ReceptionistAddRoom() {
     //switch room
 
     function handleSwitch(row) {
+
+       const isActiveRoomUrl = Config.baseUrl + Config.apiEndPoints.isActiveRoomEndPoint
 
 
         const newActiveStatus = row.room_isActive ? 0 : 1; // Toggles the active status
@@ -365,6 +372,8 @@ export default function ReceptionistAddRoom() {
 
     //fetchRoomDetails function
     function fetchRoomDetails() {
+
+        const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPoint + "?id=" + selectedCompanyId
 
         axios
             .get(roomDetailsUrl, {
