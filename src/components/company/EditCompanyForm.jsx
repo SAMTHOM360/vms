@@ -564,7 +564,7 @@ editCompanyUrl
                     sx={{ width: "47%" }}
                     label="User Limit"
                     placeholder="User Limit"
-                    type="number"
+                  
                     value={companyData.userLimit}
                     onChange={(e) =>
                       setCompanyData({ ...companyData, userLimit: e.target.value })
