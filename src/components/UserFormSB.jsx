@@ -19,7 +19,7 @@ import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { Divider, Paper, Typography } from "@mui/material";
 
-function UserForm({ authenticated, closeDialog, fetchData }) {
+function UserForm({ authenticated, closeDialog }) {
   const { isLimitReached } = useAuth();
   // console.log("isLimitReached", isLimitReached)
 
@@ -320,96 +320,220 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
     }
   };
 
+  // const handleDateChange = (date) => {
+  //   const adjustedDate = date ? date.add(1, "day") : null;
+
+  //   setFormData({
+  //     ...formData,
+  //     dob: adjustedDate,
+  //   });
+  // };
+
+
   const handleDateChange = (date) => {
-    const adjustedDate = date ? date.add(1, "day") : null;
-
-    setFormData({
-      ...formData,
-      dob: adjustedDate,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    // console.log("I GOT HITTTT  !!!!!!");
-    e.preventDefault();
-    if (!formData.dob) {
-      alert("Date of birth is required");
+    const currentDate = new Date();
+    const selectedDate = date ? new Date(date) : null;
+  
+    if (selectedDate && selectedDate > currentDate) {
+      console.error("Invalid date selected. Please choose a date up to today.");
       return;
     }
+  
+    setFormData({
+      ...formData,
+      dob: selectedDate,
+    });
+  };
+  
 
-    const user = {
-      id: null,
-      firstName: formData.firstName,
-      image: "alt img",
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      dob: formData.dob.toISOString().split("T")[0],
-      gender: formData.gender,
-      govtId: formData.govtId,
-      pincode: formData.pincode,
-      company: {
-        id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
-      },
-      departmentDto: {
-        id: formData.dept.id,
-      },
-      role: {
-        id: formData.role.id,
-      },
-      state: {
-        id: formData.state.id,
-      },
-      city: {
-        id: formData.city.id,
-      },
-      isPermission: formData.isPermission,
-    };
+//   const handleSubmit = async (e) => {
+//     // console.log("I GOT HITTTT  !!!!!!");
+//     e.preventDefault();
+//     if (!formData.dob) {
+//       alert("Date of birth is required");
+//       return;
+//     }
 
-    console.log("user", user);
+//     const currentDate = new Date();
+// if (!(formData.dob instanceof Date) || formData.dob > currentDate) {
+//   toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
+//     // ... (toast options)
+//   });
+//   console.error('Invalid date of birth selected. Please choose a date up to today.');
+//   return;
+// }
 
-    try {
-      setLoading(true);
-      let response = await axios.post(
-        "http://192.168.12.54:8080/api/user/adduser",
-        user,
-        { headers }
-      );
-      if (response.status === 200) {
-        toast.success("New Employee Added Successfully.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        // closeDialog()
-        handleEmployeeRedirect();
-        // setAddUserDialogOpen(false)
-        setGovernmentIdType("");
-        setDobDate("");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          dob: new Date(),
-          gender: "",
-          govtId: "",
-          pincode: "",
-          company: { id: "", name: "" },
-          dept: { id: "", name: "" },
-          role: { id: "", name: "" },
-          state: { id: "", name: "" },
-          city: { id: "", name: "" },
-        });
-        // fetchData();
-      }
-    } catch (error) {
-      toast.error("Something went wrong !!!", {
+
+//     const user = {
+//       id: null,
+//       firstName: formData.firstName,
+//       image: "alt img",
+//       lastName: formData.lastName,
+//       email: formData.email,
+//       phone: formData.phone,
+//       dob: formData.dob.toISOString().split("T")[0],
+//       gender: formData.gender,
+//       govtId: formData.govtId,
+//       pincode: formData.pincode,
+//       company: {
+//         id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
+//       },
+//       departmentDto: {
+//         id: formData.dept.id,
+//       },
+//       role: {
+//         id: formData.role.id,
+//       },
+//       state: {
+//         id: formData.state.id,
+//       },
+//       city: {
+//         id: formData.city.id,
+//       },
+//       isPermission: formData.isPermission,
+//     };
+
+//     console.log("user", user);
+
+//     try {
+//       setLoading(true);
+//       let response = await axios.post(
+//         "http://192.168.12.54:8080/api/user/adduser",
+//         user,
+//         { headers }
+//       );
+//       if (response.status === 200) {
+//         toast.success("New Employee Added Successfully.", {
+//           position: "top-right",
+//           autoClose: 2000,
+//           hideProgressBar: false,
+//           closeOnClick: true,
+//           pauseOnHover: true,
+//           draggable: true,
+//           progress: undefined,
+//           theme: "light",
+//         });
+
+//         // closeDialog()
+//         handleEmployeeRedirect();
+//         // setAddUserDialogOpen(false)
+//         setGovernmentIdType("");
+//         setDobDate("");
+//         setFormData({
+//           firstName: "",
+//           lastName: "",
+//           email: "",
+//           phone: "",
+//           dob: new Date(),
+//           gender: "",
+//           govtId: "",
+//           pincode: "",
+//           company: { id: "", name: "" },
+//           dept: { id: "", name: "" },
+//           role: { id: "", name: "" },
+//           state: { id: "", name: "" },
+//           city: { id: "", name: "" },
+//         });
+//       }
+//     } catch (error) {
+//       toast.error("Something went wrong !!!", {
+//         position: "top-right",
+//         autoClose: 2000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//       });
+//       console.error("Error submitting user data", error);
+//     }
+//     setLoading(false);
+//   };
+
+console.log(' formdata ', formData)
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!formData.dob) {
+    alert("Date of birth is required");
+    toast.warn("Date of birth is required !!!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    return;
+  }
+  const currentDate = new Date();
+
+  if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
+    toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    // console.error('Invalid date of birth selected. Please choose a date up to today.');
+    return;
+  }
+
+  const dob = new Date(formData.dob);
+dob.setDate(dob.getDate() + 1); 
+
+const dobISOString = dob.toISOString().split("T")[0];
+
+
+  const user = {
+    id: null,
+    firstName: formData.firstName,
+    image: "alt img",
+    lastName: formData.lastName,
+    email: formData.email,
+    phone: formData.phone,
+    dob: dobISOString,
+    gender: formData.gender,
+    govtId: formData.govtId,
+    pincode: formData.pincode,
+    company: {
+      id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
+    },
+    departmentDto: {
+      id: formData.dept.id,
+    },
+    role: {
+      id: formData.role.id,
+    },
+    state: {
+      id: formData.state.id,
+    },
+    city: {
+      id: formData.city.id,
+    },
+    isPermission: formData.isPermission,
+  };
+
+  console.log("user", user);
+
+  try {
+    setLoading(true);
+    let response = await axios.post(
+      `${BASE_URL}/adduser`,
+      user,
+      { headers }
+    );
+    if (response.status === 200) {
+      toast.success("New Employee Added Successfully.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -419,10 +543,63 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
         progress: undefined,
         theme: "light",
       });
-      console.error("Error submitting user data", error);
+
+      // closeDialog()
+      handleEmployeeRedirect();
+      // setAddUserDialogOpen(false)
+      setGovernmentIdType("");
+      setDobDate("");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        dob: new Date(),
+        gender: "",
+        govtId: "",
+        pincode: "",
+        company: { id: "", name: "" },
+        dept: { id: "", name: "" },
+        role: { id: "", name: "" },
+        state: { id: "", name: "" },
+        city: { id: "", name: "" },
+      });
     }
+  } catch (error) {
+    toast.error("Something went wrong !!!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    console.error("Error submitting user data", error);
+  } finally {
     setLoading(false);
-  };
+  }
+};
+
+
+
+
+
+  async function fetchData() {
+    try {
+      const response = await axios.get(`${BASE_URL}/getall`, { headers });
+  
+      const apiDataArray = response.data;
+  
+      sessionStorage.setItem("currEmpLength", apiDataArray.length);
+    } catch(error) {
+      console.error('Error in getting data: ', error)
+    }
+  }
+
+
+
 
   const handleEmployeeRedirect = () => {
     navigate("/employee");
@@ -492,8 +669,30 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                         label="First Name"
                         name="firstName"
                         value={formData.firstName}
-                        inputProps={{ maxLength: 26 }}
-                        onChange={handleChange}
+                        // inputProps={{ maxLength: 26 ,}}
+                        inputProps={{
+                          maxLength: 26,
+                          onInput: (event) => {
+                            let value = event.target.value;
+                      
+                            // Remove characters other than lowercase, uppercase, and spaces
+                            value = value.replace(/[^a-zA-Z\s]/g, '');
+                      
+                            // Replace consecutive spaces with a single space
+                            value = value.replace(/\s{2,}/g, ' ');
+                      
+                            // Ensure the length does not exceed maxLength
+                            if (value.length > 26) {
+                              value = value.slice(0, 26);
+                            }
+                      
+                            setFormData({
+                              ...formData,
+                              firstName: value,
+                            });
+                          },
+                        }}
+                        // onChange={handleChange}
                         required
                       />
                     </Grid>
@@ -504,8 +703,30 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                         label="Last Name"
                         name="lastName"
                         value={formData.lastName}
-                        inputProps={{ maxLength: 26 }}
-                        onChange={handleChange}
+                        // inputProps={{ maxLength: 26 }}
+                        inputProps={{
+                          maxLength: 26,
+                          onInput: (event) => {
+                            let value = event.target.value;
+                      
+                            // Remove characters other than lowercase, uppercase, and spaces
+                            value = value.replace(/[^a-zA-Z\s]/g, '');
+                      
+                            // Replace consecutive spaces with a single space
+                            value = value.replace(/\s{2,}/g, ' ');
+                      
+                            // Ensure the length does not exceed maxLength
+                            if (value.length > 26) {
+                              value = value.slice(0, 26);
+                            }
+                      
+                            setFormData({
+                              ...formData,
+                              lastName: value,
+                            });
+                          },
+                        }}
+                        // onChange={handleChange}
                         required
                       />
                     </Grid>
@@ -693,7 +914,38 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    {loggedUserRole === "SUPERADMIN" ? (
+                                          <Grid item xs={12} sm={4} md={4} lg={4}>
+                                          <FormControl sx={{ width: "100%", mt: "10px" }} required>
+                                              <>
+                                                <InputLabel htmlFor="company">Company</InputLabel>
+                                                <Select
+                                                  label="company"
+                                                  name="company"
+                                                  value={formData.company.id || ""}
+                                                  onChange={handleChange}
+                                                  required
+                                                  MenuProps={{
+                                                    PaperProps: {
+                                                      style: {
+                                                        maxHeight: "150px",
+                                                        maxWidth: "150px",
+                                                      },
+                                                    },
+                                                  }}
+                                                >
+                                                  {companies.map((company) => (
+                                                    <MenuItem key={company.id} value={company.id}>
+                                                      {company.name}
+                                                    </MenuItem>
+                                                  ))}
+                                                </Select>
+                                              </>
+                                          </FormControl>
+                                        </Grid>
+                    ) : null }
+
+                    {/* <Grid item xs={12} sm={4} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
                         {loggedUserRole === "SUPERADMIN" ? (
                           <>
@@ -728,7 +980,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                           />
                         )}
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item xs={12} sm={4} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
@@ -738,6 +990,13 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                           name="dept"
                           value={formData.dept.id || ""}
                           onChange={handleChange}
+                          MenuProps={{
+                            PaperProps: {
+                              style: {
+                                maxHeight: 150,
+                              },
+                            },
+                          }}
                           required
                         >
                           {depts.map((dept) => (
@@ -757,6 +1016,13 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                           name="role"
                           value={formData.role.id || ""}
                           onChange={handleChange}
+                          MenuProps={{
+                            PaperProps: {
+                              style: {
+                                maxHeight: 150,
+                              },
+                            },
+                          }}
                           required
                         >
                           {roles.map((role) => (
@@ -769,7 +1035,7 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={4} lg={4}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth sx={{ width: "100%", mt: "10px" }} required>
                         <InputLabel id="approval-label">
                           Can Receptionist approve meet?
                         </InputLabel>
@@ -780,8 +1046,8 @@ function UserForm({ authenticated, closeDialog, fetchData }) {
                           label="Can Receptionist approve meet?"
                           onChange={handleChange}
                         >
-                          <MenuItem value="true">True</MenuItem>
-                          <MenuItem value="false">False</MenuItem>
+                          <MenuItem value="true">YES</MenuItem>
+                          <MenuItem value="false">NO</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>

@@ -560,6 +560,9 @@ const Profile = () => {
     }
   };
 
+  console.log('basic data', editedBasicInfo)
+  console.log('add data', editedAddressInfo)
+
   return (
     <>
     <Loader isLoading={loading} />
@@ -775,11 +778,35 @@ const Profile = () => {
                       name="firstName"
                       disabled={!isEdit}
                       value={isEdit ? editedBasicInfo.firstName : formData.firstName}
-                      inputProps={{ maxLength: 26 }}
+                      // inputProps={{ maxLength: 26 }}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) =>
-                        setEditedBasicInfo({ ...editedBasicInfo, firstName: e.target.value })
-                      }
+                      inputProps={{
+                        maxLength: 26,
+                        onInput: (event) => {
+                          if (isEdit) {
+                            let value = event.target.value;
+                    
+                            // Remove characters other than lowercase, uppercase, and spaces
+                            value = value.replace(/[^a-zA-Z\s]/g, '');
+                    
+                            // Replace consecutive spaces with a single space
+                            value = value.replace(/\s{2,}/g, ' ');
+                    
+                            // Ensure the length does not exceed maxLength
+                            if (value.length > 26) {
+                              value = value.slice(0, 26);
+                            }
+                    
+                            setEditedBasicInfo({
+                              ...editedBasicInfo,
+                              firstName: value,
+                            });
+                          }
+                        },
+                      }}
+                      // onChange={(e) =>
+                      //   setEditedBasicInfo({ ...editedBasicInfo, firstName: e.target.value })
+                      // }
                       required={isEdit}
                     />
                   </Grid>
@@ -792,11 +819,36 @@ const Profile = () => {
                       size="small"
                       disabled={!isEdit}
                       value={isEdit ? editedBasicInfo.lastName : formData.lastName}
-                      inputProps={{ maxLength: 26 }}
+                      // inputProps={{ maxLength: 26 }}
+                      inputProps={{
+                        maxLength: 26,
+                        onInput: (event) => {
+                          if (isEdit) {
+                            let value = event.target.value;
+                    
+                            // Remove characters other than lowercase, uppercase, and spaces
+                            value = value.replace(/[^a-zA-Z\s]/g, '');
+                    
+                            // Replace consecutive spaces with a single space
+                            value = value.replace(/\s{2,}/g, ' ');
+                    
+                            // Ensure the length does not exceed maxLength
+                            if (value.length > 26) {
+                              value = value.slice(0, 26);
+                            }
+                    
+                            setEditedBasicInfo({
+                              ...editedBasicInfo,
+                              lastName: value,
+                            });
+                          }
+                        },
+                      }}
+
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) =>
-                        setEditedBasicInfo({ ...editedBasicInfo, lastName: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setEditedBasicInfo({ ...editedBasicInfo, lastName: e.target.value })
+                      // }
                       required={isEdit}
                     />
                   </Grid>
@@ -812,6 +864,7 @@ const Profile = () => {
                       InputLabelProps={{ shrink: true }}
                       inputProps={{
                         pattern: "^[0-9]*",
+                        maxLength: 10,
                         onInput: (event) => {
                           let value = event.target.value;
                           value = value.replace(/\D/g, "");
@@ -1098,21 +1151,29 @@ const Profile = () => {
                       size="small"
                       disabled={!isAddress}
                       value={isAddress? editedAddressInfo.pincode : formData.pincode}
-                      onChange={(e) =>
-                        setEditedAddressInfo({ ...editedAddressInfo, pincode: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setEditedAddressInfo({ ...editedAddressInfo, pincode: e.target.value })
+                      // }
                       inputProps={{
                         pattern: "^[0-9]*",
+                        maxLength:6,
                         onInput: (event) => {
-                          let value = event.target.value;
-                          value = value.replace(/\D/g, "");
-                          if (value.length > 6) {
-                            value = value.slice(0, 6);
+                          if (isAddress) {
+                            let value = event.target.value;
+                    
+                            // Remove non-numeric characters
+                            value = value.replace(/\D/g, "");
+                    
+                            // Ensure the length does not exceed 6
+                            if (value.length > 6) {
+                              value = value.slice(0, 6);
+                            }
+                    
+                            setEditedAddressInfo({
+                              ...editedAddressInfo,
+                              pincode: value,
+                            });
                           }
-                          // setFormData({
-                          //   ...formData,
-                          //   pincode: value,
-                          // });
                         },
                       }}
                       InputLabelProps={{ shrink: true }}
@@ -1190,7 +1251,7 @@ const Profile = () => {
                       label="Joined On"
                       name="joinedOn"
                       disabled
-                      // value={formattedCreatedOn}
+                      value={formattedCreatedOn}
                       InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
                     />

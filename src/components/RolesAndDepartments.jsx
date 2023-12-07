@@ -216,32 +216,56 @@ const handleSubmitAddDept = async(e) => {
 
   try{
     setBtnLoading(true)
-    const response = axiosInstance.post('http://192.168.12.54:8080/api/department/create', payload, {headers})
+    const response = await axiosInstance.post('http://192.168.12.54:8080/api/department/create', payload, {headers})
     // console.log('role submit response', response)
-    if(response.status === '200'){
-      toast.success("Dept added succesfully.", {
-        position: "top-right",
+    if (response.status >= 200 && response.status < 300) {
+      toast.success('Dept added successfully.', {
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: 'light',
       });
 
-
-      setOpenDeptDialog(false)
+      setOpenDeptDialog(false);
       setDeptFormData({
-        name:'',
+        name: '',
         company: {
-          id : '',
+          id: companyId,
         },
-      })
-      fetchDepts()
+      });
+      fetchDepts();
+    } else {
+      // Log the error details for unsuccessful responses
+      console.error('Received unsuccessful response:', response);
     }
 
   } catch(error) {
+    if(error.request.status === 400){
+
+      let errMessage = '';
+
+
+      if (error.response && error.response.data && error.response.data.message) {
+        errMessage = error.response.data.message;
+        const cleanedMessage = JSON.stringify(errMessage);
+        toast.error(JSON.parse(cleanedMessage)+' !!!', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      }
+
+
+    } else {
     toast.error("Something went wrong !", {
       position: "top-right",
       autoClose: 2000,
@@ -253,6 +277,7 @@ const handleSubmitAddDept = async(e) => {
       theme: "light",
     });
     console.error("unable to add Dept: ", error)
+  }
   }
 
   setBtnLoading(false)
@@ -276,7 +301,7 @@ const handleSubmitAddRole = async(e) => {
 
   try{
     setBtnLoading(true)
-    const response = axiosInstance.post('http://192.168.12.54:8080/api/add', payload, {headers})
+    const response = await axiosInstance.post('http://192.168.12.54:8080/api/add', payload, {headers})
     // console.log('role submit response', response)
     if(response.status === '200'){
       toast.success("Role added succesfully.", {
@@ -318,7 +343,7 @@ const handleSubmitAddRole = async(e) => {
   return (
     <>
     {/* <Navbar toggleSidebar={toggleSidebar}/> */}
-    <Box sx={{display:"flex", flexGrow: 1, p: 3, pl:'4em'}}>
+    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
         {/* <Sidebar open={sidebarOpen} /> */}
         <Grid container spacing={2}>
   <Grid item xs={12} md={12} lg={12}>
@@ -333,7 +358,7 @@ const handleSubmitAddRole = async(e) => {
       mb:'0.5em' 
       }}
       >
-        <Header title="Dashboard" subtitle="Welcome to dashboard" />
+        <Header title="Roles & Departments" subtitle="Get all lists of Roles  & Departments" />
         <Box sx={{ display: "flex", alignItems: "center", justifyContent:'end', minWidth:'31.3em', ml:'2em' }}> 
         {/* <Button
                       variant="contained"
@@ -347,10 +372,10 @@ const handleSubmitAddRole = async(e) => {
                     <Button
                       variant="contained"
                       size="small"
-                      sx={{ marginLeft: "1.2em", height: "3em", width: "11em" }}
+                      sx={{ marginLeft: "1.2em", height: "3em", width: "12em" }}
                       onClick={handleDeptDialogOpen}
                     >
-                      Add a Dept
+                      Add Department
                     </Button>
         </Box>
     </Box>
@@ -428,7 +453,7 @@ const handleSubmitAddRole = async(e) => {
                           </Typography> */}
                         </Box>
 
-<Box sx={{display:'flex', width:'100%', height:'95%',
+<Box sx={{display:'flex', width:'100%', height:'70vh',
 
 "& .MuiDataGrid-root": {
     border: "none",
@@ -526,7 +551,7 @@ const handleSubmitAddRole = async(e) => {
                           </Typography> */}
                         </Box>
 
-<Box sx={{display:'flex', width:'100%', height:'95%',
+<Box sx={{display:'flex', width:'100%', height:'70vh',
                 "& .MuiDataGrid-root": {
                     border: "none",
                   },

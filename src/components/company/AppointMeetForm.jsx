@@ -52,6 +52,7 @@ const MeetingDetails = () => {
 
 
   const [users, setUsers] = useState([]);
+  const [cleared, setCleared] = useState(false);
 
 
   const initialFormData = {
@@ -139,6 +140,7 @@ const MeetingDetails = () => {
               },
               stateId: newStateId,
             });
+            setLoading(false)
           }
         } catch (error) {
           console.error(error);
@@ -186,6 +188,26 @@ const MeetingDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.meetingStartDateTime) {
+      toast.warn('Meeting start date and time is required.', {
+        // Add your toast options here
+      });
+      return;
+    }
+  
+    // Ensure the selected date and time is not in the future and not ahead of 90 days
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set current date to midnight
+    const differenceInDays = Math.floor((formData.meetingStartDateTime - today) / (1000 * 60 * 60 * 24));
+  
+    if (differenceInDays < 0 || differenceInDays > 90) {
+      toast.warn('Meeting start date and time must be within the next 90 days and not in the past.', {
+        // Add your toast options here
+      });
+      return;
+    }
+  
+
     const updatedFormData = {
       name: formData.name || "",
       phoneNumber: formData.phoneNumber || "",
@@ -207,7 +229,7 @@ const MeetingDetails = () => {
     };
 
     try {
-      setLoading(false)
+      setLoading(true)
       const response = await axios.post(
         // "http://192.168.12.58:8080/api/meeting/add/byuser",
         "http://192.168.12.54:8080/api/meeting/add/byuser",
@@ -267,19 +289,69 @@ const MeetingDetails = () => {
   const minTime = dayjs().set("hour", 9).startOf("hour");
   const maxTime = dayjs().set("hour", 18).startOf("hour");
 
-  const handleDateTimePickerChange = (name, value) => {
-    if (name === "meetingStartDateTime") {
+  // const handleDateTimePickerChange = (name, value) => {
+  //   if (name === "meetingStartDateTime") {
 
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+  //   } else {
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+  //   }
+  // };
+
+  // const handleDateTimePickerChange = (name, value) => {
+  //   if (name === "meetingStartDateTime") {
+  //     console.log('if hittt')
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value instanceof Date && !isNaN(value) ? value : null,
+  //     });
+  //   } else {
+  //     console.log('else hittt')
+  //     setFormData({
+  //       ...formData,
+  //       [name]: value,
+  //     });
+  //   }
+  // };
+
+  const handleDateTimePickerChange = (name, value) => {
+  if (name === "meetingStartDateTime") {
+    console.log('if hit');
+    const selectedDateTime = value instanceof Date && !isNaN(value) ? value : new Date(value);
+    
+    // Check if the parsed date is valid
+    if (!isNaN(selectedDateTime)) {
       setFormData({
         ...formData,
-        [name]: value,
+        [name]: selectedDateTime,
       });
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      console.error("Invalid date/time selected.");
     }
+  } else {
+    console.log('else hit');
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+};
+
+  console.log('form data', formData)
+
+  const handleDateChange = (date) => {
+    const adjustedDate = date ? date.add(1, "day") : null;
+
+    setFormData({
+      ...formData,
+      meetingStartDateTime: adjustedDate,
+    });
   };
 
   useEffect(() => {
@@ -582,15 +654,21 @@ const MeetingDetails = () => {
                         shouldDisableDate={shouldDisableDate}
                         minTime={minTime}
                         maxTime={maxTime}
-                        onChange={(value) =>
-                          handleDateTimePickerChange(
-                            "meetingStartDateTime",
-                            value
-                          )
-                        }
+                        name='meetingStartDateTime'
+                        onChange={(value) => {
+                          console.log('Selected date:', value); // Add this line for debugging
+                          handleDateTimePickerChange("meetingStartDateTime", value);
+                        }}
+                        // onChange={handleDateChange}
                         ampm={false}
                         InputProps={{
                           required: true,
+                        }}
+                        slotProps={{
+                          field: {
+                            clearable: true,
+                            onClear: () => setCleared(true),
+                          },
                         }}
                       />
                     </DemoContainer>

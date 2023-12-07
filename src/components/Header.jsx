@@ -12,11 +12,12 @@ const Header = ({title, subtitle}) => {
     <Typography variant='h4'
     color="#3d3d3d"
     fontWeight="bold"
+    sx={{userSelect:'none'}}
     >
         {title}
     </Typography>
     <Typography variant='h7'
-    sx={{mt: "5px"}}
+    sx={{mt: "5px", userSelect:'none'}}
     color="#666666">
         {subtitle}
         </Typography>

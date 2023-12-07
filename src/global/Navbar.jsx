@@ -255,14 +255,40 @@ export default function Navbar({ toggleSidebar }) {
       // console.log("notfication api data", response.data.data);
       const bellAPiData = response.data.data;
 
+      let bellmenuItemm
+
       // console.log("bell api data", bellAPiData);
       if (!bellAPiData || bellAPiData.length === 0) {
-        return null;
-      }
+        // return null;
+          bellmenuItemm = (
+            <>
+            <List 
+             sx={{
+              width: "23em",
+            }}
+            >
+              <ListItem
+              sx={{
+                display: "flex",
+                justifyContent:'center',
+                width: "100%",
+                paddingX: 1,
+              }}
+              >
+                <Typography sx={{color:'#313541DE'}}>No new notifications...</Typography>
+              </ListItem>
+            </List>
+          {/* <Typography sx={{color:'black'}}>No new notifications...</Typography> */}
+          </>
+          )
+
+          setBellMenuItem(bellmenuItemm);
+        
+      } else {
 
       const unseenCount = bellAPiData.filter((item) => !item.seen).length;
 
-      const bellmenuItemm = (
+       bellmenuItemm = (
         <List
           sx={{
             width: "23em",
@@ -366,6 +392,7 @@ export default function Navbar({ toggleSidebar }) {
       }
       setBellBadgeCount(unseenCount);
       setBellMenuItem(bellmenuItemm);
+    }
     } catch (error) {
       console.error("unable to fecth notification apidata: ", error);
     }
@@ -1002,6 +1029,7 @@ export default function Navbar({ toggleSidebar }) {
                 paddingX: "0.5em",
                 justifyContent: "space-between",
                 alignItems: "center",
+                borderBottom:'1px solid #3135415b'
                 // bgcolor:'orange'
               }}
             >
@@ -1030,7 +1058,8 @@ export default function Navbar({ toggleSidebar }) {
             <Box
               sx={{
                 minWidth: "100%",
-                height: "300px",
+                minHeight:'50px',
+                maxHeight: "300px",
                 overflowY: "auto",
                 // bgcolor:'cyan'
               }}

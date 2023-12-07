@@ -34,9 +34,9 @@ function BulkUserForm() {
   const companyId = sessionStorage.getItem("companyId");
   // const companyName = sessionStorage.getItem("companyName");
 
-  // const headers = {
-  //   Authorization: `Bearer ${token}`,
-  // };
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
 
   const excelHeaders = {
     Authorization: `Bearer ${token}`,
@@ -56,10 +56,10 @@ function BulkUserForm() {
   const [excelDownData, setExcelDownData] = useState({
     totalElement: "",
     successfullyAdded: "",
-    falidData: "",
+    failedData: "",
     duplicateData: "",
     downloadLink: "",
-    falidDataLink: "",
+    failedDataLink: "",
     duplicateDataLink: "",
   });
 
@@ -133,6 +133,7 @@ function BulkUserForm() {
         }
       );
       if(response.status === 200) {
+        
         toast.success("File uploaded Successfully. Please check for faulty data.", {
           position: "top-right",
           autoClose: 2000,
@@ -143,6 +144,7 @@ function BulkUserForm() {
           progress: undefined,
           theme: "light",
         });
+
 
         const excelApiData = response.data.data;
         // console.log("excelApiData", excelApiData);
@@ -157,10 +159,10 @@ function BulkUserForm() {
         setExcelDownData({
           totalElement: excelApiData.totalElement || "",
           successfullyAdded: excelApiData.successfullyAdded || "",
-          falidData: excelApiData.falidData || "",
+          failedData: excelApiData.failedData || "",
           duplicateData: excelApiData.duplicateData || "",
           downloadLink: excelApiData.downloadLink || "",
-          falidDataLink: excelApiData.falidDataLink || "",
+          failedDataLink: excelApiData.failedDataLink || "",
           duplicateDataLink: excelApiData.duplicateDataLink || "",
         });
         setIsUpload(false);
@@ -187,19 +189,26 @@ function BulkUserForm() {
     catch(error){
       // console.error('Error Updating Password:', error);
       if(error.request.status === 400){
-        const errMessage =error.response.data;
-        // console.log("400 response", errMessage)
-        const cleanedMessage = JSON.stringify(errMessage);
-        toast.error(JSON.parse(cleanedMessage)+' !!!', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-      });
+
+        let errMessage = '';
+
+
+        if (error.response && error.response.data && error.response.data.message) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+        }
+ 
+ 
       }
        else {
         toast.error('Something went wrong !!!', {
@@ -217,11 +226,23 @@ function BulkUserForm() {
     setBtnLoading(false)
   }
 
+  async function fetchData() {
+    try {
+      const response = await axios.get(`${BASE_URL}/getall`, { headers });
+  
+      const apiDataArray = response.data;
+  
+      sessionStorage.setItem("currEmpLength", apiDataArray.length);
+    } catch(error) {
+      console.error('Error in getting data: ', error)
+    }
+  }
+
 
 
   const handleDownloadExcel = () => {
     const fileData = [
-      { url: excelDownData.falidDataLink, filename: "Failed Data.xlsx" },
+      { url: excelDownData.failedDataLink, filename: "Unsuccessful Data.xlsx" },
       { url: excelDownData.duplicateDataLink, filename: "Duplicate Data.xlsx" },
     ];
 
@@ -511,7 +532,7 @@ function BulkUserForm() {
                               {excelDownData.successfullyAdded || "0"}
                             </TableCell>
                             <TableCell>
-                              {excelDownData.falidData || "0"}
+                              {excelDownData.failedData || "0"}
                             </TableCell>
                             <TableCell>
                               {excelDownData.duplicateData || "0"}

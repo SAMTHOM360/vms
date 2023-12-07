@@ -10,6 +10,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -32,7 +33,7 @@ import { useParams } from "react-router-dom";
 
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
@@ -591,7 +592,7 @@ useEffect(() => {
 
 
   function formatMeetingDuration1(meeting) {
-    const endTimestamp = meeting.checkOutDateTime;
+    const endTimestamp = meeting.meetingEndDateTime;
 
     if (endTimestamp != null) {
       const endDate = new Date(endTimestamp);
@@ -621,7 +622,7 @@ useEffect(() => {
 
 
   function formatMeetingDuration(meeting) {
-    const endTimestamp = meeting.checkInDateTime;
+    const endTimestamp = meeting.meetingStartDateTime;
 
     if (endTimestamp != null) {
       const endDate = new Date(endTimestamp);
@@ -816,7 +817,12 @@ useEffect(() => {
                     borderRadius: "5px",
                     // width: "130px !important",
                     // height: '50px !important',
-                    boxShadow: "0px 2px 2px #333333",
+                    boxShadow: "0px 2px 2px #3333337d",
+                    border:'none',
+                    "&:hover": {
+                      border: "none",
+                    },
+                    
                   }}
                 >
                   {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
@@ -1157,15 +1163,18 @@ useEffect(() => {
 
                         </Grid>
                         <Box sx={{ display: "flex", alignItems: "center", gap:'1em', }}>
+                          <Tooltip title={<p style={{fontSize:'12px', fontWeight:600}}>Clear filters</p>} >
                           <Button
                             variant="contained"
                             color="error"
                             size="small"
-                            sx={{ marginLeft: "1.2em", width:'10em', height: "3em" }}
+                            sx={{ minWidth: "unset", marginLeft: "1.2em", width:'3.9em', height: "3.9em", }}
                             onClick={handleClearFilters}
                           >
-                            Clear Filters
+                            <RotateLeftIcon />
+                            {/* Clear Filters */}
                           </Button>
+                          </Tooltip>
                           </Box>
                       </div>
 
