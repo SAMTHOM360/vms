@@ -394,7 +394,7 @@ const MeetingDetails = () => {
         [name]: selectedDateTime,
       });
     } else {
-      console.error("Invalid date/time selected.");
+      // console.error("Invalid date/time selected.");
     }
   } else {
     // console.log('else hit');

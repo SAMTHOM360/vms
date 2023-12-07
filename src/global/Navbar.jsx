@@ -413,7 +413,7 @@ export default function Navbar({ toggleSidebar }) {
   useEffect(() => {
     const IntervalFetchNotification = setInterval(() => {
       fetchNotification()
-    }, 5000);
+    }, 7000);
 
     return () => clearInterval(IntervalFetchNotification)
   },[])
