@@ -14,6 +14,7 @@ import InfoIcon from "@mui/icons-material/Info";
 // import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import Config from "../../Config/Config";
 
 // import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import {
@@ -55,12 +56,14 @@ export default function VisitorMeetTimeline({ meetData }) {
   const [isVisitorMeetData, setisVisitorMeetData] = useState(false);
 
   const handleMeetDialogOpen = async (dataitem) => {
-    console.log("indiii", dataitem.id);
+    // console.log("indiii", dataitem.id);
     const meetById = dataitem.id;
+
+    let url = Config.baseUrl + Config.apiEndPoints.visitorTimeLineFetchData
 
     try {
       const response = await axios.get(
-        `${BASE_URL1}/meeting/getbyid/${meetById}`
+        `${url}/${meetById}`
       );
       const apiData = response.data.data;
       console.log("Api data", apiData);
@@ -85,65 +88,10 @@ export default function VisitorMeetTimeline({ meetData }) {
     setOpenMeetDialog(true);
   };
 
-  const handleMeetApprove = async () => {
-    const payLoad = {
-      id: meetByIdData.meetId,
-      status: "APPROVED",
-      user: {
-        id: meetByIdData.userId,
-      },
-      visitor: {
-        id: meetByIdData.vistorId,
-      },
-    };
-    console.log("payload approve", payLoad);
-
-    try {
-      const response = await axios.post(
-        `${BASE_URL1}/meeting/update/meeting`,
-        payLoad,
-        { headers: headers }
-      );
-      console.log("Meet update response", response);
-      setOpenMeetDialog(false);
-    } catch (error) {
-      console.error("Unable to update meet status: ", error);
-    }
-  };
-
-  const handleMeetReject = async () => {
-    const payLoad = {
-      id: meetByIdData.meetId,
-      status: "CANCELLED",
-      user: {
-        id: meetByIdData.userId,
-      },
-      visitor: {
-        id: meetByIdData.vistorId,
-      },
-    };
-    console.log("payload reject", payLoad);
-
-    try {
-      const response = await axios.post(
-        `${BASE_URL1}/meeting/update/meeting`,
-        payLoad,
-        { headers }
-      );
-      console.log("Meet update response", response);
-      setOpenMeetDialog(false);
-    } catch (error) {
-      console.error("Unable to update meet status: ", error);
-    }
-  };
-
   console.log("isVisitorMeetData", isVisitorMeetData);
 
   // console.log("meet by id data", meetByIdData)
 
-  const handleMeetDialogClose = () => {
-    setOpenMeetDialog(false);
-  };
 
   useEffect(() => {
     if (meetData && meetData.length > 0) {
@@ -277,7 +225,7 @@ export default function VisitorMeetTimeline({ meetData }) {
               info = true;
             }
 
-            if (dataItem && dataItem.status === "APPROVED") {
+            if (dataItem && dataItem.status === "APPROVED" || dataItem.status === "INPROCESS") {
               // console.log("dataitem data", dataItem)
 
               return (
@@ -425,162 +373,6 @@ export default function VisitorMeetTimeline({ meetData }) {
           })}
         </Timeline>
       </Box>
-
-      <Dialog
-        open={openMeetDialog}
-        // onClose={handleMeetDialogClose}
-        PaperProps={{
-          sx: {
-            mt: "5em",
-            borderRadius: "5px",
-            width: "400px",
-            height: "550px",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            textAlign: "right",
-            fontSize: "29px",
-            fontWeight: "600",
-            height: "2em",
-          }}
-        >
-          <IconButton
-            onClick={handleMeetDialogClose}
-            sx={{ mt: "-1em", mr: "-0.7em" }}
-          >
-            <CloseIcon sx={{ color: "#FF3636" }} />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            overflow: "hidden",
-            padding: "0",
-            position: "relative",
-            display: "flex",
-            // flexDirection:'column',
-            justifyContent: "center",
-          }}
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              mt: "-3em",
-              // ml: "-1em",
-              minWidth: "110%",
-              minHeight: "40%",
-              bgcolor: "cyan",
-              transform: "rotate(10deg)",
-              transformOrigin: "center",
-              // position: 'absolute',
-              // top: '50%',
-              // left: '50%',
-              // Translate the box to center it after rotation
-              // transform: 'translate(-50%, -50%) rotate(45deg)',
-            }}
-          ></Box>
-
-          <Box
-            sx={{
-              position: "absolute",
-              top: "4em",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ width: "100px", height: "100px" }}>
-              {/* <ImageIcon /> */}
-              <img
-                src={meetByIdData.visitorImgUrl}
-                alt="No DP"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </Avatar>
-            <Typography
-              sx={{
-                fontSize: "18px",
-                fontWeight: "550",
-                mt: "0.2em",
-              }}
-            >
-              {meetByIdData.visitorName}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "12px",
-                fontWeight: "800",
-                color: "#5A5A5A",
-              }}
-            >
-              ({meetByIdData.visitorCompany})
-            </Typography>{" "}
-            {/* if company is present */}
-          </Box>
-
-          <Box
-            sx={{
-              bgcolor: "orange",
-              width: "100%",
-              height: "200px",
-              // position:'relative',
-              mt: "14em",
-              pt: "0.5em",
-              pl: "1em",
-            }}
-          >
-            <Typography>Meeting Type: {meetByIdData.meetType}</Typography>
-            <Typography>Meet Time: {meetByIdData.meetTime}</Typography>
-            <Typography>Remarks: {meetByIdData.remarks}</Typography>
-            <Typography>
-              Phone No.: {meetByIdData.visitorPhoneNumber}
-            </Typography>
-            <Typography>Email: {meetByIdData.visitorEmail}</Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            mr: "1em",
-            mb: "1em",
-            ml: "1em",
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={handleMeetReject}
-            // color="secondary"
-            sx={{
-              width: "6em",
-              bgcolor: "#DA2B2B",
-              "&:hover": {
-                backgroundColor: "#9F3327",
-                color: "white",
-              },
-            }}
-          >
-            Reject
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleMeetApprove}
-            color="primary"
-            sx={{
-              width: "6em",
-              bgcolor: "#349E2A",
-              "&:hover": {
-                backgroundColor: "#1B7D00",
-                color: "white",
-              },
-            }}
-          >
-            Approve
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

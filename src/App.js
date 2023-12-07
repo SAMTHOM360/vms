@@ -144,7 +144,6 @@ const ReceptionistCompanyScreen = lazy(() => import('./components/company/Recept
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
 const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
-// const EmpMeeting = lazy(() => import('./components/EmpMeeting'));
 const Profile = lazy(() => import('./components/Profile'));
 const DynamicIdCard = lazy(() => import('./components/experimentals/DynamicIdCard'));
 const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
@@ -213,7 +212,6 @@ function App() {
 {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
 {/* <Route path="/profile" element={<Profile />} /> */}
 {/* <Route path="/userform" element={<UserForm />} /> */}
-{/* <Route path="/empmeeting" element={<EmpMeeting />} /> */}
 {/* <Route path="/appointmeeting" element={<AppointMeetForm />} /> */}
 {/* <Route path="/dashboardreceptionist" element={<DashboardReceptionist />} /> */}
 {/* <Route path="/receptionistdashboard" element={<ReceptionistDashboard />} /> */}
@@ -247,7 +245,6 @@ function App() {
 
   
   <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE','HR']} />} />
-  {/* <Route path="/empmeeting" element={<PrivateRoute element={<EmpMeeting />} allowedRoles={['EMPLOYEE']} />} /> */}
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
   <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} />
   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN','RECEPTIONIST','HR']} />} />

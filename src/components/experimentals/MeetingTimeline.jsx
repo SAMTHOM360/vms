@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRef } from "react";
 import { useAuth } from "../../routes/AuthContext";
+import Config from "../../Config/Config";
 
 import img1 from "../../assets/6173954.jpg";
 
@@ -73,11 +74,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
   const handleMeetDialogOpen = async (dataitem) => {
     // console.log("indiii", dataitem.id);
     const meetById = dataitem.id;
+    let url = Config.baseUrl + Config.apiEndPoints.meetingTimeLineFetchData
 
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BASE_URL1}/meeting/getbyid/${meetById}`
+        `${url}/${meetById}`
       );
       if (response.status === 200) {
         const apiData = response.data.data;
@@ -128,11 +130,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       },
     };
     // console.log("payload approve", payLoad);
+    let url = Config.baseUrl + Config.apiEndPoints.meetingTimeLineMeetUpdate
 
     try {
       setLoading(true);
       const response = await axios.post(
-        `${BASE_URL1}/meeting/update/meeting`,
+        `${url}`,
         payLoad,
         { headers: headers }
       );
@@ -180,11 +183,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       },
     };
     // console.log("payload reject", payLoad);
+    let url = Config.baseUrl + Config.apiEndPoints.meetingTimeLineMeetUpdate
 
     try {
       setLoading(true);
       const response = await axios.post(
-        `${BASE_URL1}/meeting/update/meeting`,
+        `${url}`,
         payLoad,
         { headers: headers }
       );

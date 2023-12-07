@@ -25,6 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import image1 from "../assets/office2_0.jpg";
 import image2 from "../assets/rapidsoft+report+colour+logo.png";
 import Loader from "./Loader";
+import Config from "../Config/Config";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -36,7 +37,8 @@ function LoginForm() {
   const OTP_URL = "http://192.168.12.54:8080/api/user";
   // const OTP_URL = "http://192.168.12.58:8080/api/user";
 
-  const OWNER = "https://www.rapidsofttechnologies.com/";
+  // const OWNER = "https://www.rapidsofttechnologies.com/";
+  const OWNER = Config.ownerSiteLink
 
   const { authenticated, setAuthenticated, logout, setIsNavBar, setIsSideBar } =
     useAuth();
@@ -305,9 +307,13 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let url = Config.baseUrl + Config.apiEndPoints.loginFormNKSubmit
+
     try {
       setBtnLoading(true);
-      const response = await axios.post(`${BASE_URL}/token`, credentials);
+      // const response = await axios.post(`${BASE_URL}/token`, credentials);
+      const response = await axios.post(`${url}`, credentials);
 
       if (response.status === 200) {
         toast.success("Successfully Logged In", {
@@ -425,6 +431,8 @@ function LoginForm() {
   };
 
   const handleGetOTP = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.loginFormNKGetOtp
+
     if (!updateCreds.username) {
       toast.warn("Username can't be empty.", {
         position: "top-right",
@@ -445,7 +453,7 @@ function LoginForm() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${OTP_URL}/getotp?username=${getOtpPayload}`
+        `${url}?username=${getOtpPayload}`
       );
       console.log("get otp", response);
       if (response.status === 200) {
@@ -502,6 +510,7 @@ function LoginForm() {
   };
 
   const handleUpdatePassword = async (e) => {
+    let url = Config.baseUrl + Config.apiEndPoints.loginFormNKSaveForgot
     e.preventDefault();
     const updatePasswordPayload = {
       username: updateCreds.username,
@@ -527,11 +536,11 @@ function LoginForm() {
       return;
     }
 
-    console.log("updatePasswordPayload.otp:", updatePasswordPayload.otp);
-    console.log(
-      "updatePasswordPayload.newPassword:",
-      updatePasswordPayload.newPassword
-    );
+    // console.log("updatePasswordPayload.otp:", updatePasswordPayload.otp);
+    // console.log(
+    //   "updatePasswordPayload.newPassword:",
+    //   updatePasswordPayload.newPassword
+    // );
 
     if (updateCreds.newPassword != updateCreds.confirmPassword) {
       toast.error("New and Confirm passwords mismatched !!!", {
@@ -550,8 +559,12 @@ function LoginForm() {
 
     try {
       setLoading(true);
+      // const response = await axios.post(
+      //   `${OTP_URL}/forgot`,
+      //   updatePasswordPayload
+      // );
       const response = await axios.post(
-        `${OTP_URL}/forgot`,
+        `${url}`,
         updatePasswordPayload
       );
       if (response.status === 200) {

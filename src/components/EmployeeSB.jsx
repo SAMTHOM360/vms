@@ -31,6 +31,7 @@ import Header from "./Header";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
+import Config from "../Config/Config";
 
 const Employee = () => {
   const { isLimitReached, setIsNavBar, setIsSideBar, setActiveListItem } =
@@ -54,8 +55,10 @@ const Employee = () => {
   // const BASE_URL = 'http://192.168.12.58:8080/api/user';
   // const BASE_URL = 'http://192.168.12.12:8080/api/user';
 
+  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.employeeSBAxiosInstance
+
   const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: urlAxiosInstance,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${AuthToken}`,
@@ -126,6 +129,7 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete
     if (id == adminId) {
       toast.error("You cannot delete yourself !!!", {
         position: "top-right",
@@ -147,7 +151,7 @@ const Employee = () => {
           };
 
           const response = await axiosInstance.post(
-            `${BASE_URL}/delete`,
+            `${url}`,
             deletePayload,
             { headers }
           );
@@ -178,16 +182,17 @@ const Employee = () => {
   };
 
   const handleEdit = async (item) => {
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById
     try {
       setLoading(true);
       const itemId = item.id;
 
-      const response = await axiosInstance.get(`${BASE_URL}/getbyid/${itemId}`);
+      const response = await axiosInstance.get(`${url}/${itemId}`);
 
       if (response.status === 200) {
         const apiData = response.data.data.data;
 
-        console.log('handle edit api data', apiData)
+        // console.log('handle edit api data', apiData)
 
         setEditedItem({
           id: apiData.id || "",
@@ -236,6 +241,7 @@ const Employee = () => {
 
   const handleSaveEdit = async () => {
     // console.log("edited item role", editedItem)
+    let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser
     const payload = {
       firstName: editedItem.firstName,
       lastName: editedItem.lastName,
@@ -254,7 +260,7 @@ const Employee = () => {
       setBtnLoading(true);
       setLoading(true);
 
-      const response = await axios.post(`${BASE_URL}/adduser`, payload, {
+      const response = await axios.post(`${url1}`, payload, {
         headers,
       });
       if (response.status === 200) {
@@ -268,8 +274,10 @@ const Employee = () => {
           progress: undefined,
           theme: "light",
         });
+        let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById
+
         const response = await axiosInstance.get(
-          `${BASE_URL}/getbyid/${editedItem.id}`
+          `${url2}/${editedItem.id}`
         );
         const updatedData = response.data.data.data;
         console.log(" updated data", updatedData)
@@ -358,15 +366,16 @@ const Employee = () => {
 
 
   async function fetchData() {
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBFetchData
     try {
       setDivText("GETTING EMPLOYEE DATA...");
       setLoading(true);
-      const response = await axios.get(`${BASE_URL}/getall`, { headers });
+      const response = await axios.get(`${url}`, { headers });
   
       const apiDataArray = response.data.data.allUser;
       const currEmpLength = response.data.data.countUser
 
-      console.log("api data users",apiDataArray)
+      // console.log("api data users",apiDataArray)
   
       sessionStorage.setItem("currEmpLength", currEmpLength);
 
@@ -904,9 +913,10 @@ const Employee = () => {
 
 
   async function fetchRoles() {
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllRole
     try {
       const response = await axios.get(
-        "http://192.168.12.54:8080/api/role/getall", { headers }
+        url, { headers }
       );
       setRoles(response.data.data);
     } catch (error) {
@@ -914,8 +924,9 @@ const Employee = () => {
     }
   }
   const fetchDepts = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllDept
     try{
-      const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
+      const response = await axios.get(`${url}?companyId=${companyId}`)
       const deptApiData = response.data.data
       // console.log("dept data", response.data.data)
       setDepts(deptApiData)

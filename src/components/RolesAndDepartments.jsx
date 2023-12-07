@@ -31,6 +31,7 @@ import Header from "./Header";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
+import Config from "../Config/Config";
 
 const RolesAndDepartments = () => {
 
@@ -54,8 +55,10 @@ const companyId = parseInt(companyIdStr,10)
 const BASE_URL = "http://192.168.12.54:8080/api/user";
 // const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
+let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsAxiosInstance
+
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: urlAxiosInstance,
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${AuthToken}`,
@@ -99,9 +102,14 @@ const [deptFormData, setDeptFormData] = useState({
 
 
 async function fetchRoles() {
+  let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsGetAllRole
   try {
+    // const response = await axios.get(
+    //   "http://192.168.12.54:8080/api/role/getall", { headers }
+    // );
+
     const response = await axios.get(
-      "http://192.168.12.54:8080/api/role/getall", { headers }
+      url, { headers }
     );
 
     const roleApiData = response.data.data
@@ -146,8 +154,11 @@ async function fetchRoles() {
   }
 }
 const fetchDepts = async () => {
+  let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsGetAllDept
+
   try{
-    const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
+    // const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
+    const response = await axios.get(`${url}?companyId=${companyId}`)
     const deptApiData = response.data.data
     // console.log('deptApiData',deptApiData)
 
@@ -213,10 +224,12 @@ const handleSubmitAddDept = async(e) => {
       id:deptFormData.company.id
     }
   }
+  let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsCreateDept
 
   try{
     setBtnLoading(true)
-    const response = await axiosInstance.post('http://192.168.12.54:8080/api/department/create', payload, {headers})
+    // const response = await axiosInstance.post('http://192.168.12.54:8080/api/department/create', payload, {headers})
+    const response = await axiosInstance.post(url, payload, {headers})
     // console.log('role submit response', response)
     if (response.status >= 200 && response.status < 300) {
       toast.success('Dept added successfully.', {
@@ -298,10 +311,11 @@ const handleSubmitAddRole = async(e) => {
   const payload = {
     name:  roleFormData.name,
   }
+  let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsCreateRole
 
   try{
     setBtnLoading(true)
-    const response = await axiosInstance.post('http://192.168.12.54:8080/api/add', payload, {headers})
+    const response = await axiosInstance.post(url, payload, {headers})
     // console.log('role submit response', response)
     if(response.status === '200'){
       toast.success("Role added succesfully.", {

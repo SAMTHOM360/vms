@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../routes/AuthContext";
+import Config from "../Config/Config";
 
 const EmpDashboard = () => {
 // console.log('I am imposter')
@@ -122,17 +123,19 @@ const EmpDashboard = () => {
     // console.log("dynamic payload", payLoad);
 
     // console.log('non dynamic data')
+    let url1 = Config.baseUrl + Config.apiEndPoints.empDashboardFetchDashboard
+    let url2 = Config.baseUrl + Config.apiEndPoints.empDashboardFetchTimeline
 
     try {
       setLoading(true);
 
       const dashboardResponse = await axios.post(
-        `${BASE_URL1}/meeting/userdashboard?userId=${adminId}`,
+        `${url1}?userId=${adminId}`,
         payLoad
       );
 
       const dashboardTimelineResponse = await axios.post(
-        `${BASE_URL1}/meeting/meetingfordashboard`,
+        `${url2}`,
         payLoad
       );
 
@@ -289,10 +292,12 @@ const EmpDashboard = () => {
       };
   
       // console.log('dynamic payload',);
+      let url = Config.baseUrl + Config.apiEndPoints.empDashboardFetchTimeline
+
   
       try {
         const dashboardTimelineResponse = await axios.post(
-          `${BASE_URL1}/meeting/meetingfordashboard`,
+          `${url}`,
           payLoad
         );
         const timelineApiData = dashboardTimelineResponse.data.data;

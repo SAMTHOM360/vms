@@ -20,6 +20,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Config from "../Config/Config";
 
 function BulkUserForm() {
   const { isLimitReached } = useAuth();
@@ -123,10 +124,11 @@ function BulkUserForm() {
   // console.log("excel up data", excelUpData);
 
   const handleSaveUpload = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.bulkUserFormSaveUpload
     try {
       setBtnLoading(true);
       const response = await axios.post(
-        `${BASE_URL}/excel/upload`,
+        `${url}`,
         excelUpData,
         {
           headers: excelHeaders,
@@ -150,12 +152,18 @@ function BulkUserForm() {
         // console.log("excelApiData", excelApiData);
         if (
           excelApiData.duplicateData !== 0 ||
-          excelApiData.unSuccessfullyAdded !== 0
+          excelApiData.failedData !== 0
         ) {
           setIsDownload(true);
         } else {
           setIsDownload(false);
         }
+
+        // setIsDownload(
+        //   excelApiData.duplicateData !== 0 ||
+        //   excelApiData.failedData !== 0
+        // );
+        
         setExcelDownData({
           totalElement: excelApiData.totalElement || "",
           successfullyAdded: excelApiData.successfullyAdded || "",
@@ -226,23 +234,23 @@ function BulkUserForm() {
     setBtnLoading(false)
   }
 
-  async function fetchData() {
-    try {
-      const response = await axios.get(`${BASE_URL}/getall`, { headers });
+  // async function fetchData() {
+  //   try {
+  //     const response = await axios.get(`${BASE_URL}/getall`, { headers });
   
-      const apiDataArray = response.data;
+  //     const apiDataArray = response.data;
   
-      sessionStorage.setItem("currEmpLength", apiDataArray.length);
-    } catch(error) {
-      console.error('Error in getting data: ', error)
-    }
-  }
+  //     sessionStorage.setItem("currEmpLength", apiDataArray.length);
+  //   } catch(error) {
+  //     console.error('Error in getting data: ', error)
+  //   }
+  // }
 
 
 
   const handleDownloadExcel = () => {
     const fileData = [
-      { url: excelDownData.failedDataLink, filename: "Unsuccessful Data.xlsx" },
+      { url: excelDownData.failedDataLink, filename: "Failed Data.xlsx" },
       { url: excelDownData.duplicateDataLink, filename: "Duplicate Data.xlsx" },
     ];
 
@@ -519,7 +527,7 @@ function BulkUserForm() {
                           <TableRow>
                             <TableCell>Total Records</TableCell>
                             <TableCell>Successfully Added</TableCell>
-                            <TableCell>Unsuccessfully Added</TableCell>
+                            <TableCell>Failed Data</TableCell>
                             <TableCell>Duplicate Data</TableCell>
                           </TableRow>
                         </TableHead>

@@ -23,6 +23,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "../routes/AuthContext";
+import Config from "../Config/Config";
 
 const Profile = () => {
   // sessionStorage.setItem('activeListItem', '/profile')
@@ -35,8 +36,10 @@ const Profile = () => {
   // const adminId = localStorage.getItem("adminId");
   const adminId = sessionStorage.getItem("adminId");
 
+  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.profileAxiosInstance
+
   const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: urlAxiosInstance,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${AuthToken}`,
@@ -119,9 +122,10 @@ const Profile = () => {
   };
 
   async function fetchData() {
+    let url = Config.baseUrl + Config.apiEndPoints.profileGetById
     try {
       setLoading(true)
-      const response = await axios.get(`${BASE_URL}/getbyid/${adminId}`);
+      const response = await axios.get(`${url}/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
 
@@ -189,10 +193,11 @@ const Profile = () => {
     setLoading(false)
   }
   const handlePresentOn = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.profilePresent
     try {
       setLoading(true)
       const response = await axios.post(
-        `${BASE_URL}/present`,
+        `${url}`,
         statusOnPayload,
         { headers }
       );
@@ -229,10 +234,19 @@ const Profile = () => {
   };
 
   const handlePresentOff = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.profilePresent
+
     try {
       setLoading(true)
+
+      // const response = await axios.post(
+      //   `${BASE_URL}/present`,
+      //   statusOffPayload,
+      //   { headers: headers }
+      // );
+
       const response = await axios.post(
-        `${BASE_URL}/present`,
+        `${url}`,
         statusOffPayload,
         { headers: headers }
       );
@@ -369,12 +383,17 @@ const Profile = () => {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
+    let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
       try {
-        const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
+        // const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
+        //   headers: ImgHeaders,
+        // });
+
+        const response = await axios.post(`${url}`, formData, {
           headers: ImgHeaders,
         });
         const imgResponseApiData = response.data.data;
@@ -414,8 +433,14 @@ const Profile = () => {
       },
     };
 
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+
     try {
-      const response = await axios.post(`${BASE_URL}/adduser`, imgPayload, {
+      // const response = await axios.post(`${BASE_URL}/adduser`, imgPayload, {
+      //   headers: headers,
+      // });
+
+      const response = await axios.post(`${url}`, imgPayload, {
         headers: headers,
       });
 
@@ -456,8 +481,13 @@ const Profile = () => {
 
 
   const handleBasicInfoUpdate = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+
     try {
-      const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
+      // const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
+      //   headers: headers,
+      // });
+      const response = await axios.post(`${url}`, editedBasicInfo, {
         headers: headers,
       });
 
@@ -509,8 +539,14 @@ const Profile = () => {
 
 
   const HandleAddressInfoUpdate = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+
     try {
-      const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
+      // const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
+      //   headers: headers,
+      // });
+
+      const response = await axios.post(`${url}`, editedAddressInfo, {
         headers: headers,
       });
 

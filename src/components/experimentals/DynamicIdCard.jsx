@@ -10,10 +10,11 @@ import Header from "../Header";
 import VisitorMeetTimeline from "./VisitorMeetTimeline";
 import image1 from "../../assets/6173954.jpg";
 import Loader from "../Loader";
+import Config from "../../Config/Config";
 
 const DynamicIdCard = () => {
   // const BASE_URL = `http://192.168.12.58:8080/api/meeting/meeting-details`;
-  const BASE_URL = `http://192.168.12.54:8080/api/meeting/meeting-details`;
+  // const BASE_URL = `http://192.168.12.54:8080/api/meeting/meeting-details`;
 
   const [meetingDetails, setMeetingDetails] = useState(null);
   const [isDynamicMeet, setIsDynamicMeet] = useState(false);
@@ -28,12 +29,16 @@ const DynamicIdCard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   const fetchMeetingDetails = async () => {
     try {
       setLoading(true);
       const id = window.location.pathname.split("/").pop();
+      let url = Config.baseUrl + Config.apiEndPoints.dynamicIdCardMeetDetails
 
-      const response = await axios.get(`${BASE_URL}/${id}`);
+
+      // const response = await axios.get(`${BASE_URL}/${id}`);
+      const response = await axios.get(`${url}/${id}`);
 
       const apiData = response.data.data;
 
