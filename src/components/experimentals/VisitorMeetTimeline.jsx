@@ -298,16 +298,34 @@ export default function VisitorMeetTimeline({ meetData }) {
                           </span>
                         </Typography>
 
-                        <Typography sx={{ bgcolor: "", fontSize: "14px" }}>
+                        <Typography sx={{ color: "#BDBDBD", bgcolor: "", fontSize: "14px" }}>
                           <span style={{ fontWeight: "500", fontSize: "15px" }}>
                             Meeting Id:{" "}
                           </span>
                           {dataItem.id}
                         </Typography>
+     
+
+                        <Typography sx={{ color: "#BDBDBD", fontSize: "14px" }}>
+                          <span style={{ fontWeight: "500", fontSize: "15px" }}>
+                            Meeting Room:{" "}
+                          </span>
+                          {dataItem.room.roomName}
+                        </Typography>
+
+                        <Typography sx={{ color: "#BDBDBD", fontSize: "14px" }}>
+                          <span style={{ fontWeight: "500", fontSize: "15px" }}>
+                            Meeting Remarks:{" "}
+                          </span>
+                          {dataItem.remarks}
+                        </Typography>
+
                         <Box sx={{ display: "flex" }}>
                           <Typography
                             sx={{
-                              color: "#959697",
+                              // color: "#959697",
+                              // color: "#959697",
+                              color:'#BDBDBD',
                               fontSize: "14px",
                               bgcolor: "",
                             }}
@@ -322,20 +340,6 @@ export default function VisitorMeetTimeline({ meetData }) {
                             {formattedMeetingEndDateTime} {roomNo}
                           </Typography>
                         </Box>
-
-                        <Typography sx={{ bgcolor: "", fontSize: "14px" }}>
-                          <span style={{ fontWeight: "500", fontSize: "15px" }}>
-                            Meeting Room:{" "}
-                          </span>
-                          {dataItem.room.roomName}
-                        </Typography>
-
-                        <Typography sx={{ bgcolor: "", fontSize: "14px" }}>
-                          <span style={{ fontWeight: "500", fontSize: "15px" }}>
-                            Meeting Remarks:{" "}
-                          </span>
-                          {dataItem.remarks}
-                        </Typography>
                       </Box>
                       <Box
                         sx={{

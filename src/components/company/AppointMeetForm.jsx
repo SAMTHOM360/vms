@@ -267,6 +267,20 @@ const MeetingDetails = () => {
       });
       return;
     }
+
+    if(formData.phoneNumber.length!== 10) {
+      toast.warn("Username must be exactly 10 digits !!!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return
+    }
   
 
     const updatedFormData = {
@@ -334,13 +348,12 @@ const MeetingDetails = () => {
 
   const shouldDisableDate = (date) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set current date to midnight
+    today.setHours(0, 0, 0, 0);
   
     const differenceInDays = Math.floor(
       (date - today) / (1000 * 60 * 60 * 24)
     );
   
-    // Disable dates more than 90 days in the future or before today
     return differenceInDays > 90 || date < today;
   };
 
@@ -387,7 +400,6 @@ const MeetingDetails = () => {
     // console.log('if hit');
     const selectedDateTime = value instanceof Date && !isNaN(value) ? value : new Date(value);
     
-    // Check if the parsed date is valid
     if (!isNaN(selectedDateTime)) {
       setFormData({
         ...formData,
@@ -515,6 +527,7 @@ const MeetingDetails = () => {
                   value={formData.phoneNumber}
                   onInput={handlePhoneNumberChange}
                     inputProps={{
+                      maxLength:10,
                       pattern: "^[0-9]*$",
                       onInput: (event) => {
                         let value = event.target.value;

@@ -42,23 +42,34 @@ const DynamicIdCard = () => {
 
       const apiData = response.data.data;
 
+      console.log('dynamic response', apiData)
+
+
+
       if (apiData) {
-        setIsDynamicMeet(true);
-        const apiData0 = apiData[0];
-        setMeetingDetails0({
-          visitorId: apiData0.visitor.id || "",
-          visitorName: apiData0.visitor.name || "N/A",
-          visitorImg: apiData0.visitor.imageUrl || "",
-          visitorCompany: apiData0.visitor.companyName || "N/A",
-          visitorEmail: apiData0.visitor.email || "N/A",
-          visitorPhone: apiData0.visitor.phoneNumber || "N/A",
-        });
+
+        if (apiData && apiData === "PASS EXPIRED") {
+          setIsDynamicMeet(false);
+        } else {
+          setIsDynamicMeet(true);
+          const apiData0 = apiData[0];
+          setMeetingDetails0({
+            visitorId: apiData0.visitor.id || "",
+            visitorName: apiData0.visitor.name || "N/A",
+            visitorImg: apiData0.visitor.imageUrl || "",
+            visitorCompany: apiData0.visitor.companyName || "N/A",
+            visitorEmail: apiData0.visitor.email || "N/A",
+            visitorPhone: apiData0.visitor.phoneNumber || "N/A",
+          });
+        }
+
+
       }
 
       if (!apiData) {
         setIsDynamicMeet(false);
       }
-      console.log("Dynamic Id Response", apiData);
+      // console.log("Dynamic Id Response", apiData);
 
       setMeetingDetails(apiData);
     } catch (error) {

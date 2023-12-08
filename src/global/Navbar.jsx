@@ -562,8 +562,38 @@ export default function Navbar({ toggleSidebar }) {
     const changePayload = {
       username: loggedUserUsername,
       oldpassword: changedItem.oldpassword,
-      newPassword: changedItem.confirmPassword,
+      newPassword: changedItem.newPassword,
     };
+
+    const hasEmptyField = Object.values(changedItem).some(value => value.length === 0);
+
+    if (hasEmptyField) {
+      toast.warn("Please fill in all fields.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    if (changedItem.newPassword.length < 4) {
+      toast.warn("New Password mustn't be less than 4 !!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
 
     let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword
 
@@ -1056,6 +1086,7 @@ export default function Navbar({ toggleSidebar }) {
                 height: "2.5em",
                 display: "flex",
                 paddingX: "0.5em",
+                paddingY:0,
                 justifyContent: "space-between",
                 alignItems: "center",
                 borderBottom:'1px solid #3135415b'
@@ -1090,6 +1121,7 @@ export default function Navbar({ toggleSidebar }) {
                 minHeight:'50px',
                 maxHeight: "300px",
                 overflowY: "auto",
+                // padding:0,
                 // bgcolor:'cyan'
               }}
             >
@@ -1202,12 +1234,20 @@ export default function Navbar({ toggleSidebar }) {
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.oldpassword}
-                onChange={(e) =>
+                onChange={(e) => {
+                  let newValue = e.target.value;
+              
+                  newValue = newValue.replace(/\s/g, '');
+              
+                  if (newValue.length > 16) {
+                    newValue = newValue.slice(0, 16);
+                  }
+              
                   setChangedItem({
                     ...changedItem,
-                    oldpassword: e.target.value,
-                  })
-                }
+                    oldpassword: newValue,
+                  });
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -1231,12 +1271,20 @@ export default function Navbar({ toggleSidebar }) {
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.newPassword}
-                onChange={(e) =>
+                onChange={(e) => {
+                  let newValue = e.target.value;
+              
+                  newValue = newValue.replace(/\s/g, '');
+              
+                  if (newValue.length > 16) {
+                    newValue = newValue.slice(0, 16);
+                  }
+              
                   setChangedItem({
                     ...changedItem,
-                    newPassword: e.target.value,
-                  })
-                }
+                    newPassword: newValue,
+                  });
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -1260,12 +1308,20 @@ export default function Navbar({ toggleSidebar }) {
                 fullWidth
                 inputProps={{ maxLength: 16 }}
                 value={changedItem.confirmPassword}
-                onChange={(e) =>
+                onChange={(e) => {
+                  let newValue = e.target.value;
+              
+                  newValue = newValue.replace(/\s/g, '');
+              
+                  if (newValue.length > 16) {
+                    newValue = newValue.slice(0, 16);
+                  }
+              
                   setChangedItem({
                     ...changedItem,
-                    confirmPassword: e.target.value,
-                  })
-                }
+                    confirmPassword: newValue,
+                  });
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

@@ -453,7 +453,7 @@ const EmpDashboard = () => {
     await fetchData(formattedFromMonth, formattedToMonth);
     // await fetchTimeLineData(formattedFromMonth, formattedToMonth);
     setEmpFilteredFromDate(formattedFromMonth)
-    setEmpFilteredToDate(formattedFromMonth)
+    setEmpFilteredToDate(formattedToMonth)
   };
 
 
@@ -539,7 +539,7 @@ const EmpDashboard = () => {
               }}
               >
 
-                <Typography sx={{color:'#555555'}}>Filter by</Typography>
+                <Typography sx={{color:'#555555', userSelect:'none'}}>Filter by</Typography>
 
                 <FormControl
                   sx={{
@@ -666,6 +666,7 @@ const EmpDashboard = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        cursor: "pointer",
                         "&:hover": {
                           bgcolor: "#283550",
                         },
@@ -735,7 +736,7 @@ const EmpDashboard = () => {
                       >
                         <Typography
                           variant="h5"
-                          sx={{ color: "#4cceac", mt: "10px", ml: "10px" }}
+                          sx={{ color: "#4cceac", mt: "10px", ml: "10px", userSelect:'none' }}
                         >
                           Meeting Counts
                         </Typography>
@@ -844,7 +845,7 @@ const EmpDashboard = () => {
                       >
                         <Typography
                           variant="h5"
-                          sx={{ color: "#4cceac", mt: "10px", ml: "10px" }}
+                          sx={{ color: "#4cceac", mt: "10px", ml: "10px", userSelect:'none' }}
                         >
                           Activity Timeline
                         </Typography>
@@ -856,6 +857,7 @@ const EmpDashboard = () => {
                             mr: "1em",
                             color: "#C1C1C1",
                             fontSize: "14px",
+                            userSelect:'none'
                           }}
                         >
                           <span

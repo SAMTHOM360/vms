@@ -1,6 +1,8 @@
 const Config = Object.freeze({
-  baseUrl: "http://192.168.12.54:8080/",
-  ownerSiteLink: "https://www.rapidsofttechnologies.com/",
+    baseUrl: "http://192.168.12.54:8080/",
+    // baseUrl: "http://vms.nyggs.com/backend/",
+
+    ownerSiteLink: "https://www.rapidsofttechnologies.com/",
 
   apiEndPoints: {
     //    buildingEndPoint:"com/getByBuildingId",

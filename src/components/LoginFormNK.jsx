@@ -174,6 +174,7 @@ function LoginForm() {
     }
 
     if (name === "password") {
+      value = value.replace(/\s/g, '');
       if (value.length > 16) {
         value = value.slice(0, 16);
       }
@@ -267,12 +268,14 @@ function LoginForm() {
     }
 
     if (name === "newPassword") {
+      value = value.replace(/\s/g, '');
       if (value.length > 16) {
         value = value.slice(0, 16);
       }
     }
 
     if (name === "confirmPassword") {
+      value = value.replace(/\s/g, '');
       if (value.length > 16) {
         value = value.slice(0, 16);
       }
@@ -307,6 +310,19 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(credentials.username.length!== 10) {
+      toast.warn("Username must be exactly 10 digits !!!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return
+    }
 
     let url = Config.baseUrl + Config.apiEndPoints.loginFormNKSubmit
 

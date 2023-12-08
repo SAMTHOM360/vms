@@ -218,6 +218,19 @@ const handleRoleDialogClose = () => {
 
 const handleSubmitAddDept = async(e) => {
   e.preventDefault()
+  if (deptFormData.name.length < 2) {
+    toast.warn('Field is required & length must be atleast 2 !!', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+    return; // Stop execution if any field is missing
+  }
   const payload = {
     name:  deptFormData.name,
     company: {

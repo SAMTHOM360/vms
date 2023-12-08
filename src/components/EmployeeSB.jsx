@@ -207,7 +207,8 @@ const Employee = () => {
 
           role: apiData.role ?  apiData.role.id || "" : "",
           roleName: apiData.role ? apiData.role.name || "" : "",
-          isPermission: apiData.isPermission || "",
+          isPermission: apiData.isPermission || false,
+          empCode: apiData.empCode || "",
         });
 
         setOpenEditDialog(true);
@@ -239,7 +240,10 @@ const Employee = () => {
     setOpenEditDialog(false);
   };
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (e) => {
+    e.preventDefault()
+
+
     // console.log("edited item role", editedItem)
     let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser
     const payload = {
@@ -255,7 +259,29 @@ const Employee = () => {
         id: editedItem.dept.id,
       },
       isPermission: editedItem.isPermission,
+      empCode: editedItem.empCode,
+      
     };
+    // console.log(" edited payload", payload)
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'role', 'dept', ];
+    const missingFields = requiredFields.filter(field => !editedItem[field]);
+
+    // console.log('missing fields', missingFields)
+  
+    if (missingFields.length > 0) {
+      toast.warn('All fields are required!', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      return; // Stop execution if any field is missing
+    }
+    // debugger
     try {
       setBtnLoading(true);
       setLoading(true);
@@ -285,7 +311,7 @@ const Employee = () => {
         const updatedRole = updatedData.role || {};
         const updatedRoleName = updatedRole.name || "";
         const updatedDept = updatedData.departmentDto || {}
-        const updatedIsPermission= updatedData.isPermission || ""
+        const updatedIsPermission= updatedData.isPermission || false
 
         const updatedRows = rows.map((row) => {
           if (row.id === editedItem.id) {
@@ -296,18 +322,28 @@ const Employee = () => {
         });
         setRows(updatedRows);
         setOpenEditDialog(false);
-      } if (response.status === 400) {
-        console.error('got the error')
       }
     } catch (error) {
       if(error.request.status === 400){
 
+        toast.error("Something went wrong !", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
         let errMessage = '';
 
+        // console.log("got error", error.response)
 
-        if (error.response && error.response.data && error.response.data.message) {
-          errMessage = error.response.data.message;
-          
+
+        if (error.response && error.response.data && error.response.data.empCode) {
+          errMessage = error.response.data.empCode;          
           const cleanedMessage = JSON.stringify(errMessage);
           toast.error(JSON.parse(cleanedMessage)+' !!!', {
             position: "top-right",
@@ -323,10 +359,20 @@ const Employee = () => {
  
  
       } else if (error.response.status === 401) {
-        alert(
-          "Error in submitting data:  " +
-            JSON.stringify(error.response.data.message)
-        );
+        // alert(
+        //   "Error in submitting data:  " +
+        //     JSON.stringify(error.response.data.message)
+        // );
+        toast.error("Something went wrong !", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
         toast.error("Something went wrong !", {
           position: "top-right",

@@ -16,6 +16,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Label } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 import Loader from "./Loader";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -65,6 +66,10 @@ const Profile = () => {
   const [formattedCreatedOn, setFormattedCreatedOn] = useState("");
   const [tempImgLink, setTempImgLink] = useState('')
   const [loading, setLoading] = useState(false);
+  const [editBtnLoading, setEditBtnLoading] = useState(false);
+  const [AddressBtnLoading, setAddressBtnLoading] = useState(false);
+  const [UploadImgBtnLoading, setUploadImgBtnLoading] = useState(false);
+  const [UploadFromDeviceBtnLoading, setUploadFromDeviceBtnLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     id: "",
@@ -293,6 +298,7 @@ const Profile = () => {
       role: {
         id: formData.role.id,
       },
+      empCode: formData.empCode,
     })
   };
 
@@ -307,6 +313,7 @@ const Profile = () => {
       role: {
         id: '',
       },
+      empCode:'',
     })
   };
 
@@ -322,6 +329,7 @@ const Profile = () => {
         id: formData.role.id,
       },
       pincode: formData.pincode,
+      empCode:formData.empCode,
     })
   };
 
@@ -337,6 +345,7 @@ const Profile = () => {
         id: '',
       },
       pincode:'',
+      empCode:'',
     })
   };
 
@@ -389,6 +398,7 @@ const Profile = () => {
       const formData = new FormData();
       formData.append("image", file);
       try {
+        setUploadFromDeviceBtnLoading(true)
         // const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
         //   headers: ImgHeaders,
         // });
@@ -416,6 +426,8 @@ const Profile = () => {
           theme: "light",
         });
         console.error("unable to send: ", error);
+      } finally {
+        setUploadFromDeviceBtnLoading(false)
       }
     }
   };
@@ -431,11 +443,13 @@ const Profile = () => {
       role: {
         id: formData.role.id,
       },
+      empCode:formData.empCode,
     };
 
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
 
     try {
+      setUploadImgBtnLoading(true)
       // const response = await axios.post(`${BASE_URL}/adduser`, imgPayload, {
       //   headers: headers,
       // });
@@ -476,6 +490,8 @@ const Profile = () => {
         theme: "light",
       });
       console.error("unable to submit image  ", error);
+    } finally {
+      setUploadImgBtnLoading(false)
     }
   };
 
@@ -484,6 +500,7 @@ const Profile = () => {
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
 
     try {
+      setEditBtnLoading(true)
       // const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
       //   headers: headers,
       // });
@@ -517,6 +534,7 @@ const Profile = () => {
           role: {
             id: '',
           },
+          empCode:'',
         })
         fetchData()
       }
@@ -533,6 +551,8 @@ const Profile = () => {
         theme: "light",
       });
       console.error("unable to submit basic info  ", error);
+    } finally{
+      setEditBtnLoading(false)
     }
   };
 
@@ -542,6 +562,7 @@ const Profile = () => {
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
 
     try {
+      setAddressBtnLoading(true)
       // const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
       //   headers: headers,
       // });
@@ -577,6 +598,7 @@ const Profile = () => {
             id: '',
           },
           pincode:'',
+          empCode:'',
         })
         fetchData()
       }
@@ -593,6 +615,8 @@ const Profile = () => {
         theme: "light",
       });
       console.error("unable to submit address info  ", error);
+    } finally {
+      setAddressBtnLoading(false)
     }
   };
 
@@ -1014,11 +1038,12 @@ const Profile = () => {
                       <Button
                         variant="contained"
                         size="small"
-                        disabled={!isEdit}
+                        disabled={!isEdit ||editBtnLoading}
                         sx={{ height: "3em", fontSize: "10px" }}
                         onClick={handleBasicInfoUpdate}
-                      >
-                        save
+                        // disabled={btnLoading}
+                        >
+                          {editBtnLoading ? <CircularProgress size="2em" /> : "Save"}
                       </Button>
                     </Box>
                   </Grid>
@@ -1229,11 +1254,11 @@ const Profile = () => {
                       <Button
                         variant="contained"
                         size="small"
-                        disabled={!isAddress}
+                        disabled={!isAddress || AddressBtnLoading}
                         sx={{ height: "3em", fontSize: "10px" }}
                         onClick={HandleAddressInfoUpdate}
                       >
-                        save
+                        {AddressBtnLoading ? <CircularProgress size="2em" /> : "Save"}
                       </Button>
                     </Box>
                   </Grid>
@@ -1345,8 +1370,9 @@ const Profile = () => {
               variant="contained"
               component="label"
               onChange={handleFileUpload}
+              disabled={UploadFromDeviceBtnLoading}
             >
-              Upload from Device
+              {UploadFromDeviceBtnLoading ? <CircularProgress size="2em" /> : "Upload from Device"}
               <input
                 type="file"
                 accept="image/*"
@@ -1372,9 +1398,9 @@ const Profile = () => {
               variant="contained"
               onClick={handleSubmitImgUpload}
               color="primary"
-              disabled={!isUpload}
+              disabled={!isUpload || UploadImgBtnLoading }
             >
-              submit
+              {UploadImgBtnLoading ? <CircularProgress size="2em" /> : "SAVE"}
             </Button>
             </Box>
           </DialogActions>

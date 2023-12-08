@@ -354,115 +354,6 @@ function UserForm({ authenticated, closeDialog }) {
       dob: selectedDate,
     });
   };
-  
-
-//   const handleSubmit = async (e) => {
-//     // console.log("I GOT HITTTT  !!!!!!");
-//     e.preventDefault();
-//     if (!formData.dob) {
-//       alert("Date of birth is required");
-//       return;
-//     }
-
-//     const currentDate = new Date();
-// if (!(formData.dob instanceof Date) || formData.dob > currentDate) {
-//   toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
-//     // ... (toast options)
-//   });
-//   console.error('Invalid date of birth selected. Please choose a date up to today.');
-//   return;
-// }
-
-
-//     const user = {
-//       id: null,
-//       firstName: formData.firstName,
-//       image: "alt img",
-//       lastName: formData.lastName,
-//       email: formData.email,
-//       phone: formData.phone,
-//       dob: formData.dob.toISOString().split("T")[0],
-//       gender: formData.gender,
-//       govtId: formData.govtId,
-//       pincode: formData.pincode,
-//       company: {
-//         id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
-//       },
-//       departmentDto: {
-//         id: formData.dept.id,
-//       },
-//       role: {
-//         id: formData.role.id,
-//       },
-//       state: {
-//         id: formData.state.id,
-//       },
-//       city: {
-//         id: formData.city.id,
-//       },
-//       isPermission: formData.isPermission,
-//     };
-
-//     console.log("user", user);
-
-//     try {
-//       setLoading(true);
-//       let response = await axios.post(
-//         "http://192.168.12.54:8080/api/user/adduser",
-//         user,
-//         { headers }
-//       );
-//       if (response.status === 200) {
-//         toast.success("New Employee Added Successfully.", {
-//           position: "top-right",
-//           autoClose: 2000,
-//           hideProgressBar: false,
-//           closeOnClick: true,
-//           pauseOnHover: true,
-//           draggable: true,
-//           progress: undefined,
-//           theme: "light",
-//         });
-
-//         // closeDialog()
-//         handleEmployeeRedirect();
-//         // setAddUserDialogOpen(false)
-//         setGovernmentIdType("");
-//         setDobDate("");
-//         setFormData({
-//           firstName: "",
-//           lastName: "",
-//           email: "",
-//           phone: "",
-//           dob: new Date(),
-//           gender: "",
-//           govtId: "",
-//           pincode: "",
-//           company: { id: "", name: "" },
-//           dept: { id: "", name: "" },
-//           role: { id: "", name: "" },
-//           state: { id: "", name: "" },
-//           city: { id: "", name: "" },
-//         });
-//       }
-//     } catch (error) {
-//       toast.error("Something went wrong !!!", {
-//         position: "top-right",
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//       });
-//       console.error("Error submitting user data", error);
-//     }
-//     setLoading(false);
-//   };
-
-// console.log('formdata', formData)
-
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -504,6 +395,35 @@ const dobISOString = dob.toISOString().split("T")[0];
 
 if (formData.empCode.length < 4) {
   toast.warn("Employee Code must be at least 4 characters !!!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  return;
+}
+
+
+if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
+  toast.warn("Aadhar Card must be 12 digits only.", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  return;
+} 
+
+if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
+  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
     position: "top-right",
     autoClose: 2000,
     hideProgressBar: false,

@@ -205,8 +205,12 @@ function App() {
 <Suspense fallback={<Loader />}>
 <Routes>
 <Route path="/" element={<LoginForm />} />
+
+{/* <Route path= '*' element={<NotFound />} /> */}
+
 <Route path="*" element={<Navigate to="/lost" />} />
               <Route path="/lost" element={<NotFound />} />
+
 <Route path="/dynamicidcard/:id" element={<DynamicIdCard />} />
 
 {/* <Route path="/empdashboard" element={<EmpDashboard />} /> */}
@@ -263,6 +267,7 @@ function App() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
+          limit={4}
           theme="light"
         />
       </Box>
