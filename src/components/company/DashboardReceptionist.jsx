@@ -96,6 +96,13 @@ export default function Dashboard() {
 
 
 
+    //dashboard redirection
+
+    const [fromDate,setFromDate] = useState('')
+    const [endDate,setEndDate] = useState('')
+
+
+
 
     function fetchData() {
 

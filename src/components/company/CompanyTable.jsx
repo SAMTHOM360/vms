@@ -21,6 +21,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Header from '../Header';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useAuth } from '../../routes/AuthContext';
 import Config from '../../Config/Config';
 
@@ -47,52 +49,203 @@ const CompanyTable = () => {
   useEffect(() => {
     setActiveListItem('/companyDetails')
   }, [setActiveListItem])
+
+
+//pagination
   const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [length,setLength] = useState(0);
+
+
+  function calculateSerialNumber(page, rowsPerPage, index) {
+    return page * rowsPerPage + index + 1;
+
+}
+
+
+const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+  // fetchAllData();
+};
+
+const handleChangeRowsPerPage = (event) => {
+  setRowsPerPage(+event.target.value);
+  // setPage(0);
+};
+
+
   const [companies, setCompanies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    fetchData(searchQuery, newPage); 
-  };
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  //   fetchData(searchQuery, newPage);
+  // };
+
+
+
+
+
+  const [buildingIds, setBuildingIds] = useState([])
+  const [selectedBuildingIds, setSelectedBuildingIds] = useState('')
+
+
+  // const [companyNames, setCompanyNames] = useState([])
+  const [selectedCompanyNames, setSelectedCompanyNames] = useState('')
+
 
   useEffect(() => {
+    
+
+    fetchAllData()
+
+  }, [page,rowsPerPage, selectedCompanyNames,selectedBuildingIds]);
+
+
+useEffect(() => {
+  fetchBuildingIds()
+
+
+
+},[])
+
+//   useEffect(() => {
+
+
+//     if (page === 0) {
+
+//         fetchAllData();
+
+//     } else {
+//         setPage(0);
+//     }
+
+
+// }, [selectedCompanyNames,selectedBuildingIds])
+
+
+
+  function fetchAllData() {
     const apiUrl = Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint;
-    console.log(apiUrl,"apiURl")
+    const payload = {
+
+      "page": page,
+      "size": rowsPerPage,
+      "companyName": selectedCompanyNames,
+      "buildingId": selectedBuildingIds
+
+    }
+    console.log(apiUrl, "apiURl")
     // const apiUrl = 'http://192.168.12.54:8080/com/all';
     axios
-      .get(apiUrl, {
+      .post(apiUrl, payload, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
-      .then(response => {
-        const responseData = response.data.data;
+      .then((response) => {
+        debugger
+
+        const responseData = response.data.data.companies;
+        setLength(response.data.data.totalElements);
+
+
         setCompanies(responseData);
+
+        // const extractedBuildingIds = responseData.map(company => ({
+        //   label: company.building.buildingId,
+        //   value: company.building.buildingId,
+        // }));
+
+        // setBuildingIds(extractedBuildingIds)
+
+        // const extractedCompanyNames = responseData.map(company => ({
+        //   label: company.name,
+        //   value: company.name,
+        // }));
+
+        // setCompanyNames(extractedCompanyNames)
+
+
+
+
+
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, []);
 
-  const fetchData = (searchTerm, pageNumber) => {
-    // const apiUrl = `http://192.168.12.54:8080/com/all?search=${searchTerm}&page=${pageNumber}`;
+  }
 
-    const apiUrl = Config.baseUrl +Config.apiEndPoints.fetchCompanyEndPoint + "?search=" + searchTerm +"&page=" + pageNumber
+  // const fetchData = (searchTerm, pageNumber) => {
+  //   // const apiUrl = `http://192.168.12.54:8080/com/all?search=${searchTerm}&page=${pageNumber}`;
+
+  //   const apiUrl = Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint + "?search=" + searchTerm + "&page=" + pageNumber
+  //   axios
+  //     .get(apiUrl, {
+  //       headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+  //     })
+  //     .then(response => {
+  //       const responseData = response.data.data.companies;
+  //       console.log(responseData, "now")
+  //       setCompanies(responseData);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // };
+
+
+  //filters
+
+
+
+
+  function handleBuildingIdChange(event, value) {
+
+
+    if (value !== null) {
+
+      console.log(value.id, "value")
+      setSelectedBuildingIds(value.id);
+
+    } else {
+      setSelectedBuildingIds('');
+    }
+
+
+  }
+
+
+  function fetchBuildingIds() {
+
+    const buildingUrl = Config.baseUrl + Config.apiEndPoints.getBuildingEndPoint
     axios
-      .get(apiUrl, {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-      })
+      .get(buildingUrl)
       .then(response => {
-        const responseData = response.data.data;
-        setCompanies(responseData);
+
+
+        setBuildingIds(response.data.data)
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+        console.log(error)
+      })
+
+  }
+
+  const handleCompanyNameChange = (event) => {
+    if (event.key === 'Enter') {
+   fetchAllData(selectedCompanyNames)
+    }
   };
+  
 
 
+  // useEffect(() => {
+
+  //   // setPage(0)
+  //   fetchAllData()
 
 
+  // }, [selectedBuildingIds])
 
 
 
@@ -117,7 +270,7 @@ const CompanyTable = () => {
     axios
       // .post(`http://192.168.12.54:8080/com/active`
       .post(activeDeactiveUrl
-      , payload, {
+        , payload, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then(response => {
@@ -132,81 +285,47 @@ const CompanyTable = () => {
       });
   };
 
-  const handleSearch = event => {
-    setPage(0)
-    setSearchQuery(event.target.value); 
-    // Update search query state
-    fetchData(event.target.value, 0); //
-  };
+  // const handleSearch = event => {
+  //   setPage(0)
+  //   setSearchQuery(event.target.value);
+  //   // Update search query state
+  //   fetchData(event.target.value, 0); //
+  // };
+
+
+
+
 
   // const filteredCompanies = companies.filter(company => {
-
   //   const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
 
-  //   const cleanPhoneNumber = (company.phoneNumber || '').replace(/\D/g, ''); // Remove non-digit characters
-  //   const formattedPhoneNumber = cleanPhoneNumber.toLowerCase(); // Convert to lowercase for comparison
-  
-  //   const formattedEmail = (company.email || '').trim().toLowerCase(); 
+  //   const dataString = `
+  //     ID: ${company.id}
+  //     Company Name: ${company.name}
+  //     Email: ${company.email}
+  //     Phone No.: ${company.phoneNumber}
+  //     Address: ${company.address}
+  //     Logo: ${company.logo}
+  //     Industry: ${company.industry}
+  //     State: ${company.state?.name}
+  //     City: ${company.city?.name}
+  //     Pin Code: ${company.pincode}
+  //     About Us: ${company.aboutUs}
+  //     Building Id: ${company.building?.buildingId}
+  //     Building Name: ${company.building?.name}
+  //     User Limit: ${company.userLimit}
+  //   `;
 
-  //   const cleanPincode = (company.pincode || '').toLowerCase().trim(); // Trim and convert pincode to lowercase
-  //   const cleanBuildingId = (company.buildingId || '').toLowerCase().trim(); //
+  //   const cleanData = dataString.toLowerCase(); // Convert data string to lowercase
 
-
-  //   // const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
-  //   return (
-  //     (company.name?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (formattedEmail.includes(searchTerm) || '') ||
-  //   (formattedPhoneNumber.includes(searchTerm) || '') ||
-  //   (company.address?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (company.industry?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (company.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (company.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-  //    (cleanPincode.includes(searchTerm) || '') || 
-  //   (company.aboutUs?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (company.createdBy?.toLowerCase()?.includes(searchTerm) || '') ||
-  //   (company.buildingId?.toLowerCase()?.includes(searchTerm) || '')
-  //   );
+  //   return cleanData.includes(searchTerm);
   // });
 
 
 
-  const filteredCompanies = companies.filter(company => {
-    const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
-  
-    const dataString = `
-      ID: ${company.id}
-      Company Name: ${company.name}
-      Email: ${company.email}
-      Phone No.: ${company.phoneNumber}
-      Address: ${company.address}
-      Logo: ${company.logo}
-      Industry: ${company.industry}
-      State: ${company.state?.name}
-      City: ${company.city?.name}
-      Pin Code: ${company.pincode}
-      About Us: ${company.aboutUs}
-      Building Id: ${company.building?.buildingId}
-      Building Name: ${company.building?.name}
-      User Limit: ${company.userLimit}
-    `;
-  
-    const cleanData = dataString.toLowerCase(); // Convert data string to lowercase
-  
-    return cleanData.includes(searchTerm);
-  });
-  
 
 
-
-
-
-
-
-
-
-
-
-
+ 
 
 
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -214,6 +333,8 @@ const CompanyTable = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+
+  console.log(page,"companies")
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3, backgroundColor: "" }}>
@@ -254,16 +375,39 @@ const CompanyTable = () => {
                   <Grid item xs={12}>
                     <Item elevation={3} style={{ height: '', margin: '10px' }}>
 
-                      <div style={{ display: "flex", justifyContent: "right" }}>
-                        {/* <Link to="/companyreg">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ marginTop: "10px", marginBottom: "10px", marginLeft: "10px" }}
-                  >      Add Company
-                  </Button>
-                </Link> */}
-                        <input
+                      <div style={{ display: "flex", justifyContent: "", backgroundColor: "" }}>
+
+
+                        <div style={{ display: "flex", justifyContent: "left" }}>
+                          <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={buildingIds}
+
+                            getOptionLabel={(option) => option.buildingId}
+                            onChange={handleBuildingIdChange}
+                            sx={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Movie" />}
+                          />
+
+
+
+                          <TextField id="outlined-basic" label="Outlined" variant="outlined"
+
+                          value={selectedCompanyNames}
+                          // onChange={ (e)handleCompanyNameChange}
+                          
+                          onChange={(e) => setSelectedCompanyNames(e.target.value)}
+                          onKeyPress={handleCompanyNameChange} 
+
+                                          
+                        />
+
+
+
+
+                        </div>
+                        {/* <input
                           type="text"
                           placeholder="Search..."
                           value={searchQuery}
@@ -277,9 +421,12 @@ const CompanyTable = () => {
                             marginRight: "10px",
                             borderRadius: "10px"
                           }}
-                        />
+                        /> */}
+
 
                       </div>
+
+
                       <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
                         <Table aria-label="simple table">
                           <TableHead style={{ backgroundColor: '#2b345386' }}>
@@ -289,7 +436,7 @@ const CompanyTable = () => {
                               <TableCell align="left"><h4>Email</h4></TableCell>
                               <TableCell align="left"><h4>Phone No.</h4></TableCell>
                               <TableCell align="left"><h4>Address</h4></TableCell>
-                              <TableCell align="left" sx={{width:"10 em"}}><h4>Logo</h4></TableCell>
+                              <TableCell align="left" sx={{ width: "10 em" }}><h4>Logo</h4></TableCell>
                               <TableCell align="left"><h4>Industry</h4></TableCell>
                               <TableCell align="left"><h4>State</h4></TableCell>
                               <TableCell align="left"><h4>City</h4></TableCell>
@@ -303,24 +450,25 @@ const CompanyTable = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {filteredCompanies
-                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            {companies && companies.length > 0 && companies
+                              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((company, index) => (
                                 <TableRow key={company.id}>
                                   <TableCell>{calculateSerialNumber(index)}</TableCell>
+                                 
                                   <TableCell align="left">{company.name}</TableCell>
                                   <TableCell align="left">{company.email}</TableCell>
                                   <TableCell align="left">{company.phoneNumber}</TableCell>
                                   <TableCell align="left">{company.address}</TableCell>
                                   <TableCell align="left">
                                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <a href={company.logo} target="_blank" rel="noopener noreferrer">
-      <img
-        src={company.logo}
-        alt="Company Logo"
-        style={{ width: '40px', height: '40px', marginLeft: '10px', cursor: 'pointer' }}
-      />
-    </a>
+                                      <a href={company.logo} target="_blank" rel="noopener noreferrer">
+                                        <img
+                                          src={company.logo}
+                                          alt="Company Logo"
+                                          style={{ width: '40px', height: '40px', marginLeft: '10px', cursor: 'pointer' }}
+                                        />
+                                      </a>
                                     </div>
                                   </TableCell>
                                   <TableCell align="left">{company.industry}</TableCell>
@@ -331,7 +479,7 @@ const CompanyTable = () => {
                                   {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
                                   {/* <TableCell align="left">{company.createdBy}</TableCell> */}
 
-                                
+
                                   <TableCell align="left">{company.building.buildingId}</TableCell>
                                   <TableCell align="left">{company.building.name}</TableCell>
 
@@ -344,7 +492,7 @@ const CompanyTable = () => {
 
                                       <Switch
                                         {...label}
-                                        defaultChecked={company.active}
+                                        defaultChecked={company.isActive}
                                         onChange={() => {
                                           const newActiveStatus = !company.active;
                                           handleSwitchToggle(company.id, newActiveStatus);
@@ -366,12 +514,14 @@ const CompanyTable = () => {
                           </TableBody>
                         </Table>
                         <TablePagination
-                          rowsPerPageOptions={[]}
+                          rowsPerPageOptions={[5,10,15]}
                           component="div"
-                          count={filteredCompanies.length}
+                          // count={companies.length}
+                          count={length}
                           rowsPerPage={rowsPerPage}
                           page={page}
                           onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                       </TableContainer>
                     </Item>

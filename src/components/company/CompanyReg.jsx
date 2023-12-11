@@ -1,3 +1,5 @@
+
+
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -470,7 +472,11 @@ export default function CompanyReg() {
 
 
 
-                                        <TextField sx={{ width: "47%" }} label="Company Name" placeholder="Company Name " type="text" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
+                                        <TextField sx={{ width: "47%" }} label="Company Name" required placeholder="Company Name " type="text"      
+                                        
+                                        
+                                        
+                                        value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
                                             error={Boolean(errors.name)}
                                             helperText={errors.name}
 
@@ -497,7 +503,7 @@ export default function CompanyReg() {
 
                                                     )}
                                                     <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                                                        <input type="file" id="file-input" onChange={handleLogoChange} />
+                                                        <input type="file"  accept="image/jpeg, image/jpg, image/png" id="file-input" required onChange={handleLogoChange} />
                                                         Upload Company Logo
                                                     </span>
 
@@ -522,7 +528,7 @@ export default function CompanyReg() {
                                     </div>
 
 
-                                    <TextField placeholder="Company Address" type="text" label="Company Address" value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
+                                    <TextField placeholder="Company Address" type="text" label="Company Address" required value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
                                         helperText={errors.address}></TextField>
                                     <div
                                         className="input"
@@ -566,7 +572,7 @@ export default function CompanyReg() {
                                         <Box sx={{ minWidth: 120 }}>
                                             <FormControl fullWidth>
                                                 {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
-                                                <Autocomplete
+                                                <Autocomplete required
                                                     sx={{ width: '350px' }}
                                                     options={states}
                                                     getOptionLabel={(option) => option.name}
@@ -592,7 +598,7 @@ export default function CompanyReg() {
                                                     }}
                                                     renderInput={(params) => (
                                                         <TextField
-                                                            {...params}
+                                                            {...params} required
                                                             label="Select State"
                                                             error={Boolean(errors.state)}
                                                             helperText={errors.state}
@@ -609,6 +615,7 @@ export default function CompanyReg() {
                                             <FormControl fullWidth>
                                                 {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
                                                 <Autocomplete
+                                                required
 
                                                     sx={{ width: '350px' }}
                                                     options={cities}
@@ -620,7 +627,7 @@ export default function CompanyReg() {
                                                     }}
                                                     renderInput={(params) => (
                                                         <TextField
-                                                            {...params}
+                                                            {...params} required
                                                             label="Select City"
                                                             error={Boolean(errors.city)}
                                                             helperText={errors.city}
@@ -668,7 +675,7 @@ export default function CompanyReg() {
                                             </FormControl>
                                         </Box> */}
                                     </div>
-                                    <TextField label="Pincode" placeholder="Pincode" value={values.pincode} onChange={(e) => {
+                                    <TextField label="Pincode" required placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
                                         if (e.target.value.length <= 6) {
                                             setValues({ ...values, pincode: e.target.value });
@@ -678,7 +685,7 @@ export default function CompanyReg() {
                                         helperText={errors.pincode}></TextField>
 
                                     <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <TextField sx={{ width: "47%" }} label="Email" placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
+                                        <TextField sx={{ width: "47%" }} label="Email" required placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
                                             helperText={errors.email} >
                                         </TextField>
                                         {/* <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
@@ -691,7 +698,7 @@ export default function CompanyReg() {
                                             helperText={errors.phoneNumber}></TextField> */}
 
 
-                                        <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " inputProps={{ maxLength: 10 }} value={values.phoneNumber}
+                                        <TextField sx={{ width: "47%" }} label="Phone Number" required placeholder=" Phone Number " inputProps={{ maxLength: 10 }} value={values.phoneNumber}
 
                                             onChange={(e) => {
                                                 const input = e.target.value;
@@ -721,7 +728,8 @@ export default function CompanyReg() {
                                             helperText={errors.buildingId}></TextField> */}
 
 
-                                        <Autocomplete sx={{ width: "47%" }}
+                                        <Autocomplete required
+                                        sx={{ width: "47%" }}
                                             options={buildingOptions}
                                             getOptionLabel={(option) => option !== null ? `Id-${option.id}   ${option.name}` : ""} // Assuming 'name' is the property containing the building name
                                             onChange={handleBuildingChange}
@@ -734,7 +742,7 @@ export default function CompanyReg() {
                                             // )}
                                             renderInput={(params) => (
                                                 <TextField
-                                                    {...params}
+                                                    {...params} required
                                                     label="Select Building"
                                                     variant="outlined"
                                                 />
@@ -755,7 +763,7 @@ export default function CompanyReg() {
 
 
 
-                                            <TextField sx={{ width: "100%", margingRight: "20px" }} label="User Limit" placeholder="User Limit" type="" value={values.userLimit}
+                                            <TextField sx={{ width: "100%", margingRight: "20px" }} label="User Limit" required placeholder="User Limit" type="" value={values.userLimit}
                                                 onChange={(e) => {
 
                                                     const enteredValue = e.target.value;
@@ -785,11 +793,11 @@ export default function CompanyReg() {
 
                                     </div>
 
-                                    <TextField label="Industry" placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
+                                    <TextField label="Industry" required placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
                                         helperText={errors.industry}></TextField>
 
 
-                                    <TextField label="About" placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
+                                    <TextField label="About" required placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
                                         helperText={errors.aboutUs}></TextField>
 
                                     <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>
@@ -817,6 +825,19 @@ export default function CompanyReg() {
 
     )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

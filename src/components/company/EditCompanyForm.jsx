@@ -40,7 +40,7 @@ export default function EditCompanyForm() {
     industry: "",
     aboutUs: "",
     userLimit: "",
-    buildingId: "",
+    buildingId: {id:null, name:""},
   });
   console.log(companyData, "companydata");
 
@@ -84,14 +84,14 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
-          buildingId: company.building.buildingId,
+          buildingId:company.building,
         });
         // console.log(company.city.id,"city");
 
         setSelectedState(company.state.id); // Set the initial selected state
         setSelectedCity(company.city.id);
         fetchCity(company.state.id);
-        setSelectedBuildingId(company.building.buildingId);
+        setSelectedBuildingId(company.building);
         console.log(company.building.buildingId, "buildingId")
       })
       .catch((error) => {
@@ -218,7 +218,7 @@ editCompanyUrl
 
       toast.success("Company data updated successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -280,7 +280,7 @@ editCompanyUrl
 
 
   console.log(buildingOptions, "hhh")
-  console.log(selectedBuildingId, "mickey")
+ 
 
   // const handleBuildingChange = (event) => {
   //     const selectedBuildingId= event.target.value;
@@ -292,14 +292,22 @@ editCompanyUrl
 
   // };
   const handleBuildingChange = (event, newValue) => {
+    console.log(newValue,"newval")
 
     if (newValue) {
       setSelectedBuildingId(newValue.id);
-      setCompanyData({ ...companyData, buildingId: newValue.id });
+      setCompanyData({ ...companyData, buildingId: {id: newValue.id, name: newValue.name} });
     } else {
       setSelectedBuildingId(null);
-      setCompanyData({ ...companyData, buildingId: "" });
+      setCompanyData({ ...companyData, buildingId: {id: null, name: ""} });
     }
+
+    // setCompanyData({
+    //   ...companyData,
+    //   building: newValue
+    // });
+
+
   };
 
 
@@ -348,7 +356,7 @@ editCompanyUrl
                 >
                   <TextField
                     sx={{ width: "47%" }}
-                    label="Company Name"
+                    label="Company Name" required
                     placeholder="Company Name "
                     type="text"
                     name="name"
@@ -356,7 +364,7 @@ editCompanyUrl
                     onChange={(e) =>
                       setCompanyData({ ...companyData, name: e.target.value })
                     }
-                    disabled={disabled}
+                    // disabled={disabled}
 
                   ></TextField>
 
@@ -478,7 +486,7 @@ editCompanyUrl
                       color: "white",
                     }}
 
-                    label="Email"
+                    label="Email" required
                     placeholder=" Email"
                     type="email"
                     name="email"
@@ -489,11 +497,12 @@ editCompanyUrl
                     onChange={(e) =>
                       setCompanyData({ ...companyData, email: e.target.value })
                     }
-                    disabled={disabled}
+                    // disabled={disabled}
                   ></TextField>
                   <TextField
                     sx={{ width: "47%" }}
                     label="Phone Number"
+                    required
                     placeholder=" Phone Number "
                     type="number"
                     name="phoneNumber"
@@ -501,7 +510,7 @@ editCompanyUrl
                     onChange={(e) =>
                       setCompanyData({ ...companyData, phoneNumber: e.target.value })
                     }
-                    disabled={disabled}
+                    // disabled={disabled}
                   ></TextField>
                 </div>
 
@@ -527,7 +536,7 @@ editCompanyUrl
                   }}
                 >
 
-                  <TextField
+                  {/* <TextField
                     sx={{ width: "47%" }}
                     label="Building Id"
                     placeholder="Building Id"
@@ -536,18 +545,18 @@ editCompanyUrl
                     onChange={(e) =>
                       setCompanyData({ ...companyData, buildingId: e.target.value })
                     }
-                    disabled={disabled}
-                  ></TextField>
+                    // disabled={disabled}
+                  ></TextField> */}
 
 
-                  {/* <Autocomplete sx={{ width: "47%" }}
+                  <Autocomplete sx={{ width: "47%" }}
                     options={buildingOptions}
                     getOptionLabel={(option) => option !== null ? option.name : ""}
-                    value={null}
+                    value={companyData.buildingId}
                     // onChange={(e, newVal)=> {}}
-                    inputValue={""}
+                    // inputValue={""}
                     // onInputChange={(e, newVal)=>{}}
-                    onChange={handleBuildingChange}
+                    onChange={(e, newVal) => handleBuildingChange(e,newVal)}
 
                     renderInput={(params) => (
                       <TextField
@@ -556,9 +565,7 @@ editCompanyUrl
                         variant="outlined"
                       />
                     )}
-                  /> */}
-
-
+                  />
 
                   <TextField
                     sx={{ width: "47%" }}

@@ -81,9 +81,10 @@ const Config = Object.freeze({
     roomDetailsEndPointdashboard: "api/room/getroomfordashboard/",
     // companyTable.jsx
 
-    fetchCompanyEndPoint: "com/all",
+    fetchCompanyEndPoint: "com/paginated",
     activeDeactiveEndPoint:"com/active",
     editEndPoint:"com/update/",
+    
     
 
     // companyReg.jsx

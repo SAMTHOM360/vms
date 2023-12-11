@@ -527,21 +527,7 @@ export default function ReceptionistAddRoom() {
                                                                                     onClick={() => handleSwitch(row)}
 
 
-                                                                                // onClick={handleSwitch}
-                                                                                // defaultChecked={company.active}
-                                                                                // onChange={() => {
-                                                                                //     const newActiveStatus = !company.active;
-                                                                                //     handleSwitchToggle(company.id, newActiveStatus);
-
-                                                                                //     // Update the local state with the new active status
-                                                                                //     const updatedCompanies = companies.map(c => {
-                                                                                //         if (c.id === company.id) {
-                                                                                //             return { ...c, active: newActiveStatus };
-                                                                                //         }
-                                                                                //         return c;
-                                                                                //     });
-                                                                                //     setCompanies(updatedCompanies);
-                                                                                // }}
+                                                                           
                                                                                 />
 
 
