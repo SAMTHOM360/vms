@@ -86,7 +86,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function Sidenav({ open: propOpen, onClose }) {
-  const { userRole, activeListItem, isSideBarPinned, setIsSideBarPinned, isHoverOpen, setIsHoverOpen } =
+  const { userRole, activeListItem, isSideBarPinned, setIsSideBarPinned, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable } =
     useAuth();
 
   const [isSideBarSettings, setIsSideBarSettings] = useState(false)
@@ -104,6 +104,10 @@ export default function Sidenav({ open: propOpen, onClose }) {
     // setActiveListItem(route);
     // sessionStorage.setItem('activeListItem', route)
   };
+
+  useEffect(() => {
+    setIsOpenForGridTable(open)
+  }, [open])
 
   useEffect(() => {
     setOpen(!propOpen);

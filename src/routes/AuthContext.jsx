@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
   const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'true' || true)
   const [isHoverOpen, setIsHoverOpen] = useState(sessionStorage.getItem('isHoverOpen') === 'true' || true)
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
+  // const [ isntComSelection, setIsntComSelection ] = useState(true)
+  const [ isOpenforGridTable, setIsOpenForGridTable] = useState()
 
   // console.log("Parent call", autoStatusChange)
 
@@ -101,11 +103,12 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('adminId')
     sessionStorage.removeItem('companyId')
     sessionStorage.removeItem('buildingId')
+    sessionStorage.removeItem('selectedCompanyId')
 
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable,setIsOpenForGridTable }}>
       {children}
     </AuthContext.Provider>
   );

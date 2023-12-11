@@ -360,6 +360,7 @@ function LoginForm() {
         sessionStorage.setItem("loggedUserRole", loggedUserRole);
         sessionStorage.setItem("loggedUserUsername", loggedUserUsername);
         sessionStorage.setItem("companyId", companyId);
+        sessionStorage.setItem("selectedCompanyId",companyId)
         sessionStorage.setItem("companyName", companyName);
         sessionStorage.setItem("limit", limit);
         sessionStorage.setItem('isSideBarPinned', true)

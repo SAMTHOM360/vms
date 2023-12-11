@@ -132,6 +132,8 @@ const MeetingDetails = () => {
           const response = await axios.get(
             `${url}?phoneNumber=${phone}`
           );
+
+          console.log('phone response', response.data.data)
   
           if (response.status === 200 && response.data.data) {
             const newStateId = response.data.data.state.id;
@@ -147,6 +149,7 @@ const MeetingDetails = () => {
                 name: response.data.data.city.name || "",
               },
               stateId: newStateId,
+              email: response.data.data.email ?  response.data.data.email || '' : ''
             });
             setLoading(false)
           }

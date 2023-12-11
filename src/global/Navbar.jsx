@@ -91,6 +91,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar({ toggleSidebar }) {
+  let companyIdStr = sessionStorage.getItem("companyId");
+  let companyId = parseInt(companyIdStr, 10);
   // const BASE_URL = 'http://192.168.12.58:8080/api/user';
   const BASE_URL = "http://192.168.12.54:8080/api";
 
@@ -121,7 +123,7 @@ export default function Navbar({ toggleSidebar }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged } = useAuth();
+  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged, activeListItem } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
   const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false)
@@ -131,6 +133,8 @@ export default function Navbar({ toggleSidebar }) {
   const [bellMenuItem, setBellMenuItem] = useState([]);
   const [isBellVisible, setIsBellVisible] = useState(false);
   const [bellBadgeCount, setBellBadgeCount] = useState();
+  const [ isHamburgerAllowed, setIsHamburgerAloowed] = useState(true)
+  
 
   useEffect(() => {
     if (loggedUserRole === "SUPERADMIN") {
@@ -144,7 +148,23 @@ export default function Navbar({ toggleSidebar }) {
     } else {
       setIsRECEPTIONIST(false)
     }
+    // if (activeListItem === "/receptionistcompanyscreen") {
+    //   setIsHamburgerAloowed(false)
+    // } else {
+    //   setIsHamburgerAloowed(true)
+    // }
   }, [loggedUserRole]);
+
+  useEffect(() => {
+      if (activeListItem === "/receptionistcompanyscreen") {
+    setIsHamburgerAloowed(false)
+  } else {
+    setIsHamburgerAloowed(true)
+  }
+  },[activeListItem])
+
+
+  // console.log('isHamburgerAllowed', isHamburgerAllowed)
 
   useEffect(() => {
     fetchData();
@@ -153,6 +173,11 @@ export default function Navbar({ toggleSidebar }) {
   useEffect(() => {
     fetchNotification();
   }, [isRECEPTIONIST])
+
+  useEffect(() => {
+    fetchNotification();
+    // console.log('isHamburgerAllowed', isHamburgerAllowed)
+  }, [isHamburgerAllowed])
 
   
   const companyName = sessionStorage.getItem("companyName");
@@ -251,6 +276,8 @@ export default function Navbar({ toggleSidebar }) {
   };
 
   async function fetchNotification() {
+    let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
+    let companyId2 = parseInt(companyIdStr2, 10);
     // console.log('fetchNotification is getting called by interval')
     let url = Config.baseUrl + Config.apiEndPoints.navbarPendingRequest
     try {
@@ -260,18 +287,20 @@ export default function Navbar({ toggleSidebar }) {
       // );
 
       const response = await axiosInstance.get(
-        `${url}`,
+        `${url}?companyId=${companyId2}`,
         { headers }
       );
 
-      // console.log("notfication api data", response.data.data);
       const bellAPiData = response.data.data;
 
       let bellmenuItemm
 
-      // console.log("bell api data", bellAPiData);
+      // debugger
+
+      // console.log("bell api data", bellAPiData.length);
       if (!bellAPiData || bellAPiData.length === 0) {
         // return null;
+        let unseenCount = bellAPiData.filter((item) => !item.seen).length;        
           bellmenuItemm = (
             <>
             <List 
@@ -294,11 +323,16 @@ export default function Navbar({ toggleSidebar }) {
           </>
           )
 
+          if (unseenCount === 0) {
+            setIsBellVisible(false);
+          }
+          setBellBadgeCount(unseenCount);
           setBellMenuItem(bellmenuItemm);
         
       } else {
 
-      const unseenCount = bellAPiData.filter((item) => !item.seen).length;
+      let unseenCount = bellAPiData.filter((item) => !item.seen).length;
+
 
        bellmenuItemm = (
         <List
@@ -423,6 +457,8 @@ export default function Navbar({ toggleSidebar }) {
   },[bellItemChanged])
 
   const handleMarkRead = async () => {
+    let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
+    let companyId2 = parseInt(companyIdStr2, 10);
     // e.preventDefault();
     let url = Config.baseUrl + Config.apiEndPoints.navbarMarkSeen
     try {
@@ -432,7 +468,7 @@ export default function Navbar({ toggleSidebar }) {
       // );
 
       const response = await axiosInstance.post(
-        `${url}`,
+        `${url}?companyId=${companyId2}`,
         { headers }
       );
       // console.log("MARK READ RESPONSE", response);
@@ -545,6 +581,11 @@ export default function Navbar({ toggleSidebar }) {
 
   const handleChangePasswordDialogClose = () => {
     setOpenChangePasswordDialog(false);
+    setChangedItem({
+      oldpassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    })
   };
 
   const handleProfileOpen = () => {
@@ -935,8 +976,9 @@ export default function Navbar({ toggleSidebar }) {
             alignItems:'center',
           }}>
 
-       
-          <IconButton
+            {isHamburgerAllowed 
+            ?
+            <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -946,6 +988,23 @@ export default function Navbar({ toggleSidebar }) {
           >
             <MenuIcon />
           </IconButton>
+
+          :
+
+          null
+          }
+
+       
+          {/* <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2, color: "#ffffff" }}
+            onClick={toggleSidebar}
+          >
+            <MenuIcon />
+          </IconButton> */}
 
           <Typography
             variant="h6"

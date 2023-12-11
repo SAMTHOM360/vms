@@ -101,6 +101,7 @@ const Profile = () => {
     pincode: "",
     empCode: "",
     createdOn: "",
+    buildingId:"",
   });
   const [editedBasicInfo, setEditedBasicInfo] = useState()
   const [editedAddressInfo, setEditedAddressInfo] = useState()
@@ -133,6 +134,7 @@ const Profile = () => {
       const response = await axios.get(`${url}/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
+        console.log(' profile data', apiData )
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         setFormattedCreatedOn(formatCreatedOn);
@@ -166,6 +168,7 @@ const Profile = () => {
           pincode: apiData.pincode || "",
           empCode: apiData.empCode || "",
           createdOn: apiData.createdOn || "",
+          buildingId:apiData.departmentDto ? apiData.departmentDto.company.building ? apiData.departmentDto.company.building.buildingId || '' : '' : '',
         });
 
         if (apiData.govtId.length === 12) {
@@ -1339,6 +1342,19 @@ const Profile = () => {
                       name="dept"
                       disabled
                       value={formData.departmentDto.name}
+                      InputLabelProps={{ shrink: true }} 
+                      // onChange={handleChange}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={12} md={6} lg={6}>
+                    <TextField
+                      size="small"
+                      sx={{ width: "100%", mt: "10px" }}
+                      label="Building Id"
+                      name="buildingId"
+                      disabled
+                      value={formData.buildingId}
                       InputLabelProps={{ shrink: true }} 
                       // onChange={handleChange}
                     />

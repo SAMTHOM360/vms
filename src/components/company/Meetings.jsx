@@ -73,6 +73,9 @@ export default function Meetings() {
   const {setActiveListItem} = useAuth()
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [phoneCleared, setPhoneCleared] = useState(false);
+  const [ startDateCleared, setStartDateCleared ] = useState(false)
+  const [ endDateCleared, setEndDateCleared ] = useState(false)
 
   // sessionStorage.setItem('activeListItem', '/meetings')
   useEffect(() => {
@@ -1032,10 +1035,22 @@ useEffect(() => {
                                 <TextField
                                   // id="outlined-select-currency"
                                   select
-                                  label="Search by Status"
+                                  label="Status"
                                   value={selectedStatusOptions}
                                   onChange={handleChangeStatus}
                                   style={{ top: "10px", width:'17em' }}
+                                  
+                                  InputProps={{
+                                    endAdornment: selectedStatusOptions ? (
+                                      <div style={{ marginRight: '-7px', marginTop: '4px', background:'' }}>
+                                      <ClearIcon
+                                        style={{ cursor: 'pointer', }}
+                                        onClick={() => setSelectedStatusOptions('')}
+                                      />
+                                    </div>
+                                    ) : null,
+                                  }}
+                       
                                 >
                                   {/* <MenuItem value="">
                                     <em>Cancel</em>
@@ -1051,10 +1066,16 @@ useEffect(() => {
 
                                 <TextField
                                   id="outlined-search"
-                                  label="Search By Phone Number"
+                                  label="Phone Number"
                                   value={phoneNumberFilter}
 
                                   inputProps={{ maxLength: 10 }} 
+                                  slotProps={{
+                                    field: {
+                                      clearable: true,
+                                      onClear: () => setPhoneCleared(true),
+                                    },
+                                  }}
 
 
                                   onChange={(e) => {
@@ -1073,7 +1094,7 @@ useEffect(() => {
                                 <TextField
                                   id="outlined-select-currency"
                                   select
-                                  label="Search by Room"
+                                  label="Room"
                                   value={selectedRoom}
                                   onChange={handleChange1}
                                   sx={{    width:'17em'}}
@@ -1086,6 +1107,16 @@ useEffect(() => {
                                     },
                                   }}
                                   style={{ top: "10px" }}
+                                  InputProps={{
+                                    endAdornment: selectedRoom ? (
+                                      <div style={{ marginRight: '-7px', marginTop: '4px', background:'' }}>
+                                      <ClearIcon
+                                        style={{ cursor: 'pointer', }}
+                                        onClick={() => setSelectedRoom('')}
+                                      />
+                                    </div>
+                                    ) : null,
+                                  }}
                                 >
                                   {/* <MenuItem value="">
                                     <em>Cancel</em>
@@ -1129,18 +1160,32 @@ useEffect(() => {
 <LocalizationProvider dateAdapter={AdapterDayjs}>
   <DemoContainer components={["DatePicker", "DatePicker"]}>
     <DatePicker
-      label="Start Date"
+    sx={{width:'20em'}}
+      label="Meet Start Date"
       value={startDate}
       onChange={handleStartDateChange}
       textField={(props) => <TextField {...props} />}
       format="DD/MM/YYYY"
+      slotProps={{
+        field: {
+          clearable: true,
+          onClear: () => setStartDate(true),
+        },
+      }}
     />
     <DatePicker
-      label="End Date"
+        sx={{width:'20em'}}
+      label="Meet End Date"
       value={endDate}
       onChange={handleEndDateChange}
       textField={(props) => <TextField {...props} />}
       format="DD/MM/YYYY"
+      slotProps={{
+        field: {
+          clearable: true,
+          onClear: () => setEndDate(true),
+        },
+      }}
     />
   </DemoContainer>
 </LocalizationProvider>

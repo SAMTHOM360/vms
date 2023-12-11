@@ -14,9 +14,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Header from '../Header';
 import Config from '../../Config/Config';
+import { useAuth } from '../../routes/AuthContext';
 
 
 export default function ReceptionistCompanyScreen() {
+    const { setActiveListItem } = useAuth()
+
+    useEffect(() => {
+        setActiveListItem('/receptionistcompanyscreen')
+      }, [setActiveListItem])
     const buildingId = sessionStorage.getItem('buildingId');
     // const buildingUrl = `http://192.168.12.54:8080/com/getByBuildingId?buildingId=${buildingId}`
     const buildingUrl = Config.baseUrl + Config.apiEndPoints.buildingEndPoint + "?buildingId=" + buildingId
@@ -52,7 +58,7 @@ export default function ReceptionistCompanyScreen() {
         setSelectedCompanyId(id);
        
         sessionStorage.setItem('selectedCompanyId', id);
-        sessionStorage.setItem('companyName', name)
+        // sessionStorage.setItem('companyName', name)
         let path = `/dashboardreceptionist`;
 
         navigate(path);

@@ -34,28 +34,35 @@ import { useAuth } from "../routes/AuthContext";
 import Config from "../Config/Config";
 
 const Employee = () => {
-  const { isLimitReached, setIsNavBar, setIsSideBar, setActiveListItem } =
-    useAuth();
+  const {
+    isLimitReached,
+    setIsNavBar,
+    setIsSideBar,
+    setActiveListItem,
+    isSideBarPinned,
+    isOpenforGridTable,
+  } = useAuth();
 
   // console.log("isLimitReached", isLimitReached)
   // sessionStorage.setItem('activeListItem', '/employee')
   useEffect(() => {
-    setActiveListItem('/employee')
-  }, [setActiveListItem])
+    setActiveListItem("/employee");
+  }, [setActiveListItem]);
   const AuthToken = sessionStorage.getItem("token");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const limit = sessionStorage.getItem("limit");
   const adminId = sessionStorage.getItem("adminId");
   const currEmpLength = sessionStorage.getItem("currEmpLength") || "0";
   const companyIdStr = sessionStorage.getItem("companyId");
-  const companyId = parseInt(companyIdStr,10)
+  const companyId = parseInt(companyIdStr, 10);
   // console.log("admin id",currEmpLength)
 
   const BASE_URL = "http://192.168.12.54:8080/api/user";
   // const BASE_URL = 'http://192.168.12.58:8080/api/user';
   // const BASE_URL = 'http://192.168.12.12:8080/api/user';
 
-  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.employeeSBAxiosInstance
+  let urlAxiosInstance =
+    Config.baseUrl + Config.apiEndPoints.employeeSBAxiosInstance;
 
   const axiosInstance = axios.create({
     baseURL: urlAxiosInstance,
@@ -81,10 +88,12 @@ const Employee = () => {
   const [divText, setDivText] = useState("");
   const [isSUPERADMINAllowed, setIsSUPERADMINAllowed] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
-  const [ isReceptAllowed, setIsReceptAllowed ] = useState()
+  const [isReceptAllowed, setIsReceptAllowed] = useState();
   const navigate = useNavigate();
-  const [ depts, setDepts ] = useState([])
-  const [scopeIsLimitReached, setScopeIsLimitReached] = useState()
+  const [depts, setDepts] = useState([]);
+  const [scopeIsLimitReached, setScopeIsLimitReached] = useState();
+  const [excelUrl, setExcelUrl] = useState();
+
   let formattedHead;
 
   if (loggedUserRole === "SUPERADMIN") {
@@ -129,7 +138,7 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
-    let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete;
     if (id == adminId) {
       toast.error("You cannot delete yourself !!!", {
         position: "top-right",
@@ -150,11 +159,9 @@ const Employee = () => {
             isActive: false,
           };
 
-          const response = await axiosInstance.post(
-            `${url}`,
-            deletePayload,
-            { headers }
-          );
+          const response = await axiosInstance.post(`${url}`, deletePayload, {
+            headers,
+          });
           // console.log("deleted", response)
           if (response.status === 200) {
             toast.success("User is succesfully deleted.", {
@@ -182,7 +189,7 @@ const Employee = () => {
   };
 
   const handleEdit = async (item) => {
-    let url = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById;
     try {
       setLoading(true);
       const itemId = item.id;
@@ -205,14 +212,14 @@ const Employee = () => {
             name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
           },
 
-          role: apiData.role ?  apiData.role.id || "" : "",
+          role: apiData.role ? apiData.role.id || "" : "",
           roleName: apiData.role ? apiData.role.name || "" : "",
           isPermission: apiData.isPermission || false,
           empCode: apiData.empCode || "",
         });
 
         setOpenEditDialog(true);
-        setLoading(false)
+        setLoading(false);
       } else {
         console.error("Error fetching data:", response.statusText);
       }
@@ -241,11 +248,10 @@ const Employee = () => {
   };
 
   const handleSaveEdit = async (e) => {
-    e.preventDefault()
-
+    e.preventDefault();
 
     // console.log("edited item role", editedItem)
-    let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser
+    let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser;
     const payload = {
       firstName: editedItem.firstName,
       lastName: editedItem.lastName,
@@ -260,24 +266,30 @@ const Employee = () => {
       },
       isPermission: editedItem.isPermission,
       empCode: editedItem.empCode,
-      
     };
     // console.log(" edited payload", payload)
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'role', 'dept', ];
-    const missingFields = requiredFields.filter(field => !editedItem[field]);
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "role",
+      "dept",
+    ];
+    const missingFields = requiredFields.filter((field) => !editedItem[field]);
 
     // console.log('missing fields', missingFields)
-  
+
     if (missingFields.length > 0) {
-      toast.warn('All fields are required!', {
-        position: 'top-right',
+      toast.warn("All fields are required!", {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light',
+        theme: "light",
       });
       return; // Stop execution if any field is missing
     }
@@ -300,23 +312,26 @@ const Employee = () => {
           progress: undefined,
           theme: "light",
         });
-        let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById
+        let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById;
 
-        const response = await axiosInstance.get(
-          `${url2}/${editedItem.id}`
-        );
+        const response = await axiosInstance.get(`${url2}/${editedItem.id}`);
         const updatedData = response.data.data.data;
         // console.log(" updated data", updatedData)
 
         const updatedRole = updatedData.role || {};
         const updatedRoleName = updatedRole.name || "";
-        const updatedDept = updatedData.departmentDto || {}
-        const updatedIsPermission= updatedData.isPermission || false
+        const updatedDept = updatedData.departmentDto || {};
+        const updatedIsPermission = updatedData.isPermission || false;
 
         const updatedRows = rows.map((row) => {
           if (row.id === editedItem.id) {
-            return { ...row, ...payload, role: updatedRoleName, dept: updatedDept.name, isPermission: updatedIsPermission ? 'YES' : 'NO'
-          };
+            return {
+              ...row,
+              ...payload,
+              role: updatedRoleName,
+              dept: updatedDept.name,
+              isPermission: updatedIsPermission ? "YES" : "NO",
+            };
           }
           return row;
         });
@@ -324,8 +339,7 @@ const Employee = () => {
         setOpenEditDialog(false);
       }
     } catch (error) {
-      if(error.request.status === 400){
-
+      if (error.request.status === 400) {
         toast.error("Something went wrong !", {
           position: "top-right",
           autoClose: 2000,
@@ -337,15 +351,18 @@ const Employee = () => {
           theme: "light",
         });
 
-        let errMessage = '';
+        let errMessage = "";
 
         // console.log("got error", error.response)
 
-
-        if (error.response && error.response.data && error.response.data.empCode) {
-          errMessage = error.response.data.empCode;          
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.empCode
+        ) {
+          errMessage = error.response.data.empCode;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -354,10 +371,8 @@ const Employee = () => {
             draggable: true,
             progress: undefined,
             theme: "light",
-        });
+          });
         }
- 
- 
       } else if (error.response.status === 401) {
         // alert(
         //   "Error in submitting data:  " +
@@ -391,153 +406,48 @@ const Employee = () => {
     setLoading(false);
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   async function fetchData() {
-    let url = Config.baseUrl + Config.apiEndPoints.employeeSBFetchData
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBFetchData;
     try {
       setDivText("GETTING EMPLOYEE DATA...");
       setLoading(true);
       const response = await axios.get(`${url}`, { headers });
-  
+
       const apiDataArray = response.data.data.allUser;
-      const currEmpLength = response.data.data.countUser
+      const currEmpLength = response.data.data.countUser;
+
+      if (response.data.data.excelUrl) {
+        let excelURL = response.data.data.excelUrl;
+        setExcelUrl(excelURL);
+      }
 
       // console.log("api data users",apiDataArray)
-  
+
       sessionStorage.setItem("currEmpLength", currEmpLength);
 
+      // Get the limit from sessionStorage
+      const limit = parseInt(sessionStorage.getItem("limit"), 10);
 
-          // Get the limit from sessionStorage
-    const limit = parseInt(sessionStorage.getItem("limit"), 10);
+      // Check if the current employee length is greater than or equal to the limit
+      const isAddLimitReached = currEmpLength >= limit;
 
-    // Check if the current employee length is greater than or equal to the limit
-    const isAddLimitReached = currEmpLength >= limit;
+      // Set the state based on the limit condition
+      setScopeIsLimitReached(isAddLimitReached);
 
-    // Set the state based on the limit condition
-    setScopeIsLimitReached(isAddLimitReached);
-
-
-  
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
         setDivText("NO DATA FOUND !!!");
         setLoading(false);
         return;
       }
-  
+
       const commonColumns = [
-        {
-          field: "serialNo",
-          headerName: "Sl No",
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "firstName",
-          headerName: "First Name",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "lastName",
-          headerName: "Last Name",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "phone",
-          headerName: "Phone",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "email",
-          headerName: "Email",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "company",
-          headerName: "Company",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "dept",
-          headerName: "Department",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        {
-          field: "role",
-          headerName: "Role",
-          flex: 1,
-          align: "center",
-          headerAlign: "center",
-        },
-        // {
-        //   field: "actions",
-        //   align: "center",
-        //   headerAlign: "center",
-        //   headerName: "Actions",
-        //   width: 110,
-        //   editable: false,
-        //   hide: false,
-        //   sortable: false,
-        //   filterable: false,
-        //   disableColumnFilter: true,
-        //   disableColumnMenu: true,
-        //   disableColumnSelector: true,
-        //   renderCell: (params) => (
-        //     <div>
-        //       <IconButton
-        //         color="primary"
-        //         onClick={() => handleEdit(params.row)}
-        //       >
-        //         <EditIcon />
-        //       </IconButton>
-        //       <IconButton
-        //         color="secondary"
-        //         onClick={() => handleDelete(params.row.id)}
-        //       >
-        //         <DeleteIcon />
-        //       </IconButton>
-        //     </div>
-        //   ),
-        // },
-      ];
-  
-      let additionalColumns = [
         {
           field: "actions",
           align: "center",
           headerAlign: "center",
           headerName: "Actions",
           width: 110,
+          fixed: true,
           editable: false,
           hide: false,
           sortable: false,
@@ -562,20 +472,151 @@ const Employee = () => {
             </div>
           ),
         },
-      ];
-  
-      if (loggedUserRole !== "SUPERADMIN") {
-        additionalColumns.push({
-          field: "isPermission",
-          headerName: "Meet Crosscheck",
-          flex: 1,
+
+        {
+          field: "serialNo",
+          headerName: "Sl No",
           align: "center",
           headerAlign: "center",
+          width: 120,
+        },
+
+        {
+          field: "firstName",
+          headerName: "First Name",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+        {
+          field: "lastName",
+          headerName: "Last Name",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+        {
+          field: "phone",
+          headerName: "Phone",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+        {
+          field: "email",
+          headerName: "Email",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 330,
+        },
+
+        {
+          field: "state",
+          headerName: "State",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 220,
+        },
+
+        {
+          field: "city",
+          headerName: "City",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 200,
+        },
+
+        {
+          field: "govtId",
+          headerName: "Government ID",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 190,
+        },
+        // {
+        //   field: "company",
+        //   headerName: "Company",
+        //   flex: 1,
+        //   align: "center",
+        //   headerAlign: "center",
+        // },
+        {
+          field: "dept",
+          headerName: "Department",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+        {
+          field: "role",
+          headerName: "Role",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+
+        {
+          field: "empCode",
+          headerName: "Employee Code",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+      ];
+
+      let isPermissionColumn = [];
+      let companyColumn = [];
+
+      if (loggedUserRole !== "SUPERADMIN") {
+        isPermissionColumn.push({
+          field: "isPermission",
+          headerName: "Recpst. Meet Permissions",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 220,
         });
       }
-  
-      const gridColumns = [...commonColumns, ...additionalColumns];
-  
+
+      if (loggedUserRole === "SUPERADMIN") {
+        companyColumn.push(
+          {
+            field: "company",
+            headerName: "Company",
+            // flex: 1,
+            align: "center",
+            headerAlign: "center",
+            width: 200,
+          },
+          {
+            field: "buildingId",
+            headerName: "Building ID",
+            // flex: 1,
+            align: "center",
+            headerAlign: "center",
+            width: 120,
+          }
+        );
+      }
+
+      const gridColumns = [
+        ...commonColumns,
+        ...isPermissionColumn,
+        ...companyColumn,
+      ];
+
+      console.log(" empSB", apiDataArray);
+
       const gridRows = apiDataArray.map((apiDataItem, index) => ({
         id: apiDataItem.id,
         serialNo: index + 1,
@@ -583,12 +624,26 @@ const Employee = () => {
         lastName: apiDataItem.lastName,
         phone: apiDataItem.phone,
         email: apiDataItem.email,
+        // govtId:apiDataItem.govtId,
+        state: apiDataItem.state.name ? apiDataItem.state.name : "",
+        city: apiDataItem.city.name ? apiDataItem.city.name : "",
+        govtId: apiDataItem.govtId
+          ? apiDataItem.govtId.length === 12
+            ? `${apiDataItem.govtId} (Aadhar)`
+            : `${apiDataItem.govtId} (PAN)`
+          : null,
         company: apiDataItem.company ? apiDataItem.company.name : "",
         dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
         role: apiDataItem.role ? apiDataItem.role.name : "",
+        empCode: apiDataItem.empCode ? apiDataItem.empCode : "",
         isPermission: apiDataItem.isPermission ? "YES" : "NO",
+        buildingId: apiDataItem.departmentDto
+          ? apiDataItem.departmentDto.company.building
+            ? apiDataItem.departmentDto.company.building.buildingId || ""
+            : ""
+          : "",
       }));
-  
+
       setColumns(gridColumns);
       setRows(gridRows);
       setDivText("");
@@ -609,381 +664,59 @@ const Employee = () => {
       setLoading(false);
     }
   }
-  
 
+  const handleDownloadExcel = () => {
+    const fileData = [
+      { url: excelUrl, filename: "Employee Data.xlsx" },
+      // { url: excelDownData.duplicateDataLink, filename: "Duplicate Data.xlsx" },
+    ];
 
+    const downloadFile = (index) => {
+      if (index < fileData.length) {
+        const data = fileData[index];
+        const link = document.createElement("a");
+        link.style.display = "none";
+        link.href = data.url;
+        link.download = "TEST 1";
 
+        document.body.appendChild(link);
+        link.click();
 
+        document.body.removeChild(link);
 
+        // setTimeout(() => {
+        //   downloadFile(index + 1);
+        // }, 1000);
+      }
+    };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // async function fetchData() {
-  //   try {
-  //     setDivText("GETTING EMPLOYEE DATA...");
-  //     setLoading(true);
-  //     const response = await axios.get(`${BASE_URL}/getall`, { headers });
-
-  //     const apiDataArray = response.data;
-
-  //     // console.log("apidata index 0", apiDataArray[0].departmentDto);
-  //     // console.log("apidata ", apiDataArray);
-
-  //     sessionStorage.setItem("currEmpLength", apiDataArray.length);
-
-  //     if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
-  //       // console.error(
-  //       //   "API response does not contain the expected array or the array is empty:",
-  //       //   apiDataArray
-  //       // );
-  //       setDivText("NO DATA FOUND !!!");
-  // setLoading(false);
-  //       return;
-  //     }
-
-  //     const gridColumns = [
-  //       {
-  //         field: "serialNo",
-  //         headerName: "Sl No",
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "firstName",
-  //         headerName: "First Name",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "lastName",
-  //         headerName: "Last Name",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "phone",
-  //         headerName: "Phone",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "email",
-  //         headerName: "Email",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "company",
-  //         headerName: "Company",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "dept",
-  //         headerName: "Department",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "role",
-  //         headerName: "Role",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "isPermission",
-  //         headerName: "Meet Crosscheck",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-
-  //       },
-  //       {
-  //         field: "actions",
-  //         align: "center",
-  //         headerAlign: "center",
-  //         headerName: "Actions",
-  //         width: 110,
-  //         editable: false,
-  //         hide: false,
-  //         sortable: false,
-  //         filterable: false,
-  //         disableColumnFilter: true,
-  //         disableColumnMenu: true,
-  //         disableColumnSelector: true,
-  //         renderCell: (params) => (
-  //           <div>
-  //             <IconButton
-  //               color="primary"
-  //               onClick={() => handleEdit(params.row)}
-  //             >
-  //               <EditIcon />
-  //             </IconButton>
-  //             <IconButton
-  //               color="secondary"
-  //               onClick={() => handleDelete(params.row.id)}
-  //             >
-  //               <DeleteIcon />
-  //             </IconButton>
-  //           </div>
-  //         ),
-  //       },
-  //     ];
-
-
-  //   console.log("Grid Columns:", gridColumns);
-
-  //     const gridRows = apiDataArray.map((apiDataItem, index) => ({
-  //       id: apiDataItem.id,
-  //       serialNo: index + 1,
-  //       firstName: apiDataItem.firstName,
-  //       lastName: apiDataItem.lastName,
-  //       phone: apiDataItem.phone,
-  //       email: apiDataItem.email,
-  //       company: apiDataItem.company ? apiDataItem.company.name : "",
-  //       dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
-  //       role: apiDataItem.role ? apiDataItem.role.name : "",
-  //       // isPermission: apiDataItem.isPermission
-  //       isPermission: apiDataItem.isPermission ? "YES" : "NO",
-  //     }));
-
-  //     setColumns(gridColumns);
-  //     setRows(gridRows);
-  //     setDivText("");
-  //   } catch (error) {
-  //     toast.error("Something went wrong !", {
-  //       position: "top-right",
-  //       autoClose: 2000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     console.error("Error fetching data:", error);
-  //   }
-  //   setDivText("NO DATA FOUND !!!");
-  //   setLoading(false);
-  // }
-
-
-  // async function fetchData() {
-  //   try {
-  //     const fetchPromise = axios.get(`${BASE_URL}/getall`, { headers });
-
-  //     const response = await Promise.race([
-  //       fetchPromise,
-  //       new Promise((_, reject) => {
-  //         setTimeout(() => {
-  //           reject(new Error("Timeout exceeded"));
-  //         }, 10000);
-  //       }),
-  //     ]);
-
-  //     const apiDataArray = response.data;
-
-  //     // console.log("apidata index 0", apiDataArray[0].departmentDto);
-  //     // console.log("apidata ", apiDataArray);
-
-  //     sessionStorage.setItem("currEmpLength", apiDataArray.length);
-
-  //     if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
-  //       console.error(
-  //         "API response does not contain the expected array or the array is empty:",
-  //         apiDataArray
-  //       );
-  //       return;
-  //     }
-
-  //     const gridColumns = [
-  //       {
-  //         field: "serialNo",
-  //         headerName: "Sl No",
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "firstName",
-  //         headerName: "First Name",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "lastName",
-  //         headerName: "Last Name",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "phone",
-  //         headerName: "Phone",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "email",
-  //         headerName: "Email",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "company",
-  //         headerName: "Company",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "dept",
-  //         headerName: "Department",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "role",
-  //         headerName: "Role",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "isPermission",
-  //         headerName: "Meet Crosscheck",
-  //         flex: 1,
-  //         align: "center",
-  //         headerAlign: "center",
-  //       },
-  //       {
-  //         field: "actions",
-  //         align: "center",
-  //         headerAlign: "center",
-  //         headerName: "Actions",
-  //         width: 110,
-  //         editable: false,
-  //         hide: false,
-  //         sortable: false,
-  //         filterable: false,
-  //         disableColumnFilter: true,
-  //         disableColumnMenu: true,
-  //         disableColumnSelector: true,
-  //         renderCell: (params) => (
-  //           <div>
-  //             <IconButton
-  //               color="primary"
-  //               onClick={() => handleEdit(params.row)}
-  //             >
-  //               <EditIcon />
-  //             </IconButton>
-  //             <IconButton
-  //               color="secondary"
-  //               onClick={() => handleDelete(params.row.id)}
-  //             >
-  //               <DeleteIcon />
-  //             </IconButton>
-  //           </div>
-  //         ),
-  //       },
-  //     ];
-
-  //     const gridRows = apiDataArray.map((apiDataItem, index) => ({
-  //       id: apiDataItem.id,
-  //       serialNo: index + 1,
-  //       firstName: apiDataItem.firstName,
-  //       lastName: apiDataItem.lastName,
-  //       phone: apiDataItem.phone,
-  //       email: apiDataItem.email,
-  //       company: apiDataItem.company ? apiDataItem.company.name : "",
-  //       dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
-  //       role: apiDataItem.role ? apiDataItem.role.name : "",
-  //       // isPermission: apiDataItem.isPermission
-  //       isPermission: apiDataItem.isPermission ? "YES" : "NO",
-  //     }));
-
-  //     setColumns(gridColumns);
-  //     setRows(gridRows);
-  //     setDivText("");
-  //   } catch (error) {
-  //     toast.error("Something went wrong !", {
-  //       position: "top-right",
-  //       autoClose: 2000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     console.error("Error fetching data:", error);
-  //   } finally {
-  //     setDivText("NO DATA FOUND !!!");
-  //   setLoading(false);
-  //   }
-    
-  // }
-
-
+    downloadFile(0);
+  };
 
   async function fetchRoles() {
-    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllRole
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllRole;
     try {
-      const response = await axios.get(
-        url, { headers }
-      );
+      const response = await axios.get(url, { headers });
       setRoles(response.data.data);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
   }
   const fetchDepts = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllDept
-    try{
-      const response = await axios.get(`${url}?companyId=${companyId}`)
-      const deptApiData = response.data.data
+    let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllDept;
+    try {
+      const response = await axios.get(`${url}?companyId=${companyId}`);
+      const deptApiData = response.data.data;
       // console.log("dept data", response.data.data)
-      setDepts(deptApiData)
-    } catch(error) {
-      console.error("Error in fetching depts", error)
+      setDepts(deptApiData);
+    } catch (error) {
+      console.error("Error in fetching depts", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchDepts()
-  }, [companyId])
+    fetchDepts();
+  }, [companyId]);
 
   useEffect(() => {
     fetchData();
@@ -1019,7 +752,15 @@ const Employee = () => {
                 title={formattedHead}
                 subtitle={`List of ${formattedHead} for Future Reference`}
               />
-              <Box sx={{ display: "flex", alignItems: "center", justifyContent:'end', minWidth:'31.3em', ml:'2em' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "end",
+                  minWidth: "31.3em",
+                  ml: "2em",
+                }}
+              >
                 <Typography
                   sx={{ fontSize: "20px", fontWeight: "550", color: "#949494" }}
                 >
@@ -1069,11 +810,25 @@ const Employee = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: "5px",
-                // overflowX:'hidden'
+                overflowX: "hidden",
+                flexDirection: "column",
+                // bgcolor:'orange',
+                maxWidth: isSideBarPinned
+                  ? isOpenforGridTable
+                    ? "83vw"
+                    : "93.5vw"
+                  : "93.5vw",
+                flexGrow: 1,
+                minHeight: "75vh",
+                pb: "1.5em",
               }}
             >
+              {/* <Button
+              variant="contained"
+              onClick={handleDownloadExcel}
+              >download</Button> */}
               <Box
-                m="20px 0 0 0"
+                m="2px 0 0 0"
                 flexGrow={1}
                 height="75vh"
                 sx={{
@@ -1109,17 +864,52 @@ const Employee = () => {
                     color: `#141414 !important`,
                   },
                   mb: "1.5em",
+                  // maxWidth: "105em",
                   maxWidth: "95%",
                   borderRadius: "5px",
+                  // bgcolor:'cyan',
+                  // overflowX:'auto'
                 }}
               >
+
+
                 {rows.length > 0 ? (
+                  <>
+                                  <Box
+                                  sx={{
+                                    minWidth: "100%",
+                                    // bgcolor: "orange",
+                                    display:'flex',
+                                    justifyContent:'end',
+                                  }}
+                                >
+                                  <Button
+                                    variant="contained"
+                                    sx={{
+                                      // position:'absolute',
+                                      // left:'4.5em',
+                                      width: "12em",
+                                      // float:'right'
+                                    }}
+                                    onClick={handleDownloadExcel}
+                                  >
+                                    Export As Excel
+                                  </Button>
+                                </Box>
                   <DataGrid
+                    // sx={{mt:'0.5em'}}
                     rows={rows ?? []}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
+                    // initialState={{
+                    //   pinnedColumns: {
+                    //     left: ['actions'],
+                    //     // right: ['actions', 'title', 'director', '...'],
+                    //   },
+                    // }}
                   />
+                  </>
                 ) : (
                   <div
                     style={{
@@ -1224,57 +1014,62 @@ const Employee = () => {
                     required
                   />
                   <TextField
-                sx={{ mt: "1em" }}
-                label="Phone"
-                size="small"
-                fullWidth
-                value={editedItem.phone}
-                inputProps={{
-                  pattern: '^[0-9]*',
-                  onInput: (e) => {
-                    let value = e.target.value;
-                    value = value.replace(/\D/g, ''); 
-                    if (value.length > 10) {
-                      value = value.slice(0, 10);
-                    }
-                    setEditedItem({
-                      ...editedItem,
-                      phone: value,
-                    });
-                  },
-                }}
-                required
-              />
+                    sx={{ mt: "1em" }}
+                    label="Phone"
+                    size="small"
+                    fullWidth
+                    value={editedItem.phone}
+                    inputProps={{
+                      pattern: "^[0-9]*",
+                      onInput: (e) => {
+                        let value = e.target.value;
+                        value = value.replace(/\D/g, "");
+                        if (value.length > 10) {
+                          value = value.slice(0, 10);
+                        }
+                        setEditedItem({
+                          ...editedItem,
+                          phone: value,
+                        });
+                      },
+                    }}
+                    required
+                  />
 
-<FormControl sx={{ width: "100%", mt: "1em" }} size="small" required>
-                      <InputLabel htmlFor="dept">Department</InputLabel>
-                      <Select
-                        label="Department"
-                        name="dept"
-                        value={editedItem.dept.id || ""}
-                        
-                        required
-                        onChange={(e) => {
-                          const updatedItem = { ...editedItem, dept: { ...editedItem.dept, id: e.target.value } };
-                          setSelectedDept(e.target.value);
-                          setEditedItem(updatedItem);
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: 150,
-                            },
+                  <FormControl
+                    sx={{ width: "100%", mt: "1em" }}
+                    size="small"
+                    required
+                  >
+                    <InputLabel htmlFor="dept">Department</InputLabel>
+                    <Select
+                      label="Department"
+                      name="dept"
+                      value={editedItem.dept.id || ""}
+                      required
+                      onChange={(e) => {
+                        const updatedItem = {
+                          ...editedItem,
+                          dept: { ...editedItem.dept, id: e.target.value },
+                        };
+                        setSelectedDept(e.target.value);
+                        setEditedItem(updatedItem);
+                      }}
+                      MenuProps={{
+                        PaperProps: {
+                          style: {
+                            maxHeight: 150,
                           },
-                        }}
-                    
-                      >
-                        {depts.map((dept) => (
-                          <MenuItem key={dept.id} value={dept.id}>
-                            {dept.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                        },
+                      }}
+                    >
+                      {depts.map((dept) => (
+                        <MenuItem key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
                   <FormControl fullWidth size="small" sx={{ mt: "1em" }}>
                     <InputLabel required>Role</InputLabel>
@@ -1299,40 +1094,40 @@ const Employee = () => {
                           <MenuItem key={role.id} value={role.id}>
                             {role.name}
                           </MenuItem>
-                          
                         ))}
                     </Select>
                   </FormControl>
 
-
-                  { isSUPERADMINAllowed ?
-
-<FormControl sx={{ width: "100%", mt: "1em" }} size="small" fullWidth>
-<InputLabel id="approval-label">
-  Can Receptionist approve meet?
-</InputLabel>
-<Select
-  labelId="approval-label"
-  name="isPermission"
-  value={editedItem.isPermission}
-  label="Can Receptionist approve meet?"
-  onChange={(e) => {
-    setIsReceptAllowed(e.target.value);
-    setEditedItem({ ...editedItem, isPermission: e.target.value });
-  }}
->
-  {/* <MenuItem value="true">True</MenuItem>
+                  {isSUPERADMINAllowed ? (
+                    <FormControl
+                      sx={{ width: "100%", mt: "1em" }}
+                      size="small"
+                      fullWidth
+                    >
+                      <InputLabel id="approval-label">
+                        Can Receptionist approve meet?
+                      </InputLabel>
+                      <Select
+                        labelId="approval-label"
+                        name="isPermission"
+                        value={editedItem.isPermission}
+                        label="Can Receptionist approve meet?"
+                        onChange={(e) => {
+                          setIsReceptAllowed(e.target.value);
+                          setEditedItem({
+                            ...editedItem,
+                            isPermission: e.target.value,
+                          });
+                        }}
+                      >
+                        {/* <MenuItem value="true">True</MenuItem>
   <MenuItem value="false">False</MenuItem> */}
 
-  <MenuItem value="true">YES</MenuItem>
-  <MenuItem value="false">NO</MenuItem>
-</Select>
-</FormControl>
-
-:
-null
-                  
-                }
+                        <MenuItem value="true">YES</MenuItem>
+                        <MenuItem value="false">NO</MenuItem>
+                      </Select>
+                    </FormControl>
+                  ) : null}
                 </form>
               )}
             </DialogContent>
@@ -1360,7 +1155,7 @@ null
                 sx={{ width: "6em" }}
                 disabled={btnLoading}
               >
-                              {btnLoading ? <CircularProgress size="2em" /> : "Save"}
+                {btnLoading ? <CircularProgress size="2em" /> : "Save"}
               </Button>
             </DialogActions>
           </Dialog>

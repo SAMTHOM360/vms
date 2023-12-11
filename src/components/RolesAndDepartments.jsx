@@ -317,6 +317,12 @@ const handleDeptDialogOpen = () => {
 
 const handleDeptDialogClose = () => {
   setOpenDeptDialog(false);
+  setDeptFormData({
+    name:'',
+    company: {
+      id: companyId,
+    },
+  })
 };
 
 const handleSubmitAddRole = async(e) => {
