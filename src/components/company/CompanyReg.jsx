@@ -290,10 +290,6 @@ export default function CompanyReg() {
         // setSelectedCity(selectedCity);
     };
 
-
-
-
-
     const [imageUrl, setImageUrl] = useState('');
 
 
@@ -825,7 +821,6 @@ export default function CompanyReg() {
 
     )
 }
-
 
 
 

@@ -47,6 +47,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
+import moment from 'moment'
 
 
 
@@ -379,6 +380,32 @@ export default function Dashboard() {
 
 
         };
+
+        
+        if(!selectedRoom && selectedStatusModal && selectedStatusModal !== "CANCELLED"){
+
+            console.log("alert room")
+            alert("Choose a room")
+            return
+        }
+        
+        if(selectedRoom && !selectedStatusModal ){
+
+            console.log("alert room")
+            alert("Choose a status")
+            return
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         // const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
 
@@ -748,9 +775,17 @@ export default function Dashboard() {
 
 
     const filter = sessionStorage.getItem('filters')
+   
     if (filter) {
 
+        const today = dayjs(); 
+
+    
+        // const date = moment(new Date).format("DD/MM/YYYY")
+        // console.log(moment(date).format("DD/MM/YYYY"),"datee")
         setSelectedStatusOptions(filter)
+        setStartDate(today)
+        setEndDate(today)
         // setPage(0)
         sessionStorage.removeItem('filters')
 
@@ -770,7 +805,7 @@ export default function Dashboard() {
         }
 
 
-    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, phoneNumberFilter, startDate, endDate])
+    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, phoneNumberFilter, startDate, endDate, ])
 
 
 
@@ -880,677 +915,11 @@ export default function Dashboard() {
 
     console.log(openDialog, "opendialog")
     return (
-        // <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
-        //     <Grid container spacing={2} style={{}} >
-        //         <Grid item xs={12} md={12} lg={12}>
-        //             <Paper
-        //                 elevation={5}
-        //                 sx={{
-        //                     display: 'flex',
-        //                     justifyContent: 'space-between',
-        //                     // width:'100%',
-        //                     minHeight: '4.5em',
-        //                     mt: '3em',
-        //                     mb: '0.5em'
-        //                 }}
-        //             >
+       
 
-        //                 <Header title="Visitors" subtitle="Visitors List" />
 
-        //                 {/* <Link to="/companyreg"> */}
 
-
-
-        //                 <Button
-        //                     // onClick={handleOpenAddRoomDialog}
-        //                     variant="contained"
-        //                     color="primary"
-        //                     style={{ margin: '1.2em', height: '3em' }}
-        //                 >      Add Room
-        //                 </Button>
-
-
-
-        //                 {/* </Link> */}
-
-        //             </Paper>
-
-        //         </Grid>
-
-
-
-
-
-
-
-        //         <Grid item xs={12} md={12} lg={12}>
-        //             <Paper
-
-
-        //                 sx={{ width: '100%' }} elevation={2}>
-
-        //                 <TableContainer sx={{ height: "100%", overflow: "auto" }}>
-        //                     <Table sx={{}} aria-label="simple table">
-        //                         <TableHead sx={{ backgroundColor: '#141b2d', border: "1px solid white", fontSize: "18px", color: "white" }}>
-        //                             <TableRow sx={{ border: "1px solid black" }}>
-        //                                 {/* <TableCell>Meeting ID</TableCcenter
-        //                                                 <TableCell>Visitor ID</TableCell> */}
-        //                                 <TableCell sx={{ color: "white" }}>Sl No</TableCell>
-        //                                 <TableCell sx={{ color: "white" }} align="left">Full Name</TableCell>
-
-        //                                 <TableCell sx={{ color: "white" }} align="left">Phone No.</TableCell>
-        //                                 <TableCell sx={{ color: "white" }} align="left">Company Name</TableCell>
-        //                                 <TableCell sx={{ color: "white" }} align="left">Host Name</TableCell>
-        //                                 {/* <TableCell align="right">Remarks</TableCell> */}
-        //                                 <TableCell sx={{ color: "white" }} align="left">Room</TableCell>
-
-        //                                 <TableCell sx={{ color: "white" }} align="left">Meeting Time</TableCell>
-        //                                 {/* <TableCell align="right">End Time</TableCell> */}
-
-        //                                 <TableCell sx={{ color: "white" }} align="left">Check In</TableCell>
-        //                                 <TableCell sx={{ color: "white" }} align="left">Check Out</TableCell>
-
-        //                                 <TableCell sx={{ color: "white" }} align="left">Status</TableCell>
-        //                                 <TableCell sx={{ color: "white" }} align="left">Remarks</TableCell>
-
-
-
-        //                                 {/* <TableCell sx={{color:"white"}}align="left">Actions</TableCell> */}
-
-        //                                 {!isADMIN && <TableCell sx={{ color: "white" }}>Actions</TableCell>}
-
-        //                                 {/* <TableCell sx={{ color: "white" }} align="left">Actions</TableCell> */}
-
-
-
-
-        //                             </TableRow>
-        //                         </TableHead>
-        //                         <TableBody>
-        //                             {visitors
-        //                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        //                                 .map((visitor, index) => (
-        //                                     <TableRow key={index}>
-        //                                         {/* <TableCell>{visitor.id}</TableCell>
-        //                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
-
-        //                                         <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
-
-        //                                         <TableCell align="left">{visitor.visitor.name}</TableCell>
-
-        //                                         {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
-        //                                         <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
-
-        //                                         <TableCell align="left">{visitor.visitor.companyName}</TableCell>
-        //                                         {/* <TableCell align="left">{getFullName(visitor.user)}</TableCell> */}
-
-        //                                         <TableCell align="left">
-        //                                             {visitor.user.role.name === "ADMIN" ? (
-        //                                                 <span> {getFullName(visitor.user)} (Admin)
-
-        //                                                 </span>
-        //                                             ) : (
-        //                                                 getFullName(visitor.user)
-        //                                             )}
-        //                                         </TableCell>
-
-        //                                         {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
-        //                                         <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
-        //                                         <TableCell align="left">{visitor.meetingStartDateTime !== null ? formatMeetingDurationStartTime(visitor) : "NA"}</TableCell>
-        //                                         {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
-
-        //                                         <TableCell align="left">{visitor.checkInDateTime !== null ? formatMeetingDuration(visitor) : "NA"}</TableCell>
-        //                                         <TableCell align="left">{visitor.checkOutDateTime !== null ? formatMeetingDuration1(visitor) : "NA"}</TableCell>
-        //                                         {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
-        //                                         <TableCell align="left">{visitor.status}</TableCell>
-        //                                         {/* <TableCell align="left"><InfoIcon style={{ fontSize: "20px", color: "grey", marginTop: "5px", cursor: "pointer" }} onClick={() => handleClickOpenDialog(visitor)} /></TableCell> */}
-
-        //                                         <TableCell align="left">
-        //                                             {
-        //                                                 visitor.remarks !== "" ?
-        //                                                     <InfoIcon
-        //                                                         style={{ fontSize: "20px", color: "", marginTop: "5px", cursor: "pointer" }}
-        //                                                         onClick={() => handleClickOpenDialog(visitor)}
-        //                                                     /> :
-        //                                                     <InfoIcon
-        //                                                         style={{ fontSize: "20px", color: "lightgrey", marginTop: "5px", cursor: "", pointerEvents: "none" }}
-        //                                                         disabled
-
-
-
-        //                                                     />
-        //                                             }
-
-
-
-
-        //                                         </TableCell>
-
-
-        //                                         {/*                                                                
-        //                                                                   {!isADMIN && (
-        //                                                                     <TableCell sx={{ color: "white" }} align="left">Actions</TableCell>
-
-        //                                                                   )}
-        //                                                                      */}
-
-
-        //                                         {!isADMIN && (
-
-        //                                             <TableCell align="left">
-
-        //                                                 {
-        //                                                     (visitor.status === 'APPROVED') ? (
-        //                                                         visitor.room ?
-        //                                                             <DownloadIcon
-        //                                                                 style={{ cursor: "pointer" }}
-
-        //                                                                 onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
-        //                                                             :
-        //                                                             <EditIcon onClick={() => handleOpenModal(visitor)} />
-        //                                                     ) :
-
-        //                                                         (visitor.status === 'INPROCESS' && visitor.room) ? (
-        //                                                             <DownloadIcon
-
-        //                                                                 style={{ cursor: "pointer" }}
-
-        //                                                                 onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
-        //                                                         ) :
-
-        //                                                             ['COMPLETED', 'CANCELLED', 'CANCELLED_BY_VISITOR'].includes(visitor.status) ? (
-        //                                                                 <EditIcon style={{ color: 'lightgray' }} disabled />
-        //                                                             ) :
-
-        //                                                                 visitor.status === 'PENDING' && visitor.user.isPermission === true ? (
-        //                                                                     <EditIcon
-        //                                                                         style={{ cursor: "pointer" }}
-
-        //                                                                         onClick={() => handleOpenModal(visitor)} />
-        //                                                                 ) : (
-        //                                                                     <EditIcon style={{ color: 'lightgray' }} disabled />
-        //                                                                 )
-        //                                                 }
-
-
-
-
-        //                                             </TableCell>
-
-        //                                         )}
-
-        //                                     </TableRow>
-        //                                 ))}
-        //                         </TableBody>
-
-        //                     </Table>
-        //                     <TablePagination
-        //                         //   rowsPerPageOptions={[10, 25, 50, 100]}
-        //                         rowsPerPageOptions={[10, 15, 20]}
-        //                         component="div"
-        //                         count={meetings}
-
-        //                         rowsPerPage={rowsPerPage}
-
-        //                         page={page}
-        //                         onPageChange={
-        //                             handleChangePage}
-        //                         onRowsPerPageChange={handleChangeRowsPerPage}
-
-        //                     />
-        //                 </TableContainer>
-
-
-
-
-        //                 {/* </div> */}
-
-
-
-        //             </Paper>
-
-
-
-
-        //         </Grid>
-
-
-        //     </Grid>
-
-
-
-        // </Box>
-
-
-
-        //trial2
-
-        // <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
-
-        //     <Grid container spacing={2}>
-        //         <Grid item xs={12} md={12} lg={12}>
-        //             <div style={{ display: "flex", justifyContent: "center", flexDirection: "", flexGrow: 1, }}>
-        //                 <div className="one" style={{ backgroundColor: '', border: "1px solid offwhite", flexGrow: 1 }}>
-        //                     <Grid container>
-        //                         <Grid container>
-        //                             <Grid item xs={12}>
-        //                                 <Paper
-        //                                     elevation={1}
-        //                                     sx={{
-        //                                         display: 'flex',
-        //                                         justifyContent: 'space-between',
-        //                                         // width:'100%',
-        //                                         minHeight: '4.5em',
-        //                                         mt: '3em',
-        //                                         mb: '0.5em'
-        //                                     }}
-        //                                 >
-        //                                     <Header title="Dashboard" subtitle="Welcome to dashboard" />
-        //                                 </Paper>
-        //                             </Grid>
-
-        //                         </Grid>
-
-        //                     </Grid>
-
-
-        //                     <Grid container>
-        //                         <Grid container>
-        //                             <Grid item xs={12}>
-        //                                 <Paper
-        //                                     elevation={1}
-        //                                     sx={{
-        //                                         display: 'flex',
-                                               
-        //                                         // width:'100%',
-        //                                         minHeight: '4.5em',
-        //                                         mt: '3em',
-        //                                         mb: '0.5em',
-        //                                         display:"flex",
-        //                                         justifyContent:"space-between"
-        //                                     }}
-        //                                 >
-                                                                                 
-                                       
-
-
-        //                                         <TextField
-        //                                             id="outlined-select-currency"
-        //                                             select
-        //                                             label="Search by Status"
-        //                                             value={selectedStatusOptions}
-
-        //                                             onChange={handleChangeStatus}
-
-        //                                             style={{ top: "10px",width:"20%" }}
-
-
-        //                                         >
-
-
-        //                                             {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
-        //                                                 <MenuItem key={index} value={options} >{options}</MenuItem>
-        //                                             ))}
-        //                                         </TextField>
-
-
-
-        //                                         <TextField
-        //                                             id="outlined-select-currency"
-        //                                             select
-        //                                             label="Search by Host"
-        //                                             value={selectedHostOptions}
-
-        //                                             onChange={handleChangeHost}
-        //                                             SelectProps={{
-        //                                                 MenuProps: {
-        //                                                     style: {
-        //                                                         maxHeight: '400px',
-        //                                                         maxWidth: '200px',
-
-        //                                                     },
-        //                                                 },
-        //                                             }}
-
-        //                                             style={{ top: "10px",width:"20%" }}
-
-
-        //                                         >
-
-        //                                             {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
-        //                                                 <MenuItem key={index} value={options.id} disabled={!options.isPresent}
-        //                                                     style={{ color: options.isPresent ? 'black' : 'grey' }} >{options.name}</MenuItem>
-        //                                             ))}
-        //                                         </TextField>
-
-        //                                         <TextField id="outlined-search" label="Search By Phone Number" value={phoneNumberFilter}
-
-        //                                             inputProps={{ maxLength: 10 }}
-
-        //                                             onChange={(e) => {
-
-        //                                                 if (e.target.value.length <= 10) {
-        //                                                     setPhoneNumberFilter(e.target.value)
-        //                                                 }
-
-
-        //                                             }}
-
-
-
-        //                                             // Update phone number filter state
-        //                                             onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "10px",width:"20%" }} />
-
-
-
-        //                                         <TextField
-        //                                             id="outlined-select-currency"
-        //                                             select
-        //                                             label="Search by Room"
-        //                                             value={filterSelectedRoom}
-
-        //                                             onChange={handleChange2}
-
-        //                                             SelectProps={{
-        //                                                 MenuProps: {
-        //                                                     style: {
-        //                                                         maxHeight: '400px', // 
-        //                                                     },
-        //                                                 },
-        //                                             }}
-
-        //                                             style={{ top: "10px",width:"20%"}}
-
-
-        //                                         >
-
-                             
-
-
-
-        //                                             {Array.isArray(rooms) && rooms.map((room) => (
-        //                                                 <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
-        //                                             ))}
-        //                                         </TextField>
-
-        //                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        //                                             <DemoContainer components={['DatePicker', 'DatePicker']}>
-
-        //                                                 <DatePicker
-        //                                                     label="Start Date"
-        //                                                     value={startDate}
-        //                                                     // onChange={(newValue) => setStartDate(newValue)}
-        //                                                     onChange={handleStartDateChange}
-        //                                                     renderInput={(params) => <TextField {...params} />}
-        //                                                     format="DD/MM/YYYY"
-        //                                                 />
-        //                                                 <DatePicker
-        //                                                     label="End Date"
-        //                                                     value={endDate}
-        //                                                     // onChange={(newValue) => setEndDate(newValue)}
-        //                                                     onChange={handleEndDateChange}
-        //                                                     renderInput={(params) => <TextField {...params} />}
-        //                                                     format="DD/MM/YYYY"
-        //                                                 />
-        //                                             </DemoContainer>
-        //                                         </LocalizationProvider>
-
-        //                                         <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "20px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
-
-
-        //                                                         <Box sx={{ display: "flex", alignItems: "center", gap: '1em', }}>
-        //                                                              <Tooltip title={<p style={{ fontSize: '12px', fontWeight: 600 }}>Clear filters</p>} >
-        //                                                                 <Button
-        //                                                                     variant="contained"
-        //                                                                      color="error"
-        //                                                                     size="small"
-        //                                                                    sx={{ minWidth: "unset", marginLeft: "1.2em", width: '3.9em', height: "3.9em", top: "5px" }}
-        //                                                                     onClick={handleClearFilters}
-        //                                                                  >
-        //                                                                  <RotateLeftIcon />
-        //                                                                 {/* Clear Filters */}
-        //                                                             </Button>
-        //                                                            </Tooltip>
-        //                                                        </Box>
-
-
-                                                
-                                                
-
-
-
-                                            
-        //                                 </Paper>
-        //                             </Grid>
-
-        //                         </Grid>
-
-        //                     </Grid>
-
-
-
-
-
-                    
-        //                     {/* code */}
-
-        //                     <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
-        //                         <Grid item xs={12} style={{ backgroundColor: "red", display: "flex", flexDirection: "row" }}>
-        //                             <Grid style={{ gap: "20px", marginTop: "", backgroundColor: "", display: "flex", flexDirection: "row"}} container >
-
-
-
-        //                                 <Paper style={{ backgroundColor: "red", display: "flex", justifyContent: "center",flexDirection:"row", }} elevation={7} sx={{
-        //                                     height: 700,
-        //                                     width: 400,
-        //                                     flexGrow: 1,
-        //                                     backgroundColor: "",
-        //                                 }}>
-
-
-        //                                     <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
-        //                                         <Table sx={{}} aria-label="simple table">
-        //                                             <TableHead sx={{ backgroundColor: '#141b2d', border: "1px solid white", fontSize: "18px", color: "white" }}>
-        //                                                 <TableRow sx={{ border: "1px solid black" }}>
-        //                                                     {/* <TableCell>Meeting ID</TableCcenter
-        //                                                 <TableCell>Visitor ID</TableCell> */}
-        //                                                     <TableCell sx={{ color: "white" }}>Sl No</TableCell>
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Full Name</TableCell>
-        //                                                     {/* <TableCell align="right">Email</TableCell> */}
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Phone No.</TableCell>
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Company Name</TableCell>
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Host Name</TableCell>
-        //                                                     {/* <TableCell align="right">Remarks</TableCell> */}
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Room</TableCell>
-
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Meeting Time</TableCell>
-        //                                                     {/* <TableCell align="right">End Time</TableCell> */}
-
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Check In</TableCell>
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Check Out</TableCell>
-
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Status</TableCell>
-        //                                                     <TableCell sx={{ color: "white" }} align="left">Remarks</TableCell>
-
-
-
-        //                                                     {/* <TableCell sx={{color:"white"}}align="left">Actions</TableCell> */}
-
-        //                                                     {!isADMIN && <TableCell sx={{ color: "white" }}>Actions</TableCell>}
-
-        //                                                     {/* <TableCell sx={{ color: "white" }} align="left">Actions</TableCell> */}
-
-
-
-
-        //                                                 </TableRow>
-        //                                             </TableHead>
-        //                                             <TableBody>
-        //                                                 {visitors
-        //                                                     // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        //                                                     .map((visitor, index) => (
-        //                                                         <TableRow key={index}>
-        //                                                             {/* <TableCell>{visitor.id}</TableCell>
-        //                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
-
-        //                                                             <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
-
-        //                                                             <TableCell align="left">{visitor.visitor.name}</TableCell>
-
-        //                                                             {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
-        //                                                             <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
-
-        //                                                             <TableCell align="left">{visitor.visitor.companyName}</TableCell>
-        //                                                             {/* <TableCell align="left">{getFullName(visitor.user)}</TableCell> */}
-
-        //                                                             <TableCell align="left">
-        //                                                                 {visitor.user.role.name === "ADMIN" ? (
-        //                                                                     <span> {getFullName(visitor.user)} (Admin)
-
-        //                                                                     </span>
-        //                                                                 ) : (
-        //                                                                     getFullName(visitor.user)
-        //                                                                 )}
-        //                                                             </TableCell>
-
-        //                                                             {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
-        //                                                             <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
-        //                                                             <TableCell align="left">{visitor.meetingStartDateTime !== null ? formatMeetingDurationStartTime(visitor) : "NA"}</TableCell>
-        //                                                             {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
-
-        //                                                             <TableCell align="left">{visitor.checkInDateTime !== null ? formatMeetingDuration(visitor) : "NA"}</TableCell>
-        //                                                             <TableCell align="left">{visitor.checkOutDateTime !== null ? formatMeetingDuration1(visitor) : "NA"}</TableCell>
-        //                                                             {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
-        //                                                             <TableCell align="left">{visitor.status}</TableCell>
-        //                                                             {/* <TableCell align="left"><InfoIcon style={{ fontSize: "20px", color: "grey", marginTop: "5px", cursor: "pointer" }} onClick={() => handleClickOpenDialog(visitor)} /></TableCell> */}
-
-        //                                                             <TableCell align="left">
-        //                                                                 {
-        //                                                                     visitor.remarks !== "" ?
-        //                                                                         <InfoIcon
-        //                                                                             style={{ fontSize: "20px", color: "", marginTop: "5px", cursor: "pointer" }}
-        //                                                                             onClick={() => handleClickOpenDialog(visitor)}
-        //                                                                         /> :
-        //                                                                         <InfoIcon
-        //                                                                             style={{ fontSize: "20px", color: "lightgrey", marginTop: "5px", cursor: "", pointerEvents: "none" }}
-        //                                                                             disabled
-
-
-
-        //                                                                         />
-        //                                                                 }
-
-
-
-
-        //                                                             </TableCell>
-
-
-        //                                                             {/*                                                                
-        //                                                                   {!isADMIN && (
-        //                                                                     <TableCell sx={{ color: "white" }} align="left">Actions</TableCell>
-
-        //                                                                   )}
-        //                                                                      */}
-
-
-        //                                                             {!isADMIN && (
-
-        //                                                                 <TableCell align="left">
-
-        //                                                                     {
-        //                                                                         (visitor.status === 'APPROVED') ? (
-        //                                                                             visitor.room ?
-        //                                                                                 <DownloadIcon
-        //                                                                                     style={{ cursor: "pointer" }}
-
-        //                                                                                     onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
-        //                                                                                 :
-        //                                                                                 <EditIcon onClick={() => handleOpenModal(visitor)} />
-        //                                                                         ) :
-
-        //                                                                             (visitor.status === 'INPROCESS' && visitor.room) ? (
-        //                                                                                 <DownloadIcon
-
-        //                                                                                     style={{ cursor: "pointer" }}
-
-        //                                                                                     onClick={() => handleDownloadPass(visitor.id, visitor.visitor.name, visitor.visitor.phoneNumber)} />
-        //                                                                             ) :
-
-        //                                                                                 ['COMPLETED', 'CANCELLED', 'CANCELLED_BY_VISITOR'].includes(visitor.status) ? (
-        //                                                                                     <EditIcon style={{ color: 'lightgray' }} disabled />
-        //                                                                                 ) :
-
-        //                                                                                     visitor.status === 'PENDING' && visitor.user.isPermission === true ? (
-        //                                                                                         <EditIcon
-        //                                                                                             style={{ cursor: "pointer" }}
-
-        //                                                                                             onClick={() => handleOpenModal(visitor)} />
-        //                                                                                     ) : (
-        //                                                                                         <EditIcon style={{ color: 'lightgray' }} disabled />
-        //                                                                                     )
-        //                                                                     }
-
-
-
-
-        //                                                                 </TableCell>
-
-        //                                                             )}
-
-        //                                                         </TableRow>
-        //                                                     ))}
-        //                                             </TableBody>
-
-        //                                         </Table>
-        //                                         <TablePagination
-        //                                             //   rowsPerPageOptions={[10, 25, 50, 100]}
-        //                                             rowsPerPageOptions={[10, 15, 20]}
-        //                                             component="div"
-        //                                             count={meetings}
-
-        //                                             rowsPerPage={rowsPerPage}
-
-        //                                             page={page}
-        //                                             onPageChange={
-        //                                                 handleChangePage}
-        //                                             onRowsPerPageChange={handleChangeRowsPerPage}
-
-        //                                         />
-        //                                     </TableContainer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //                                 </Paper>
-
-
-
-
-        //                             </Grid>
-        //                         </Grid>
-
-        //                     </Grid>
-
-        //                 </div>
-
-        //             </div>
-        //         </Grid>
-        //     </Grid>
-        // </Box>
-
-
-
-        //blah
+       
         <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         <Grid container spacing={2} style={{}} >
             <Grid item xs={12} md={12} lg={12}>
@@ -1766,6 +1135,8 @@ export default function Dashboard() {
                                                             ))}
                                                         </TextField>
 
+{/* <input type='date' value={startDate} onChange={handleStartDateChange}></input>
+<input type='date' value={endDate} onChange={handleEndDateChange}></input> */}
 
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DemoContainer components={['DatePicker', 'DatePicker']}>
@@ -1876,7 +1247,9 @@ export default function Dashboard() {
                                             <TableBody>
                                                 {visitors
                                                     // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)                                           .map((visitor, index) => (
+                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                    
+                                                    .map((visitor, index) => (
                                                         <TableRow key={index}>
                                                             {/* <TableCell>{visitor.id}</TableCell>
                                                     <TableCell>{visitor.visitor.id}</TableCell> */}

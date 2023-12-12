@@ -55,6 +55,11 @@ export default function EditCompanyForm() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
+
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const [logo,setLogo] = useState(null)
+
   function fetchData() {
 
     const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editCompanyEndPoint + companyId
@@ -74,7 +79,7 @@ export default function EditCompanyForm() {
         setCompanyData({
           name: company.name,
           logo: null,
-          // image:company.logo,
+          image:company.logo,
           address: company.address,
           state: company.state.id,
           city: company.city.id,
@@ -92,6 +97,8 @@ export default function EditCompanyForm() {
         setSelectedCity(company.city.id);
         fetchCity(company.state.id);
         setSelectedBuildingId(company.building);
+        setImageUrl(company.image)
+        console.log(company.logo,"logo")
         console.log(company.building.buildingId, "buildingId")
       })
       .catch((error) => {
@@ -169,13 +176,85 @@ export default function EditCompanyForm() {
     setSelectedCity(selectedCity);
   };
 
+  //logo handling
+
+
+
+  const [logoUpdated, setLogoUpdated] = useState(false);
+
+  
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+
+  const handleImageClick = () => { 
+    let img = imageUrl || companyData.image
+    if (img) {
+        const newWindow = window.open();
+        newWindow.document.write(`<img src="${img}" alt="Uploaded Logo"/>`);
+    }
+};
+
+
+
+  const handleLogoChange = (event) => {
+    const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+    const logoFile = event.target.files[0];
+
+
+    if (!logoFile) {
+        // User clicked cancel without selecting a file
+        return;
+    }
+
+
+    // Check if file format is allowed
+    if (!allowedExtensions.includes(logoFile.type)) {
+
+
+        alert("Allowed file formats: .jpg, .jpeg, .png")
+        // setErrors({
+        //     ...errors,
+        //     logo: "Allowed file formats: .jpg, .jpeg, .png"
+        // });
+        return;
+    }
+
+    // Check if file size exceeds the limit
+    if (logoFile.size > MAX_FILE_SIZE) {
+        alert("Maximum file size exceeded (5MB)");
+        // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+        return;
+    }
+
+    // Proceed with normal logo upload process
+    setCompanyData({ ...companyData, logo: logoFile });
+    setLogoUpdated(true);
+    alert("Company logo updated successfully");
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        setImageUrl(reader.result);
+    };
+    reader.readAsDataURL(logoFile);
+};
+
+
+
+
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const handleSave = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
       formData.append("name", companyData.name);
-      //    formData.append('image', companyData.logo);
+
+
+      if (companyData.logo) {
+        // Only append the image if it exists
+                 formData.append('image', companyData.logo);
+        
+    }
+        //  formData.append('image', companyData.logo);
 
       formData.append("address", companyData.address);
       formData.append("state.id", companyData.state);
@@ -185,11 +264,11 @@ export default function EditCompanyForm() {
       formData.append("phoneNumber", companyData.phoneNumber);
       formData.append("industry", companyData.industry);
       formData.append("userLimit", companyData.userLimit);
-      formData.append("building.buildingId", companyData.buildingId);
+      formData.append("building.buildingId", companyData.buildingId.id);
       formData.append("aboutUs", companyData.aboutUs);
-      if (companyData.logo) {
-        formData.append("image", companyData.logo);
-      }
+      // if (companyData.logo) {
+      //   formData.append("image", companyData.logo);
+      // }
       // if(!companyData.logo){
       //     console.log("image null")
       //     formData.append('image', null);
@@ -244,11 +323,11 @@ editCompanyUrl
     }
   };
 
-  const handleLogoChange = (event) => {
+  // const handleLogoChange = (event) => {
 
-    const logoFile = event.target.files[0];
-    setCompanyData({ ...companyData, logo: logoFile });
-  };
+  //   const logoFile = event.target.files[0];
+  //   setCompanyData({ ...companyData, logo: logoFile });
+  // };
 
 
   //buildingId
@@ -371,10 +450,8 @@ editCompanyUrl
                   {/* <label></label>
             <TextField className="fileInput" type="file" label="Upload Company Logo" InputLabelProps={{ shrink: true }} id="logo" style={{ width: "47%", height: "50px", color: "blue" }} name="logo" value={companyData.logo} onChange={handleInputChange}></TextField> */}
 
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    {/* <label>Upload company Logo</label><br></br> */}
-
-                    {/* <input type="file" value={companyData.logo} onChange={(e) => setCompanyData({ ...companyData, logo: e.target.value })} ></input> */}
+                  {/* <div style={{ display: "flex", flexDirection: "column" }}>
+               
 
                     <label className="custom-file-upload">
                       <input
@@ -385,7 +462,41 @@ editCompanyUrl
                       />
                       Upload Company Logo
                     </label>
-                  </div>
+                  </div> */}
+
+
+<div style={{ display: "flex", flexDirection: "column", gap: "" }} >
+                                            <label
+                                            >
+
+                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                                                    {(imageUrl || companyData.image) && (
+
+                                                        <img
+                                                            src={imageUrl || companyData.image}
+                                                            // src={companyData.logo}
+                                                            alt="Uploaded Logo"
+                                                            style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px', cursor: 'pointer' }}
+                                                            onClick={handleImageClick}
+                                                        />
+
+                                                    )}
+                                                    <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
+                                                        <input type="file"  accept="image/jpeg, image/jpg, image/png" id="file-input" required   onChange={handleLogoChange} />
+                                                        Upload Company Logo
+                                                    </span>
+
+                                                </div>
+
+
+
+                                            </label>
+                                            <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
+                                                Allowed file formats: .jpg, .jpeg, .png
+                                            </Typography>
+
+
+                                        </div>
                 </div>
 
                 <TextField

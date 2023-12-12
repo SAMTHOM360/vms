@@ -95,33 +95,28 @@ const handleChangeRowsPerPage = (event) => {
 
 
   useEffect(() => {
-    
 
     fetchAllData()
 
-  }, [page,rowsPerPage, selectedCompanyNames,selectedBuildingIds]);
+  }, [page,rowsPerPage]);
 
 
 useEffect(() => {
   fetchBuildingIds()
 
-
-
 },[])
 
-//   useEffect(() => {
+  useEffect(() => {
 
+    if (page === 0) {
 
-//     if (page === 0) {
+        fetchAllData();
 
-//         fetchAllData();
+    } else {
+        setPage(0);
+    }
 
-//     } else {
-//         setPage(0);
-//     }
-
-
-// }, [selectedCompanyNames,selectedBuildingIds])
+}, [selectedBuildingIds])
 
 
 
@@ -142,7 +137,7 @@ useEffect(() => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then((response) => {
-        debugger
+        
 
         const responseData = response.data.data.companies;
         setLength(response.data.data.totalElements);
@@ -345,8 +340,8 @@ useEffect(() => {
               <div style={{ backgroundColor: "", width: "100%" }}>
                 <Grid container>
                   <Grid item xs={12}>
-                    <Paper
-                      elevation={5}
+                    <Box
+                      // elevation={5}
                       sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -367,7 +362,7 @@ useEffect(() => {
                         >      Add Company
                         </Button>
                       </Link>
-                    </Paper>
+                    </Box>
                   </Grid>
                 </Grid>
 
@@ -378,16 +373,23 @@ useEffect(() => {
                       <div style={{ display: "flex", justifyContent: "", backgroundColor: "" }}>
 
 
-                        <div style={{ display: "flex", justifyContent: "left" }}>
+                        <div style={{ display: "flex", justifyContent: "" }}>
                           <Autocomplete
                             disablePortal
                             id="combo-box-demo"
                             options={buildingIds}
 
-                            getOptionLabel={(option) => option.buildingId}
+                            getOptionLabel={(option) => option !== null ? `Id-      ${option.id}   ${option.name}` : ""}
                             onChange={handleBuildingIdChange}
                             sx={{ width: 300 }}
-                            renderInput={(params) => <TextField {...params} label="Movie" />}
+                            renderInput={(params) => <TextField {...params} label="Search by building id" 
+                            renderOption={(props, option) => (
+        <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: "red" }} {...props}>
+            <div>{`Id-${option.id}`}</div>
+            <div>{option.name}</div>
+        </div>
+    )}
+                            />}
                           />
 
 
@@ -431,7 +433,7 @@ useEffect(() => {
                         <Table aria-label="simple table">
                           <TableHead style={{ backgroundColor: '#2b345386' }}>
                             <TableRow>
-                              <TableCell><h4>ID</h4></TableCell>
+                              <TableCell><h4>Sl.No</h4></TableCell>
                               <TableCell align="left"><h4>Company Name</h4></TableCell>
                               <TableCell align="left"><h4>Email</h4></TableCell>
                               <TableCell align="left"><h4>Phone No.</h4></TableCell>
@@ -538,7 +540,6 @@ useEffect(() => {
 };
 
 export default CompanyTable;
-
 
 
 
