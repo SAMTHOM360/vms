@@ -17,6 +17,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import Navbar from '../../global/Navbar';
 import Sidebar from '../../global/Sidebar';
 import Header from '../Header';
+import dayjs from 'dayjs';
 
 
 import PendingIcon from '@mui/icons-material/Pending';
@@ -47,9 +48,9 @@ export default function Dashboard() {
     const {setActiveListItem} = useAuth()
 
     // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
-    useEffect(() => {
-        setActiveListItem('/dashboardreceptionist')
-      }, [setActiveListItem])
+    // useEffect(() => {
+    //     setActiveListItem('/dashboardreceptionist')
+    //   }, [setActiveListItem])
 
     const [allData, setAllData] = useState(null);
 
@@ -175,22 +176,35 @@ export default function Dashboard() {
 
     const navigate = useNavigate();
     const routeChange = (filteredVisitors) => {
+
+        // const today = dayjs().format('YYYY-MM-DD'); 
         let path = `/receptionistdashboard`;
 
         navigate(path);
 
         if (filteredVisitors) {
             sessionStorage.setItem("filters", filteredVisitors)
+            // sessionStorage.setItem("today",today)
             navigate(path);
 
         }
-        else {
-            navigate(path);
-        }
+        // else {
+        //     navigate(path);
+        // }
     }
 
 const routeChange1 = ()=>{
+
     let path1= '/receptionistdashboard';
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    console.log(formattedDate,"formatteddate")
+    sessionStorage.setItem("total",formattedDate)
     navigate(path1);
 }
 
@@ -206,7 +220,7 @@ const routeChange1 = ()=>{
                                 <Grid container>
                                     <Grid container>
                                         <Grid item xs={12}>
-                                            <Paper
+                                            <Box
                                                 elevation={1}
                                                 sx={{
                                                     display: 'flex',
@@ -218,7 +232,7 @@ const routeChange1 = ()=>{
                                                 }}
                                             >
                                                 <Header title="Dashboard" subtitle="Welcome to dashboard" />
-                                            </Paper>
+                                            </Box>
                                         </Grid>
 
                                     </Grid>
@@ -227,7 +241,7 @@ const routeChange1 = ()=>{
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                                     <Grid item xs={12} style={{ backgroundColor: "" }}>
                                         <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                            <Paper onClick={routeChange1} elevation={1} sx={{
+                                            <Paper onClick={routeChange1}  elevation={1} sx={{
                                                 height: 150,
                                                 width: 300,
                                              

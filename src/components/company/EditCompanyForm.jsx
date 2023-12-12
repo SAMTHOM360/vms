@@ -673,6 +673,7 @@ editCompanyUrl
                       <TextField
                         {...params}
                         label="Select Building"
+                        required
                         variant="outlined"
                       />
                     )}
@@ -680,7 +681,7 @@ editCompanyUrl
 
                   <TextField
                     sx={{ width: "47%" }}
-                    label="User Limit"
+                    label="User Limit" required
                     placeholder="User Limit"
                   
                     value={companyData.userLimit}

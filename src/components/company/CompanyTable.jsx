@@ -51,27 +51,27 @@ const CompanyTable = () => {
   }, [setActiveListItem])
 
 
-//pagination
+  //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [length,setLength] = useState(0);
+  const [length, setLength] = useState(0);
 
 
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
 
-}
+  }
 
 
-const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-  // fetchAllData();
-};
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    // fetchAllData();
+  };
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(+event.target.value);
-  // setPage(0);
-};
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    // setPage(0);
+  };
 
 
   const [companies, setCompanies] = useState([]);
@@ -98,25 +98,25 @@ const handleChangeRowsPerPage = (event) => {
 
     fetchAllData()
 
-  }, [page,rowsPerPage]);
+  }, [page, rowsPerPage]);
 
 
-useEffect(() => {
-  fetchBuildingIds()
+  useEffect(() => {
+    fetchBuildingIds()
 
-},[])
+  }, [])
 
   useEffect(() => {
 
     if (page === 0) {
 
-        fetchAllData();
+      fetchAllData();
 
     } else {
-        setPage(0);
+      setPage(0);
     }
 
-}, [selectedBuildingIds])
+  }, [selectedBuildingIds])
 
 
 
@@ -137,7 +137,7 @@ useEffect(() => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then((response) => {
-        
+
 
         const responseData = response.data.data.companies;
         setLength(response.data.data.totalElements);
@@ -228,10 +228,10 @@ useEffect(() => {
 
   const handleCompanyNameChange = (event) => {
     if (event.key === 'Enter') {
-   fetchAllData(selectedCompanyNames)
+      fetchAllData(selectedCompanyNames)
     }
   };
-  
+
 
 
   // useEffect(() => {
@@ -320,7 +320,7 @@ useEffect(() => {
 
 
 
- 
+
 
 
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -329,7 +329,7 @@ useEffect(() => {
   };
 
 
-  console.log(page,"companies")
+  console.log(page, "companies")
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3, backgroundColor: "" }}>
@@ -370,60 +370,53 @@ useEffect(() => {
                   <Grid item xs={12}>
                     <Item elevation={3} style={{ height: '', margin: '10px' }}>
 
-                      <div style={{ display: "flex", justifyContent: "", backgroundColor: "" }}>
+                      <div style={{ display: "flex", justifyContent: "",gap:"20px", backgroundColor: "" ,marginBottom:"10px"}}>
 
 
-                        <div style={{ display: "flex", justifyContent: "" }}>
+                        {/* <div style={{ display: "flex", justifyContent: "yellow" }}> */}
                           <Autocomplete
                             disablePortal
                             id="combo-box-demo"
                             options={buildingIds}
 
-                            getOptionLabel={(option) => option !== null ? `Id-      ${option.id}   ${option.name}` : ""}
+                            getOptionLabel={(option) => option !== null ? `Id-${option.id}    ${option.name}` : ""}
                             onChange={handleBuildingIdChange}
                             sx={{ width: 300 }}
-                            renderInput={(params) => <TextField {...params} label="Search by building id" 
-                            renderOption={(props, option) => (
-        <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: "red" }} {...props}>
-            <div>{`Id-${option.id}`}</div>
-            <div>{option.name}</div>
-        </div>
-    )}
+                            renderInput={(params) => <TextField {...params} label="Search by building id"
+                              // renderOption={(props, option) => (
+                              //   <div style={{ display: '', justifyContent: '', backgroundColor: "red" }} {...props}>
+                              //     <div>{`Id-${option.id}`}</div>
+                              //     <div>{option.name}</div>
+                              //   </div>
+                              // )}
+
+                              renderOption={(props, option) => (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: "red" }} {...props}>
+                                  <div>{`Id-${option.id}`}</div>
+                                  <div style={{ marginLeft: '10px' }}>{option.name}</div> {/* Adjust the margin as needed */}
+                                </div>
+                              )}
                             />}
                           />
 
 
 
-                          <TextField id="outlined-basic" label="Outlined" variant="outlined"
+                          <TextField id="outlined-basic" label="Search by Company Name" variant="outlined"
 
-                          value={selectedCompanyNames}
-                          // onChange={ (e)handleCompanyNameChange}
-                          
-                          onChange={(e) => setSelectedCompanyNames(e.target.value)}
-                          onKeyPress={handleCompanyNameChange} 
+                            value={selectedCompanyNames}
+                            // onChange={ (e)handleCompanyNameChange}
 
-                                          
-                        />
+                            onChange={(e) => setSelectedCompanyNames(e.target.value)}
+                            onKeyPress={handleCompanyNameChange}
 
 
+                          />
 
 
-                        </div>
-                        {/* <input
-                          type="text"
-                          placeholder="Search..."
-                          value={searchQuery}
-                          onChange={handleSearch}
-                          style={{
-                            position: '',
-                            right: 0,
-                            marginTop: "10px",
-                            marginBottom: "15px",
-                            height: "30px",
-                            marginRight: "10px",
-                            borderRadius: "10px"
-                          }}
-                        /> */}
+
+
+                        {/* </div> */}
+                        
 
 
                       </div>
@@ -457,7 +450,7 @@ useEffect(() => {
                               .map((company, index) => (
                                 <TableRow key={company.id}>
                                   <TableCell>{calculateSerialNumber(index)}</TableCell>
-                                 
+
                                   <TableCell align="left">{company.name}</TableCell>
                                   <TableCell align="left">{company.email}</TableCell>
                                   <TableCell align="left">{company.phoneNumber}</TableCell>
@@ -516,7 +509,7 @@ useEffect(() => {
                           </TableBody>
                         </Table>
                         <TablePagination
-                          rowsPerPageOptions={[5,10,15]}
+                          rowsPerPageOptions={[5, 10, 15]}
                           component="div"
                           // count={companies.length}
                           count={length}
