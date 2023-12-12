@@ -25,6 +25,7 @@ const MeetBarChart = ({ data }) => {
       datasets: [
         {
           label: "BUSINESS COUNT",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["BUSINESS"]?.count ?? 0
           ),
@@ -33,6 +34,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "CASUAL COUNT",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["CASUAL"]?.count ?? 0
           ),
@@ -41,6 +43,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "INTERVIEW COUNT",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["INTERVIEW"]?.count ?? 0
           ),
@@ -49,6 +52,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "BUSINESS HOUR",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["BUSINESS"]?.hour ?? 0
           ),
@@ -57,6 +61,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "CASUAL HOUR",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["CASUAL"]?.hour ?? 0
           ),
@@ -65,6 +70,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "INTERVIEW HOUR",
+          // barThickness: 40,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["INTERVIEW"]?.hour ?? 0
           ),
@@ -201,6 +207,7 @@ const MeetBarChart = ({ data }) => {
         },
 
         scales: {
+          
           x: {
             stacked: true,
             title: {

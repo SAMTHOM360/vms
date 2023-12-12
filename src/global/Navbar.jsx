@@ -339,6 +339,8 @@ export default function Navbar({ toggleSidebar }) {
 
       // console.log('bellAPiData', bellAPiData)
 
+     
+
 
        bellmenuItemm = (
         <List
@@ -487,6 +489,7 @@ export default function Navbar({ toggleSidebar }) {
   };
 // console.log('why should')
   async function fetchData() {
+    // console.log('i got hitt')
     let url = Config.baseUrl + Config.apiEndPoints.navbarFetchGetById
     try {
       // const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
