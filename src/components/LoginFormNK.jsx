@@ -754,6 +754,7 @@ function LoginForm() {
                 usernameErrors.errorMessage || usernameErrors.warningMessage
               }
               required
+              autoFocus
             />
 
             <TextField

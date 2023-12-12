@@ -19,6 +19,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -881,6 +882,7 @@ const Employee = () => {
                                     // bgcolor: "orange",
                                     display:'flex',
                                     justifyContent:'end',
+                                    mt:'3px'
                                   }}
                                 >
                                   <Button
@@ -888,12 +890,15 @@ const Employee = () => {
                                     sx={{
                                       // position:'absolute',
                                       // left:'4.5em',
-                                      width: "12em",
+                                      minHeight:'unset',
+                                      width: "13em",
+                                      height:'40px',
+                                      gap:1,
                                       // float:'right'
                                     }}
                                     onClick={handleDownloadExcel}
                                   >
-                                    Export As Excel
+                                   <DownloadIcon/> Export Excel
                                   </Button>
                                 </Box>
                   <DataGrid

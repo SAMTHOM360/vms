@@ -10,7 +10,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -35,7 +35,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { TextField, Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -49,7 +49,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 
@@ -68,20 +68,19 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
 export default function Meetings() {
-  const {setActiveListItem} = useAuth()
+  const { setActiveListItem } = useAuth();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [phoneCleared, setPhoneCleared] = useState(false);
-  const [ startDateCleared, setStartDateCleared ] = useState(false)
-  const [ endDateCleared, setEndDateCleared ] = useState(false)
+  const [startDateCleared, setStartDateCleared] = useState(false);
+  const [endDateCleared, setEndDateCleared] = useState(false);
 
   // sessionStorage.setItem('activeListItem', '/meetings')
   useEffect(() => {
-    setActiveListItem('/meetings')
-  }, [setActiveListItem])
-    const navigate = useNavigate()
+    setActiveListItem("/meetings");
+  }, [setActiveListItem]);
+  const navigate = useNavigate();
 
   //pagination
   const [page, setPage] = useState(0);
@@ -136,7 +135,8 @@ export default function Meetings() {
   function getRoomsOption() {
     const companyId = sessionStorage.getItem("companyId");
 
-    const roomUrl = Config.baseUrl + Config.apiEndPoints.getRoomEndPoint + "?id=" + companyId
+    const roomUrl =
+      Config.baseUrl + Config.apiEndPoints.getRoomEndPoint + "?id=" + companyId;
 
     // const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${companyId}`;
 
@@ -174,38 +174,68 @@ export default function Meetings() {
 
   //  console.log('status option', statusOptions);
 
-useEffect(() => {
-  const filter = sessionStorage.getItem('filters');
-  const empFilteredFromDate = sessionStorage.getItem('empFilteredFromDate');
-  const empFilteredToDate = sessionStorage.getItem('empFilteredToDate');
+  // useEffect(() => {
+  //   const filter = sessionStorage.getItem('filters');
+  //   const empFilteredFromDate = sessionStorage.getItem('empFilteredFromDate');
+  //   const empFilteredToDate = sessionStorage.getItem('empFilteredToDate');
 
-  if (filter && Array.isArray(statusOptions) && statusOptions.length > 0) {
-    setSelectedStatusOptions(filter);
-    sessionStorage.removeItem('filters');
-  }
+  //   if (filter && Array.isArray(statusOptions) && statusOptions.length > 0) {
+  //     setSelectedStatusOptions(filter);
+  //     sessionStorage.removeItem('filters');
+  //   }
 
-  if (empFilteredFromDate && empFilteredToDate) {
-    const startDate = dayjs(empFilteredFromDate);
-    const endDate = dayjs(empFilteredToDate);
+  //   if (empFilteredFromDate && empFilteredToDate) {
+  //     const startDate = dayjs(empFilteredFromDate);
+  //     const endDate = dayjs(empFilteredToDate);
 
-    // console.log('useeffect start date', startDate);
-    // console.log('useeffect end date', endDate);
+  //     // console.log('useeffect start date', startDate);
+  //     // console.log('useeffect end date', endDate);
 
-    setStartDate(startDate);
-    setEndDate(endDate);
+  //     setStartDate(startDate);
+  //     setEndDate(endDate);
 
-    sessionStorage.removeItem('empFilteredFromDate');
-    sessionStorage.removeItem('empFilteredToDate');
-  }
-}, [statusOptions]);
+  //     sessionStorage.removeItem('empFilteredFromDate');
+  //     sessionStorage.removeItem('empFilteredToDate');
+  //   }
+  // }, [statusOptions]);
 
+  useEffect(() => {
+    const filter = sessionStorage.getItem("filters");
+    const empFilteredFromDate = sessionStorage.getItem("empFilteredFromDate");
+    const empFilteredToDate = sessionStorage.getItem("empFilteredToDate");
 
-// console.log('calender start date',startDate)
-// console.log('calender end date',endDate)
+    if (
+      (filter && Array.isArray(statusOptions) && statusOptions.length > 0) ||
+      (empFilteredFromDate && empFilteredToDate)
+    ) {
+      setSelectedStatusOptions(filter);
+      const startDate = dayjs(empFilteredFromDate);
+      const endDate = dayjs(empFilteredToDate);
+
+      // console.log('useeffect start date', startDate);
+      // console.log('useeffect end date', endDate);
+
+      setStartDate(startDate);
+      setEndDate(endDate);
+
+      setTimeout(() => {
+        sessionStorage.removeItem("filters");
+        sessionStorage.removeItem("empFilteredFromDate");
+        sessionStorage.removeItem("empFilteredToDate");
+      }, 1000);
+
+      // sessionStorage.removeItem('filters');
+      // sessionStorage.removeItem('empFilteredFromDate');
+      // sessionStorage.removeItem('empFilteredToDate');
+    }
+  }, [statusOptions]);
+
+  // console.log('calender start date',startDate)
+  // console.log('calender end date',endDate)
 
   function fetchStatusOptions() {
     // const statusUrl = `http://192.168.12.54:8080/vis/meetstatus`;
-    const statusUrl = Config.baseUrl + Config.apiEndPoints.statusEndPoint
+    const statusUrl = Config.baseUrl + Config.apiEndPoints.statusEndPoint;
     axios
       .get(statusUrl)
       .then((response) => {
@@ -240,70 +270,59 @@ useEffect(() => {
 
   //export
 
-
   function downloadFile(url) {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', 'meeting_details.xlsx');
-    link.style.display = 'none';
+    link.setAttribute("download", "meeting_details.xlsx");
+    link.style.display = "none";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-}
+  }
 
   function excelExport() {
-
-    const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+    const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
 
     // const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
 
-    const exportUrl =Config.baseUrl + Config.apiEndPoints.exportEndPoint;
+    const exportUrl = Config.baseUrl + Config.apiEndPoints.exportEndPoint;
 
     const payload = {
-        page: 0,
-        size: 1000,
-        phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
-        fromDate: startDate,
-        toDate: endDate,
+      page: 0,
+      size: 1000,
+      phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+      fromDate: startDate,
+      toDate: endDate,
 
-        companyId: selectedCompanyId,
-        user: {
-          id:adminId,
+      companyId: selectedCompanyId,
+      user: {
+        id: adminId,
 
-            // id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
-        },
+        // id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+      },
 
-        room: {
-            // id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
-            id:selectedRoom.length === 0 ? null : selectedRoom,
-          },
-        
+      room: {
+        // id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+        id: selectedRoom.length === 0 ? null : selectedRoom,
+      },
 
-        status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
-        // date:'2023-10-18T11:00:00'
+      status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+      // date:'2023-10-18T11:00:00'
+    };
 
-    }
-
-    axios.post(exportUrl, payload, {
-
+    axios
+      .post(exportUrl, payload, {
         // responseType: 'blob', // important
-    })
-        .then(response => {
-            const url = response.data.data;
-            // console.log(url, "files")
-            downloadFile(url)
-
-        }).catch(error => {
-            console.error('Error fetching data:', error);
-        });
-}
-
-
-
-
-
-
-
+      })
+      .then((response) => {
+        const url = response.data.data;
+        // console.log(url, "files")
+        downloadFile(url);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -337,7 +356,6 @@ useEffect(() => {
       room: {
         id: selectedRoom.length === 0 ? null : selectedRoom,
       },
-      
 
       //         // date:'2023-10-18T11:00:00'
 
@@ -345,8 +363,9 @@ useEffect(() => {
     };
 
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`;
-    const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.getVisitorEndPoint
-    
+    const getVisitorUrl =
+      Config.baseUrl + Config.apiEndPoints.getVisitorEndPoint;
+
     axios
       .post(getVisitorUrl, payload)
 
@@ -506,8 +525,8 @@ useEffect(() => {
 
     // const addMeetingUrl =
     //   "http://192.168.12.54:8080/api/meeting/update/meeting";
-    const addMeetingUrl = Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint
-  
+    const addMeetingUrl =
+      Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint;
 
     axios
       .post(addMeetingUrl, meetingData, {
@@ -600,8 +619,6 @@ useEffect(() => {
   //   }
   // }
 
-
-
   function formatMeetingDuration1(meeting) {
     const endTimestamp = meeting.meetingEndDateTime;
 
@@ -612,25 +629,29 @@ useEffect(() => {
       endDate.setMinutes(endDate.getMinutes() - 30);
 
       const options = {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-        timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: "Asia/Kolkata", // Set the timezone to IST
       };
 
-      const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+      const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
+        endDate
+      );
 
       let hours = endDate.getHours();
-      const amPm = hours >= 12 ? 'PM' : 'AM';
+      const amPm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
 
       // Manually construct the time in 12-hour format (hh:mm AM/PM)
-      const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+      const formattedTime = `${hours}:${endDate
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")} ${amPm}`;
 
       return `${formattedDate}, ${formattedTime}`;
     }
   }
-
 
   function formatMeetingDuration(meeting) {
     const endTimestamp = meeting.meetingStartDateTime;
@@ -642,20 +663,25 @@ useEffect(() => {
       endDate.setMinutes(endDate.getMinutes() - 30);
 
       const options = {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-        timeZone: 'Asia/Kolkata', // Set the timezone to IST
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: "Asia/Kolkata", // Set the timezone to IST
       };
 
-      const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(endDate);
+      const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
+        endDate
+      );
 
       let hours = endDate.getHours();
-      const amPm = hours >= 12 ? 'PM' : 'AM';
+      const amPm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12; // Convert midnight (0 hours) to 12
 
       // Manually construct the time in 12-hour format (hh:mm AM/PM)
-      const formattedTime = `${hours}:${endDate.getMinutes().toString().padStart(2, '0')} ${amPm}`;
+      const formattedTime = `${hours}:${endDate
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")} ${amPm}`;
 
       return `${formattedDate}, ${formattedTime}`;
     }
@@ -663,35 +689,36 @@ useEffect(() => {
 
   // console.log(meetings, "whyyyyy")
 
-
   //universal search
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredCompanies = visitors.filter(company => {
+  const filteredCompanies = visitors.filter((company) => {
     const searchTerm = searchQuery.toLowerCase(); // Convert search query to lowercase
     return (
-      (company.visitor.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.email?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.phoneNumber?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.companyName?.toLowerCase()?.includes(searchTerm) || '') ||
-
-      (company.visitor.state?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.city?.name?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.remarks?.toLowerCase()?.includes(searchTerm) || '') ||
-      (company.visitor.status?.toLowerCase()?.includes(searchTerm) || '')
+      company.visitor.name?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.email?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.phoneNumber?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.companyName?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.state?.name?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.city?.name?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.remarks?.toLowerCase()?.includes(searchTerm) ||
+      "" ||
+      company.visitor.status?.toLowerCase()?.includes(searchTerm) ||
+      ""
       // (company.createdBy?.toLowerCase()?.includes(searchTerm) || '')
     );
   });
 
-
-  const handleSearch = event => {
+  const handleSearch = (event) => {
     setSearchQuery(event.target.value); // Update search query state
   };
-
-
-
-
 
   //room
 
@@ -713,16 +740,14 @@ useEffect(() => {
     phoneNumberFilter,
     startDate,
     endDate,
-    searchQuery
+    searchQuery,
   ]);
-
 
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
   const [selectedFilter, setSelectedFilter] = useState("personalMeets");
 
-  const [ isADMIN, setIsADMIN ] = useState(false)
-
+  const [isADMIN, setIsADMIN] = useState(false);
 
   useEffect(() => {
     if (loggedUserRole === "ADMIN") {
@@ -737,142 +762,142 @@ useEffect(() => {
     { label: "Company Meets", value: "companyMeets" },
   ];
 
-
   const handleFilterChange = (event) => {
     const selectedValue = event.target.value;
 
     switch (selectedValue) {
-      case 'personalMeets':
-        navigate('/meetings')
+      case "personalMeets":
+        navigate("/meetings");
         break;
-      case 'companyMeets':
-        navigate('/receptionistdashboard')
+      case "companyMeets":
+        navigate("/receptionistdashboard");
         break;
       default:
         break;
     }
 
-
     setSelectedFilter(selectedValue);
   };
 
   const handleClearFilters = () => {
-    setSelectedStatusOptions('')
-    setPhoneNumberFilter('')
-    setSelectedRoom('')
-    setStartDate(null)
-    setEndDate(null)
-    setSearchQuery('')
-    sessionStorage.removeItem('filters')
-      sessionStorage.removeItem('empFilteredFromDate');
-    sessionStorage.removeItem('empFilteredToDate');
-  }
-
-
-
+    setSelectedStatusOptions("");
+    setPhoneNumberFilter("");
+    setSelectedRoom("");
+    setStartDate(null);
+    setEndDate(null);
+    setSearchQuery("");
+    sessionStorage.removeItem("filters");
+    sessionStorage.removeItem("empFilteredFromDate");
+    sessionStorage.removeItem("empFilteredToDate");
+  };
 
   const handleOpenAppointMeetingForm = () => {
     // setAddUserDialogOpen(true)
-    navigate('/appointmeeting')
-  }
+    navigate("/appointmeeting");
+  };
 
   return (
     <>
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3,}}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
-
-                
-                <Grid container>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Box
-                        elevation={1}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          // width:'100%',
-                          minHeight: "4.5em",
-                          mt: "3em",
-                          mb: "0.5em",
-                        }}
-                      >
-                        <Header
-                          title="Personal Meetings"
-                          subtitle="Get all updates about your meetings"
-                        />
-                        <Box sx={{ display: "flex", alignItems: "center", gap:'1em' }}>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            sx={{ marginLeft: "1.2em", height: "3em" }}
-                            onClick={handleOpenAppointMeetingForm}
-                          >
-                            Appoint A Meeting
-                          </Button>
-
-                          {isADMIN ? (<Box
-              sx={{
-                display:'flex',
-                flexDirection:{xs:'column', md:'row'},
-                alignItems:'center',
-                gap:'0.3em'
-              }}
-              >
-
-                <Typography sx={{color:'#555555'}}>Filter by</Typography>
-
-                <FormControl
-                  sx={{
-                    border: "none",
-                    borderRadius: "5px",
-                    // width: "130px !important",
-                    // height: '50px !important',
-                    boxShadow: "0px 2px 2px #3333337d",
-                    border:'none',
-                    "&:hover": {
-                      border: "none",
-                    },
-                    
-                  }}
-                >
-                  {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
-                  <Select
+            <Grid container>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Box
+                    elevation={1}
                     sx={{
-                      color: "white",
-                      bgcolor: "#1976d2",
-                      width: "165px !important",
-                      height: '40px !important',
-                      border: "none",
-                      "&:hover": {
-                        bgcolor: "#1565c0",
-                      },
-                      "& .MuiSelect-icon": {
-                        color: "white",
-                      },
+                      display: "flex",
+                      justifyContent: "space-between",
+                      // width:'100%',
+                      minHeight: "4.5em",
+                      mt: "3em",
+                      mb: "0.5em",
                     }}
-                    label="Select a filter"
-                    value={selectedFilter}
-                    onChange={handleFilterChange}
-                    elevation={3}
                   >
-                    {meetOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>)  : ''}
+                    <Header
+                      title="Personal Meetings"
+                      subtitle="Get all updates about your meetings"
+                    />
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", gap: "1em" }}
+                    >
+                      <Button
+                        variant="contained"
+                        size="small"
+                        sx={{ marginLeft: "1.2em", height: "3em" }}
+                        onClick={handleOpenAppointMeetingForm}
+                      >
+                        Appoint A Meeting
+                      </Button>
 
-                          
+                      {isADMIN ? (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: { xs: "column", md: "row" },
+                            alignItems: "center",
+                            gap: "0.3em",
+                          }}
+                        >
+                          <Typography sx={{ color: "#555555" }}>
+                            Filter by
+                          </Typography>
+
+                          <FormControl
+                            sx={{
+                              border: "none",
+                              borderRadius: "5px",
+                              // width: "130px !important",
+                              // height: '50px !important',
+                              boxShadow: "0px 2px 2px #3333337d",
+                              border: "none",
+                              "&:hover": {
+                                border: "none",
+                              },
+                            }}
+                          >
+                            {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
+                            <Select
+                              sx={{
+                                color: "white",
+                                bgcolor: "#1976d2",
+                                width: "165px !important",
+                                height: "40px !important",
+                                border: "none",
+                                "&:hover": {
+                                  bgcolor: "#1565c0",
+                                },
+                                "& .MuiSelect-icon": {
+                                  color: "white",
+                                },
+                              }}
+                              label="Select a filter"
+                              value={selectedFilter}
+                              onChange={handleFilterChange}
+                              elevation={3}
+                            >
+                              {meetOptions.map((option) => (
+                                <MenuItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
                         </Box>
-                      </Box>
-                    </Grid>
-                  </Grid>
+                      ) : (
+                        ""
+                      )}
+                    </Box>
+                  </Box>
                 </Grid>
-                <Grid sx={{ flexGrow: 1, backgroundColor: "" }}>
-                  {/* <Grid item xs={12}>
+              </Grid>
+            </Grid>
+            <Grid sx={{ flexGrow: 1, backgroundColor: "" }}>
+              {/* <Grid item xs={12}>
                                 <Grid style={{ gap: "30px", marginTop: "20px" }} container justifyContent="center" >
                                     <Paper elevation={1} sx={{
                                         height: 150,
@@ -967,24 +992,24 @@ useEffect(() => {
 
                                 </Grid>
                             </Grid> */}
-                </Grid>
-                <Grid container style={{ marginTop: "" }}>
-                  <Grid item xs={12} style={{ backgroundColor: "" }}>
-                    <Item
-                      elevation={2}
-                      style={{
-                        height: "",
-                        margin: "10px",
-                        backgroundColor: "",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        {/* <h1 style={{ textAlign: "left" }}>Visitors</h1>
+            </Grid>
+            <Grid container style={{ marginTop: "" }}>
+              <Grid item xs={12} style={{ backgroundColor: "" }}>
+                <Item
+                  elevation={2}
+                  style={{
+                    height: "",
+                    margin: "10px",
+                    backgroundColor: "",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {/* <h1 style={{ textAlign: "left" }}>Visitors</h1>
                                         <input
                                             type="text"
                                             placeholder="Search..."
@@ -1002,138 +1027,142 @@ useEffect(() => {
                                             }}
                                         /> */}
 
-                        <Grid>
-                          <Box
-                            component="form"
-                            // sx={{
-                            //   "& .MuiTextField-root": { m: 1, width: "25ch" },
-                            // }}
-                            sx={{width:"95%", mb:'1em'}}
-                            noValidate
-                            autoComplete="off"
-                          // style={{display:"flex",justifyContent:"space-evenly"}}
+                    <Grid>
+                      <Box
+                        component="form"
+                        // sx={{
+                        //   "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        // }}
+                        sx={{ width: "95%", mb: "1em" }}
+                        noValidate
+                        autoComplete="off"
+                        // style={{display:"flex",justifyContent:"space-evenly"}}
+                      >
+                        <Grid
+                          style={{
+                            display: "flex",
+                            flexDirection: "",
+                            justifyContent: "",
+                            margin: "",
+                            backgroundColor: "",
+                            gap: "20px",
+                            width: "",
+                          }}
+                        >
+                          <Grid
+                            style={{
+                              backgroundColor: "",
+                              display: "flex",
+                              flexDirection: "row",
+                              gap: 5,
+                            }}
                           >
-                            <Grid
-                              style={{
-                                display: "flex",
-                                flexDirection: "",
-                                justifyContent: "",
-                                margin: "",
-                                backgroundColor: "",
-                                gap: "20px",
-                                width: "",
+                            <TextField
+                              // id="outlined-select-currency"
+                              select
+                              label="Status"
+                              value={selectedStatusOptions}
+                              onChange={handleChangeStatus}
+                              style={{ top: "10px", width: "17em" }}
+                              InputProps={{
+                                endAdornment: selectedStatusOptions ? (
+                                  <div
+                                    style={{
+                                      marginRight: "-7px",
+                                      marginTop: "4px",
+                                      background: "",
+                                    }}
+                                  >
+                                    <ClearIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        setSelectedStatusOptions("")
+                                      }
+                                    />
+                                  </div>
+                                ) : null,
                               }}
                             >
-                              <Grid
-                                style={{
-                                  backgroundColor: "",
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  gap:5
-                                }}
-                              >
-                                <TextField
-                                  // id="outlined-select-currency"
-                                  select
-                                  label="Status"
-                                  value={selectedStatusOptions}
-                                  onChange={handleChangeStatus}
-                                  style={{ top: "10px", width:'17em' }}
-                                  
-                                  InputProps={{
-                                    endAdornment: selectedStatusOptions ? (
-                                      <div style={{ marginRight: '-7px', marginTop: '4px', background:'' }}>
-                                      <ClearIcon
-                                        style={{ cursor: 'pointer', }}
-                                        onClick={() => setSelectedStatusOptions('')}
-                                      />
-                                    </div>
-                                    ) : null,
-                                  }}
-                       
-                                >
-                                  {/* <MenuItem value="">
+                              {/* <MenuItem value="">
                                     <em>Cancel</em>
                                   </MenuItem> */}
 
-                                  {Array.isArray(statusOptions) &&
-                                    statusOptions.map((options, index) => (
-                                      <MenuItem key={index} value={options}>
-                                        {options}
-                                      </MenuItem>
-                                    ))}
-                                </TextField>
+                              {Array.isArray(statusOptions) &&
+                                statusOptions.map((options, index) => (
+                                  <MenuItem key={index} value={options}>
+                                    {options}
+                                  </MenuItem>
+                                ))}
+                            </TextField>
 
-                                <TextField
-                                  id="outlined-search"
-                                  label="Phone Number"
-                                  value={phoneNumberFilter}
+                            <TextField
+                              id="outlined-search"
+                              label="Phone Number"
+                              value={phoneNumberFilter}
+                              inputProps={{ maxLength: 10 }}
+                              slotProps={{
+                                field: {
+                                  clearable: true,
+                                  onClear: () => setPhoneCleared(true),
+                                },
+                              }}
+                              onChange={(e) => {
+                                if (e.target.value.length <= 10) {
+                                  setPhoneNumberFilter(e.target.value);
+                                }
+                              }}
+                              type="search"
+                              style={{ top: "10px" }}
+                            />
 
-                                  inputProps={{ maxLength: 10 }} 
-                                  slotProps={{
-                                    field: {
-                                      clearable: true,
-                                      onClear: () => setPhoneCleared(true),
-                                    },
-                                  }}
-
-
-                                  onChange={(e) => {
-
-                                    if (e.target.value.length <= 10) {
-                                        setPhoneNumberFilter(e.target.value)} 
-                                       
-                                    
-                                }}
-                                
-                               
-                                  type="search"
-                                  style={{ top: "10px" }}
-                                />
-
-                                <TextField
-                                  id="outlined-select-currency"
-                                  select
-                                  label="Room"
-                                  value={selectedRoom}
-                                  onChange={handleChange1}
-                                  sx={{    width:'17em'}}
-                                  SelectProps={{
-                                    MenuProps: {
-                                      style: {
-                                        maxHeight: "300px",
-                                    
-                                      },
-                                    },
-                                  }}
-                                  style={{ top: "10px" }}
-                                  InputProps={{
-                                    endAdornment: selectedRoom ? (
-                                      <div style={{ marginRight: '-7px', marginTop: '4px', background:'' }}>
-                                      <ClearIcon
-                                        style={{ cursor: 'pointer', }}
-                                        onClick={() => setSelectedRoom('')}
-                                      />
-                                    </div>
-                                    ) : null,
-                                  }}
-                                >
-                                  {/* <MenuItem value="">
+                            <TextField
+                              id="outlined-select-currency"
+                              select
+                              label="Room"
+                              value={selectedRoom}
+                              onChange={handleChange1}
+                              sx={{ width: "17em" }}
+                              SelectProps={{
+                                MenuProps: {
+                                  style: {
+                                    maxHeight: "300px",
+                                  },
+                                },
+                              }}
+                              style={{ top: "10px" }}
+                              InputProps={{
+                                endAdornment: selectedRoom ? (
+                                  <div
+                                    style={{
+                                      marginRight: "-7px",
+                                      marginTop: "4px",
+                                      background: "",
+                                    }}
+                                  >
+                                    <ClearIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => setSelectedRoom("")}
+                                    />
+                                  </div>
+                                ) : null,
+                              }}
+                            >
+                              {/* <MenuItem value="">
                                     <em>Cancel</em>
                                   </MenuItem> */}
 
-                                  {/* {Array.isArray(rooms) && rooms.map((room) => (
+                              {/* {Array.isArray(rooms) && rooms.map((room) => (
                                                                 <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
                                                             ))} */}
-                                  {Array.isArray(rooms) &&
-                                    rooms.map((room) => (
-                                      <MenuItem key={room.id} value={room.id}>
-                                        {room.roomName}{" "}
-                                      </MenuItem>
-                                    ))}
-                                </TextField>
+                              {Array.isArray(rooms) &&
+                                rooms.map((room) => (
+                                  <MenuItem key={room.id} value={room.id}>
+                                    {room.roomName}{" "}
+                                  </MenuItem>
+                                ))}
+                            </TextField>
 
-                                {/* <LocalizationProvider
+                            {/* <LocalizationProvider
                                   dateAdapter={AdapterDayjs}
                                 >
                                   <DemoContainer
@@ -1157,47 +1186,70 @@ useEffect(() => {
                                   </DemoContainer>
                                 </LocalizationProvider> */}
 
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DemoContainer components={["DatePicker", "DatePicker"]}>
-    <DatePicker
-    sx={{width:'20em'}}
-      label="Meet Start Date"
-      value={startDate}
-      onChange={handleStartDateChange}
-      textField={(props) => <TextField {...props} />}
-      format="DD/MM/YYYY"
-      slotProps={{
-        field: {
-          clearable: true,
-          onClear: () => setStartDate(true),
-        },
-      }}
-    />
-    <DatePicker
-        sx={{width:'20em'}}
-      label="Meet End Date"
-      value={endDate}
-      onChange={handleEndDateChange}
-      textField={(props) => <TextField {...props} />}
-      format="DD/MM/YYYY"
-      slotProps={{
-        field: {
-          clearable: true,
-          onClear: () => setEndDate(true),
-        },
-      }}
-    />
-  </DemoContainer>
-</LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              {/* <DemoContainer components={["DatePicker", "DatePicker"]}> */}
+                              <DemoContainer components={["DatePicker"]} sx={{ width: {md:"24em", lg:'21em'}, mt:'2px' }}>
+                                <DatePicker
+                                  sx={{ width: "20em" }}
+                                  label="Meet Start Date"
+                                  value={startDate}
+                                  onChange={handleStartDateChange}
+                                  textField={(props) => (
+                                    <TextField {...props} />
+                                  )}
+                                  format="DD/MM/YYYY"
+                                  slotProps={{
+                                    field: {
+                                      clearable: true,
+                                      onClear: () => setStartDate(true),
+                                    },
+                                  }}
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
 
-                                <Grid style={{ backgroundColor: "", right: 0 }}>
-                                                                <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "55px", top: "9px", gap: "5px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoContainer components={["DatePicker"]} sx={{ width: {md:"24em", lg:'21em'}, mt:'2px' }}>
+                                <DatePicker
+                                  sx={{ width: "20em" }}
+                                  label="Meet End Date"
+                                  value={endDate}
+                                  onChange={handleEndDateChange}
+                                  textField={(props) => (
+                                    <TextField {...props} />
+                                  )}
+                                  format="DD/MM/YYYY"
+                                  slotProps={{
+                                    field: {
+                                      clearable: true,
+                                      onClear: () => setEndDate(true),
+                                    },
+                                  }}
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
+{/* 
+                            <Grid style={{ backgroundColor: "", right: 0 }}>
+                              <Button
+                                variant="contained"
+                                onClick={excelExport}
+                                sx={{
+                                  marginLeft: "",
+                                  width: "200px",
+                                  height: "55px",
+                                  top: "9px",
+                                  gap: "5px",
+                                  backgroundColor: "",
+                                }}
+                              >
+                                <FileDownloadIcon />
+                                Meetings Export
+                              </Button>
+                            </Grid> */}
 
-                                                            </Grid>
+                            {/* universal search */}
 
-                                                            {/* universal search */}
-
-                                {/* <TextField
+                            {/* <TextField
                                   id="outlined-search"
                                   label="Search"
 
@@ -1209,111 +1261,142 @@ useEffect(() => {
                                   type="search"
                                   style={{ top: "10px" }}
                                 /> */}
-                              </Grid>
-                            </Grid>
-                            
-                          </Box>
-
+                          </Grid>
                         </Grid>
-                        <Box sx={{ display: "flex", alignItems: "center", gap:'1em', }}>
-                          <Tooltip title={<p style={{fontSize:'12px', fontWeight:600}}>Clear filters</p>} >
-                          <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            sx={{ minWidth: "unset", marginLeft: "1.2em", width:'3.9em', height: "3.9em", }}
-                            onClick={handleClearFilters}
-                          >
-                            <RotateLeftIcon />
-                            {/* Clear Filters */}
-                          </Button>
-                          </Tooltip>
-                          </Box>
-                      </div>
+                      </Box>
+                    </Grid>
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", gap: "1em" }}
+                    >
+                                              <Button
+                                variant="contained"
+                                onClick={excelExport}
+                                sx={{
+                                  marginLeft: "",
+                                  width: "200px",
+                                  height: "51px",
+                                  // top: "9px",
+                                  // gap: "5px",
+                                  backgroundColor: "",
+                                }}
+                              >
+                                <FileDownloadIcon />
+                                Meetings Export
+                              </Button>
+                      <Tooltip
+                        title={
+                          <p style={{ fontSize: "12px", fontWeight: 600 }}>
+                            Clear filters
+                          </p>
+                        }
+                      >
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          sx={{
+                            minWidth: "unset",
+                            marginLeft: "1.2em",
+                            width: "3.9em",
+                            height: "3.9em",
+                          }}
+                          onClick={handleClearFilters}
+                        >
+                          <RotateLeftIcon />
+                          {/* Clear Filters */}
+                        </Button>
+                      </Tooltip>
+                    </Box>
+                  </div>
 
-                      <TableContainer
-                        component={Paper}
+                  <TableContainer
+                    component={Paper}
+                    sx={{
+                      width: "100%",
+                      boxShadow: 6,
+                      backgroundColor: "",
+                    }}
+                  >
+                    <Table sx={{}} aria-label="simple table">
+                      <TableHead
                         sx={{
-                          width: "100%",
-                          boxShadow: 6,
-                          backgroundColor: "",
+                          backgroundColor: "#2b345386",
+                          border: "1px solid black",
+                          fontWeight: "600",
                         }}
                       >
-                        <Table sx={{}} aria-label="simple table">
-                          <TableHead
-                            sx={{
-                              backgroundColor: "#2b345386",
-                              border: "1px solid black",
-                              fontWeight: "600",
-                            }}
-                          >
-                            <TableRow sx={{ border: "1px solid black" }}>
-                        
-                              <TableCell>Sl No</TableCell>
-                              <TableCell align="left">Full Name</TableCell>
+                        <TableRow sx={{ border: "1px solid black" }}>
+                          <TableCell>Sl No</TableCell>
+                          <TableCell align="left">Full Name</TableCell>
 
-                              <TableCell align="left">Email</TableCell>
-                              <TableCell align="left">Phone No.</TableCell>
-                              <TableCell align="left">Company Name</TableCell>
+                          <TableCell align="left">Email</TableCell>
+                          <TableCell align="left">Phone No.</TableCell>
+                          <TableCell align="left">Company Name</TableCell>
 
-                              <TableCell align="left">Start Time</TableCell>
-                              <TableCell align="left">End Time</TableCell>
-                              {/* <TableCell align="left">Remarks</TableCell> */}
-                              <TableCell align="left">Status</TableCell>
-                              <TableCell align="left">Room</TableCell>
+                          <TableCell align="left">Start Time</TableCell>
+                          <TableCell align="left">End Time</TableCell>
+                          {/* <TableCell align="left">Remarks</TableCell> */}
+                          <TableCell align="left">Status</TableCell>
+                          <TableCell align="left">Room</TableCell>
 
-                              <TableCell align="left">Actions</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {filteredCompanies
-                              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                              .map((visitor, index) => (
-                                <TableRow key={index}>
-                                  {/* <TableCell>{visitor.id}</TableCell>
+                          <TableCell align="left">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {filteredCompanies
+                          // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((visitor, index) => (
+                            <TableRow key={index}>
+                              {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                                  <TableCell>
-                                    {calculateSerialNumber(
-                                      index,
-                                      page,
-                                      rowsPerPage
-                                    )}
-                                  </TableCell>
+                              <TableCell>
+                                {calculateSerialNumber(
+                                  index,
+                                  page,
+                                  rowsPerPage
+                                )}
+                              </TableCell>
 
-                                  <TableCell align="left">
-                                    {visitor.visitor.name}
-                                  </TableCell>
+                              <TableCell align="left">
+                                {visitor.visitor.name}
+                              </TableCell>
 
-                                  <TableCell align="left">
-                                    {visitor.visitor.email}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {visitor.visitor.phoneNumber}
-                                  </TableCell>
+                              <TableCell align="left">
+                                {visitor.visitor.email}
+                              </TableCell>
+                              <TableCell align="left">
+                                {visitor.visitor.phoneNumber}
+                              </TableCell>
 
-                                  <TableCell align="left">
-                                    {visitor.visitor.companyName}
-                                  </TableCell>
+                              <TableCell align="left">
+                                {visitor.visitor.companyName}
+                              </TableCell>
 
-                                  <TableCell align="left">
-                                    {visitor.meetingStartDateTime !== null ?formatMeetingDuration(visitor) :"NA"}
-                                  </TableCell>
-                                  {/* <TableCell align="left">{formatDate(visitor.checkInDateTime)}</TableCell> */}
-                                  <TableCell align="left">
-                                    {visitor.meetingEndDateTime !== null ?formatMeetingDuration1(visitor) :"NA"}
-                                  </TableCell>
-                                  {/* <TableCell align="left">
+                              <TableCell align="left">
+                                {visitor.meetingStartDateTime !== null
+                                  ? formatMeetingDuration(visitor)
+                                  : "NA"}
+                              </TableCell>
+                              {/* <TableCell align="left">{formatDate(visitor.checkInDateTime)}</TableCell> */}
+                              <TableCell align="left">
+                                {visitor.meetingEndDateTime !== null
+                                  ? formatMeetingDuration1(visitor)
+                                  : "NA"}
+                              </TableCell>
+                              {/* <TableCell align="left">
                                     {visitor.remarks}
                                   </TableCell> */}
-                                  <TableCell align="left">
-                                    {visitor.status}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {visitor.room !== null ? visitor.room.roomName : 'NA'}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {/*                                                            
+                              <TableCell align="left">
+                                {visitor.status}
+                              </TableCell>
+                              <TableCell align="left">
+                                {visitor.room !== null
+                                  ? visitor.room.roomName
+                                  : "NA"}
+                              </TableCell>
+                              <TableCell align="left">
+                                {/*                                                            
                                                             { visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
                                                                 // Disable the Edit button
                                                                 <EditIcon style={{ color: 'lightgray', pointerEvents: 'none' }} />
@@ -1322,10 +1405,9 @@ useEffect(() => {
                                                                 <EditIcon onClick={() => handleOpenModal(visitor)} />
                                                             )} */}
 
+                                {/* zzzzzzzzz */}
 
-                                    {/* zzzzzzzzz */}
-
-                                    {/* {visitor.status === "COMPLETED" ||
+                                {/* {visitor.status === "COMPLETED" ||
                                     visitor.status === "CANCELLED" ||
                                     visitor.status ===
                                       "CANCELLED_BY_VISITOR"|| visitor.status ===
@@ -1377,134 +1459,122 @@ useEffect(() => {
                                       </>
                                     )} */}
 
-                                    {/* zzzzzz */}
+                                {/* zzzzzz */}
 
+                                {visitor.status === "APPROVED" ? (
+                                  <div className="status">
+                                    <CheckIcon
+                                      style={{
+                                        // cursor: 'pointer',
+                                        color: "lightgray",
+                                        marginRight: "10px",
+                                        pointerEvents: "none",
+                                      }}
+                                    />
+                                    <ClearIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        handleAddMeeting(visitor, "CANCELLED")
+                                      }
+                                    />
+                                  </div>
+                                ) : visitor.status === "CANCELLED" ||
+                                  visitor.status === "COMPLETED" ||
+                                  visitor.status === "CANCELLED_BY_VISITOR" ||
+                                  visitor.status === "INPROCESS" ? (
+                                  <>
+                                    <div className="status">
+                                      <CheckIcon
+                                        style={{
+                                          cursor: "pointer",
+                                          color: "lightgray",
+                                          marginRight: "10px",
+                                          pointerEvents: "none",
+                                        }}
+                                        // onClick={() => handleAddMeeting(visitor, 'APPROVED')}
+                                      />
+                                      <ClearIcon
+                                        style={{
+                                          cursor: "pointer",
+                                          color: "lightgray",
+                                        }}
+                                        // onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
+                                      />
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="status">
+                                      <CheckIcon
+                                        style={{
+                                          cursor: "pointer",
+                                          marginRight: "10px",
+                                        }}
+                                        onClick={() =>
+                                          handleAddMeeting(visitor, "APPROVED")
+                                        }
+                                      />
+                                      <ClearIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() =>
+                                          handleAddMeeting(visitor, "CANCELLED")
+                                        }
+                                      />
+                                    </div>
+                                  </>
+                                )}
 
-
-
-
-
-
-
-                                    {
-                                      visitor.status === 'APPROVED' ? (
-                                        <div className="status">
-                                          <CheckIcon
-                                            style={{
-                                              // cursor: 'pointer',
-                                              color: 'lightgray',
-                                              marginRight: '10px',
-                                              pointerEvents: "none"
-                                            }}
-                                          />
-                                          <ClearIcon
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-                                          />
-
-                                        </div>
-
-
-
-
-                                      ) : visitor.status === 'CANCELLED' || visitor.status === 'COMPLETED' ||
-                                        visitor.status === 'CANCELLED_BY_VISITOR' ||
-                                        visitor.status === 'INPROCESS' ? (
-                                        <>
-                                          <div className="status">
-                                            <CheckIcon
-                                              style={{
-                                                cursor: 'pointer',
-                                                color: 'lightgray',
-                                                marginRight: '10px',
-                                                pointerEvents: "none"
-                                              }}
-                                              // onClick={() => handleAddMeeting(visitor, 'APPROVED')}
-                                            />
-                                            <ClearIcon
-                                              style={{
-                                                cursor: 'pointer',
-                                                color: 'lightgray',
-                                              }}
-                                              // onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-                                            />
-                                          </div>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <div className="status">
-                                            <CheckIcon
-                                              style={{
-                                                cursor: 'pointer',
-                                                marginRight: '10px',
-                                              }}
-                                              onClick={() => handleAddMeeting(visitor, 'APPROVED')}
-                                            />
-                                            <ClearIcon
-                                              style={{ cursor: 'pointer' }}
-                                              onClick={() => handleAddMeeting(visitor, 'CANCELLED')}
-                                            />
-                                          </div>
-                                        </>
-                                      )
-                                    }
-
-
-                                    {/* <CheckIcon style={{cursor:"pointer"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
+                                {/* <CheckIcon style={{cursor:"pointer"}} onClick={() =>handleAddMeeting(visitor,'APPROVED')}/>
                                                             <ClearIcon style={{cursor:"pointer"}}onClick={()=>handleAddMeeting(visitor,'CANCELLED')}/> */}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                          </TableBody>
-                        </Table>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 15]}
-                          component="div"
-                          count={meetings}
-                          // count={visitors}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 15]}
+                      component="div"
+                      count={meetings}
+                      // count={visitors}
 
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                      </TableContainer>
-                    </Item>
-                  </Grid>
-                </Grid>
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </TableContainer>
+                </Item>
+              </Grid>
+            </Grid>
 
-                <StyledModal
-                  open={open} // Set the open prop of the modal
-                  // onClose={handleCloseModal} // Handle closing the modal
-                  aria-labelledby="modal-title"
-                  aria-describedby="modal-description"
+            <StyledModal
+              open={open} // Set the open prop of the modal
+              // onClose={handleCloseModal} // Handle closing the modal
+              aria-labelledby="modal-title"
+              aria-describedby="modal-description"
+            >
+              <Box
+                width={600}
+                height={300}
+                bgcolor={"white"}
+                p={3}
+                borderRadius={5}
+                border="none"
+              >
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  // margin='auto'
+                  // marginTop={10}
+                  padding={3}
+                  borderRadius={5}
+                  gap={3}
                 >
-                  <Box
-                    width={600}
-                    height={300}
-                    bgcolor={"white"}
-                    p={3}
-                    borderRadius={5}
-                    border="none"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      // margin='auto'
-                      // marginTop={10}
-                      padding={3}
-                      borderRadius={5}
-                      gap={3}
-                    >
-                      <Typography
-                        fontSize={20}
-                        fontWeight={"bold"}
-                        variant={"h1"}
-                      >
-                        Meeting
-                      </Typography>
+                  <Typography fontSize={20} fontWeight={"bold"} variant={"h1"}>
+                    Meeting
+                  </Typography>
 
-                      {/* <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Choose Room</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
@@ -1525,7 +1595,7 @@ useEffect(() => {
                                     </Select>
                                 </FormControl> */}
 
-                      {/* <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Status</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
@@ -1539,14 +1609,13 @@ useEffect(() => {
 
                                     </Select>
                                 </FormControl> */}
-                      {/* <div style={{ display: "flex", justifyContent: "center", gap: "5px" }}>
+                  {/* <div style={{ display: "flex", justifyContent: "center", gap: "5px" }}>
                                     <Button variant='contained' onClick={handleAddMeeting} >Update</Button>
                                     <Button variant='contained' onClick={handleCloseModal}>Close</Button>
                                 </div> */}
-                    </Box>
-                  </Box>
-                </StyledModal>
-          
+                </Box>
+              </Box>
+            </StyledModal>
           </Grid>
         </Grid>
       </Box>

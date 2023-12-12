@@ -483,6 +483,9 @@ const MeetingDetails = () => {
   };
 
 
+  // console.log("cities", cities)
+
+
   //------------------------ JSX ---------------------
 
   return (
@@ -586,7 +589,7 @@ const MeetingDetails = () => {
                     sx={{ width: "100%", mt: "10px" }}
                     options={cities}
                     fullWidth
-                    freeSolo={false}
+                    // freeSolo={false}
                     value={
                       formData.city &&
                       cities.some((city) => city.id === formData.city.id)

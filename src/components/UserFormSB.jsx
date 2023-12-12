@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-import { Divider, Paper, Typography } from "@mui/material";
+import { Autocomplete, Divider, Paper, Typography } from "@mui/material";
 import Config from "../Config/Config";
 
 function UserForm({ authenticated, closeDialog }) {
@@ -73,10 +73,10 @@ function UserForm({ authenticated, closeDialog }) {
       id: "",
       name: "",
     },
-    isPermission: "",
+    isPermission: true,
     empCode:'',
   });
-  // console.log("form data", formData);
+  console.log("form data", formData);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -513,6 +513,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
         role: { id: "", name: "" },
         state: { id: "", name: "" },
         city: { id: "", name: "" },
+        isPermission: true,
         empCode: '',
       });
     }
@@ -548,6 +549,10 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
   //     console.error('Error in getting data: ', error)
   //   }
   // }
+
+
+
+  
 
 
 
@@ -757,7 +762,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={4} lg={4}>
+                    {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
                         <InputLabel htmlFor="state">State</InputLabel>
                         <Select
@@ -781,9 +786,52 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                           ))}
                         </Select>
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
 
-                    <Grid item xs={12} sm={6} md={4} lg={4}>
+<Grid item xs={12} sm={6} md={4} lg={4}>
+  <Autocomplete
+    disablePortal
+    id="state-autocomplete"
+    sx={{ width: '100%', mt: '10px' }}
+    options={states}
+    getOptionLabel={(option) => option.name || ''}
+    value={states.find((state) => state.id === formData.state.id) || null}
+    onChange={(event, newValue) => {
+
+      setFormData({
+        ...formData,
+        state:{
+          id: newValue.id || '',
+          name:newValue.name || '',
+        } || '',
+        city: { id: '' },
+
+      })
+
+      // console.log('selected state', newValue);
+
+      fetchCities(newValue ? newValue.id : '');
+    }}
+    ListboxProps={{
+      style: {
+        maxHeight: '150px',
+      },
+    }}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="State"
+        name="state"
+        required
+      />
+    )}
+    isOptionEqualToValue={(option, value) => option.id === value.id}
+  />
+</Grid>
+
+
+
+                    {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
                         <InputLabel htmlFor="city">City</InputLabel>
                         <Select
@@ -807,7 +855,46 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                           ))}
                         </Select>
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
+
+<Grid item xs={12} sm={6} md={4} lg={4}>
+  <Autocomplete
+    disablePortal
+    id="city-autocomplete"
+    sx={{ width: '100%', mt: '10px' }}
+    options={cities}
+    getOptionLabel={(option) => option.name || ''}
+    value={cities.find((city) => city.id === formData.city.id) || null}
+    onChange={(event, newValue) => {
+      // const selectedCity = cities.find((city) => city.id === newValue);
+      setFormData({
+        ...formData,
+        city: {
+          id: newValue? newValue.id : '',
+          name: newValue ? newValue.name : '',
+        },
+      });
+
+      // console.log('selected city', newValue);
+    }}
+    ListboxProps={{
+      style: {
+        maxHeight: '150px',
+      },
+    }}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="City"
+        name="city"
+        required
+      />
+    )}
+    isOptionEqualToValue={(option, value) => option.id === value.id}
+  />
+</Grid>
+
+
 
                     <Grid item xs={12} sm={4} md={4} lg={4}>
                       <TextField

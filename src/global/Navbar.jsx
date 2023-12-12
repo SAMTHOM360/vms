@@ -25,6 +25,8 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -123,7 +125,7 @@ export default function Navbar({ toggleSidebar }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged, activeListItem } = useAuth();
+  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged, activeListItem, isOpenforGridTable } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
   const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false)
@@ -986,7 +988,8 @@ export default function Navbar({ toggleSidebar }) {
             sx={{ mr: 2, color: "#ffffff" }}
             onClick={toggleSidebar}
           >
-            <MenuIcon />
+            {isOpenforGridTable ? <ArrowBackIosNewIcon/> : <MenuIcon />}
+            {/* <MenuIcon /> */}
           </IconButton>
 
           :
