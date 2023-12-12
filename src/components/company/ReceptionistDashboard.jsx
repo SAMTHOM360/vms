@@ -209,8 +209,8 @@ export default function Dashboard() {
         setSelectedHostOptions('')
         setPhoneNumberFilter('')
         setFilterSelectedRoom('')
-        setStartDate(null)
-        setEndDate(null)
+        setStartDate('')
+        setEndDate('')
       
         setSearchQuery('')
         sessionStorage.removeItem('filters')
@@ -434,14 +434,6 @@ export default function Dashboard() {
 
 
 
-
-
-
-
-
-
-
-
         // const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
 
         const addMeetingUrl = Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint
@@ -646,8 +638,6 @@ export default function Dashboard() {
 
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
-
-
                 }
             
                 
@@ -658,10 +648,6 @@ export default function Dashboard() {
 
 
     }
-
-
-
-
 
 
     function getFullName(user) {
