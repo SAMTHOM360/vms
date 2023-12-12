@@ -616,7 +616,7 @@ const Employee = () => {
         ...companyColumn,
       ];
 
-      console.log(" empSB", apiDataArray);
+      // console.log(" empSB", apiDataArray);
 
       const gridRows = apiDataArray.map((apiDataItem, index) => ({
         id: apiDataItem.id,
@@ -632,11 +632,11 @@ const Employee = () => {
           ? apiDataItem.govtId.length === 12
             ? `${apiDataItem.govtId} (Aadhar)`
             : `${apiDataItem.govtId} (PAN)`
-          : null,
+          : 'N/A',
         company: apiDataItem.company ? apiDataItem.company.name : "",
         dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
         role: apiDataItem.role ? apiDataItem.role.name : "",
-        empCode: apiDataItem.empCode ? apiDataItem.empCode : "",
+        empCode: apiDataItem.empCode ? apiDataItem.empCode : "N/A",
         isPermission: apiDataItem.isPermission ? "YES" : "NO",
         buildingId: apiDataItem.departmentDto
           ? apiDataItem.departmentDto.company.building
@@ -816,7 +816,7 @@ const Employee = () => {
                 // bgcolor:'orange',
                 maxWidth: isSideBarPinned
                   ? isOpenforGridTable
-                    ? "83vw"
+                    ? "83.5vw"
                     : "93.5vw"
                   : "93.5vw",
                 flexGrow: 1,
@@ -831,7 +831,7 @@ const Employee = () => {
               <Box
                 m="2px 0 0 0"
                 flexGrow={1}
-                height="75vh"
+                height="74vh"
                 sx={{
                   "& .MuiDataGrid-root": {
                     border: "none",
@@ -882,18 +882,19 @@ const Employee = () => {
                                     // bgcolor: "orange",
                                     display:'flex',
                                     justifyContent:'end',
-                                    mt:'3px'
+                                    mt:'0.5em'
                                   }}
                                 >
                                   <Button
                                     variant="contained"
                                     sx={{
-                                      // position:'absolute',
+                                      position:'absolute',
                                       // left:'4.5em',
                                       minHeight:'unset',
                                       width: "13em",
                                       height:'40px',
                                       gap:1,
+                                      zIndex:1,
                                       // float:'right'
                                     }}
                                     onClick={handleDownloadExcel}
@@ -902,7 +903,7 @@ const Employee = () => {
                                   </Button>
                                 </Box>
                   <DataGrid
-                    // sx={{mt:'0.5em'}}
+                    sx={{mt:'0.7em'}}
                     rows={rows ?? []}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}

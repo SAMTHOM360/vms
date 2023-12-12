@@ -5,7 +5,19 @@ import Sidebar from "../global/Sidebar";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
 import {
-  Paper,Box,Chip,Typography,Avatar,Dialog,DialogTitle,DialogContent,DialogActions,FormControlLabel,Switch,Button,TextField,
+  Paper,
+  Box,
+  Chip,
+  Typography,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Switch,
+  Button,
+  TextField,
   FormControl,
   MenuItem,
   Select,
@@ -21,8 +33,8 @@ import Loader from "./Loader";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../routes/AuthContext";
 import Config from "../Config/Config";
 
@@ -36,8 +48,10 @@ const Profile = () => {
   const AuthToken = sessionStorage.getItem("token");
   // const adminId = localStorage.getItem("adminId");
   const adminId = sessionStorage.getItem("adminId");
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
-  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.profileAxiosInstance
+  let urlAxiosInstance =
+    Config.baseUrl + Config.apiEndPoints.profileAxiosInstance;
 
   const axiosInstance = axios.create({
     baseURL: urlAxiosInstance,
@@ -56,20 +70,24 @@ const Profile = () => {
     "Content-Type": "multipart/form-data",
   };
 
-  const {setAutoStatusChange, setActiveListItem} = useAuth()
+  const { setAutoStatusChange, setActiveListItem } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isPresent, setIsPresent] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isAddress, setIsAddress] = useState(false);
   const [isUpload, setIsUpload] = useState(false);
+  const [isCompany, setIsCompany] = useState(false);
   const [uploadImgDialog, setUploadImgDialog] = useState(false);
   const [formattedCreatedOn, setFormattedCreatedOn] = useState("");
-  const [tempImgLink, setTempImgLink] = useState('')
+  const [tempImgLink, setTempImgLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [editBtnLoading, setEditBtnLoading] = useState(false);
   const [AddressBtnLoading, setAddressBtnLoading] = useState(false);
+  const [companyBtnLoading, setCompanyBtnLoading] = useState(false);
   const [UploadImgBtnLoading, setUploadImgBtnLoading] = useState(false);
-  const [UploadFromDeviceBtnLoading, setUploadFromDeviceBtnLoading] = useState(false);
+  const [isUserAllowed, setIsUserAllowed] = useState();
+  const [UploadFromDeviceBtnLoading, setUploadFromDeviceBtnLoading] =
+    useState(false);
 
   const [formData, setFormData] = useState({
     id: "",
@@ -101,17 +119,27 @@ const Profile = () => {
     pincode: "",
     empCode: "",
     createdOn: "",
-    buildingId:"",
+    buildingId: "",
+    isPermission: "",
   });
-  const [editedBasicInfo, setEditedBasicInfo] = useState()
-  const [editedAddressInfo, setEditedAddressInfo] = useState()
+  const [editedBasicInfo, setEditedBasicInfo] = useState();
+  const [editedAddressInfo, setEditedAddressInfo] = useState();
+  const [editedCompanyInfo, setEditedCompanyInfo] = useState();
   useEffect(() => {
-    setActiveListItem('/profile')
-  }, [setActiveListItem])
+    setActiveListItem("/profile");
+  }, [setActiveListItem]);
 
   useEffect(() => {
     fetchData();
   }, []);
+
+useEffect(() => {
+  if (loggedUserRole === "ADMIN") {
+    setIsUserAllowed(true);
+  } else {
+    setIsUserAllowed(false);
+  }
+}, [loggedUserRole])
 
   const statusOnPayload = {
     id: adminId,
@@ -128,17 +156,17 @@ const Profile = () => {
   };
 
   async function fetchData() {
-    let url = Config.baseUrl + Config.apiEndPoints.profileGetById
+    let url = Config.baseUrl + Config.apiEndPoints.profileGetById;
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.get(`${url}/${adminId}`);
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        console.log(' profile data', apiData )
+        // console.log(" profile data", apiData);
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         setFormattedCreatedOn(formatCreatedOn);
-        setIsPresent(apiData.isPresent)
+        setIsPresent(apiData.isPresent);
         setFormData({
           id: apiData.id || "",
           firstName: apiData.firstName || "",
@@ -168,7 +196,12 @@ const Profile = () => {
           pincode: apiData.pincode || "",
           empCode: apiData.empCode || "",
           createdOn: apiData.createdOn || "",
-          buildingId:apiData.departmentDto ? apiData.departmentDto.company.building ? apiData.departmentDto.company.building.buildingId || '' : '' : '',
+          buildingId: apiData.departmentDto
+            ? apiData.departmentDto.company.building
+              ? apiData.departmentDto.company.building.buildingId || ""
+              : ""
+            : "",
+          isPermission: apiData.isPermission || false,
         });
 
         if (apiData.govtId.length === 12) {
@@ -186,7 +219,7 @@ const Profile = () => {
         console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -198,21 +231,16 @@ const Profile = () => {
       });
       console.error("Error fetching data:", error);
     }
-    setLoading(false)
+    setLoading(false);
   }
   const handlePresentOn = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.profilePresent
+    let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
     try {
-      setLoading(true)
-      const response = await axios.post(
-        `${url}`,
-        statusOnPayload,
-        { headers }
-      );
+      setLoading(true);
+      const response = await axios.post(`${url}`, statusOnPayload, { headers });
 
-      if(response.status === 200) 
-      {
-        toast.success('Status updated successfully', {
+      if (response.status === 200) {
+        toast.success("Status updated successfully", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -223,10 +251,10 @@ const Profile = () => {
           theme: "light",
         });
         setIsPresent(true);
-        setAutoStatusChange(true)
+        setAutoStatusChange(true);
       }
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -238,14 +266,14 @@ const Profile = () => {
       });
       console.error("Catched Error: ", error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handlePresentOff = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.profilePresent
+    let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       // const response = await axios.post(
       //   `${BASE_URL}/present`,
@@ -253,14 +281,11 @@ const Profile = () => {
       //   { headers: headers }
       // );
 
-      const response = await axios.post(
-        `${url}`,
-        statusOffPayload,
-        { headers: headers }
-      );
-      if(response.status === 200) 
-      {
-        toast.success('Status updated successfully', {
+      const response = await axios.post(`${url}`, statusOffPayload, {
+        headers: headers,
+      });
+      if (response.status === 200) {
+        toast.success("Status updated successfully", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -271,11 +296,10 @@ const Profile = () => {
           theme: "light",
         });
         setIsPresent(false);
-        setAutoStatusChange(false)
-
+        setAutoStatusChange(false);
       }
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -287,7 +311,7 @@ const Profile = () => {
       });
       console.error("Catched Error: ", error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleEditOn = () => {
@@ -302,22 +326,22 @@ const Profile = () => {
         id: formData.role.id,
       },
       empCode: formData.empCode,
-    })
+    });
   };
 
   const handleEditOff = () => {
     setIsEdit(false);
     setEditedBasicInfo({
-      id: '',
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
+      id: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
       role: {
-        id: '',
+        id: "",
       },
-      empCode:'',
-    })
+      empCode: "",
+    });
   };
 
   const handleAddressOn = () => {
@@ -332,24 +356,56 @@ const Profile = () => {
         id: formData.role.id,
       },
       pincode: formData.pincode,
-      empCode:formData.empCode,
-    })
+      empCode: formData.empCode,
+    });
   };
 
   const handleAddressOff = () => {
     setIsAddress(false);
     setEditedAddressInfo({
-      id: '',
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
+      id: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
       role: {
-        id: '',
+        id: "",
       },
-      pincode:'',
-      empCode:'',
-    })
+      pincode: "",
+      empCode: "",
+    });
+  };
+
+  const handleCompanyOn = () => {
+    setIsCompany(true);
+    setEditedCompanyInfo({
+      id: formData.id,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      email: formData.email,
+      role: {
+        id: formData.role.id,
+      },
+      empCode: formData.empCode,
+      isPermission: formData.isPermission,
+    });
+  };
+
+  const handleCompanyOff = () => {
+    setIsCompany(false);
+    setEditedCompanyInfo({
+      id: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      role: {
+        id: "",
+      },
+      empCode: "",
+      isPermission: "",
+    });
   };
 
   const handleUploadImgDialogOpen = () => {
@@ -357,13 +413,12 @@ const Profile = () => {
   };
 
   const handleUploadImgDialogClose = () => {
-
     const fileInput = document.getElementById("fileInputProfilePic");
     if (fileInput) {
       fileInput.value = "";
     }
 
-    setTempImgLink('')
+    setTempImgLink("");
     setUploadImgDialog(false);
   };
 
@@ -384,10 +439,8 @@ const Profile = () => {
 
       const capturedImage = canvas.toDataURL("image/jpeg");
 
-
       videoElement.srcObject.getVideoTracks().forEach((track) => track.stop());
       document.body.removeChild(videoElement);
-
     } catch (error) {
       console.error("Error capturing image from camera:", error);
     }
@@ -395,13 +448,13 @@ const Profile = () => {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
-    let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg
+    let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
       try {
-        setUploadFromDeviceBtnLoading(true)
+        setUploadFromDeviceBtnLoading(true);
         // const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
         //   headers: ImgHeaders,
         // });
@@ -410,7 +463,7 @@ const Profile = () => {
           headers: ImgHeaders,
         });
         const imgResponseApiData = response.data.data;
-        setTempImgLink(imgResponseApiData)
+        setTempImgLink(imgResponseApiData);
 
         const fileInput = document.getElementById("fileInputProfilePic");
         if (fileInput) {
@@ -418,7 +471,7 @@ const Profile = () => {
         }
         setIsUpload(true);
       } catch (error) {
-        toast.error('Something went wrong !', {
+        toast.error("Something went wrong !", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -430,7 +483,7 @@ const Profile = () => {
         });
         console.error("unable to send: ", error);
       } finally {
-        setUploadFromDeviceBtnLoading(false)
+        setUploadFromDeviceBtnLoading(false);
       }
     }
   };
@@ -446,13 +499,13 @@ const Profile = () => {
       role: {
         id: formData.role.id,
       },
-      empCode:formData.empCode,
+      empCode: formData.empCode,
     };
 
-    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
-      setUploadImgBtnLoading(true)
+      setUploadImgBtnLoading(true);
       // const response = await axios.post(`${BASE_URL}/adduser`, imgPayload, {
       //   headers: headers,
       // });
@@ -461,9 +514,8 @@ const Profile = () => {
         headers: headers,
       });
 
-      if(response.status === 200)
-      {
-        toast.success('Profile Picture updated successfully', {
+      if (response.status === 200) {
+        toast.success("Profile Picture updated successfully", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -476,13 +528,11 @@ const Profile = () => {
 
         const submitImgApiData = response;
         handleUploadImgDialogClose();
-        setTempImgLink('')
-        fetchData()
-
+        setTempImgLink("");
+        fetchData();
       }
-
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -494,16 +544,15 @@ const Profile = () => {
       });
       console.error("unable to submit image  ", error);
     } finally {
-      setUploadImgBtnLoading(false)
+      setUploadImgBtnLoading(false);
     }
   };
 
-
   const handleBasicInfoUpdate = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
-      setEditBtnLoading(true)
+      setEditBtnLoading(true);
       // const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
       //   headers: headers,
       // });
@@ -511,9 +560,8 @@ const Profile = () => {
         headers: headers,
       });
 
-      if(response.status === 200)
-      {
-        toast.success('Basic info updated successfully', {
+      if (response.status === 200) {
+        toast.success("Basic info updated successfully", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -526,24 +574,23 @@ const Profile = () => {
 
         const submitApiData = response;
         handleUploadImgDialogClose();
-        setTempImgLink('')
+        setTempImgLink("");
         setIsEdit(false);
         setEditedBasicInfo({
-          id: '',
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
+          id: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
           role: {
-            id: '',
+            id: "",
           },
-          empCode:'',
-        })
-        fetchData()
+          empCode: "",
+        });
+        fetchData();
       }
-
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -554,18 +601,16 @@ const Profile = () => {
         theme: "light",
       });
       console.error("unable to submit basic info  ", error);
-    } finally{
-      setEditBtnLoading(false)
+    } finally {
+      setEditBtnLoading(false);
     }
   };
 
-
-
   const HandleAddressInfoUpdate = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
-      setAddressBtnLoading(true)
+      setAddressBtnLoading(true);
       // const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
       //   headers: headers,
       // });
@@ -574,9 +619,8 @@ const Profile = () => {
         headers: headers,
       });
 
-      if(response.status === 200)
-      {
-        toast.success('Address info updated successfully', {
+      if (response.status === 200) {
+        toast.success("Address info updated successfully", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -589,25 +633,24 @@ const Profile = () => {
 
         const submitApiData = response;
         handleUploadImgDialogClose();
-        setTempImgLink('')
+        setTempImgLink("");
         setIsAddress(false);
         setEditedAddressInfo({
-          id: '',
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
+          id: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
           role: {
-            id: '',
+            id: "",
           },
-          pincode:'',
-          empCode:'',
-        })
-        fetchData()
+          pincode: "",
+          empCode: "",
+        });
+        fetchData();
       }
-
     } catch (error) {
-      toast.error('Something went wrong !', {
+      toast.error("Something went wrong !", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -619,17 +662,78 @@ const Profile = () => {
       });
       console.error("unable to submit address info  ", error);
     } finally {
-      setAddressBtnLoading(false)
+      setAddressBtnLoading(false);
+    }
+  };
+
+  const HandleCompanyInfoUpdate = async () => {
+    let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
+
+    try {
+      setCompanyBtnLoading(true);
+      // const response = await axios.post(`${BASE_URL}/adduser`, editedAddressInfo, {
+      //   headers: headers,
+      // });
+
+      const response = await axios.post(`${url}`, editedCompanyInfo, {
+        headers: headers,
+      });
+
+      if (response.status === 200) {
+        toast.success("Company info updated successfully", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const submitApiData = response;
+        handleUploadImgDialogClose();
+        setTempImgLink("");
+        setIsCompany(false);
+        setEditedCompanyInfo({
+          id: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
+          role: {
+            id: "",
+          },
+          empCode: "",
+          isPermission: "",
+        });
+        fetchData();
+      }
+    } catch (error) {
+      toast.error("Something went wrong !", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.error("unable to submit company info  ", error);
+    } finally {
+      setCompanyBtnLoading(false);
     }
   };
 
   // console.log('basic data', editedBasicInfo)
-  // console.log('add data', editedAddressInfo)
+  // console.log('address data', editedAddressInfo)
+  // console.log("company data", editedCompanyInfo);
 
   return (
     <>
-    <Loader isLoading={loading} />
-    <Box sx={{display:"flex", flexGrow: 1, p: 3,}}>
+      <Loader isLoading={loading} />
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
             <Box
@@ -684,15 +788,24 @@ const Profile = () => {
                 >
                   <Avatar sx={{ width: "70px", height: "70px" }}>
                     {/* <ImageIcon /> */}
-                    <img src={formData.image} alt="No DP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <img
+                      src={formData.image}
+                      alt="No DP"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </Avatar>
                   <IconButton
                     color="primary"
                     onClick={handleUploadImgDialogOpen}
                     sx={{ position: "absolute", bottom: -5, right: -4 }}
                   >
-                    <CameraAltIcon color="primary" 
-                    // sx={{ color: "#FF5733" }} 
+                    <CameraAltIcon
+                      color="primary"
+                      // sx={{ color: "#FF5733" }}
                     />
                   </IconButton>
                 </Box>
@@ -840,7 +953,9 @@ const Profile = () => {
                       label="First Name"
                       name="firstName"
                       disabled={!isEdit}
-                      value={isEdit ? editedBasicInfo.firstName : formData.firstName}
+                      value={
+                        isEdit ? editedBasicInfo.firstName : formData.firstName
+                      }
                       // inputProps={{ maxLength: 26 }}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{
@@ -848,18 +963,18 @@ const Profile = () => {
                         onInput: (event) => {
                           if (isEdit) {
                             let value = event.target.value;
-                    
+
                             // Remove characters other than lowercase, uppercase, and spaces
-                            value = value.replace(/[^a-zA-Z\s]/g, '');
-                    
+                            value = value.replace(/[^a-zA-Z\s]/g, "");
+
                             // Replace consecutive spaces with a single space
-                            value = value.replace(/\s{2,}/g, ' ');
-                    
+                            value = value.replace(/\s{2,}/g, " ");
+
                             // Ensure the length does not exceed maxLength
                             if (value.length > 26) {
                               value = value.slice(0, 26);
                             }
-                    
+
                             setEditedBasicInfo({
                               ...editedBasicInfo,
                               firstName: value,
@@ -881,25 +996,27 @@ const Profile = () => {
                       name="lastName"
                       size="small"
                       disabled={!isEdit}
-                      value={isEdit ? editedBasicInfo.lastName : formData.lastName}
+                      value={
+                        isEdit ? editedBasicInfo.lastName : formData.lastName
+                      }
                       // inputProps={{ maxLength: 26 }}
                       inputProps={{
                         maxLength: 26,
                         onInput: (event) => {
                           if (isEdit) {
                             let value = event.target.value;
-                    
+
                             // Remove characters other than lowercase, uppercase, and spaces
-                            value = value.replace(/[^a-zA-Z\s]/g, '');
-                    
+                            value = value.replace(/[^a-zA-Z\s]/g, "");
+
                             // Replace consecutive spaces with a single space
-                            value = value.replace(/\s{2,}/g, ' ');
-                    
+                            value = value.replace(/\s{2,}/g, " ");
+
                             // Ensure the length does not exceed maxLength
                             if (value.length > 26) {
                               value = value.slice(0, 26);
                             }
-                    
+
                             setEditedBasicInfo({
                               ...editedBasicInfo,
                               lastName: value,
@@ -907,7 +1024,6 @@ const Profile = () => {
                           }
                         },
                       }}
-
                       InputLabelProps={{ shrink: true }}
                       // onChange={(e) =>
                       //   setEditedBasicInfo({ ...editedBasicInfo, lastName: e.target.value })
@@ -1041,12 +1157,16 @@ const Profile = () => {
                       <Button
                         variant="contained"
                         size="small"
-                        disabled={!isEdit ||editBtnLoading}
+                        disabled={!isEdit || editBtnLoading}
                         sx={{ height: "3em", fontSize: "10px" }}
                         onClick={handleBasicInfoUpdate}
                         // disabled={btnLoading}
-                        >
-                          {editBtnLoading ? <CircularProgress size="2em" /> : "Save"}
+                      >
+                        {editBtnLoading ? (
+                          <CircularProgress size="2em" />
+                        ) : (
+                          "Save"
+                        )}
                       </Button>
                     </Box>
                   </Grid>
@@ -1214,25 +1334,27 @@ const Profile = () => {
                       name="pincode"
                       size="small"
                       disabled={!isAddress}
-                      value={isAddress? editedAddressInfo.pincode : formData.pincode}
+                      value={
+                        isAddress ? editedAddressInfo.pincode : formData.pincode
+                      }
                       // onChange={(e) =>
                       //   setEditedAddressInfo({ ...editedAddressInfo, pincode: e.target.value })
                       // }
                       inputProps={{
                         pattern: "^[0-9]*",
-                        maxLength:6,
+                        maxLength: 6,
                         onInput: (event) => {
                           if (isAddress) {
                             let value = event.target.value;
-                    
+
                             // Remove non-numeric characters
                             value = value.replace(/\D/g, "");
-                    
+
                             // Ensure the length does not exceed 6
                             if (value.length > 6) {
                               value = value.slice(0, 6);
                             }
-                    
+
                             setEditedAddressInfo({
                               ...editedAddressInfo,
                               pincode: value,
@@ -1261,7 +1383,11 @@ const Profile = () => {
                         sx={{ height: "3em", fontSize: "10px" }}
                         onClick={HandleAddressInfoUpdate}
                       >
-                        {AddressBtnLoading ? <CircularProgress size="2em" /> : "Save"}
+                        {AddressBtnLoading ? (
+                          <CircularProgress size="2em" />
+                        ) : (
+                          "Save"
+                        )}
                       </Button>
                     </Box>
                   </Grid>
@@ -1305,6 +1431,28 @@ const Profile = () => {
                       <Typography sx={{ fontSize: "19px", fontWeight: "550" }}>
                         Company Info
                       </Typography>
+
+                      {isUserAllowed ? (
+                        isCompany ? (
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{ height: "3em", fontSize: "10px" }}
+                            onClick={handleCompanyOff}
+                          >
+                            Cancel
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            size="small"
+                            sx={{ height: "3em", fontSize: "10px" }}
+                            onClick={handleCompanyOn}
+                          >
+                            Edit
+                          </Button>
+                        )
+                      ) : null}
                     </Box>
                   </Grid>
 
@@ -1329,7 +1477,7 @@ const Profile = () => {
                       name="empId"
                       disabled
                       value={formData.empCode}
-                      InputLabelProps={{ shrink: true }} 
+                      InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
                     />
                   </Grid>
@@ -1342,7 +1490,7 @@ const Profile = () => {
                       name="dept"
                       disabled
                       value={formData.departmentDto.name}
-                      InputLabelProps={{ shrink: true }} 
+                      InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
                     />
                   </Grid>
@@ -1355,10 +1503,128 @@ const Profile = () => {
                       name="buildingId"
                       disabled
                       value={formData.buildingId}
-                      InputLabelProps={{ shrink: true }} 
+                      InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
                     />
                   </Grid>
+
+                  <Grid item xs={12} sm={12} md={6} lg={6}>
+                    {isCompany ? (
+                      <FormControl
+                        sx={{ width: "100%", mt: "10px" }}
+                        size="small"
+                        fullWidth
+                      >
+                        <InputLabel id="approval-label">
+                          Can Receptionist Approve/Reject meets?
+                        </InputLabel>
+                        <Select
+                          labelId="approval-label"
+                          name="isPermission"
+                          value={
+                            isCompany
+                              ? editedCompanyInfo.isPermission
+                              : formData.isPermission
+                          }
+                          label="Can Receptionist Approve/Reject meets?"
+                          onChange={(e) => {
+                            // setIsReceptAllowed(e.target.value);
+                            setEditedCompanyInfo({
+                              ...editedCompanyInfo,
+                              isPermission: e.target.value,
+                            });
+                          }}
+                        >
+                          <MenuItem value="true">YES</MenuItem>
+                          <MenuItem value="false">NO</MenuItem>
+                        </Select>
+                      </FormControl>
+                    ) : (
+                      <TextField
+                        size="small"
+                        sx={{ width: "100%", mt: "10px" }}
+                        label="Can Receptionist Approve/Reject meets?"
+                        name="buildingId"
+                        disabled
+                        value={formData.isPermission ? "YES" : "NO"}
+                        InputLabelProps={{ shrink: true }}
+                        // onChange={handleChange}
+                      />
+                    )}
+                    {/* <TextField
+                      size="small"
+                      sx={{ width: "100%", mt: "10px" }}
+                      label="Can Receptionist Approve/Reject meets?"
+                      name="buildingId"
+                      disabled
+                      value={formData.isPermission ? "YES" : "NO"}
+                      InputLabelProps={{ shrink: true }}
+                      // onChange={handleChange}
+                    /> */}
+                    {/* 
+                    <FormControl
+                      sx={{ width: "100%", mt: "1em" }}
+                      size="small"
+                      fullWidth
+                    >
+                      <InputLabel id="approval-label">
+                      Can Receptionist Approve/Reject meets?
+                      </InputLabel>
+                      <Select
+                        labelId="approval-label"
+                        name="isPermission"
+                        value={editedItem.isPermission}
+                        label="Can Receptionist Approve/Reject meets?"
+                        onChange={(e) => {
+                          setIsReceptAllowed(e.target.value);
+                          setEditedItem({
+                            ...editedItem,
+                            isPermission: e.target.value,
+                          });
+                        }}
+                      >
+                     
+                        <MenuItem value="true">YES</MenuItem>
+                        <MenuItem value="false">NO</MenuItem>
+                      </Select>
+                    </FormControl> */}
+                  </Grid>
+
+                  {isUserAllowed ?
+
+<Grid item xs={12} sm={12} md={12} lg={12}>
+<Box
+  sx={{
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    mt: "1em",
+  }}
+>
+  <Button
+    variant="contained"
+    size="small"
+    disabled={!isCompany || companyBtnLoading}
+    sx={{ height: "3em", fontSize: "10px" }}
+    onClick={HandleCompanyInfoUpdate}
+    // disabled={btnLoading}
+  >
+    {companyBtnLoading ? (
+      <CircularProgress size="2em" />
+    ) : (
+      "Save"
+    )}
+  </Button>
+</Box>
+</Grid>
+
+:
+
+null
+                  
+                }
+
+
 
                   <Grid item xs={12} sm={12} md={6} lg={6}></Grid>
                 </Grid>
@@ -1367,61 +1633,107 @@ const Profile = () => {
           </Grid>
         </Grid>
 
-        <Dialog open={uploadImgDialog} onClose={handleUploadImgDialogClose} PaperProps={{ sx: { width: "100%", maxWidth: "520px!important", mt:'5em', borderRadius:'15px',ml:'6em'},}}>
-          <DialogContent sx={{display:'flex',justifyContent:'center', flexDirection:'column', alignItems:'center'}}>
-            <Box sx={{width:'250px', height:'250px', bgcolor:'#EDEDED', color:'#848484', mb:'2em', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'5px'}}>
-              {tempImgLink? 
-            <img src={tempImgLink} alt="No DP" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
-            :
-            "Choose an image"  
-            }
-             
+        <Dialog
+          open={uploadImgDialog}
+          onClose={handleUploadImgDialogClose}
+          PaperProps={{
+            sx: {
+              width: "100%",
+              maxWidth: "520px!important",
+              mt: "5em",
+              borderRadius: "15px",
+              ml: "6em",
+            },
+          }}
+        >
+          <DialogContent
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "250px",
+                height: "250px",
+                bgcolor: "#EDEDED",
+                color: "#848484",
+                mb: "2em",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "5px",
+              }}
+            >
+              {tempImgLink ? (
+                <img
+                  src={tempImgLink}
+                  alt="No DP"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                "Choose an image"
+              )}
             </Box>
 
-            <Box sx={{width:'100%', display:'flex', justifyContent:'center'}}>
-            {/* <Button variant="outlined" onClick={handleCapture}>
+            <Box
+              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+            >
+              {/* <Button variant="outlined" onClick={handleCapture}>
               Capture from Camera
             </Button> */}
-            <Button
-              variant="contained"
-              component="label"
-              onChange={handleFileUpload}
-              disabled={UploadFromDeviceBtnLoading}
-            >
-              {UploadFromDeviceBtnLoading ? <CircularProgress size="2em" /> : "Upload from Device"}
-              <input
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                id="fileInputProfilePic"
-                hidden
-                // onChange={handleFileUpload}
-              />
-            </Button>
+              <Button
+                variant="contained"
+                component="label"
+                onChange={handleFileUpload}
+                disabled={UploadFromDeviceBtnLoading}
+              >
+                {UploadFromDeviceBtnLoading ? (
+                  <CircularProgress size="2em" />
+                ) : (
+                  "Upload from Device"
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="fileInputProfilePic"
+                  hidden
+                  // onChange={handleFileUpload}
+                />
+              </Button>
             </Box>
           </DialogContent>
           <DialogActions>
-            <Box sx={{width:'100%', display:'flex', justifyContent:'space-between'}}>
-            <Button
-              variant="contained"
-              onClick={handleUploadImgDialogClose}
-              color="secondary"
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              Cancel
-            </Button>
+              <Button
+                variant="contained"
+                onClick={handleUploadImgDialogClose}
+                color="secondary"
+              >
+                Cancel
+              </Button>
 
-            <Button
-              variant="contained"
-              onClick={handleSubmitImgUpload}
-              color="primary"
-              disabled={!isUpload || UploadImgBtnLoading }
-            >
-              {UploadImgBtnLoading ? <CircularProgress size="2em" /> : "SAVE"}
-            </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmitImgUpload}
+                color="primary"
+                disabled={!isUpload || UploadImgBtnLoading}
+              >
+                {UploadImgBtnLoading ? <CircularProgress size="2em" /> : "SAVE"}
+              </Button>
             </Box>
           </DialogActions>
         </Dialog>
-        </Box>
+      </Box>
     </>
   );
 };

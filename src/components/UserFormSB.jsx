@@ -76,7 +76,7 @@ function UserForm({ authenticated, closeDialog }) {
     isPermission: true,
     empCode:'',
   });
-  console.log("form data", formData);
+  // console.log("form data", formData);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [roles, setRoles] = useState([]);

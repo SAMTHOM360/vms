@@ -133,7 +133,7 @@ const MeetingDetails = () => {
             `${url}?phoneNumber=${phone}`
           );
 
-          console.log('phone response', response.data.data)
+          // console.log('phone response', response.data.data)
   
           if (response.status === 200 && response.data.data) {
             const newStateId = response.data.data.state.id;
@@ -317,7 +317,7 @@ const MeetingDetails = () => {
       if (response.status === 200) {
         toast.success("Meeting appointed successfully.", {
           position: "top-right",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

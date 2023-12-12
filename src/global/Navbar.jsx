@@ -295,6 +295,7 @@ export default function Navbar({ toggleSidebar }) {
 
       const bellAPiData = response.data.data;
 
+
       let bellmenuItemm
 
       // debugger
@@ -334,6 +335,9 @@ export default function Navbar({ toggleSidebar }) {
       } else {
 
       let unseenCount = bellAPiData.filter((item) => !item.seen).length;
+
+
+      // console.log('bellAPiData', bellAPiData)
 
 
        bellmenuItemm = (
@@ -425,7 +429,8 @@ export default function Navbar({ toggleSidebar }) {
                       color: "#959697",
                     }}
                   >
-                    {calculateTimeAgo(dataItem.createdAt)}
+                    {/* {calculateTimeAgo(dataItem.createdAt)} */}
+                    {calculateTimeAgo(dataItem.updatedAt)}
                   </Typography>
                 </ListItem>
                 <Divider sx={{bgcolor:'#6c6c6c9b'}} />

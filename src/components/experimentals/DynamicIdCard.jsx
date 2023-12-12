@@ -42,7 +42,7 @@ const DynamicIdCard = () => {
 
       const apiData = response.data.data;
 
-      console.log('dynamic response', apiData)
+      // console.log('dynamic response', apiData)
 
 
 
