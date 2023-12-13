@@ -166,8 +166,8 @@ export default function Navbar({ toggleSidebar }) {
   },[activeListItem])
 
 
-  console.log('isHamburgerAllowed', activeListItem)
-  console.log('isHamburgerAllowed', isHamburgerAllowed)
+  // console.log('isHamburgerAllowed', activeListItem)
+  // console.log('isHamburgerAllowed', isHamburgerAllowed)
 
   useEffect(() => {
     fetchData();

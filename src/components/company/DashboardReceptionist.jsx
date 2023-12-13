@@ -47,12 +47,9 @@ export default function Dashboard() {
 
     const {setActiveListItem} = useAuth()
 
-    sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
-<<<<<<< Updated upstream
+    // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
 
 
-=======
->>>>>>> Stashed changes
     useEffect(() => {
         setActiveListItem('/dashboardreceptionist')
       }, [setActiveListItem])
