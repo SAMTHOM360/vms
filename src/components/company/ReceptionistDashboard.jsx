@@ -1,13 +1,6 @@
 
-
-
-//major backups
-//again
-
 import React from 'react';
-// import './Dashboard.css';
 import '../../css/ReceptionistDashboard.css'
-// import '../Receptionist/MeetingDetails';
 import { styled } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
@@ -160,29 +153,15 @@ export default function Dashboard() {
 
 
 
-    // const handleStartDateChange = (date) => {
-    //     setStartDate(date);
-    //     //  console.log(selectedStatusOptions,"acsd")
-    // };
 
-
-    // const handleEndDateChange = (date) => {
-    //     setEndDate(date);
-    //     //  fetchData();
-    // };
 
     const handleStartDateChange = (e) => {
-        // console.log(date, "dateeeeeeeee");
-        // // debugger
-        // const selectedDate = dayjs(date).format('YYYY-MM-DD'); // Convert selected date to YYYY-MM-DD format
-        // setStartDate(selectedDate);
+
         setStartDate(e.target.value)
     };
 
     const handleEndDateChange = (e) => {
 
-        //     const selectedDate = dayjs(date).format('YYYY-MM-DD'); // Convert selected date to YYYY-MM-DD format
-        //     setEndDate(selectedDate);
         setEndDate(e.target.value)
 
     };
@@ -230,10 +209,6 @@ export default function Dashboard() {
 
         setSelectedStatusOptions(event.target.value);
 
-
-        // console.log(event.target.value,"xyz");
-        // fetchData();
-
     };
 
 
@@ -245,9 +220,6 @@ export default function Dashboard() {
     const handleChangeStatusModal = (event) => {
 
         setSelectedStatusModal(event.target.value);
-
-        // console.log(event.target.value,"xyz");
-        // fetchData();
 
     };
 
@@ -371,11 +343,6 @@ export default function Dashboard() {
 
     function getRoomsOption() {
 
-
-        // const companyId = sessionStorage.getItem('companyId');
-
-
-        // const roomUrl = `http://192.168.12.54:8080/api/room/all?id=${selectedCompanyId}`;
         const roomUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsRecepEndPoint + "?id=" + selectedCompanyId
 
         axios.get(roomUrl, {
@@ -383,11 +350,7 @@ export default function Dashboard() {
 
         }).then(response => {
             const data = response.data.data;
-            // console.log(data);
             setRooms(data);
-            // console.log("Room Data", data[4].id)
-
-
         }).catch(error => {
             console.error('Error fetching data:', error);
         });
@@ -401,20 +364,10 @@ export default function Dashboard() {
 
             id: item.id,
             status: item.user.isPermission === true && item.room === null && item.status === "PENDING" ? selectedStatusModal : item.status,
-            // status: 'APPROVED',
 
-            // user: {
-            //     id: adminId
-            // },
-            // visitor: {
-            //     id: item.visitor.id
-            // },
             room: {
                 id: selectedRoom
             }
-
-
-
         };
 
 
@@ -434,25 +387,12 @@ export default function Dashboard() {
 
 
 
-
-        // const addMeetingUrl = 'http://192.168.12.54:8080/api/meeting/update/meeting';
-
         const addMeetingUrl = Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint
 
         axios.post(addMeetingUrl, meetingData, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         })
             .then((response) => {
-
-
-
-                // handleCloseModal();
-                // setSelectedRoom(null);
-                // setSelectedStatusModal('');
-                // setIsCancelled(false);
-                // setRoomAdded(false);
-
-                // setStatus('')
 
                 if (response.data.message === "Meeting is cancelled") {
                     alert("Meeting cancelled succesfully")
@@ -463,21 +403,11 @@ export default function Dashboard() {
                     setRoomAdded(true);
                     setIsCancelled(true)
                 }
-                // if (response.data.message === "You cannot update a meeting now") {
-                //     console.log("You cannot update a meeting now")
-                //     alert("You cannot update a meeting now")
-
-                //     setRoomAdded(true);
-                //     setIsCancelled(true)
-                // }
-
-
 
 
                 else {
                     console.log(selectedRoom, "selectedRoom")
-                    // alert("Room added succesfully")
-                    // setRoomAdded(true);
+
                 }
 
                 fetchData();
@@ -493,20 +423,13 @@ export default function Dashboard() {
                     alert("An unexpected error occurred");
                 }
 
-                // alert('Error adding meeting:', error);
-
 
             });
-        // };
-
 
     }
 
 
     //export
-
-
-
     function downloadFile(url) {
         const link = document.createElement('a');
         link.href = url;
@@ -520,9 +443,6 @@ export default function Dashboard() {
 
     function excelExport() {
 
-        // const selectedCompanyId = sessionStorage.getItem('companyId');
-
-        // const exportUrl = `http://192.168.12.54:8080/api/meeting/exportdata`;
         const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint
 
         const payload = {
@@ -543,17 +463,16 @@ export default function Dashboard() {
             },
 
             status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
-            // date:'2023-10-18T11:00:00'
+
 
         }
 
         axios.post(exportUrl, payload, {
 
-            // responseType: 'blob', // important
         })
             .then(response => {
                 const url = response.data.data;
-                // console.log(url, "files")
+
                 downloadFile(url)
 
             }).catch(error => {
@@ -566,7 +485,7 @@ export default function Dashboard() {
     //pagination
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-        // fetchData(newPage);
+
     };
 
 
@@ -585,9 +504,6 @@ export default function Dashboard() {
 
     function fetchData() {
 
-
-
-        // const companyId = sessionStorage.getItem('companyId');
         const payload = {
             page: page,
             size: rowsPerPage,
@@ -605,11 +521,11 @@ export default function Dashboard() {
                 id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
             }
 
-            // date:'2023-10-18T11:00:00'
+
 
         }
 
-        // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
+
         const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint
         axios
             .post(getVisitorUrl,
@@ -617,19 +533,15 @@ export default function Dashboard() {
             .then(response => {
 
                 const responseData = response.data.data.meetings;
-                // console.log(response.data.data.meetings[0].user.isPermission, "isPermission")
-
 
                 const responseDataLength = response.data.data.meetings.length;
-                if( response.data.data.meetings.length === null){
-                    console.log("friends")
+                if (response.data.data.meetings.length === null) {
+
                 }
-                if( response.data.data.meetings.length){
-                    console.log("enemies")
+                if (response.data.data.meetings.length) {
+
                 }
 
-                console.log(responseDataLength, "length")
-                console.log(responseData, "responseDatta")
 
                 responseData.forEach(meeting => {
                     const meetingId = meeting.id;
@@ -647,8 +559,6 @@ export default function Dashboard() {
 
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
-
-
 
             })
             .catch(error => {
@@ -691,8 +601,6 @@ export default function Dashboard() {
 
         }
     }
-
-
 
 
 
@@ -758,7 +666,6 @@ export default function Dashboard() {
 
     const handleDownloadPass = (meetingId, visitorName, visitorPhoneNumber) => {
 
-        // const passApiEndpoint = `http://192.168.12.54:8080/api/meeting/downloadPass?meetingId=${meetingId}`;
 
         const passApiEndpoint = Config.baseUrl + Config.apiEndPoints.passApiEndPoint + "?meetingId=" + meetingId
 
@@ -807,23 +714,12 @@ export default function Dashboard() {
         fetchStatusOptions1();
         fetchHostOptions();
 
-        // if(selectedStatusOptions ||filterSelectedRoom || selectedHostOptions || phoneNumberFilter || startDate || endDate){
-        //     console.log(selectedStatusModal,"jjjjjjjjjjjjjjjjjj");
-        //     setPage(0)
-        //     fetchData();
-
-        // }
-
 
     }, [page, rowsPerPage]);
-
-
 
     const filter = sessionStorage.getItem('filters')
 
     const total = sessionStorage.getItem('total')
-
-
 
 
     useEffect(() => {
@@ -843,27 +739,6 @@ export default function Dashboard() {
 
 
     const [filterStatus, setFilterStatus] = useState('')
-    // const[filter,setFilterStatus] = useState('')
-
-
-
-
-
-
-
-
-
-    // useEffect(() => {
-    //     // const filter = sessionStorage.getItem('filters')
-    //     if (filter) {
-
-    //         setSelectedStatusOptions(filter)
-    //         // setPage(0)
-    //         sessionStorage.removeItem('filters')
-    //     }
-
-    // }, [selectedStatusOptions])
-
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -879,7 +754,6 @@ export default function Dashboard() {
 
     const handleClickOpenDialog = (value) => {
 
-        console.log(value.remarks, "whatever")
 
         setOpenDialog(true);
 
@@ -919,11 +793,6 @@ export default function Dashboard() {
             setIsReceptionist(false);
         }
 
-
-
-
-
-
     }, [loggedUserRole]);
 
     const meetOptions = [
@@ -950,7 +819,7 @@ export default function Dashboard() {
         setSelectedFilter(selectedValue);
     };
 
-    function fetchfilter(){
+    function fetchfilter() {
 
         if (filter) {
 
@@ -959,65 +828,23 @@ export default function Dashboard() {
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
 
-            const formattedDate = `${year}-${month}-${day}`;
-
-
-
-            console.log(formattedDate, "today")
-
-
-            // const date = moment(new Date).format("DD/MM/YYYY")
-            // console.log(moment(date).format("DD/MM/YYYY"),"datee")
+            const formattedDate = `${year}-${month}-${day}`
             setSelectedStatusOptions(filter)
-
-           
             setStartDate(formattedDate)
             setEndDate(formattedDate)
 
-            // setTimeout(() => {
-            //     fetchData();
-            //   }, 1000); 
-        
-            // fetchData()
-            // setPage(0)
-            // sessionStorage.removeItem('filters')
-
 
         }
-
-
-
-
-
     }
 
 
     useEffect(() => {
-    
-
-
-        //       if(total){
-        //         const date =total
-
-        //     setStartDate(date)
-        //     setEndDate(date)
-        //     // setPage(0)
-        //     sessionStorage.removeItem('total')
-
-        // }
 
         fetchfilter()
 
-
-
-
     }, [])
-    console.log(openDialog, "opendialog")
+
     return (
-
-
-
-
 
         <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
             <Grid container spacing={2} style={{}} >
@@ -1057,12 +884,11 @@ export default function Dashboard() {
                                                 sx={{
                                                     border: "none",
                                                     borderRadius: "5px",
-                                                    // width: "130px !important",
-                                                    // height: '50px !important',
+
                                                     boxShadow: "0px 2px 2px #333333",
                                                 }}
                                             >
-                                                {/* <InputLabel sx={{ color: "#626262" }}>Filter by</InputLabel> */}
+
                                                 <Select
                                                     sx={{
                                                         color: "white",
@@ -1112,16 +938,13 @@ export default function Dashboard() {
                                                     }}
                                                     noValidate
                                                     autoComplete="on"
-                                                // style={{display:"flex",justifyContent:"space-evenly"}}
+
                                                 >
                                                     <Grid style={{ display: "flex", flexDirection: "", justifyContent: "space-between", margin: "", backgroundColor: "", gap: "20px", width: "" }}>
 
 
 
                                                         <Grid style={{ backgroundColor: "", display: "flex", flexDirection: "row" }}>
-
-
-
 
                                                             <TextField id="outlined-search" label="Phone Number" value={phoneNumberFilter}
 
@@ -1140,7 +963,7 @@ export default function Dashboard() {
 
 
 
-                                                                // Update phone number filter state
+
                                                                 onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "" }} />
 
 
@@ -1148,7 +971,7 @@ export default function Dashboard() {
                                                                 id="outlined-select-currency"
                                                                 select
                                                                 label="Status"
-                                                                // defaultValue={filterStatus ? filterStatus : ''}
+
                                                                 value={selectedStatusOptions}
 
                                                                 onChange={handleChangeStatus}
@@ -1169,9 +992,6 @@ export default function Dashboard() {
 
                                                             >
 
-
-
-
                                                                 {Array.isArray(statusOptions) && statusOptions.map((options, index) => (
                                                                     <MenuItem key={index} value={options} >{options}</MenuItem>
                                                                 ))}
@@ -1187,26 +1007,6 @@ export default function Dashboard() {
                                                                 value={selectedHostOptions}
 
                                                                 onChange={handleChangeHost}
-
-                                                                // SelectProps={{
-                                                                //     displayEmpty: true,
-                                                                //     IconComponent: selectedStatusOptions ? 'div' : undefined,
-                                                                //     endAdornment: selectedStatusOptions && (
-                                                                //       <ClearIcon
-                                                                //         style={{ cursor: 'pointer' }}
-                                                                //         onClick={handleClearHostSelection}
-                                                                //       />
-                                                                //     ),
-                                                                //     MenuProps: {
-                                                                //         style: {
-                                                                //             maxHeight: '400px',
-                                                                //         },
-                                                                //     },
-
-
-                                                                //   }}
-
-
                                                                 InputProps={{
                                                                     endAdornment: selectedHostOptions && (
                                                                         <InputAdornment position="end">
@@ -1226,20 +1026,10 @@ export default function Dashboard() {
                                                                 }}
 
 
-
-
-
-
-
-
                                                                 style={{ top: "" }}
 
 
                                                             >
-
-
-
-
 
                                                                 {Array.isArray(hostOptions) && hostOptions.map((options, index) => (
                                                                     <MenuItem key={index} value={options.id} disabled={!options.isPresent}
@@ -1253,17 +1043,6 @@ export default function Dashboard() {
                                                                 select
                                                                 label="Room"
                                                                 value={filterSelectedRoom}
-
-                                                                // SelectProps={{
-                                                                //     displayEmpty: true,
-                                                                //     IconComponent: selectedStatusOptions ? 'div' : undefined,
-                                                                //     endAdornment: selectedStatusOptions && (
-                                                                //       <ClearIcon
-                                                                //         style={{ cursor: 'pointer' }}
-                                                                //         onClick={handleClearRoomSelection}
-                                                                //       />
-                                                                //     ),
-                                                                //   }}
                                                                 InputProps={{
                                                                     endAdornment: filterSelectedRoom && (
                                                                         <InputAdornment position="end">
@@ -1284,27 +1063,8 @@ export default function Dashboard() {
 
 
                                                                 onChange={handleChange2}
-
-                                                                // SelectProps={{
-                                                                //     MenuProps: {
-                                                                //         style: {
-                                                                //             maxHeight: '400px', // 
-                                                                //         },
-                                                                //     },
-                                                                // }}
-
-
-
-
                                                                 style={{ top: "" }}
-
-
                                                             >
-
-
-
-
-
                                                                 {Array.isArray(rooms) && rooms.map((room) => (
                                                                     <MenuItem key={room.id} value={room.id}>{room.roomName}</MenuItem>
                                                                 ))}
@@ -1313,59 +1073,12 @@ export default function Dashboard() {
                                                             <TextField type='date' value={startDate} onChange={handleStartDateChange}></TextField>
                                                             <TextField type='date' value={endDate} onChange={handleEndDateChange}></TextField>
 
-                                                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
-
-                                                                <DatePicker
-                                                                    label="Start Date"
-                                                                    value={startDate}
-                                                                    // onChange={(newValue) => setStartDate(newValue)}
-                                                                    onChange={handleStartDateChange}
-                                                                    renderInput={(params) => <TextField {...params} />}
-                                                                    format="YYYY-MM-DD"
-                                                                />
-                                                                <DatePicker
-                                                                    label="End Date"
-                                                                    value={endDate}
-                                                                    // onChange={(newValue) => setEndDate(newValue)}
-                                                                    onChange={handleEndDateChange}
-                                                                    renderInput={(params) => <TextField {...params} />}
-                                                                    format="YYYY-MM-DD"
-                                                                />
-                                                            </DemoContainer>
-                                                        </LocalizationProvider> */}
-
-                                                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-<DatePicker
-  label="Start Date"
-  value={startDate}
-  onChange={handleStartDateChange}
-  renderInput={(params) => <TextField {...params} />}
-  format="dd/MM/yy" // Set the desired date format
-/>
-<DatePicker
-  label="End Date"
-  value={endDate}
-  onChange={handleEndDateChange}
-  renderInput={(params) => <TextField {...params} />}
-  format="dd/MM/yy" // Set the desired date format
-/>
-
-</LocalizationProvider> */}
-
-
-
-
-
                                                         </Grid>
 
                                                         <Grid style={{ backgroundColor: "", right: 0 }}>
                                                             <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "10px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
 
                                                         </Grid>
-
-
 
                                                         <Box sx={{ display: "flex", alignItems: "center", gap: '1em', }}>
                                                             <Tooltip title={<p style={{ fontSize: '12px', fontWeight: 600 }}>Clear filters</p>} >
@@ -1382,50 +1095,35 @@ export default function Dashboard() {
                                                             </Tooltip>
                                                         </Box>
 
-
-
-
-
-
                                                     </Grid>
-
-
 
                                                 </Box>
 
                                             </Grid>
-
-
-
                                         </div>
 
                                         <TableContainer component={Paper} sx={{ width: '100%', boxShadow: 6, backgroundColor: "" }}>
                                             <Table sx={{}} aria-label="simple table">
                                                 <TableHead sx={{ backgroundColor: '#141b2d', border: "1px solid white", fontSize: "18px", color: "white" }}>
                                                     <TableRow sx={{ border: "1px solid black" }}>
-                                                        {/* <TableCell>Meeting ID</TableCcenter
-                                            <TableCell>Visitor ID</TableCell> */}
+
                                                         <TableCell sx={{ color: "white" }}>Sl No</TableCell>
                                                         <TableCell sx={{ color: "white" }} align="left">Full Name</TableCell>
-                                                        {/* <TableCell align="right">Email</TableCell> */}
+
                                                         <TableCell sx={{ color: "white" }} align="left">Phone No.</TableCell>
                                                         <TableCell sx={{ color: "white" }} align="left">Company Name</TableCell>
                                                         <TableCell sx={{ color: "white" }} align="left">Host Name</TableCell>
-                                                        {/* <TableCell align="right">Remarks</TableCell> */}
+
                                                         <TableCell sx={{ color: "white" }} align="left">Room</TableCell>
 
                                                         <TableCell sx={{ color: "white" }} align="left">Meeting Time</TableCell>
-                                                        {/* <TableCell align="right">End Time</TableCell> */}
+
 
                                                         <TableCell sx={{ color: "white" }} align="left">Check In</TableCell>
                                                         <TableCell sx={{ color: "white" }} align="left">Check Out</TableCell>
 
                                                         <TableCell sx={{ color: "white" }} align="left">Status</TableCell>
                                                         <TableCell sx={{ color: "white" }} align="left">Remarks</TableCell>
-
-
-
-                                                        {/* <TableCell sx={{color:"white"}}align="left">Actions</TableCell> */}
 
                                                         {isADMIN ? null : (
 
@@ -1440,18 +1138,16 @@ export default function Dashboard() {
                                                     {visitors.length ? (
                                                         visitors.map((visitor, index) => (
                                                             <TableRow key={index}>
-                                                                {/* <TableCell>{visitor.id}</TableCell>
-                                                    <TableCell>{visitor.visitor.id}</TableCell> */}
 
                                                                 <TableCell>{calculateSerialNumber(page, rowsPerPage, index)}</TableCell>
 
                                                                 <TableCell align="left">{visitor.visitor.name}</TableCell>
 
-                                                                {/* <TableCell align="right">{visitor.visitor.email}</TableCell> */}
+
                                                                 <TableCell align="left">{visitor.visitor.phoneNumber}</TableCell>
 
                                                                 <TableCell align="left">{visitor.visitor.companyName}</TableCell>
-                                                                {/* <TableCell align="left">{getFullName(visitor.user)}</TableCell> */}
+
 
                                                                 <TableCell align="left">
                                                                     {visitor.user.role.name === "ADMIN" ? (
@@ -1463,16 +1159,16 @@ export default function Dashboard() {
                                                                     )}
                                                                 </TableCell>
 
-                                                                {/* <TableCell align="right">{visitor.user.role.name}</TableCell> */}
+
                                                                 <TableCell align="left">{visitor.room === null ? 'NA' : visitor.room.roomName}</TableCell>
                                                                 <TableCell align="left">{visitor.meetingStartDateTime !== null ? formatMeetingDurationStartTime(visitor) : "NA"}</TableCell>
-                                                                {/* <TableCell align="right">{formatDate(visitor.meetingEndDateTime)}</TableCell> */}
+
 
                                                                 <TableCell align="left">{visitor.checkInDateTime !== null ? formatMeetingDuration(visitor) : "NA"}</TableCell>
                                                                 <TableCell align="left">{visitor.checkOutDateTime !== null ? formatMeetingDuration1(visitor) : "NA"}</TableCell>
                                                                 {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                                                                 <TableCell align="left">{visitor.status}</TableCell>
-                                                                {/* <TableCell align="left"><InfoIcon style={{ fontSize: "20px", color: "grey", marginTop: "5px", cursor: "pointer" }} onClick={() => handleClickOpenDialog(visitor)} /></TableCell> */}
+
 
                                                                 <TableCell align="left">
                                                                     {
@@ -1497,8 +1193,7 @@ export default function Dashboard() {
 
 
 
-
-                                                                <TableCell align="left">
+                                                                {isADMIN ? null : (<TableCell align="left">
 
                                                                     {
                                                                         (visitor.status === 'APPROVED') ? (
@@ -1536,29 +1231,25 @@ export default function Dashboard() {
 
 
 
-                                                                </TableCell>
+                                                                </TableCell>)}
+
 
                                                             </TableRow>
                                                         ))
 
-                                                    ) : ( 
+                                                    ) : (
                                                         <TableRow>
-                                                        <TableCell colSpan={12} sx={{textAlign:"center"}}>No data</TableCell>
-                                                    </TableRow>
+                                                            <TableCell colSpan={12} sx={{ textAlign: "center" }}>No data</TableCell>
+                                                        </TableRow>
                                                     )
 
-
-
-
                                                     }
-
-
 
                                                 </TableBody>
 
                                             </Table>
                                             <TablePagination
-                                                //   rowsPerPageOptions={[10, 25, 50, 100]}
+                                               
                                                 rowsPerPageOptions={[10, 15, 20]}
                                                 component="div"
                                                 count={meetings}
@@ -1646,8 +1337,7 @@ export default function Dashboard() {
 
                                                         {Array.isArray(rooms) && rooms.map((room) => (
 
-                                                            // <MenuItem key={room.id} value={room.id} disabled={!room.isAvailable}
-                                                            //     style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}       Capacity:{room.capacity}</MenuItem>
+                                                          
                                                             <MenuItem
                                                                 key={room.id}
                                                                 value={room.id}
@@ -1708,8 +1398,6 @@ export default function Dashboard() {
                                                         <Button variant='contained' onClick={handleAddMeeting} disabled={roomAdded}
                                                             className={roomAdded ? 'disabledButton' : ''} >Add Room</Button>
 
-
-
                                                     </div>
                                                     <div style={{ display: "flex", justifyContent: "", gap: "5px" }}>
 
@@ -1747,35 +1435,6 @@ export default function Dashboard() {
                                 </Dialog>
 
                             )}
-                            {/* 
-{openDialog && (
-<Dialog onClose={handleCloseDialog} open={openDialog}>
-<DialogTitle style={{ color: "black" ,textAlign:"center"}}>INFO</DialogTitle>
-<List sx={{ width: "300px" }}>
-  <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
-    <ListItemText
-      primary="Remarks:"
-      secondary={selectedValue.remarks !== null && selectedValue.remarks !== "" ? selectedValue.remarks : '-'}
-      primaryTypographyProps={{ sx: { color: "blue" } }} // Style for the label "Remarks"
-      secondaryTypographyProps={{ sx: { color: "green" } }} // Style for the value of Remarks
-    />
-  </ListItem>
-  <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
-    <ListItemText
-      primary="Permission:"
-      secondary={selectedValue.user.isPermission !== 'null' && selectedValue.user.isPermission !== "" ? selectedValue.user.isPermission : ""}
-      primaryTypographyProps={{ sx: { color: "red" } }} // Style for the label "Permission"
-      secondaryTypographyProps={{ sx: { color: "purple" } }} // Style for the value of Permission
-    />
-  </ListItem>
-</List>
-</Dialog>
-)} */}
-
-
-
-                            {/* </div> */}
-
 
                         </div>
 
@@ -1783,37 +1442,5 @@ export default function Dashboard() {
                 </Grid>
             </Grid>
         </Box>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     )
 }

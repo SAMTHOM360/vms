@@ -47,10 +47,12 @@ export default function Dashboard() {
 
     const {setActiveListItem} = useAuth()
 
-    // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
-    // useEffect(() => {
-    //     setActiveListItem('/dashboardreceptionist')
-    //   }, [setActiveListItem])
+    sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
+
+
+    useEffect(() => {
+        setActiveListItem('/dashboardreceptionist')
+      }, [setActiveListItem])
 
     const [allData, setAllData] = useState(null);
 
@@ -140,11 +142,7 @@ export default function Dashboard() {
                 setAllData(response.data.data);
                 const responseData = response.data.data.meetings;
 
-                console.log(response.data.data.status, "statusssss");
-                // responseData.forEach(meeting => {
-                //     const meetingId = meeting.id; 
-
-                // });
+             
 
                 setVisitors(responseData);
 
@@ -203,7 +201,7 @@ const routeChange1 = ()=>{
 
     const formattedDate = `${year}-${month}-${day}`;
 
-    console.log(formattedDate,"formatteddate")
+
     sessionStorage.setItem("total",formattedDate)
     navigate(path1);
 }
