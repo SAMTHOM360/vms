@@ -135,7 +135,7 @@ export default function Navbar({ toggleSidebar }) {
   const [bellMenuItem, setBellMenuItem] = useState([]);
   const [isBellVisible, setIsBellVisible] = useState(false);
   const [bellBadgeCount, setBellBadgeCount] = useState();
-  const [ isHamburgerAllowed, setIsHamburgerAloowed] = useState(true)
+  const [ isHamburgerAllowed, setIsHamburgerAllowed] = useState(true)
   
 
   useEffect(() => {
@@ -151,22 +151,23 @@ export default function Navbar({ toggleSidebar }) {
       setIsRECEPTIONIST(false)
     }
     // if (activeListItem === "/receptionistcompanyscreen") {
-    //   setIsHamburgerAloowed(false)
+    //   setIsHamburgerAllowed(false)
     // } else {
-    //   setIsHamburgerAloowed(true)
+    //   setIsHamburgerAllowed(true)
     // }
   }, [loggedUserRole]);
 
   useEffect(() => {
       if (activeListItem === "/receptionistcompanyscreen") {
-    setIsHamburgerAloowed(false)
+    setIsHamburgerAllowed(false)
   } else {
-    setIsHamburgerAloowed(true)
+    setIsHamburgerAllowed(true)
   }
   },[activeListItem])
 
 
-  // console.log('isHamburgerAllowed', isHamburgerAllowed)
+  console.log('isHamburgerAllowed', activeListItem)
+  console.log('isHamburgerAllowed', isHamburgerAllowed)
 
   useEffect(() => {
     fetchData();
@@ -179,6 +180,7 @@ export default function Navbar({ toggleSidebar }) {
   useEffect(() => {
     fetchNotification();
     // console.log('isHamburgerAllowed', isHamburgerAllowed)
+    console.log('hambuger is changing', )
   }, [isHamburgerAllowed])
 
   
