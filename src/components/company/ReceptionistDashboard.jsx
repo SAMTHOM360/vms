@@ -191,15 +191,15 @@ export default function Dashboard() {
 
     const handleClearSelection = () => {
         setSelectedStatusOptions('');
-      };
+    };
 
-      const handleClearHostSelection = () => {
+    const handleClearHostSelection = () => {
         setSelectedHostOptions('');
-      };
+    };
 
-       const handleClearRoomSelection = () => {
+    const handleClearRoomSelection = () => {
         setFilterSelectedRoom('');
-      }; 
+    };
 
 
     //handleclearfilters
@@ -211,10 +211,10 @@ export default function Dashboard() {
         setFilterSelectedRoom('')
         setStartDate('')
         setEndDate('')
-      
+
         setSearchQuery('')
         sessionStorage.removeItem('filters')
-    
+
         sessionStorage.removeItem('empFilteredFromDate');
         sessionStorage.removeItem('empFilteredToDate');
     }
@@ -229,6 +229,7 @@ export default function Dashboard() {
     const handleChangeStatus = (event) => {
 
         setSelectedStatusOptions(event.target.value);
+
 
         // console.log(event.target.value,"xyz");
         // fetchData();
@@ -607,17 +608,25 @@ export default function Dashboard() {
             // date:'2023-10-18T11:00:00'
 
         }
-        
+
         // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginate`
         const getVisitorUrl = Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint
         axios
             .post(getVisitorUrl,
                 payload)
             .then(response => {
-                if(response.data.data.meetings.length>0){
-                    const responseData = response.data.data.meetings;
-                console.log(response.data.data.meetings[0].user.isPermission, "isPermission")
+
+                const responseData = response.data.data.meetings;
+                // console.log(response.data.data.meetings[0].user.isPermission, "isPermission")
+
+
                 const responseDataLength = response.data.data.meetings.length;
+                if( response.data.data.meetings.length === null){
+                    console.log("friends")
+                }
+                if( response.data.data.meetings.length){
+                    console.log("enemies")
+                }
 
                 console.log(responseDataLength, "length")
                 console.log(responseData, "responseDatta")
@@ -638,9 +647,9 @@ export default function Dashboard() {
 
                 setPendingVisitors(response.data.data.totalPending);
                 setApprovedVisitors(response.data.data.totalApproved);
-                }
-            
-                
+
+
+
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -791,18 +800,27 @@ export default function Dashboard() {
     useEffect(() => {
 
 
+
         fetchData();
         getRoomsOption();
         fetchStatusOptions();
         fetchStatusOptions1();
         fetchHostOptions();
 
+        // if(selectedStatusOptions ||filterSelectedRoom || selectedHostOptions || phoneNumberFilter || startDate || endDate){
+        //     console.log(selectedStatusModal,"jjjjjjjjjjjjjjjjjj");
+        //     setPage(0)
+        //     fetchData();
+
+        // }
+
+
     }, [page, rowsPerPage]);
 
 
 
     const filter = sessionStorage.getItem('filters')
-   
+
     const total = sessionStorage.getItem('total')
 
 
@@ -820,7 +838,13 @@ export default function Dashboard() {
         }
 
 
-    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, phoneNumberFilter, startDate, endDate,])
+    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
+
+
+
+    const [filterStatus, setFilterStatus] = useState('')
+    // const[filter,setFilterStatus] = useState('')
+
 
 
 
@@ -926,41 +950,66 @@ export default function Dashboard() {
         setSelectedFilter(selectedValue);
     };
 
+    function fetchfilter(){
 
-    useEffect(() => {
         if (filter) {
 
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-    
+
             const formattedDate = `${year}-${month}-${day}`;
-    
-    
-    
+
+
+
             console.log(formattedDate, "today")
-    
-    
+
+
             // const date = moment(new Date).format("DD/MM/YYYY")
             // console.log(moment(date).format("DD/MM/YYYY"),"datee")
             setSelectedStatusOptions(filter)
+
+           
             setStartDate(formattedDate)
             setEndDate(formattedDate)
-            // setPage(0)
-            sessionStorage.removeItem('filters')
-    
-    
-        }
-    //       if(total){
-    //         const date =total
-      
-    //     setStartDate(date)
-    //     setEndDate(date)
-    //     // setPage(0)
-    //     sessionStorage.removeItem('total')
 
-    // }
+            // setTimeout(() => {
+            //     fetchData();
+            //   }, 1000); 
+        
+            // fetchData()
+            // setPage(0)
+            // sessionStorage.removeItem('filters')
+
+
+        }
+
+
+
+
+
+    }
+
+
+    useEffect(() => {
+    
+
+
+        //       if(total){
+        //         const date =total
+
+        //     setStartDate(date)
+        //     setEndDate(date)
+        //     // setPage(0)
+        //     sessionStorage.removeItem('total')
+
+        // }
+
+        fetchfilter()
+
+
+
 
     }, [])
     console.log(openDialog, "opendialog")
@@ -1099,7 +1148,7 @@ export default function Dashboard() {
                                                                 id="outlined-select-currency"
                                                                 select
                                                                 label="Status"
-                                                                
+                                                                // defaultValue={filterStatus ? filterStatus : ''}
                                                                 value={selectedStatusOptions}
 
                                                                 onChange={handleChangeStatus}
@@ -1110,12 +1159,12 @@ export default function Dashboard() {
                                                                     displayEmpty: true,
                                                                     IconComponent: selectedStatusOptions ? 'div' : undefined,
                                                                     endAdornment: selectedStatusOptions && (
-                                                                      <ClearIcon
-                                                                        style={{ cursor: 'pointer' }}
-                                                                        onClick={handleClearSelection}
-                                                                      />
+                                                                        <ClearIcon
+                                                                            style={{ cursor: 'pointer' }}
+                                                                            onClick={handleClearSelection}
+                                                                        />
                                                                     ),
-                                                                  }}
+                                                                }}
 
 
                                                             >
@@ -1138,7 +1187,7 @@ export default function Dashboard() {
                                                                 value={selectedHostOptions}
 
                                                                 onChange={handleChangeHost}
-                                                               
+
                                                                 // SelectProps={{
                                                                 //     displayEmpty: true,
                                                                 //     IconComponent: selectedStatusOptions ? 'div' : undefined,
@@ -1160,27 +1209,27 @@ export default function Dashboard() {
 
                                                                 InputProps={{
                                                                     endAdornment: selectedHostOptions && (
-                                                                      <InputAdornment position="end">
-                                                                        <IconButton onClick={handleClearHostSelection} edge="end">
-                                                                          <ClearIcon />
-                                                                        </IconButton>
-                                                                      </InputAdornment>
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton onClick={handleClearHostSelection} edge="end">
+                                                                                <ClearIcon />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
                                                                     ),
-                                                                  }}
-                                                                  SelectProps={{
+                                                                }}
+                                                                SelectProps={{
                                                                     IconComponent: selectedHostOptions ? 'div' : undefined,
                                                                     MenuProps: {
-                                                                      style: {
-                                                                        maxHeight: '400px',
-                                                                      },
+                                                                        style: {
+                                                                            maxHeight: '400px',
+                                                                        },
                                                                     },
-                                                                  }}
+                                                                }}
 
 
 
-                                                                
 
-                                                                
+
+
 
 
                                                                 style={{ top: "" }}
@@ -1188,7 +1237,7 @@ export default function Dashboard() {
 
                                                             >
 
-                                                              
+
 
 
 
@@ -1217,21 +1266,21 @@ export default function Dashboard() {
                                                                 //   }}
                                                                 InputProps={{
                                                                     endAdornment: filterSelectedRoom && (
-                                                                      <InputAdornment position="end">
-                                                                        <IconButton onClick={handleClearRoomSelection} edge="end">
-                                                                          <ClearIcon />
-                                                                        </IconButton>
-                                                                      </InputAdornment>
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton onClick={handleClearRoomSelection} edge="end">
+                                                                                <ClearIcon />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
                                                                     ),
-                                                                  }}
-                                                                  SelectProps={{
+                                                                }}
+                                                                SelectProps={{
                                                                     IconComponent: filterSelectedRoom ? 'div' : undefined,
                                                                     MenuProps: {
-                                                                      style: {
-                                                                        maxHeight: '400px',
-                                                                      },
+                                                                        style: {
+                                                                            maxHeight: '400px',
+                                                                        },
                                                                     },
-                                                                  }}
+                                                                }}
 
 
                                                                 onChange={handleChange2}
@@ -1243,7 +1292,7 @@ export default function Dashboard() {
                                                                 //         },
                                                                 //     },
                                                                 // }}
-                                                                
+
 
 
 
@@ -1252,7 +1301,7 @@ export default function Dashboard() {
 
                                                             >
 
-                                                              
+
 
 
 
@@ -1318,20 +1367,20 @@ export default function Dashboard() {
 
 
 
-                                                        <Box sx={{ display: "flex", alignItems: "center", gap:'1em', }}>
-                          <Tooltip title={<p style={{fontSize:'12px', fontWeight:600}}>Clear filters</p>} >
-                          <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            sx={{ minWidth: "unset", marginLeft: "1.2em", width:'3.9em', height: "3.9em", }}
-                            onClick={handleClearFilters}
-                          >
-                            <RotateLeftIcon />
-                            {/* Clear Filters */}
-                          </Button>
-                          </Tooltip>
-                          </Box>
+                                                        <Box sx={{ display: "flex", alignItems: "center", gap: '1em', }}>
+                                                            <Tooltip title={<p style={{ fontSize: '12px', fontWeight: 600 }}>Clear filters</p>} >
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="error"
+                                                                    size="small"
+                                                                    sx={{ minWidth: "unset", marginLeft: "1.2em", width: '3.9em', height: "3.9em", }}
+                                                                    onClick={handleClearFilters}
+                                                                >
+                                                                    <RotateLeftIcon />
+                                                                    {/* Clear Filters */}
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </Box>
 
 
 
@@ -1388,11 +1437,8 @@ export default function Dashboard() {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {visitors
-                                                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-
-                                                        .map((visitor, index) => (
+                                                    {visitors.length ? (
+                                                        visitors.map((visitor, index) => (
                                                             <TableRow key={index}>
                                                                 {/* <TableCell>{visitor.id}</TableCell>
                                                     <TableCell>{visitor.visitor.id}</TableCell> */}
@@ -1493,7 +1539,21 @@ export default function Dashboard() {
                                                                 </TableCell>
 
                                                             </TableRow>
-                                                        ))}
+                                                        ))
+
+                                                    ) : ( 
+                                                        <TableRow>
+                                                        <TableCell colSpan={12} sx={{textAlign:"center"}}>No data</TableCell>
+                                                    </TableRow>
+                                                    )
+
+
+
+
+                                                    }
+
+
+
                                                 </TableBody>
 
                                             </Table>
