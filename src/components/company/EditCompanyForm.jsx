@@ -28,6 +28,15 @@ export default function EditCompanyForm() {
 
   const navigate = useNavigate();
 
+
+
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+  const pincodeRegex = /^\d{6}$/;
+
+  // const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
+  const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
+
   const [companyData, setCompanyData] = useState({
     name: "",
     logo: null,
@@ -40,9 +49,34 @@ export default function EditCompanyForm() {
     industry: "",
     aboutUs: "",
     userLimit: "",
-    buildingId: {id:null, name:""},
+    buildingId: { id: null, name: "" },
+    // buildingId: ""
   });
-  console.log(companyData, "companydata");
+
+
+
+
+  const [errors, setErrors] = useState({
+    name: "",
+    logo: "",
+    address: "",
+    state: "",
+    city: "",
+    pincode: "",
+    email: "",
+    phoneNumber: "",
+    industry: "",
+    userLimit: "",
+    aboutUs: "",
+    buildingId: "",
+
+  })
+
+
+
+
+
+  // console.log(companyData, "companydata");
 
 
   const [disabled, setDisabled] = useState(true);
@@ -58,7 +92,7 @@ export default function EditCompanyForm() {
 
   const [imageUrl, setImageUrl] = useState(null);
 
-  const [logo,setLogo] = useState(null)
+  const [logo, setLogo] = useState(null)
 
   function fetchData() {
 
@@ -67,19 +101,19 @@ export default function EditCompanyForm() {
       // .get(`http://192.168.12.54:8080/com/get/${companyId}`, 
 
       .get(editCompanyUrl,
-      
-      {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-      })
+
+        {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        })
       .then((response) => {
         const company = response.data.data;
-        console.log(response.data.data);
+        // console.log(response.data.data);
 
 
         setCompanyData({
           name: company.name,
           logo: null,
-          image:company.logo,
+          image: company.logo,
           address: company.address,
           state: company.state.id,
           city: company.city.id,
@@ -89,7 +123,7 @@ export default function EditCompanyForm() {
           industry: company.industry,
           aboutUs: company.aboutUs,
           userLimit: company.userLimit,
-          buildingId:company.building,
+          buildingId: company.building,
         });
         // console.log(company.city.id,"city");
 
@@ -98,7 +132,7 @@ export default function EditCompanyForm() {
         fetchCity(company.state.id);
         setSelectedBuildingId(company.building);
         setImageUrl(company.image)
-        console.log(company.logo,"logo")
+        // console.log(company.logo,"logo")
         console.log(company.building.buildingId, "buildingId")
       })
       .catch((error) => {
@@ -108,7 +142,7 @@ export default function EditCompanyForm() {
 
   function fetchStates() {
 
-    const stateUrl =Config.baseUrl + Config.apiEndPoints.statesEndPoint
+    const stateUrl = Config.baseUrl + Config.apiEndPoints.statesEndPoint
     axios
       // .get("http://192.168.12.54:8080/sc/states")
 
@@ -143,7 +177,7 @@ export default function EditCompanyForm() {
     setSelectedState(selectedState);
 
 
-    const cityUrl =Config.baseUrl + Config.apiEndPoints.cityEndPoint + selectedState
+    const cityUrl = Config.baseUrl + Config.apiEndPoints.cityEndPoint + selectedState
     axios
       // .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
       .get(cityUrl)
@@ -182,17 +216,17 @@ export default function EditCompanyForm() {
 
   const [logoUpdated, setLogoUpdated] = useState(false);
 
-  
+
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 
-  const handleImageClick = () => { 
+  const handleImageClick = () => {
     let img = imageUrl || companyData.image
     if (img) {
-        const newWindow = window.open();
-        newWindow.document.write(`<img src="${img}" alt="Uploaded Logo"/>`);
+      const newWindow = window.open();
+      newWindow.document.write(`<img src="${img}" alt="Uploaded Logo"/>`);
     }
-};
+  };
 
 
 
@@ -202,8 +236,8 @@ export default function EditCompanyForm() {
 
 
     if (!logoFile) {
-        // User clicked cancel without selecting a file
-        return;
+      // User clicked cancel without selecting a file
+      return;
     }
 
 
@@ -211,19 +245,19 @@ export default function EditCompanyForm() {
     if (!allowedExtensions.includes(logoFile.type)) {
 
 
-        alert("Allowed file formats: .jpg, .jpeg, .png")
-        // setErrors({
-        //     ...errors,
-        //     logo: "Allowed file formats: .jpg, .jpeg, .png"
-        // });
-        return;
+      alert("Allowed file formats: .jpg, .jpeg, .png")
+      // setErrors({
+      //     ...errors,
+      //     logo: "Allowed file formats: .jpg, .jpeg, .png"
+      // });
+      return;
     }
 
     // Check if file size exceeds the limit
     if (logoFile.size > MAX_FILE_SIZE) {
-        alert("Maximum file size exceeded (5MB)");
-        // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
-        return;
+      alert("Maximum file size exceeded (5MB)");
+      // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+      return;
     }
 
     // Proceed with normal logo upload process
@@ -233,95 +267,176 @@ export default function EditCompanyForm() {
 
     const reader = new FileReader();
     reader.onload = () => {
-        setImageUrl(reader.result);
+      setImageUrl(reader.result);
     };
     reader.readAsDataURL(logoFile);
-};
+  };
 
 
 
 
   const [updateSuccess, setUpdateSuccess] = useState(false);
+
+
+  const [buildingIdError, setBuildingIdError] = useState("");
+  console.log(buildingIdError, "buildingIdError");
+
+
+
+
   const handleSave = async (e) => {
+
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", companyData.name);
+    console.log(companyData, "companydata")
+
+    const newErrors = {};
 
 
-      if (companyData.logo) {
-        // Only append the image if it exists
-                 formData.append('image', companyData.logo);
-        
+    // if (!companyData.buildingId ===  {id:null, name:""}) {
+    //   setBuildingIdError("Building Id is required");
+    // } else {
+    //   setBuildingIdError(""); // No error
+    // }
+
+    // Check for empty fields and validate their content
+    if (!companyData.name) {
+      newErrors.name = "Name is required";
     }
+    // if (!companyData.logo) {
+    //   newErrors.logo = "Company Logo is required";
+    // }
+
+
+    if (!companyData.address) {
+      newErrors.address = "Address is required";
+    }
+
+    if (!companyData.state) {
+      newErrors.state = "State is required";
+    }
+
+    if (!companyData.city) {
+      newErrors.city = "City is required";
+    }
+
+    if (!companyData.pincode || !companyData.pincode.match(pincodeRegex)) {
+      newErrors.pincode = "Pincode must be exactly 6 digits";
+    }
+
+    if (!companyData.email || !companyData.email.match(emailRegex)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    if (!companyData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required";
+    }
+
+    if (!phoneNumberRegex.test(companyData.phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be exactly 10 digits";
+    }
+
+    if (!companyData.industry) {
+      newErrors.industry = "Industry is required";
+    }
+
+
+
+
+    if (!companyData.userLimit) {
+      newErrors.userLimit = "User Limit is required";
+    }
+
+    if (!companyData.buildingId.buildingId) {
+      newErrors.buildingId = "Building Id is required";
+    }
+
+    if (!companyData.aboutUs) {
+      newErrors.aboutUs = "About is required";
+    }
+
+
+    setErrors(newErrors);
+
+
+
+    if (Object.keys(newErrors).length === 0) {
+
+      try {
+        const formData = new FormData();
+        formData.append("name", companyData.name);
+
+
+        if (companyData.logo) {
+          // Only append the image if it exists
+          formData.append('image', companyData.logo);
+
+        }
+
+
+        // if(companyData.buildingId.buildingId){
+        //   formData.append("building.buildingId", companyData.buildingId.buildingId);
+
+        // }
+
+
         //  formData.append('image', companyData.logo);
 
-      formData.append("address", companyData.address);
-      formData.append("state.id", companyData.state);
-      formData.append("city.id", companyData.city);
-      formData.append("pincode", companyData.pincode);
-      formData.append("email", companyData.email);
-      formData.append("phoneNumber", companyData.phoneNumber);
-      formData.append("industry", companyData.industry);
-      formData.append("userLimit", companyData.userLimit);
-      formData.append("building.buildingId", companyData.buildingId.id);
-      formData.append("aboutUs", companyData.aboutUs);
-      // if (companyData.logo) {
-      //   formData.append("image", companyData.logo);
-      // }
-      // if(!companyData.logo){
-      //     console.log("image null")
-      //     formData.append('image', null);
+        formData.append("address", companyData.address);
+        formData.append("state.id", companyData.state);
+        formData.append("city.id", companyData.city);
+        formData.append("pincode", companyData.pincode);
+        formData.append("email", companyData.email);
+        formData.append("phoneNumber", companyData.phoneNumber);
+        formData.append("industry", companyData.industry);
+        formData.append("userLimit", companyData.userLimit);
+        formData.append("building.buildingId", companyData.buildingId.buildingId);
+        formData.append("aboutUs", companyData.aboutUs);
 
-      // }
-      // else{
-      //     console.log("image")
-      //      formData.append('logo', companyData.logo);
-      //     //  formData.append('')
+        const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editEndPoint + companyId
+        axios.post(
+          // `http://192.168.12.54:8080/com/update/${companyId}`
+          editCompanyUrl
+          ,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
+          .then(response => {
 
-      // }
-  const editCompanyUrl = Config.baseUrl +Config.apiEndPoints.editEndPoint + companyId
-      await axios.post(
-        // `http://192.168.12.54:8080/com/update/${companyId}`
-editCompanyUrl
-        ,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+            if (response.data.statusCode === 200) {
+              setUpdateSuccess(true);
 
-      setUpdateSuccess(true);
+              toast.success("Company data updated successfully!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+              navigate('/companyDetails')
 
-      toast.success("Company data updated successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      // setCompanyData({
+            }
 
-      //     name: "",
-      //     logo: "",
-      //     address: "",
-      //     state: "",
-      //     city: "",
-      //     pincode: "",
-      //     email: "",
-      //     phoneNumber: "",
-      //     industry: "",
-      //     aboutUs: ""
+          })
 
-      // })
-    } catch (error) {
-      console.error("Error updating company data:", error);
-    }
-  };
+          ;
+
+
+
+      } catch (error) {
+        console.error("Error updating company data:", error);
+      }
+    };
+
+    // navigate('/companyDetails')
+
+
+  }
 
   // const handleLogoChange = (event) => {
 
@@ -335,16 +450,16 @@ editCompanyUrl
   const [selectedBuildingId, setSelectedBuildingId] = useState('');
 
   // const buildingUrl = `http://192.168.12.54:8080/api/building/getAll`;
-    // getBuildingEndPoint:"api/building/getAll",
-  const buildingUrl = Config.baseUrl +Config.apiEndPoints.getBuildingEndPoint
-  
+  // getBuildingEndPoint:"api/building/getAll",
+  const buildingUrl = Config.baseUrl + Config.apiEndPoints.getBuildingEndPoint
+
 
   function fetchBuildingNames() {
 
     axios
       .get(buildingUrl)
       .then(response => {
-        console.log(response.data.data, "buildings")
+
 
 
         setBuildingOptions(response.data.data);
@@ -358,8 +473,8 @@ editCompanyUrl
   }
 
 
-  console.log(buildingOptions, "hhh")
- 
+
+
 
   // const handleBuildingChange = (event) => {
   //     const selectedBuildingId= event.target.value;
@@ -371,14 +486,16 @@ editCompanyUrl
 
   // };
   const handleBuildingChange = (event, newValue) => {
-    console.log(newValue,"newval")
+    console.log(newValue, "newval")
 
     if (newValue) {
       setSelectedBuildingId(newValue.id);
-      setCompanyData({ ...companyData, buildingId: {id: newValue.id, name: newValue.name} });
+      setCompanyData({ ...companyData, buildingId: { id: newValue.id, buildingId: newValue.buildingId, name: newValue.name } });
+
+      // setCompanyData({ ...companyData, buildingId: { buildingId: newValue.id, name: newValue.name } });
     } else {
       setSelectedBuildingId(null);
-      setCompanyData({ ...companyData, buildingId: {id: null, name: ""} });
+      setCompanyData({ ...companyData, buildingId: { id: null, buildingId: null, name: "" } });
     }
 
     // setCompanyData({
@@ -443,7 +560,11 @@ editCompanyUrl
                     onChange={(e) =>
                       setCompanyData({ ...companyData, name: e.target.value })
                     }
-                    // disabled={disabled}
+
+                    error={Boolean(errors.name)}
+                    helperText={errors.name}
+
+                  // disabled={disabled}
 
                   ></TextField>
 
@@ -465,38 +586,38 @@ editCompanyUrl
                   </div> */}
 
 
-<div style={{ display: "flex", flexDirection: "column", gap: "" }} >
-                                            <label
-                                            >
+                  <div style={{ display: "flex", flexDirection: "column", gap: "" }} >
+                    <label
+                    >
 
-                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-                                                    {(imageUrl || companyData.image) && (
+                      <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                        {(imageUrl || companyData.image) && (
 
-                                                        <img
-                                                            src={imageUrl || companyData.image}
-                                                            // src={companyData.logo}
-                                                            alt="Uploaded Logo"
-                                                            style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px', cursor: 'pointer' }}
-                                                            onClick={handleImageClick}
-                                                        />
+                          <img
+                            src={imageUrl || companyData.image}
+                            // src={companyData.logo}
+                            alt="Uploaded Logo"
+                            style={{ width: '60px', height: '60px', objectFit: 'cover', marginLeft: '10px', cursor: 'pointer' }}
+                            onClick={handleImageClick}
+                          />
 
-                                                    )}
-                                                    <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                                                        <input type="file"  accept="image/jpeg, image/jpg, image/png" id="file-input" required   onChange={handleLogoChange} />
-                                                        Upload Company Logo
-                                                    </span>
+                        )}
+                        <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
+                          <input type="file" accept="image/jpeg, image/jpg, image/png" id="file-input" required onChange={handleLogoChange} />
+                          Upload Company Logo
+                        </span>
 
-                                                </div>
-
-
-
-                                            </label>
-                                            <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
-                                                Allowed file formats: .jpg, .jpeg, .png
-                                            </Typography>
+                      </div>
 
 
-                                        </div>
+
+                    </label>
+                    <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
+                      Allowed file formats: .jpg, .jpeg, .png
+                    </Typography>
+
+
+                  </div>
                 </div>
 
                 <TextField
@@ -508,6 +629,8 @@ editCompanyUrl
                     setCompanyData({ ...companyData, address: e.target.value })
                   }
                   disabled={disabled}
+
+
                 ></TextField>
                 <div
                   className="input"
@@ -579,6 +702,9 @@ editCompanyUrl
                   onChange={(e) =>
                     setCompanyData({ ...companyData, pincode: e.target.value })
                   }
+                  error={Boolean(errors.pincode)}
+                  helperText={errors.pincode}
+
                   disabled={disabled}
                 ></TextField>
 
@@ -602,26 +728,39 @@ editCompanyUrl
                     type="email"
                     name="email"
                     value={companyData.email}
+
+                    error={Boolean(errors.email)}
+                    helperText={errors.email}
                     // InputProps={{
                     //   readOnly: true,
                     // }}
                     onChange={(e) =>
                       setCompanyData({ ...companyData, email: e.target.value })
                     }
-                    // disabled={disabled}
+                  // disabled={disabled}
                   ></TextField>
                   <TextField
                     sx={{ width: "47%" }}
                     label="Phone Number"
                     required
                     placeholder=" Phone Number "
-                    type="number"
+                    inputProps={{ maxLength: 10 }}
+
                     name="phoneNumber"
                     value={companyData.phoneNumber}
-                    onChange={(e) =>
-                      setCompanyData({ ...companyData, phoneNumber: e.target.value })
-                    }
-                    // disabled={disabled}
+                    onChange={(e) => {
+                      const input = e.target.value;
+                      const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
+                      if (numericValue.length > 10) {
+                        return;
+                      }
+                      setCompanyData({ ...companyData, phoneNumber: numericValue });
+                    }}
+
+                    error={Boolean(errors.phoneNumber)}
+                    helperText={errors.phoneNumber}
+
+                  // disabled={disabled}
                   ></TextField>
                 </div>
 
@@ -635,6 +774,9 @@ editCompanyUrl
                   onChange={(e) =>
                     setCompanyData({ ...companyData, industry: e.target.value })
                   }
+                  error={Boolean(errors.industry)}
+                  helperText={errors.industry}
+
                   disabled={disabled}
                 ></TextField>
 
@@ -647,19 +789,6 @@ editCompanyUrl
                   }}
                 >
 
-                  {/* <TextField
-                    sx={{ width: "47%" }}
-                    label="Building Id"
-                    placeholder="Building Id"
-                    type="number"
-                    value={companyData.buildingId}
-                    onChange={(e) =>
-                      setCompanyData({ ...companyData, buildingId: e.target.value })
-                    }
-                    // disabled={disabled}
-                  ></TextField> */}
-
-
                   <Autocomplete sx={{ width: "47%" }}
                     options={buildingOptions}
                     getOptionLabel={(option) => option !== null ? option.name : ""}
@@ -667,7 +796,9 @@ editCompanyUrl
                     // onChange={(e, newVal)=> {}}
                     // inputValue={""}
                     // onInputChange={(e, newVal)=>{}}
-                    onChange={(e, newVal) => handleBuildingChange(e,newVal)}
+                    onChange={(e, newVal) => handleBuildingChange(e, newVal)}
+
+
 
                     renderInput={(params) => (
                       <TextField
@@ -675,6 +806,11 @@ editCompanyUrl
                         label="Select Building"
                         required
                         variant="outlined"
+                        error={Boolean(errors.buildingId)}
+                        helperText={errors.buildingId}
+                      // helperText={buildingIdError} // Render helper text based on buildingIdError state
+                      // error={Boolean(buildingIdError)} // Set error state based on buildingIdError
+                      // Other props...
                       />
                     )}
                   />
@@ -683,11 +819,26 @@ editCompanyUrl
                     sx={{ width: "47%" }}
                     label="User Limit" required
                     placeholder="User Limit"
-                  
+
                     value={companyData.userLimit}
-                    onChange={(e) =>
-                      setCompanyData({ ...companyData, userLimit: e.target.value })
-                    }
+
+
+                    error={Boolean(errors.userLimit)}
+                    helperText={errors.userLimit}
+
+                    onChange={(e) => {
+
+                      const enteredValue = e.target.value;
+                      const numericValue = parseInt(enteredValue);
+
+                      if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 1000) {
+                        setCompanyData({ ...companyData, userLimit: numericValue });
+                      } else {
+
+                        setCompanyData({ ...companyData, userLimit: '' });
+
+                      }
+                    }}
                   ></TextField>
                 </div>
 

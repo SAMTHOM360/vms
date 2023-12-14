@@ -95,7 +95,7 @@ export default function Dashboard() {
 
     // const companyId = sessionStorage.getItem('companyId');
     const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
-    console.log(selectedCompanyId,"selectedCompanyId");
+
 
 
 
@@ -178,12 +178,12 @@ export default function Dashboard() {
         // const today = dayjs().format('YYYY-MM-DD'); 
         let path = `/receptionistdashboard`;
 
-        navigate(path);
+        // navigate(path);
 
         if (filteredVisitors) {
-            sessionStorage.setItem("filters", filteredVisitors)
+            // sessionStorage.setItem("filters", filteredVisitors)
             // sessionStorage.setItem("today",today)
-            navigate(path);
+            navigate(path, {state:{filter: filteredVisitors}});
 
         }
         // else {
@@ -191,20 +191,20 @@ export default function Dashboard() {
         // }
     }
 
-const routeChange1 = ()=>{
+// const routeChange1 = ()=>{
 
-    let path1= '/receptionistdashboard';
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+//     let path1= '/receptionistdashboard';
+//     const today = new Date();
+//     const year = today.getFullYear();
+//     const month = String(today.getMonth() + 1).padStart(2, '0');
+//     const day = String(today.getDate()).padStart(2, '0');
 
-    const formattedDate = `${year}-${month}-${day}`;
+//     const formattedDate = `${year}-${month}-${day}`;
 
 
-    sessionStorage.setItem("total",formattedDate)
-    navigate(path1);
-}
+//     sessionStorage.setItem("total",formattedDate)
+//     navigate(path1);
+// }
 
 
     return (
@@ -239,7 +239,7 @@ const routeChange1 = ()=>{
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                                     <Grid item xs={12} style={{ backgroundColor: "" }}>
                                         <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                            <Paper onClick={routeChange1}  elevation={1} sx={{
+                                            <Paper onClick={()=>navigate('/receptionistdashboard')}  elevation={1} sx={{
                                                 height: 150,
                                                 width: 300,
                                              

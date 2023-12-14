@@ -89,10 +89,15 @@ export default function ReceptionistAddRoom() {
     const [selectedRoomId, setSelectedRoomId] = useState('');
 
 
+    const [roomUpdated,setRoomUpdated] = useState(false);
+
 
     // Function to handle opening the Add Room modal
     const handleOpenAddRoomDialog = () => {
         setOpenAddRoomDialog(true);
+        setRoomName('');
+        setCapacity('');
+        // setSelectedRoomId('');
     };
 
     // Function to handle closing the Add Room modal
@@ -141,23 +146,33 @@ export default function ReceptionistAddRoom() {
             "company": {
                 "id": selectedCompanyId
             }
-
-
-
         }
 
+
+        if(!roomName){
+            alert('Room is required')
+            return
+        }
+        if(!capacity){
+            alert("Capacity is required")
+            return
+        }
+        
+    
         axios.post(addRoomUrl, payload)
             .then(response => {
                 handleCloseAddRoomDialog()
                 setReload(!reload);
                 setPage(0)
-                console.log(response)
+                // console.log(response)
 
                 alert('Room added')
                 setRoomName('');
                 setCapacity('')
             })
             .catch(error => {
+
+                // if(response.data.message === "capacity is required")
                 console.log(error, "error")
             })
 
@@ -176,7 +191,7 @@ export default function ReceptionistAddRoom() {
         setOpenAddRoomDialog(true);
         setSelectedRoomId(row.room_Id);
         setEditMode(true);
-        console.log(' blah ', row.room_Id);
+      
     };
 
     function handleUpdateRoom() {
@@ -203,10 +218,11 @@ export default function ReceptionistAddRoom() {
 
                     handleCloseAddRoomDialog()
 
+
                     setReload(!reload);
                     setPage(0)
     
-                    console.log(response);
+                    // console.log(response);
 
 
                 }
@@ -240,7 +256,7 @@ export default function ReceptionistAddRoom() {
 
                 setReload(!reload);
                 setPage(0)
-                console.log(response)
+                // console.log(response)
             })
             .catch(error => {
                 console.log(error)
@@ -268,24 +284,31 @@ export default function ReceptionistAddRoom() {
             .post(isActiveRoomUrl, payload)
             .then(response => {
 
-                alert('switched succesfully')
 
-                // setActive(newActiveStatus);
+                if(response.data.message === "Success"){
 
-                setRoomDetails(prevRoomDetails => ({
-                    ...prevRoomDetails,
-                    [row.room_Id]: {
-                        ...prevRoomDetails[row.room_Id],
-                        isActive: newActiveStatus
-                    }
-                }));
+                    alert('switched succesfully')
+
+                    // setActive(newActiveStatus);
+    
+                    setRoomDetails(prevRoomDetails => ({
+                        ...prevRoomDetails,
+                        [row.room_Id]: {
+                            ...prevRoomDetails[row.room_Id],
+                            isActive: newActiveStatus
+                        }
+                    }));
+    
+    
+                    setReload(!reload);
+                    setPage(0)
+
+                }
+
+              
 
 
-                setReload(!reload);
-                setPage(0)
-
-
-                console.log(response)
+                // console.log(response)
             })
             .catch(error => {
                 console.log(error, "error");
@@ -352,7 +375,7 @@ export default function ReceptionistAddRoom() {
 
     const handleClickOpenDialog = (value) => {
 
-        console.log(value, "value")
+        // console.log(value, "value")
 
         setOpenDialog(true);
         setSelectedValue(value)
@@ -360,7 +383,7 @@ export default function ReceptionistAddRoom() {
 
     };
 
-    console.log(' selected value', selectedValue)
+    // console.log(' selected value', selectedValue)
 
     const handleCloseDialog = (value) => {
         setOpenDialog(false);
@@ -400,7 +423,7 @@ export default function ReceptionistAddRoom() {
 
     }, [reload])
 
-    console.log(selectedRoomId, "room")
+    // console.log(selectedRoomId, "room")
 
 
 
@@ -575,6 +598,7 @@ export default function ReceptionistAddRoom() {
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <TextField
                                     label="Room Name"
+                                    required
                                     value={roomName}
                                     onChange={handleRoomNameChange}
                                     // fullWidth
@@ -584,6 +608,7 @@ export default function ReceptionistAddRoom() {
                                 {/* Capacity field */}
                                 <TextField
                                     label="Capacity"
+                                    required
                                     value={capacity}
                                     onChange={handleCapacityChange}
                                     // fullWidth

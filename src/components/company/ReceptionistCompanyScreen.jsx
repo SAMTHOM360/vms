@@ -40,7 +40,7 @@ export default function ReceptionistCompanyScreen() {
 
                 setCompanyName(response.data.data);
 
-                console.log(response.data.data)
+                // console.log(response.data.data)
 
             })
             .catch(
@@ -82,7 +82,7 @@ export default function ReceptionistCompanyScreen() {
     }, [])
 
 
-    console.log(companyName, "companyName")
+    // console.log(companyName, "companyName")
 
 
 

@@ -57,6 +57,9 @@ const CompanyTable = () => {
   const [length, setLength] = useState(0);
 
 
+  const [reload, setReload] = useState(false)
+
+
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
 
@@ -98,7 +101,7 @@ const CompanyTable = () => {
 
     fetchAllData()
 
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage,reload]);
 
 
   useEffect(() => {
@@ -116,7 +119,7 @@ const CompanyTable = () => {
       setPage(0);
     }
 
-  }, [selectedBuildingIds])
+  }, [selectedBuildingIds,selectedCompanyNames])
 
 
 
@@ -130,7 +133,7 @@ const CompanyTable = () => {
       "buildingId": selectedBuildingIds
 
     }
-    console.log(apiUrl, "apiURl")
+
     // const apiUrl = 'http://192.168.12.54:8080/com/all';
     axios
       .post(apiUrl, payload, {
@@ -145,24 +148,6 @@ const CompanyTable = () => {
 
         setCompanies(responseData);
 
-        // const extractedBuildingIds = responseData.map(company => ({
-        //   label: company.building.buildingId,
-        //   value: company.building.buildingId,
-        // }));
-
-        // setBuildingIds(extractedBuildingIds)
-
-        // const extractedCompanyNames = responseData.map(company => ({
-        //   label: company.name,
-        //   value: company.name,
-        // }));
-
-        // setCompanyNames(extractedCompanyNames)
-
-
-
-
-
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -170,23 +155,7 @@ const CompanyTable = () => {
 
   }
 
-  // const fetchData = (searchTerm, pageNumber) => {
-  //   // const apiUrl = `http://192.168.12.54:8080/com/all?search=${searchTerm}&page=${pageNumber}`;
-
-  //   const apiUrl = Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint + "?search=" + searchTerm + "&page=" + pageNumber
-  //   axios
-  //     .get(apiUrl, {
-  //       headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-  //     })
-  //     .then(response => {
-  //       const responseData = response.data.data.companies;
-  //       console.log(responseData, "now")
-  //       setCompanies(responseData);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // };
+  
 
 
   //filters
@@ -199,7 +168,7 @@ const CompanyTable = () => {
 
     if (value !== null) {
 
-      console.log(value.id, "value")
+   
       setSelectedBuildingIds(value.id);
 
     } else {
@@ -257,11 +226,15 @@ const CompanyTable = () => {
 
   const handleSwitchToggle = (companyId, isActive) => {
 
+    console.log(isActive,"isActive")
+
     const activeDeactiveUrl = Config.baseUrl + Config.apiEndPoints.activeDeactiveEndPoint;
     const payload = {
       id: companyId,
       isActive: isActive,
     };
+
+  
     axios
       // .post(`http://192.168.12.54:8080/com/active`
       .post(activeDeactiveUrl
@@ -269,15 +242,33 @@ const CompanyTable = () => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then(response => {
-        if (isActive) {
-          toast.success(`Company is active.`);
-        } else {
-          toast.success(`Company is deactivated.`);
-        }
+        // if (isActive === true) {
+        //   toast.success(`Company is active.`);
+        // } else  if(isActive === false){
+        //   toast.success(`Company is deactivated.`);
+        // }
+ if(response.data.message){
+
+  alert(response.data.message)
+  setReload(!reload);
+
+
+ }
+
+
+      
+        // setPage(0)
+
+
+
       })
       .catch(error => {
         console.error('Error toggling switch:', error);
       });
+
+   
+      // setReload(true)
+
   };
 
   // const handleSearch = event => {
@@ -329,7 +320,7 @@ const CompanyTable = () => {
   };
 
 
-  console.log(page, "companies")
+
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3, backgroundColor: "" }}>
@@ -382,7 +373,7 @@ const CompanyTable = () => {
                             getOptionLabel={(option) => option !== null ? `Id-${option.id}    ${option.name}` : ""}
                             onChange={handleBuildingIdChange}
                             sx={{ width: 300 }}
-                            renderInput={(params) => <TextField {...params} label="Search by building id"
+                            renderInput={(params) => <TextField {...params} label="Building id"
                               // renderOption={(props, option) => (
                               //   <div style={{ display: '', justifyContent: '', backgroundColor: "red" }} {...props}>
                               //     <div>{`Id-${option.id}`}</div>
@@ -401,7 +392,7 @@ const CompanyTable = () => {
 
 
 
-                          <TextField id="outlined-basic" label="Search by Company Name" variant="outlined"
+                          <TextField id="outlined-basic" label="Company Name" variant="outlined"
 
                             value={selectedCompanyNames}
                             // onChange={ (e)handleCompanyNameChange}
@@ -485,14 +476,15 @@ const CompanyTable = () => {
                                         <EditIcon />
                                       </Link>
 
-                                      <Switch
+                                      {/* <Switch
                                         {...label}
                                         defaultChecked={company.isActive}
                                         onChange={() => {
                                           const newActiveStatus = !company.active;
+                                          console.log(!company.active,"newActiveStatus")
                                           handleSwitchToggle(company.id, newActiveStatus);
 
-                                          // Update the local state with the new active status
+                                        
                                           const updatedCompanies = companies.map(c => {
                                             if (c.id === company.id) {
                                               return { ...c, active: newActiveStatus };
@@ -501,7 +493,26 @@ const CompanyTable = () => {
                                           });
                                           setCompanies(updatedCompanies);
                                         }}
-                                      />
+                                      /> */}
+
+<Switch
+  {...label}
+  defaultChecked={company.isActive}
+  onChange={() => {
+    const newActiveStatus = !company.isActive; // Update to use `isActive` property
+    console.log(!company.isActive, "newActiveStatus");
+    handleSwitchToggle(company.id, newActiveStatus);
+
+    const updatedCompanies = companies.map(c => {
+      if (c.id === company.id) {
+        return { ...c, isActive: newActiveStatus }; // Update to set `isActive`
+      }
+      return c;
+    });
+    setCompanies(updatedCompanies);
+  }}
+/>
+
                                     </div>
                                   </TableCell>
                                 </TableRow>
@@ -509,7 +520,7 @@ const CompanyTable = () => {
                           </TableBody>
                         </Table>
                         <TablePagination
-                          rowsPerPageOptions={[5, 10, 15]}
+                          rowsPerPageOptions={[5, 10, 15,100]}
                           component="div"
                           // count={companies.length}
                           count={length}

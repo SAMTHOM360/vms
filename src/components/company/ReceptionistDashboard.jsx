@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 import Navbar from '../../global/Navbar';
@@ -140,6 +140,11 @@ export default function Dashboard() {
 
 
 
+      const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;;
+
+
+
+
     const [item, setItem] = useState('');
 
     const [phoneNumberFilter, setPhoneNumberFilter] = useState('');
@@ -152,6 +157,7 @@ export default function Dashboard() {
     const [endDate, setEndDate] = useState(null);
 
 
+    const location = useLocation()
 
 
 
@@ -183,7 +189,7 @@ export default function Dashboard() {
 
     //handleclearfilters
     const handleClearFilters = () => {
-        // console.log("i got hitt")
+
         setSelectedStatusOptions('')
         setSelectedHostOptions('')
         setPhoneNumberFilter('')
@@ -192,7 +198,7 @@ export default function Dashboard() {
         setEndDate('')
 
         setSearchQuery('')
-        sessionStorage.removeItem('filters')
+        // sessionStorage.removeItem('filters')
 
         sessionStorage.removeItem('empFilteredFromDate');
         sessionStorage.removeItem('empFilteredToDate');
@@ -279,7 +285,7 @@ export default function Dashboard() {
         axios.get(hostUrl)
             .then(response => {
                 const data = response.data.data;
-                console.log(data, "hostnames")
+                // console.log(data, "hostnames")
 
                 setHostOptions(data);
 
@@ -323,7 +329,7 @@ export default function Dashboard() {
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
     const [filterSelectedRoom, setFilterSelectedRoom] = useState('');
-
+    const [reload, setReload] = useState(false)
     const [selectedRoomOptions, setSelectedRoomOptions] = useState('');
 
 
@@ -339,7 +345,7 @@ export default function Dashboard() {
 
 
     const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
-    console.log(selectedCompanyId, "hello")
+    // console.log(selectedCompanyId, "hello")
 
     function getRoomsOption() {
 
@@ -373,16 +379,18 @@ export default function Dashboard() {
 
         if (!selectedRoom && selectedStatusModal && selectedStatusModal !== "CANCELLED") {
 
-            console.log("alert room")
+            // console.log("alert room")
             alert("Choose a room")
             return
+
         }
 
         if (selectedRoom && !selectedStatusModal) {
 
-            console.log("alert room")
+            // console.log("alert room")
             alert("Choose a status")
             return
+
         }
 
 
@@ -410,14 +418,14 @@ export default function Dashboard() {
 
                 }
 
-                fetchData();
+                setReload(true)
 
 
             })
             .catch((error) => {
 
                 if (error.response.data.message === "You cannot update a meeting now") {
-                    console.log(error.response.data.message, 'inside');
+                    // console.log(error.response.data.message, 'inside');
                     alert(error.response.data.message);
                 } else {
                     alert("An unexpected error occurred");
@@ -507,11 +515,12 @@ export default function Dashboard() {
         const payload = {
             page: page,
             size: rowsPerPage,
-            phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+            phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
             companyId: selectedCompanyId,
             fromDate: startDate,
             toDate: endDate,
-            status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+            status: selectedStatusOptions ? selectedStatusOptions : null,
+            // status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
             user: {
 
                 id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
@@ -554,6 +563,7 @@ export default function Dashboard() {
                 setMeetings(response.data.data.totalElements);
 
                 setVisitors(responseData);
+                console.log(visitors,"visitorsdata")
 
                 setTotalVisitors(response.data.data.totalElements);
 
@@ -689,7 +699,7 @@ export default function Dashboard() {
                 window.URL.revokeObjectURL(url);
                 alert('Pass downloaded succesfully');
                 handleCloseModal();
-                fetchData();
+                setReload(true)
             })
             .catch((error) => {
                 console.error('Error downloading pass:', error);
@@ -697,44 +707,78 @@ export default function Dashboard() {
     };
 
 
-    const handlePhoneNumberSearch = (event) => {
-        if (event.key === 'Enter') {
+    // const handlePhoneNumberSearch = (event) => {
+    //     if (event.key === 'Enter') {
 
-            fetchData(phoneNumberFilter);
+    //         setPhoneNumberFilter(e.target.value)
+
+    //         // fetchData(phoneNumberFilter);
+    //     }
+    // };
+
+
+    // useEffect(() => {
+    //     fetchData()
+    // }, [ selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
+
+
+    useEffect(()=>{
+        
+
+        if (location.state && location.state.filter) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const formattedDate = `${year}-${month}-${day}`
+
+            setSelectedStatusOptions(location?.state?.filter)
+            setStartDate(formattedDate)
+            setEndDate(formattedDate)
         }
-    };
+
+        fetchData()
+
+    },[page,rowsPerPage,reload, selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
 
     useEffect(() => {
-
-
-
-        fetchData();
         getRoomsOption();
         fetchStatusOptions();
         fetchStatusOptions1();
         fetchHostOptions();
 
 
-    }, [page, rowsPerPage]);
+    }, []);
 
-    const filter = sessionStorage.getItem('filters')
+    // useEffect(() => {
+    //     if (location.state && location.state.filter) {
+    //         const today = new Date();
+    //         const year = today.getFullYear();
+    //         const month = String(today.getMonth() + 1).padStart(2, '0');
+    //         const day = String(today.getDate()).padStart(2, '0');
 
-    const total = sessionStorage.getItem('total')
+    //         const formattedDate = `${year}-${month}-${day}`
+
+    //         setSelectedStatusOptions(location?.state?.filter)
+    //         setStartDate(formattedDate)
+    //         setEndDate(formattedDate)
+    //     }
+    // }, [])
+
+    // useEffect(() => {
 
 
-    useEffect(() => {
+    //     if (page === 0) {
+
+    //         fetchData();
+
+    //     } else {
+    //         setPage(0);
+    //     }
 
 
-        if (page === 0) {
-
-            fetchData();
-
-        } else {
-            setPage(0);
-        }
-
-
-    }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
+    // }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
 
 
 
@@ -768,7 +812,7 @@ export default function Dashboard() {
         setSelectedValue(value);
     };
 
-
+    console.log(location, "location")
 
 
     const loggedUserRole = sessionStorage.getItem("loggedUserRole");
@@ -819,30 +863,9 @@ export default function Dashboard() {
         setSelectedFilter(selectedValue);
     };
 
-    function fetchfilter() {
+   
 
-        if (filter) {
-
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const formattedDate = `${year}-${month}-${day}`
-            setSelectedStatusOptions(filter)
-            setStartDate(formattedDate)
-            setEndDate(formattedDate)
-
-
-        }
-    }
-
-
-    useEffect(() => {
-
-        fetchfilter()
-
-    }, [])
+    console.log(phoneNumberFilter, "phone num enter")
 
     return (
 
@@ -950,13 +973,37 @@ export default function Dashboard() {
 
                                                                 inputProps={{ maxLength: 10 }}
 
+                                                                // onChange={(e) => {
+
+                                                                //     console.log(e,"event name")
+
+
+                                                                //     if (e.target.value.length <= 10) {
+                                                                //         setPhoneNumberFilter(e.target.value)
+                                                                //     }
+
+
+                                                                // }}
+
+
                                                                 onChange={(e) => {
-
-                                                                    if (e.target.value.length <= 10) {
-                                                                        setPhoneNumberFilter(e.target.value)
+                                                                    const { value } = e.target;
+                                                                  
+                                                                    if (value.length <= 10 && phoneNumberRegex.test(value)) {
+                                                                      setPhoneNumberFilter(value);
+                                                                    } else if (value.length === 0) { // Allow clearing the field when empty
+                                                                      setPhoneNumberFilter(value);
                                                                     }
+                                                                  }}
+                                                                onKeyDown={(e) => {
+                                                                    const { key } = e;
 
 
+                                                                    if (key === 'Enter') {
+                                                                        e.preventDefault();
+                                                                        //  fetchData()
+
+                                                                    }
                                                                 }}
 
 
@@ -964,7 +1011,13 @@ export default function Dashboard() {
 
 
 
-                                                                onKeyPress={handlePhoneNumberSearch} type="search" style={{ top: "" }} />
+
+
+
+
+
+                                                                // onKeyPress={handlePhoneNumberSearch} 
+                                                                type="search" style={{ top: "" }} />
 
 
                                                             <TextField
@@ -1077,7 +1130,6 @@ export default function Dashboard() {
 
                                                         <Grid style={{ backgroundColor: "", right: 0 }}>
                                                             <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "10px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button>
-
                                                         </Grid>
 
                                                         <Box sx={{ display: "flex", alignItems: "center", gap: '1em', }}>
@@ -1135,7 +1187,7 @@ export default function Dashboard() {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {visitors.length ? (
+                                                    {visitors.length > 0 ? (
                                                         visitors.map((visitor, index) => (
                                                             <TableRow key={index}>
 
@@ -1249,7 +1301,7 @@ export default function Dashboard() {
 
                                             </Table>
                                             <TablePagination
-                                               
+
                                                 rowsPerPageOptions={[10, 15, 20]}
                                                 component="div"
                                                 count={meetings}
@@ -1337,7 +1389,7 @@ export default function Dashboard() {
 
                                                         {Array.isArray(rooms) && rooms.map((room) => (
 
-                                                          
+
                                                             <MenuItem
                                                                 key={room.id}
                                                                 value={room.id}

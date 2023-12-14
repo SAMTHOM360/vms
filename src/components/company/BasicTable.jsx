@@ -73,16 +73,17 @@ export default function BasicTable() {
 const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointdashboard + "?companyId=" + selectedCompanyId
 
 
-console.log(roomDetailsUrl,"roomDetailsUrl")
+
 
   //dialog
 
   const handleClickOpenDialog = (value) => {
 
-    console.log(value, "value")
+
 
     setOpenDialog(true);
     setSelectedValue(value)
+    console.log(value,"ssss")
 
 
   };
@@ -176,6 +177,7 @@ console.log(roomDetailsUrl,"roomDetailsUrl")
 
   //format host name
   function getFullName(user) {
+
     return `${user.firstName} ${user.lastName}`;
   }
 
@@ -220,9 +222,6 @@ console.log(roomDetailsUrl,"roomDetailsUrl")
 
 
 
-
-
-
   return (
     <>
       <Paper sx={{ width: '100%' }}>
@@ -236,7 +235,7 @@ console.log(roomDetailsUrl,"roomDetailsUrl")
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ fontWeight: "bolder", fontSize: "15px" }}
+                    style={{ fontWeight: "bolder", fontSize: "15px",backgroundColor:"rgb(145 187 231 / 85%)" }}
                   // style={{ top: 57, minWidth: column.minWidth }}
                   >
                     {column.label}
@@ -295,42 +294,50 @@ console.log(roomDetailsUrl,"roomDetailsUrl")
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
 
-
       </Paper>
-
+{/* 
       {Array.isArray(selectedValue) && selectedValue.map((meeting, index) => (
         <div key={index} style={{ width: "1000px" }}>
 
-          {openDialog && (
-            <Dialog onClose={handleCloseDialog} open={openDialog}
+          {openDialog && ( */}
+            <Dialog onClose={handleCloseDialog} open={openDialog}  
+            
          
             >
               <DialogTitle style={{ color: "black" }}>Room Details</DialogTitle>
+              { Array.isArray(selectedValue) && selectedValue?.map((meeting,index)=>{
+
+            return (
               <List sx={{ width: "300px" }}>
-                <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
-                  <ListItemText primary={`Start Time: ${meeting.meetingStartDateTime !== null ? formatMeetingDuration(meeting) : '-'}`} />
-                </ListItem>
-                <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
-                  <ListItemText primary={`End Time: ${meeting.meetingEndDateTime !== null ? formatMeetingDuration1(meeting) : "-"} `} />
-                </ListItem>
-                <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
-                  <ListItemText primary={`Host Name : ${getFullName(meeting.user)}`} />
-                </ListItem>
-                <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
-                  <ListItemText primary={`Visitor Name : ${meeting.visitor.name}`} />
-                </ListItem>
+              <ListItem button onClick={() => handleCloseDialog('username@gmail.com')}>
+                <ListItemText primary={`Start Time: ${meeting.meetingStartDateTime !== null ? formatMeetingDuration(meeting) : '-'}`} />
+              </ListItem>
+              <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
+                <ListItemText primary={`End Time: ${meeting.meetingEndDateTime !== null ? formatMeetingDuration1(meeting) : "-"} `} />
+              </ListItem>
+              <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
+                <ListItemText primary={`Host Name : ${getFullName(meeting.user)}`} />
+              </ListItem>
+              <ListItem button onClick={() => handleCloseDialog('user02@gmail.com')}>
+                <ListItemText primary={`Visitor Name : ${meeting.visitor.name}`} />
+              </ListItem>
 
 
+            </List>
+            )
 
+              })
 
-              </List>
+             
+              }
+            
             </Dialog>
 
-          )}
+          {/* )}
 
 
         </div>
-      ))}
+      ))} */}
 
     </>
   )

@@ -20,24 +20,8 @@ const ProgressBar = ({meetingHour,avgData,meetingData}) => {
     const chartInstance = useRef(null);
 
 
-    // const[totalMeetingTime,setTotalMeetingTime] = useState(0);
-    // const[totalAverageTime,setTotalAverageTime] = useState(0);
-
-
-       console.log(meetingHour,"xxxx")
+      
  useEffect(() => {
-
-
-    // if(allData){
-    //     // setAverageHoursPerWeek(allData.averageHoursPerWeek)
-
-    //     const x = (allData.averageHoursPerWeek)
-
-
-    //     console.log(x,"xxxxx")
-    // }
-
-   
 
     if (chartInstance.current !== null) {
         chartInstance.current.destroy();

@@ -72,7 +72,7 @@ export default function CompanyReg() {
 
         const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint
 
-        console.log("companyUrl", companyUrl)
+    
         e.preventDefault();
 
 
@@ -199,7 +199,7 @@ export default function CompanyReg() {
                     navigate('/companyDetails');
 
                 } else if (res.status === 409) {
-                    console.log(res.data.message, 'inside');
+              
                     alert(res.data.message);
                 } else {
                     alert("An unexpected error occurred");
@@ -211,7 +211,7 @@ export default function CompanyReg() {
             } catch (error) {
 
                 if (error.response && error.response.status === 409) {
-                    console.log(error.response.data.message, 'inside');
+                   
                     alert(error.response.data.message);
                 } else {
                     alert("An unexpected error occurred");
@@ -386,7 +386,7 @@ export default function CompanyReg() {
 
         const buildingUrl = Config.baseUrl + Config.apiEndPoints.getBuildingEndPoint
 
-        console.log(Config.apiEndPoints, "builddd")
+
 
         axios
             .get(buildingUrl)
@@ -405,13 +405,6 @@ export default function CompanyReg() {
     }
 
 
-    // console.log(buildingOptions, "hhh")
-
-    // const handleBuildingChange = (event) => {
-    //     const selectedBuildingId= event.target.value;
-    //     // console.log(selectedState)
-    //     setSelectedBuildingId(selectedBuildingId);
-    //     setValues({ ...values, buildingId: selectedBuildingId });
 
 
 
@@ -437,7 +430,6 @@ export default function CompanyReg() {
 
 
 
-    // console.log(imageUrl, "imageURl")
 
 
 
