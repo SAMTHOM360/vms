@@ -118,6 +118,7 @@ const MeetingDetails = () => {
   }, [adminId]);
 
   const handlePhoneNumberChange = async (event) => {
+    toast.dismiss()
     const phone = event.target.value;
     let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormGetVisitorByPhone
   
@@ -155,16 +156,7 @@ const MeetingDetails = () => {
           }
         } catch (error) {
           // console.error(error);
-          // toast.error("User doesn't exist!", {
-          //   position: "top-right",
-          //   autoClose: 4000,
-          //   hideProgressBar: false,
-          //   closeOnClick: true,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   progress: undefined,
-          //   theme: "light",
-          // });
+          // toast.error("User doesn't exist!");
           // setFormData({
           //   ...initialFormData,
           //   phoneNumber: phone,
@@ -182,16 +174,7 @@ const MeetingDetails = () => {
             if (error.response && error.response.data && error.response.data.message) {
               errMessage = error.response.data.message;
               const cleanedMessage = JSON.stringify(errMessage);
-              toast.error(JSON.parse(cleanedMessage)+' !!!', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
+              toast.error(JSON.parse(cleanedMessage)+' !!!');
 
             setFormData({
               ...initialFormData,
@@ -206,16 +189,7 @@ const MeetingDetails = () => {
      
           }
            else {
-            toast.error('Something went wrong !!!', {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-          });
+            toast.error('Something went wrong !!!');
           setFormData({
             ...initialFormData,
             phoneNumber: phone,
@@ -250,6 +224,7 @@ const MeetingDetails = () => {
 
 
   const handleSubmit = async (e) => {
+    toast.dismiss()
     e.preventDefault();
 
     if (!formData.meetingStartDateTime) {
@@ -265,23 +240,12 @@ const MeetingDetails = () => {
     const differenceInDays = Math.floor((formData.meetingStartDateTime - today) / (1000 * 60 * 60 * 24));
   
     if (differenceInDays < 0 || differenceInDays > 90) {
-      toast.warn('Meeting start date and time must be within the next 90 days and not in the past.', {
-        // Add your toast options here
-      });
+      toast.warn('Meeting start date and time must be within the next 90 days and not in the past.');
       return;
     }
 
     if(formData.phoneNumber.length!== 10) {
-      toast.warn("Username must be exactly 10 digits !!!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Username must be exactly 10 digits !!!");
       return
     }
   
@@ -315,16 +279,7 @@ const MeetingDetails = () => {
         updatedFormData
       );
       if (response.status === 200) {
-        toast.success("Meeting appointed successfully.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Meeting appointed successfully.");
         setFormData({ ...initialFormData });
         handleRedirectMeetings()
       } else if (response.data.data === null) {

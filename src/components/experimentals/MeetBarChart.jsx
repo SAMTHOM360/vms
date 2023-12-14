@@ -20,12 +20,76 @@ const MeetBarChart = ({ data }) => {
       })
     );
 
+//     let largestCountSum = 0;
+
+// ["BUSINESS", "CASUAL", "INTERVIEW"].forEach(category => {
+//   // Find the largest count for the current category
+//   const largestCount = Math.max(
+//     ...dataEntries.map(
+//       ([, meetingData]) => meetingData?.[category]?.count ?? 0
+//     )
+//   );
+//   // Add the largest count to the total sum
+//   largestCountSum += largestCount;
+// });
+
+// console.log('Largest Count Sum:', largestCountSum);
+
+
+let largestCountSum = 0;
+let largestHourSum = 0;
+
+["BUSINESS", "CASUAL", "INTERVIEW"].forEach(category => {
+  const countValues = dataEntries.map(
+    ([, meetingData]) => meetingData?.[category]?.count ?? 0
+  );
+  const largestCount = countValues.length > 0 ? Math.max(...countValues) : 0;
+
+  const hourValues = dataEntries.map(
+    ([, meetingData]) => meetingData?.[category]?.hour ?? 0
+  );
+  const largestHour = hourValues.length > 0 ? Math.max(...hourValues) : 0;
+
+  largestCountSum += largestCount;
+  largestHourSum += largestHour;
+});
+
+console.log('Largest Count Sum:', largestCountSum);
+console.log('Largest Hour Sum:', largestHourSum);
+
+let meanScale = 15
+
+if(largestCountSum >= largestHourSum) {
+  meanScale = largestCountSum + 15
+} else {
+  meanScale = largestHourSum + 15
+}
+
+
+
+    let meow = null;
+
+    if (labels) {
+      if (labels.length === 1) {
+        meow = 100;
+      }
+       if (labels.length === 7) {
+        meow = 40;
+      }
+      if (labels.length === 15) {
+        meow = 23;
+      }
+    }
+
+    // meowRef.current = meow;
+
     const datas = {
       labels: labels,
       datasets: [
         {
           label: "BUSINESS COUNT",
-          // barThickness: 40,
+          barThickness: meow,
+          // meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["BUSINESS"]?.count ?? 0
           ),
@@ -34,7 +98,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "CASUAL COUNT",
-          // barThickness: 40,
+          barThickness: meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["CASUAL"]?.count ?? 0
           ),
@@ -43,7 +107,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "INTERVIEW COUNT",
-          // barThickness: 40,
+          barThickness: meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["INTERVIEW"]?.count ?? 0
           ),
@@ -52,7 +116,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "BUSINESS HOUR",
-          // barThickness: 40,
+          barThickness: meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["BUSINESS"]?.hour ?? 0
           ),
@@ -61,7 +125,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "CASUAL HOUR",
-          // barThickness: 40,
+          barThickness: meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["CASUAL"]?.hour ?? 0
           ),
@@ -70,7 +134,7 @@ const MeetBarChart = ({ data }) => {
         },
         {
           label: "INTERVIEW HOUR",
-          // barThickness: 40,
+          barThickness: meow,
           data: dataEntries.map(
             ([, meetingData]) => meetingData?.["INTERVIEW"]?.hour ?? 0
           ),
@@ -122,7 +186,8 @@ const MeetBarChart = ({ data }) => {
             //   33,
             //   0
             // );
-            if(value !==411.6) {
+            console.log('value', value)
+            if(value !==431.6) {
               ctx.fillText(
                 y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
                 33,
@@ -181,9 +246,9 @@ const MeetBarChart = ({ data }) => {
             //   33,
             //   0
             // );
-            if(value !== 411.6) {
+            if(value !== 431.6) {
               ctx.fillText(
-                y.getValueForPixel(value).toFixed(0) + "  HOURS",
+                y.getValueForPixel(value).toFixed(0) + " HOURS",
                 33,
                 0
               );
@@ -234,7 +299,8 @@ const MeetBarChart = ({ data }) => {
               color: '#404E6B',
             },
             // min: 0,
-                max: 20,
+                // max: 50 ,
+                max: meanScale, 
           },
         },
 
@@ -296,143 +362,3 @@ const MeetBarChart = ({ data }) => {
 export default MeetBarChart;
 
 
-
-
-
-
-// import React, { useEffect, useRef } from 'react';
-// import Chart from 'chart.js/auto';
-
-// const MeetBarChart = ({ data }) => {
-//   const chartRef = useRef(null);
-
-//   useEffect(() => {
-//     if (!chartRef.current || !data) return;
-
-//     const dataEntries = Object.entries(data);
-
-//     const labels = dataEntries.map(([date]) =>
-//       new Date(date).toLocaleDateString('en-US', {
-//         month: 'short',
-//         day: 'numeric',
-//       })
-//     );
-
-//     const datasets1 = [
-//       {
-//         label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-//         backgroundColor: '#305BA6',
-//       },
-//       {
-//         label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-//         backgroundColor: '#54ccd2',
-//       },
-//       {
-//         label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-//         backgroundColor: '#d9c9b4',
-//       },
-//     ];
-
-//     const datasets2 = [
-//       {
-//         label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS_HOUR'] || 0),
-//         backgroundColor: '#305BA6',
-//       },
-//       {
-//         label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['CASUAL_HOUR'] || 0),
-//         backgroundColor: '#54ccd2',
-//       },
-//       {
-//         label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW_HOUR'] || 0),
-//         backgroundColor: '#d9c9b4',
-//       },
-//     ]
-
-// const datas = {
-//   labels: labels,
-//   datasets: [
-//     {
-//       label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS'] || 0),
-//         backgroundColor: '#305BA6',
-//       stack: 'Stack 0',
-//     },
-//     {
-//       label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['CASUAL'] || 0),
-//         backgroundColor: '#54ccd2',
-//       stack: 'Stack 0',
-//     },
-//     {
-//       label: 'Meetings',
-//         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW'] || 0),
-//         backgroundColor: '#d9c9b4',
-//       stack: 'Stack 0',
-//     },
-//     {
-//       label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['BUSINESS_HOUR'] || 0),
-//         backgroundColor: '#305BA6',
-//       stack: 'Stack 1',
-//     },
-//     {
-//       label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['CASUAL_HOUR'] || 0),
-//         backgroundColor: '#54ccd2',
-//       stack: 'Stack 1',
-//     },
-//     {
-//       label: 'Hours',
-//         data: dataEntries.map(([, meetingData]) => meetingData['INTERVIEW_HOUR'] || 0),
-//         backgroundColor: '#d9c9b4',
-//       stack: 'Stack 1',
-//     },
-//   ]
-// };
-
-//     const config = {
-//       type: 'bar',
-//       data: datas,
-//       options: {
-//         plugins: {
-//           title: {
-//             display: true,
-//             text: 'Chart.js Bar Chart - Stacked'
-//           },
-//         },
-//         responsive: true,
-//         interaction: {
-//           intersect: false,
-//         },
-//         scales: {
-//           x: {
-//             stacked: true,
-//           },
-//           y: {
-//             stacked: true
-//           }
-//         }
-//       }
-//     };
-
-//     const chartInstance = new Chart(chartRef.current, config);
-
-//     return () => {
-//       chartInstance.destroy();
-//     };
-//   }, [data]);
-
-//   return (
-//     <div style={{ marginLeft: '1em', width: '100%', height: '99%', display: 'flex', justifyContent: 'center' }}>
-//       <canvas ref={chartRef} id="myChart"></canvas>
-//     </div>
-//   );
-// };
-
-// export default MeetBarChart;

@@ -310,17 +310,9 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.dismiss();
     if(credentials.username.length!== 10) {
-      toast.warn("Username must be exactly 10 digits !!!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Username must be exactly 10 digits !!!");
       return
     }
 
@@ -332,16 +324,7 @@ function LoginForm() {
       const response = await axios.post(`${url}`, credentials);
 
       if (response.status === 200) {
-        toast.success("Successfully Logged In", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Successfully Logged In");
         const token = response.data.token;
         const loggedUserName = response.data.name;
         const loggedUserRole = response.data.role;
@@ -397,27 +380,9 @@ function LoginForm() {
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("Incorrect username or password", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Incorrect username or password");
       } else {
-        toast.error("Something went wrong !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !!!");
       }
     }
     setBtnLoading(false);
@@ -451,16 +416,7 @@ function LoginForm() {
     let url = Config.baseUrl + Config.apiEndPoints.loginFormNKGetOtp
 
     if (!updateCreds.username) {
-      toast.warn("Username can't be empty.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Username can't be empty.");
 
       return;
     }
@@ -474,53 +430,17 @@ function LoginForm() {
       );
       // console.log("get otp", response);
       if (response.status === 200) {
-        toast.success("OTP sent successfully. Please check your mail.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("OTP sent successfully. Please check your mail.");
         setItemVisible1(true);
         setItemVisible2(false);
       } else {
-        toast.error("Something went wrong !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !!!");
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("User not found !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("User not found !!!",);
       } else {
-        toast.error("Something went wrong !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !!!");
       }
     }
     setLoading(false);
@@ -539,16 +459,7 @@ function LoginForm() {
       updatePasswordPayload.otp.trim() === "" ||
       updatePasswordPayload.newPassword.trim() === ""
     ) {
-      toast.warn("Please fill all details !!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Please fill all details !!");
 
       return;
     }
@@ -560,16 +471,7 @@ function LoginForm() {
     // );
 
     if (updateCreds.newPassword != updateCreds.confirmPassword) {
-      toast.error("New and Confirm passwords mismatched !!!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("New and Confirm passwords mismatched !!!");
 
       return;
     }
@@ -585,16 +487,7 @@ function LoginForm() {
         updatePasswordPayload
       );
       if (response.status === 200) {
-        toast.success("Password updated succesfully.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Password updated succesfully.");
         handleForgotPasswordClose();
         logout();
       }
@@ -603,27 +496,9 @@ function LoginForm() {
       if (error.request.status === 400) {
         const errMessage = error.response.data.message;
         const cleanedMessage = JSON.stringify(errMessage);
-        toast.error(JSON.parse(cleanedMessage) + " !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(JSON.parse(cleanedMessage) + " !!!");
       } else {
-        toast.error("Something went wrong !!!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !!!");
       }
     }
     setLoading(false);

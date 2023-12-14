@@ -49,7 +49,7 @@ function UserForm({ authenticated, closeDialog }) {
     image: "",
     email: "",
     phone: "",
-    dob: new Date(),
+    dob: null,
     gender: "",
     govtId: "",
     pincode: "",
@@ -356,34 +356,17 @@ function UserForm({ authenticated, closeDialog }) {
   };
 
 const handleSubmit = async (e) => {
+  toast.dismiss()
   e.preventDefault();
 
   if (!formData.dob) {
-    toast.warn("Date of birth is required !!!", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    toast.warn("Date of birth is required !!!");
     return;
   }
   const currentDate = new Date();
 
   if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
-    toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    toast.warn("Invalid date of birth selected. Please choose a date up to today.");
     // console.error('Invalid date of birth selected. Please choose a date up to today.');
     return;
   }
@@ -394,45 +377,18 @@ dob.setDate(dob.getDate() + 1);
 const dobISOString = dob.toISOString().split("T")[0];
 
 if (formData.empCode.length < 4) {
-  toast.warn("Employee Code must be at least 4 characters !!!", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
+  toast.warn("Employee Code must be at least 4 characters !!!");
   return;
 }
 
 
 if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
-  toast.warn("Aadhar Card must be 12 digits only.", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
+  toast.warn("Aadhar Card must be 12 digits only.");
   return;
 } 
 
 if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
-  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
+  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.");
   return;
 }
 
@@ -483,16 +439,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
       { headers }
     );
     if (response.status === 200) {
-      toast.success("New Employee Added Successfully.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("New Employee Added Successfully.");
 
       // closeDialog()
       handleEmployeeRedirect();
@@ -504,7 +451,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
         lastName: "",
         email: "",
         phone: "",
-        dob: new Date(),
+        dob: null,
         gender: "",
         govtId: "",
         pincode: "",
@@ -518,17 +465,25 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
       });
     }
   } catch (error) {
-    toast.error("Something went wrong !!!", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    console.error("Error submitting user data", error);
+    // toast.error("Something went wrong !!!");
+    // console.error("Error submitting user data", error);
+
+          if(error.request.status === 400){
+
+        let errMessage = '';
+
+
+        if (error.response && error.response.data && error.response.data.message) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage)+' !!!');
+        }
+ 
+ 
+      }
+       else {
+        toast.error('Something went wrong !!!');
+      }
   } finally {
     setLoading(false);
   }
@@ -744,7 +699,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
 
                     <Grid item xs={12} sm={6} md={6} lg={6}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth>
-                        <InputLabel id="demo-simple-select-label">
+                        <InputLabel htmlFor="demo-simple-select-label">
                           Gender
                         </InputLabel>
                         <Select

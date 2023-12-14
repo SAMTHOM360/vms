@@ -139,18 +139,10 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
+    toast.dismiss();
     let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete;
     if (id == adminId) {
-      toast.error("You cannot delete yourself !!!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("You cannot delete yourself !!!");
       return;
     } else {
       if (window.confirm("Are you sure you want to delete this row?")) {
@@ -165,16 +157,7 @@ const Employee = () => {
           });
           // console.log("deleted", response)
           if (response.status === 200) {
-            toast.success("User is succesfully deleted.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            toast.success("User is succesfully deleted.");
             const updatedRows = rows.map((row) =>
               row.id === id ? { ...row, isActive: true } : row
             );
@@ -250,6 +233,7 @@ const Employee = () => {
 
   const handleSaveEdit = async (e) => {
     e.preventDefault();
+    toast.dismiss();
 
     // console.log("edited item role", editedItem)
     let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser;
@@ -282,17 +266,8 @@ const Employee = () => {
     // console.log('missing fields', missingFields)
 
     if (missingFields.length > 0) {
-      toast.warn("All fields are required!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return; // Stop execution if any field is missing
+      toast.warn("All fields are required!");
+      return;
     }
     // debugger
     try {
@@ -303,16 +278,7 @@ const Employee = () => {
         headers,
       });
       if (response.status === 200) {
-        toast.success("Selected user is successfully updated.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Selected user is successfully updated.");
         let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById;
 
         const response = await axiosInstance.get(`${url2}/${editedItem.id}`);
@@ -341,16 +307,7 @@ const Employee = () => {
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("Something went wrong !", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !");
 
         let errMessage = "";
 
@@ -363,43 +320,16 @@ const Employee = () => {
         ) {
           errMessage = error.response.data.empCode;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage) + " !!!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error(JSON.parse(cleanedMessage) + " !!!");
         }
       } else if (error.response.status === 401) {
         // alert(
         //   "Error in submitting data:  " +
         //     JSON.stringify(error.response.data.message)
         // );
-        toast.error("Something went wrong !", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !");
       } else {
-        toast.error("Something went wrong !", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !");
         console.error("Error saving changes:", error);
       }
     }
@@ -436,7 +366,7 @@ const Employee = () => {
       setScopeIsLimitReached(isAddLimitReached);
 
       if (!Array.isArray(apiDataArray) || apiDataArray.length === 0) {
-        setDivText("NO DATA FOUND !!!");
+        setDivText("NO RECORDS FOUND !!!");
         setLoading(false);
         return;
       }
@@ -649,16 +579,7 @@ const Employee = () => {
       setRows(gridRows);
       setDivText("");
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("Error fetching data:", error);
     } finally {
       setDivText("NO DATA FOUND !!!");

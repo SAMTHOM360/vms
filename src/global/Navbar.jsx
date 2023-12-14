@@ -180,7 +180,7 @@ export default function Navbar({ toggleSidebar }) {
   useEffect(() => {
     fetchNotification();
     // console.log('isHamburgerAllowed', isHamburgerAllowed)
-    console.log('hambuger is changing', )
+    // console.log('hambuger is changing', )
   }, [isHamburgerAllowed])
 
   
@@ -611,6 +611,7 @@ export default function Navbar({ toggleSidebar }) {
   }
 
   const handleSavePasswordChange = async (e) => {
+    toast.dismiss()
     e.preventDefault();
     const changePayload = {
       username: loggedUserUsername,
@@ -621,46 +622,19 @@ export default function Navbar({ toggleSidebar }) {
     const hasEmptyField = Object.values(changedItem).some(value => value.length === 0);
 
     if (hasEmptyField) {
-      toast.warn("Please fill in all fields.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Please fill in all fields.");
       return;
     }
 
     if (changedItem.newPassword.length < 4) {
-      toast.warn("New Password mustn't be less than 4 !!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("New Password mustn't be less than 4 !!");
       return;
     }
 
     let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword
 
     if (changedItem.newPassword != changedItem.confirmPassword) {
-      toast.warn("Confirm Password mismatched !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.warn("Confirm Password mismatched !");
       return;
     }
     try {
@@ -680,16 +654,7 @@ export default function Navbar({ toggleSidebar }) {
         }
       );
       if (response.status === 200) {
-        toast.success("Password has been successfully changed.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Password has been successfully changed.");
         handleChangePasswordDialogClose();
         logout();
       }
@@ -698,26 +663,9 @@ export default function Navbar({ toggleSidebar }) {
       const cleanedMessage = JSON.stringify(errMessage);
 
       if (error.response.status === 400) {
-        toast.warn("Old " + JSON.parse(cleanedMessage) + ".", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.warn("Old " + JSON.parse(cleanedMessage) + ".");
       } else {
-        toast.error("Something went Wrong !", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went Wrong !");
       }
 
       console.error("Error saving changes:", error.response.data.message);
@@ -728,19 +676,11 @@ export default function Navbar({ toggleSidebar }) {
   const { authenticated, setAuthenticated } = useAuth();
 
   const handleLogout = () => {
+    toast.dismiss()
     const confirmLogout = window.confirm("Are you sure you want to log out?");
 
     if (confirmLogout) {
-      toast.success("Successfully logged out.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("Successfully logged out.");
 
       logout();
       navigate("/");

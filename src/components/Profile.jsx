@@ -157,6 +157,7 @@ useEffect(() => {
 
   async function fetchData() {
     let url = Config.baseUrl + Config.apiEndPoints.profileGetById;
+    // debugger
     try {
       setLoading(true);
       const response = await axios.get(`${url}/${adminId}`);
@@ -168,15 +169,15 @@ useEffect(() => {
         setFormattedCreatedOn(formatCreatedOn);
         setIsPresent(apiData.isPresent);
         setFormData({
-          id: apiData.id || "",
-          firstName: apiData.firstName || "",
-          lastName: apiData.lastName || "",
-          phone: apiData.phone || "",
-          email: apiData.email || "",
-          dob: apiData.dob || "",
-          gender: apiData.gender || "",
-          govtId: apiData.govtId || "",
-          image: apiData.image || "",
+          id: apiData.id ? apiData.id || "" : "",
+          firstName: apiData.firstName ? apiData.firstName || "" : "",
+          lastName:apiData.lastName ? apiData.lastName || "" : "",
+          phone: apiData.phone ? apiData.phone || "" : "",
+          email: apiData.email ?  apiData.email || "" : "",
+          dob: apiData.dob ?  apiData.dob || "" : "",
+          gender: apiData.gender ?  apiData.gender || "" : "",
+          govtId: apiData.govtId ?  apiData.govtId || "" : "",
+          image: apiData.image ?  apiData.image || "" : "",
           departmentDto: {
             id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
             name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
@@ -193,23 +194,23 @@ useEffect(() => {
             id: apiData.role ? apiData.role.id || "" : "",
             name: apiData.role ? apiData.role.name || "" : "",
           },
-          pincode: apiData.pincode || "",
-          empCode: apiData.empCode || "",
-          createdOn: apiData.createdOn || "",
+          pincode: apiData.pincode ?  apiData.pincode || "" : "",
+          empCode: apiData.empCode ? apiData.empCode || "" : "",
+          createdOn: apiData.createdOn ?  apiData.createdOn || "" : "",
           buildingId: apiData.departmentDto
             ? apiData.departmentDto.company.building
               ? apiData.departmentDto.company.building.buildingId || ""
               : ""
             : "",
-          isPermission: apiData.isPermission || false,
+          isPermission: apiData.isPermission ? apiData.isPermission || false : false,
         });
 
-        if (apiData.govtId.length === 12) {
+        if (apiData.govtId && apiData.govtId.length === 12) {
           setFormData((prevFormData) => ({
             ...prevFormData,
             governmentIdType: "ADHAAR CARD" || "",
           }));
-        } else if (apiData.govtId.length === 10) {
+        } else if (apiData.govtId && apiData.govtId.length === 10) {
           setFormData((prevFormData) => ({
             ...prevFormData,
             governmentIdType: "PAN CARD" || "",
@@ -219,57 +220,32 @@ useEffect(() => {
         console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("Error fetching data:", error);
     }
     setLoading(false);
   }
   const handlePresentOn = async () => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
     try {
       setLoading(true);
       const response = await axios.post(`${url}`, statusOnPayload, { headers });
 
       if (response.status === 200) {
-        toast.success("Status updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Status updated successfully");
         setIsPresent(true);
         setAutoStatusChange(true);
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("Catched Error: ", error);
     }
     setLoading(false);
   };
 
   const handlePresentOff = async () => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
 
     try {
@@ -285,30 +261,12 @@ useEffect(() => {
         headers: headers,
       });
       if (response.status === 200) {
-        toast.success("Status updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Status updated successfully");
         setIsPresent(false);
         setAutoStatusChange(false);
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("Catched Error: ", error);
     }
     setLoading(false);
@@ -447,6 +405,7 @@ useEffect(() => {
   };
 
   const handleFileUpload = async (event) => {
+    toast.dismiss()
     event.preventDefault();
     let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
     const file = event.target.files[0];
@@ -471,16 +430,7 @@ useEffect(() => {
         }
         setIsUpload(true);
       } catch (error) {
-        toast.error("Something went wrong !", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went wrong !");
         console.error("unable to send: ", error);
       } finally {
         setUploadFromDeviceBtnLoading(false);
@@ -489,6 +439,7 @@ useEffect(() => {
   };
 
   const handleSubmitImgUpload = async () => {
+    toast.dismiss()
     const imgPayload = {
       id: formData.id,
       image: tempImgLink,
@@ -515,16 +466,7 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Profile Picture updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Profile Picture updated successfully");
 
         const submitImgApiData = response;
         handleUploadImgDialogClose();
@@ -532,16 +474,7 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("unable to submit image  ", error);
     } finally {
       setUploadImgBtnLoading(false);
@@ -549,6 +482,7 @@ useEffect(() => {
   };
 
   const handleBasicInfoUpdate = async () => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
@@ -561,16 +495,7 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Basic info updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Basic info updated successfully");
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -590,16 +515,7 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("unable to submit basic info  ", error);
     } finally {
       setEditBtnLoading(false);
@@ -607,6 +523,7 @@ useEffect(() => {
   };
 
   const HandleAddressInfoUpdate = async () => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
@@ -620,16 +537,7 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Address info updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Address info updated successfully");
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -650,16 +558,7 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("unable to submit address info  ", error);
     } finally {
       setAddressBtnLoading(false);
@@ -667,6 +566,7 @@ useEffect(() => {
   };
 
   const HandleCompanyInfoUpdate = async () => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
@@ -680,16 +580,7 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Company info updated successfully", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Company info updated successfully");
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -710,16 +601,7 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong !");
       console.error("unable to submit company info  ", error);
     } finally {
       setCompanyBtnLoading(false);

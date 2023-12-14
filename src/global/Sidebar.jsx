@@ -164,6 +164,12 @@ export default function Sidenav({ open: propOpen, onClose }) {
     setIsSideBarSettings(!isSideBarSettings)
   }
 
+  useEffect(() => {
+    if(!open) {
+      setIsSideBarSettings(false)
+    }
+  }, [open])
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />

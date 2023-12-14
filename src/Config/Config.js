@@ -72,6 +72,7 @@ const Config = Object.freeze({
     rolesAndDeptsGetAllRole: "api/role/getall",
     rolesAndDeptsGetAllDept: "api/department/companyId",
     rolesAndDeptsCreateDept: "api/department/create",
+    rolesAndDeptsUpdateDept: "api/department/update",
     rolesAndDeptsCreateRole: "api/add",
 
 

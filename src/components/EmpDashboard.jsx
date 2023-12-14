@@ -110,6 +110,7 @@ const EmpDashboard = () => {
   // console.log('to date', empFilteredToDate)
 
   async function fetchData(fromDate, toDate) {
+    toast.dismiss();
     const payLoad = {
       user: {
         id: adminId,
@@ -159,16 +160,7 @@ const EmpDashboard = () => {
         });
       }
     } catch (error) {
-      toast.error("Something went wrong!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went wrong!");
       console.error("Error fetching data:", error);
     }
 
@@ -211,16 +203,7 @@ const EmpDashboard = () => {
   //       // }));
   //     }
   //   } catch (error) {
-  //     // toast.error("Something went wrong!", {
-  //     //   position: "top-right",
-  //     //   autoClose: 2000,
-  //     //   hideProgressBar: false,
-  //     //   closeOnClick: true,
-  //     //   pauseOnHover: true,
-  //     //   draggable: true,
-  //     //   progress: undefined,
-  //     //   theme: "light",
-  //     // });
+  //     // toast.error("Something went wrong!");
   //     console.error("Error fetching data:", error);
   //   }
   // }
@@ -311,16 +294,7 @@ const EmpDashboard = () => {
           // }));
         }
       } catch (error) {
-        // toast.error("Something went wrong!", {
-        //   position: "top-right",
-        //   autoClose: 2000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        // toast.error("Something went wrong!");
         console.error("Error fetching data:", error);
       }
     }
@@ -597,12 +571,13 @@ const EmpDashboard = () => {
                 // width="100%"
                 maxWidth="100%"
                 flexGrow={1}
-                height="auto"
+                // height="auto"
                 sx={{
-                  mb: "1.5em",
+                  // mb: "1.5em",
+                  minHeight:'75vh'
                 }}
               >
-                <Grid container spacing={2} mt="1px">
+                <Grid container spacing={2} mt="1px" mb="15px">
                   <Grid item xs={12} sm={6} md={6} lg={3} >
                     <Box
                       sx={{
@@ -717,7 +692,7 @@ const EmpDashboard = () => {
                         display: "flex",
                         flexDirection: "column",
                         overflow: "hidden",
-                        pb:'2em'
+                        pb:'10px'
                       }}
                     >
                       {/* <Grid  container>
@@ -743,6 +718,7 @@ const EmpDashboard = () => {
                         <Box
                           sx={{
                             mt: "1em",
+                            mt:'10px',
                           }}
                         >
                           <Button

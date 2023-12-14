@@ -124,6 +124,7 @@ function BulkUserForm() {
   // console.log("excel up data", excelUpData);
 
   const handleSaveUpload = async () => {
+    toast.dismiss();
     let url = Config.baseUrl + Config.apiEndPoints.bulkUserFormSaveUpload
     try {
       setBtnLoading(true);
@@ -135,20 +136,34 @@ function BulkUserForm() {
         }
       );
       if(response.status === 200) {
-        
-        toast.success("File uploaded Successfully. Please check for faulty data.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-
         const excelApiData = response.data.data;
+
+        let toastMsg
+         if(excelApiData.duplicateData !== 0) {
+          toastMsg = "Please check for Duplicate data."
+         } 
+         if(excelApiData.failedDataLink !== 0) {
+          toastMsg = "Please check for Failed data."
+         } 
+         if(excelApiData.duplicateData !== 0 && excelApiData.failedData !== 0) {
+          toastMsg = "Please check for Duplicate & Failed data."
+         }
+
+
+
+         if(excelApiData.duplicateData === 0 && excelApiData.failedData === 0) {
+          toast.success("File uploaded Successfully.");
+
+        } else {
+          toast.warn(`File uploaded Successfully. ${toastMsg}`);
+        }
+
+         
+        
+        // toast.success("File uploaded Successfully.");
+
+
+       
         // console.log("excelApiData", excelApiData);
         if (
           excelApiData.duplicateData !== 0 ||
@@ -182,16 +197,7 @@ function BulkUserForm() {
       }
       else if(response.status === 400){
         // console.log("400 response", response)
-        // toast.error("New Employee Added Successfully.", {
-        //   position: "top-right",
-        //   autoClose: 2000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        // toast.error("New Employee Added Successfully.");
       }
     } 
     catch(error){
@@ -204,31 +210,13 @@ function BulkUserForm() {
         if (error.response && error.response.data && error.response.data.message) {
           errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
+          toast.error(JSON.parse(cleanedMessage)+' !!!');
         }
  
  
       }
        else {
-        toast.error('Something went wrong !!!', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-      });
+        toast.error('Something went wrong !!!');
       }
     }
     setBtnLoading(false)
