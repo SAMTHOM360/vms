@@ -235,6 +235,25 @@ const Employee = () => {
     e.preventDefault();
     toast.dismiss();
 
+    const trimmedFirstName = editedItem.firstName ? editedItem.firstName.trim() : null;
+    const trimmedLastName = editedItem.lastName ? editedItem.lastName.trim() : null;
+    const trimmedEmail = editedItem.email ? editedItem.email.trim() : null;
+
+    if (!trimmedFirstName) {
+      toast.warn("First Name is required !!!");
+      return;
+    }
+  
+    if (!trimmedLastName) {
+      toast.warn("Last Name is required !!!");
+      return;
+    }
+  
+    if (!trimmedEmail) {
+      toast.warn("Email is required !!!");
+      return;
+    }
+
     // console.log("edited item role", editedItem)
     let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser;
     const payload = {
@@ -568,9 +587,9 @@ const Employee = () => {
         role: apiDataItem.role ? apiDataItem.role.name : "",
         empCode: apiDataItem.empCode ? apiDataItem.empCode : "N/A",
         isPermission: apiDataItem.isPermission ? "YES" : "NO",
-        buildingId: apiDataItem.departmentDto
-          ? apiDataItem.departmentDto.company.building
-            ? apiDataItem.departmentDto.company.building.buildingId || ""
+        buildingId: apiDataItem.company
+          ? apiDataItem.company.building
+            ? apiDataItem.company.building.buildingId || ""
             : ""
           : "",
       }));
@@ -906,13 +925,34 @@ const Employee = () => {
                     label="First Name"
                     fullWidth
                     value={editedItem.firstName}
-                    inputProps={{ maxLength: 26 }}
-                    onChange={(e) =>
-                      setEditedItem({
-                        ...editedItem,
-                        firstName: e.target.value,
-                      })
-                    }
+                    inputProps={{
+                      maxLength: 26,
+                      onInput: (event) => {
+                        let value = event.target.value;
+                  
+                        // Remove characters other than lowercase, uppercase, and spaces
+                        value = value.replace(/[^a-zA-Z\s]/g, '');
+                  
+                        // Replace consecutive spaces with a single space
+                        value = value.replace(/\s{2,}/g, ' ');
+                  
+                        // Ensure the length does not exceed maxLength
+                        if (value.length > 26) {
+                          value = value.slice(0, 26);
+                        }
+                  
+                        setEditedItem({
+                          ...editedItem,
+                          firstName: value,
+                        })
+                      },
+                    }}
+                    // onChange={(e) =>
+                    //   setEditedItem({
+                    //     ...editedItem,
+                    //     firstName: e.target.value,
+                    //   })
+                    // }
                     required
                   />
                   <TextField
@@ -921,10 +961,31 @@ const Employee = () => {
                     label="Last Name"
                     fullWidth
                     value={editedItem.lastName}
-                    inputProps={{ maxLength: 26 }}
-                    onChange={(e) =>
-                      setEditedItem({ ...editedItem, lastName: e.target.value })
-                    }
+                    inputProps={{
+                      maxLength: 26,
+                      onInput: (event) => {
+                        let value = event.target.value;
+                  
+                        // Remove characters other than lowercase, uppercase, and spaces
+                        value = value.replace(/[^a-zA-Z\s]/g, '');
+                  
+                        // Replace consecutive spaces with a single space
+                        value = value.replace(/\s{2,}/g, ' ');
+                  
+                        // Ensure the length does not exceed maxLength
+                        if (value.length > 26) {
+                          value = value.slice(0, 26);
+                        }
+                  
+                        setEditedItem({
+                          ...editedItem,
+                          lastName: value,
+                        })
+                      },
+                    }}
+                    // onChange={(e) =>
+                    //   setEditedItem({ ...editedItem, lastName: e.target.value })
+                    // }
                     required
                   />
                   <TextField

@@ -73,11 +73,14 @@ const MeetingDetails = () => {
     },
     companyName: "",
     remarks: "",
-    meetingStartDateTime: null,
+    // meetingStartDateTime: null,
+    meetingStartDateTime:dayjs(new Date().setHours(9, 0, 0, 0)),
     context: "",
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
+
+  
 
 
   useEffect(() => {
@@ -227,16 +230,54 @@ const MeetingDetails = () => {
     toast.dismiss()
     e.preventDefault();
 
+    const trimmedName = formData.name ? formData.name.trim() : null;
+    const trimmedEmail = formData.email ? formData.email.trim() : null;
+    const trimmedCompanyName = formData.companyName ? formData.companyName.trim() : null;
+    const trimmedRemarks = formData.remarks ? formData.remarks.trim() : null;
+
+    if (!trimmedName) {
+      toast.warn("Name is required !!!");
+      return;
+    }
+  
+    if (!trimmedEmail) {
+      toast.warn("Email is required !!!");
+      return;
+    }
+
+    if(formData.companyName) {
+      if (!trimmedCompanyName) {
+        toast.warn("Company Name can\'t be empty (if required) !!!");
+        return;
+      }
+    }
+    
+    if(formData.remarks) {
+      if (!trimmedRemarks) {
+        toast.warn("Remarks can\'t be empty (if required) !!!");
+        return;
+      }
+  
+    }
+
+
     if (!formData.meetingStartDateTime) {
       toast.warn('Meeting start date and time is required.', {
-        // Add your toast options here
       });
       return;
     }
   
-    // Ensure the selected date and time is not in the future and not ahead of 90 days
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set current date to midnight
+    today.setHours(0, 0, 0, 0); 
+
+
+  const currentDateTime = new Date();
+
+    if (formData.meetingStartDateTime < currentDateTime) {
+      toast.warn('Meeting start date and time cannot be in the past.');
+      return;
+    }
+
     const differenceInDays = Math.floor((formData.meetingStartDateTime - today) / (1000 * 60 * 60 * 24));
   
     if (differenceInDays < 0 || differenceInDays > 90) {
@@ -364,7 +405,10 @@ const MeetingDetails = () => {
         [name]: selectedDateTime,
       });
     } else {
-      // console.error("Invalid date/time selected.");
+      setFormData({
+        ...formData,
+        [name]: null, // Set to a default date or handle as per your requirements
+      });
     }
   } else {
     // console.log('else hit');
@@ -438,7 +482,7 @@ const MeetingDetails = () => {
   };
 
 
-  // console.log("cities", cities)
+  console.log("form data", formData)
 
 
   //------------------------ JSX ---------------------
@@ -515,8 +559,29 @@ const MeetingDetails = () => {
                     name="name"
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.name}
-                    inputProps={{ maxLength: 26 }}
-                    onChange={handleChange}
+                    inputProps={{
+                      maxLength: 26,
+                      onInput: (event) => {
+                        let value = event.target.value;
+                  
+                        // Remove characters other than lowercase, uppercase, and spaces
+                        value = value.replace(/[^a-zA-Z\s]/g, '');
+                  
+                        // Replace consecutive spaces with a single space
+                        value = value.replace(/\s{2,}/g, ' ');
+                  
+                        // Ensure the length does not exceed maxLength
+                        if (value.length > 26) {
+                          value = value.slice(0, 26);
+                        }
+                  
+                        setFormData({
+                          ...formData,
+                          name: value,
+                        });
+                      },
+                    }}
+                    // onChange={handleChange}
                     required
                   />
                 </Grid>
@@ -605,8 +670,15 @@ const MeetingDetails = () => {
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.companyName}
                     inputProps={{ maxLength: 120 }}
-                    onChange={handleChange}
-                    // required
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      const inputValue = e.target.value.replace(/\s+/g, ' '); // Replace consecutive spaces with a single space
+                      setFormData({
+                        ...formData,
+                        companyName: inputValue,
+                      });
+                    }}
+                    required
                   />
                 </Grid>
 
@@ -681,7 +753,14 @@ const MeetingDetails = () => {
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.remarks}
                     name="remarks"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const inputValue = e.target.value.replace(/\s+/g, ' '); // Replace consecutive spaces with a single space
+                      setFormData({
+                        ...formData,
+                        remarks: inputValue,
+                      });
+                    }}
+                    // onChange={handleChange}
                     inputProps={{ maxLength: 120 }}
                   />
                 </Grid>
@@ -712,6 +791,15 @@ const MeetingDetails = () => {
                           field: {
                             clearable: true,
                             onClear: () => setCleared(true),
+                          },
+                          actionBar: {
+                            actions: ['clear'],
+                          },  
+                        }}
+
+                        componentsProps={{
+                          actionBar: {
+                            actions: ['clear'],
                           },
                         }}
                       />

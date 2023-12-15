@@ -50,7 +50,7 @@ const AppBar = styled(
   MuiAppBar,
   {}
 )(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
+  zIndex: theme.zIndex.modal + 5,
 }));
 
 const Search = styled("div")(({ theme }) => ({
@@ -695,7 +695,7 @@ export default function Navbar({ toggleSidebar }) {
         // zIndex:1500,
         // overflow: "visible",
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-        mt: "2.6em",
+        mt: "3.2em",
         // bgcolor:'red'
         // mr: "7em",
       }}
@@ -959,7 +959,56 @@ export default function Navbar({ toggleSidebar }) {
             <MenuIcon />
           </IconButton> */}
 
+          {isSUPERADMIN ? 
+          null
+
+          :
           <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{
+            display: { xs: "block", sm: "flex" },
+            alignItems: "center",
+            color: "#ffffff",
+            fontSize: { xs: "17px", sm: "20px" },
+            userSelect:'none'
+          }}
+        >
+          <Typography
+            component={"span"}
+            sx={{
+              fontSize: { xs: "17px", sm: "20px" },
+            }}
+          >
+            {companyName}
+          </Typography>{" "}
+          <Typography
+            component={"span"}
+            sx={{
+              fontSize: { xs: "20px", sm: "23px" },
+              marginLeft: "0.4em",
+              marginRight: "0.4em",
+              fontWeight: "500",
+            }}
+          >
+            {" "}
+            |{" "}
+          </Typography>{" "}
+          <Typography
+            component={"span"}
+            sx={{
+              fontSize: { xs: "16px", sm: "19px" },
+              // marginTop: "0.2em",
+              // marginRight: "0.1em",
+            }}
+          >
+            {formData.dept.name}
+          </Typography>
+        </Typography>
+        }
+
+          {/* <Typography
             variant="h6"
             noWrap
             component="div"
@@ -971,7 +1020,6 @@ export default function Navbar({ toggleSidebar }) {
               userSelect:'none'
             }}
           >
-            {/* <span style={{fontSize:'19px'}}>VMS</span>  */}
             <Typography
               component={"span"}
               sx={{
@@ -1000,10 +1048,9 @@ export default function Navbar({ toggleSidebar }) {
                 // marginRight: "0.1em",
               }}
             >
-              {/* VMS */}
               {formData.dept.name}
             </Typography>
-          </Typography>
+          </Typography> */}
 
           </Box>
 
@@ -1091,6 +1138,9 @@ export default function Navbar({ toggleSidebar }) {
               vertical: 'top',
               horizontal: 'right',
             }}
+            sx={{
+              mt:"0.6em"
+            }}
           >
             <Box
               sx={{
@@ -1101,8 +1151,8 @@ export default function Navbar({ toggleSidebar }) {
                 paddingY:0,
                 justifyContent: "space-between",
                 alignItems: "center",
-                borderBottom:'1px solid #3135415b'
-                // bgcolor:'orange'
+                borderBottom:'1px solid #3135415b',
+                // bgcolor:'orange',
               }}
             >
               <Typography

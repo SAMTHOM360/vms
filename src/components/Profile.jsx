@@ -197,9 +197,9 @@ useEffect(() => {
           pincode: apiData.pincode ?  apiData.pincode || "" : "",
           empCode: apiData.empCode ? apiData.empCode || "" : "",
           createdOn: apiData.createdOn ?  apiData.createdOn || "" : "",
-          buildingId: apiData.departmentDto
-            ? apiData.departmentDto.company.building
-              ? apiData.departmentDto.company.building.buildingId || ""
+          buildingId: apiData.company
+            ? apiData.company.building
+              ? apiData.company.building.buildingId || ""
               : ""
             : "",
           isPermission: apiData.isPermission ? apiData.isPermission || false : false,
@@ -409,6 +409,13 @@ useEffect(() => {
     event.preventDefault();
     let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
     const file = event.target.files[0];
+
+    const fileSizeInMB = file.size / (1024 * 1024);
+    if (fileSizeInMB > 5) {
+        toast.warn("Image size shouldn't be larger than 5 MB !");
+        return;
+    }
+
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
@@ -484,6 +491,19 @@ useEffect(() => {
   const handleBasicInfoUpdate = async () => {
     toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
+
+    const trimmedFirstName = editedBasicInfo.firstName ? editedBasicInfo.firstName.trim() : null;
+    const trimmedLastName = editedBasicInfo.lastName ? editedBasicInfo.lastName.trim() : null;
+
+    if (!trimmedFirstName) {
+      toast.warn("First Name is required !!!");
+      return;
+    }
+  
+    if (!trimmedLastName) {
+      toast.warn("Last Name is required !!!");
+      return;
+    }
 
     try {
       setEditBtnLoading(true);
@@ -1556,7 +1576,14 @@ null
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
-                "Choose an image"
+                <>
+                <Typography sx={{width:'100%', display:'flex', justifyContent:'center', flexDirection:'column', alignItems:'center'}}>
+                  <Typography component='span'>Choose an image</Typography>
+                <Typography component='span' sx={{fontSize:'14px'}}>
+                (less than 5MB)
+                </Typography>
+              </Typography>
+              </>
               )}
             </Box>
 

@@ -125,7 +125,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import { useAuth } from './routes/AuthContext';
 // import NotFound from './components/NotFound';
 import DynamicMonthData from './components/unused/DynamicMonthData';
-import RolesAndDepartments from './components/RolesAndDepartments';
+// import RolesAndDepartments from './components/RolesAndDepartments';
 
 
 // import ReceptionistAddRoom from './components/company/ReceptionistAddRoom';
@@ -150,6 +150,8 @@ const BulkUserForm = lazy(() => import('./components/BulkUserForm'));
 const DemoDashboardV2 = lazy(() => import('./components/experimentals/DemoDashboardV2'));
 const Department = lazy(() => import('./components/experimentals/Department'));
 const ReceptionistAddRoom = lazy(() => import('./components/company/ReceptionistAddRoom'));
+const RolesAndDepartments = lazy(() => import('./components/RolesAndDepartments'));
+const Building = lazy(() => import ('./components/company/Building'))
 
 
 function App() {
@@ -225,14 +227,15 @@ function App() {
 {/* <Route path="/employee" element={<Employee />} /> */}
 {/* <Route path='/bulkform' element={<BulkUserForm />} /> */}
 
-<Route path='/demodashboard' element={<DemoDashboardV2 />} />
+{/* <Route path='/demodashboard' element={<DemoDashboardV2 />} />
 <Route path='/demodept' element={<Department />} />
 <Route path='/demodata' element={<DynamicMonthData />} />
-<Route path='/rolesanddepts' element={<RolesAndDepartments />} />
+<Route path='/rolesanddepts' element={<RolesAndDepartments />} /> */}
 
   <Route path="/employee" element={<PrivateRoute element={<Employee />} allowedRoles={['SUPERADMIN','ADMIN']} />} />
   <Route path="/companyreg" element={<PrivateRoute element={<CompanyReg />} allowedRoles={['SUPERADMIN']} />} />
   <Route path="/companyDetails" element={<PrivateRoute element={<CompanyTable />} allowedRoles={['SUPERADMIN']} />}/>
+  <Route path="/building" element={<PrivateRoute element={<Building />} allowedRoles={['SUPERADMIN']} />}/>
   <Route path="/edit/:companyId" element={<PrivateRoute element={<EditCompanyForm />} allowedRoles={['SUPERADMIN']} />} />
   <Route path="/meetings" element={<PrivateRoute element={<Meetings />} allowedRoles={['ADMIN', 'EMPLOYEE','HR']} />} />
   <Route path="/receptionistdashboard" element={<PrivateRoute element={<ReceptionistDashboard />} allowedRoles={['RECEPTIONIST','ADMIN']} />} />
@@ -251,6 +254,7 @@ function App() {
   <Route path="/appointmeeting" element={<PrivateRoute element={<AppointMeetForm />} allowedRoles={['RECEPTIONIST','ADMIN','EMPLOYEE','HR']} />} />
   <Route path="/userform" element={<PrivateRoute element={<UserForm />} allowedRoles={['ADMIN','SUPERADMIN']} />} />
   <Route path="/bulkform" element={<PrivateRoute element={<BulkUserForm />} allowedRoles={['ADMIN',]} />} />
+  <Route path="/rolesanddepts" element={<PrivateRoute element={<RolesAndDepartments />} allowedRoles={['ADMIN',]} />} />
   <Route path="/empdashboard" element={<PrivateRoute element={<EmpDashboard />} allowedRoles={['EMPLOYEE','ADMIN','RECEPTIONIST','HR']} />} />
   <Route path="/profile" element={<PrivateRoute element={<Profile />} allowedRoles={['EMPLOYEE','RECEPTIONIST', 'ADMIN', 'HR']} />} />
 

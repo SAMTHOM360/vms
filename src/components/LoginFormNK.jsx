@@ -346,7 +346,8 @@ function LoginForm() {
         sessionStorage.setItem("selectedCompanyId",companyId)
         sessionStorage.setItem("companyName", companyName);
         sessionStorage.setItem("limit", limit);
-        sessionStorage.setItem('isSideBarPinned', true)
+        // sessionStorage.setItem('isSideBarPinned', true)
+        sessionStorage.setItem('isSideBarPinned', false)
         sessionStorage.setItem("buildingId",buildingId);
         sessionStorage.setItem('isHoverOpen', true)
 

@@ -22,6 +22,7 @@ import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import JoinInnerIcon from '@mui/icons-material/JoinInner';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 // import AnalyticsIcon from "@mui/icons-material/Analytics";
 // import SettingsIcon from "@mui/icons-material/Settings";
 // import InfoIcon from "@mui/icons-material/Info";
@@ -73,6 +74,7 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
+  zIndex: theme.zIndex.modal + 1,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
@@ -171,7 +173,7 @@ export default function Sidenav({ open: propOpen, onClose }) {
   }, [open])
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", }}>
       <CssBaseline />
 
       <Drawer
@@ -375,6 +377,44 @@ export default function Sidenav({ open: propOpen, onClose }) {
                   </ListItemIcon>
                   <ListItemText
                     primary="Companies"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
+              <ListItem
+                disablePadding
+                sx={{
+                  display: "block",
+                  bgcolor:
+                    activeListItem === "/building"
+                      ? activeListBgColor
+                      : inactiveListBgColor,
+                      '&:hover': {
+                        bgcolor:'#5E6985'
+                      },
+                      
+                }}
+                onClick={() => handleSelectListItem("/building")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ApartmentIcon sx={{ color: "#ffffff" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Buildings"
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>

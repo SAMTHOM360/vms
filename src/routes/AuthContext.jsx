@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   // const [ autoStatusChange, setAutoStatusChange ] = useState(sessionStorage.getItem('autoStatusChange' || ''))
   const [ autoStatusChange, setAutoStatusChange ] = useState()
   const [ activeListItem, setActiveListItem ] = useState()
-  const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'true' || true)
+  const [ isSideBarPinned, setIsSideBarPinned ] = useState(sessionStorage.getItem('isSideBarPinned') === 'false' || false)
   const [isHoverOpen, setIsHoverOpen] = useState(sessionStorage.getItem('isHoverOpen') === 'true' || true)
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
   // const [ isntComSelection, setIsntComSelection ] = useState(true)

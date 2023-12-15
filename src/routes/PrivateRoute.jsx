@@ -36,6 +36,8 @@ const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
 
   if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <NotFound />;
+    // return <Navigate to="lost" />;
+
   }
 
   return element;

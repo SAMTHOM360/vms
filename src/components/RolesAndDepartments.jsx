@@ -419,7 +419,7 @@ const RolesAndDepartments = () => {
             >
               <Header
                 title="Roles & Departments"
-                subtitle="Get all lists of Roles  & Departments"
+                subtitle="Get all list of Roles  & Departments"
               />
               <Box
                 sx={{

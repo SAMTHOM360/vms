@@ -72,14 +72,14 @@ export default function VisitorMeetTimeline({ meetData }) {
         vistorId: apiData.visitor.id || "",
         visitorName: apiData.visitor.name || "",
         visitorImgUrl: apiData.visitor.imageUrl || "",
-        visitorCompany: apiData.visitor.companyName || "",
-        visitorEmail: apiData.visitor.email || "",
-        visitorPhoneNumber: apiData.visitor.phoneNumber || "",
+        visitorCompany: apiData.visitor.companyName || "N/A",
+        visitorEmail: apiData.visitor.email || "N/A",
+        visitorPhoneNumber: apiData.visitor.phoneNumber || "N/A",
         userId: apiData.user.id || "",
         meetType: apiData.context || "",
         // meetTime: apiData.checkInDateTime || '',
-        meetTime: apiData.meetingStartDateTime || "",
-        remarks: apiData.remarks || "",
+        meetTime: apiData.meetingStartDateTime || "N/A",
+        remarks: apiData.remarks ?  apiData.remarks || "N/A" : "N/A",
         status: apiData.status || "",
       });
     } catch (error) {
@@ -310,14 +310,14 @@ export default function VisitorMeetTimeline({ meetData }) {
                           <span style={{ fontWeight: "500", fontSize: "15px" }}>
                             Meeting Room:{" "}
                           </span>
-                          {dataItem.room.roomName}
+                          {dataItem.room.roomName ? dataItem.room.roomName : "N/A"}
                         </Typography>
 
                         <Typography sx={{ color: "#BDBDBD", fontSize: "14px" }}>
                           <span style={{ fontWeight: "500", fontSize: "15px" }}>
                             Meeting Remarks:{" "}
                           </span>
-                          {dataItem.remarks}
+                          {dataItem.remarks ? dataItem.remarks : "N/A"}
                         </Typography>
 
                         <Box sx={{ display: "flex" }}>

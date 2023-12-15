@@ -355,9 +355,32 @@ function UserForm({ authenticated, closeDialog }) {
     });
   };
 
+
+
 const handleSubmit = async (e) => {
+  
   toast.dismiss()
   e.preventDefault();
+
+
+  const trimmedFirstName = formData.firstName ? formData.firstName.trim() : null;
+  const trimmedLastName = formData.lastName ? formData.lastName.trim() : null;
+  const trimmedEmail = formData.email ? formData.email.trim() : null;
+
+  if (!trimmedFirstName) {
+    toast.warn("First Name is required !!!");
+    return;
+  }
+
+  if (!trimmedLastName) {
+    toast.warn("Last Name is required !!!");
+    return;
+  }
+
+  if (!trimmedEmail) {
+    toast.warn("Email is required !!!");
+    return;
+  }
 
   if (!formData.dob) {
     toast.warn("Date of birth is required !!!");
@@ -698,7 +721,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={6} lg={6}>
-                      <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth>
+                      <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth required>
                         <InputLabel htmlFor="demo-simple-select-label">
                           Gender
                         </InputLabel>
