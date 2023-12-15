@@ -169,7 +169,7 @@ export default function EditCompanyForm() {
     // fetchCity(selectedState);
   }, []);
 
-
+ 
 
   const handleStateChange = (event) => {
     const selectedState = event.target.value;
@@ -177,10 +177,10 @@ export default function EditCompanyForm() {
     setSelectedState(selectedState);
 
 
-    const cityUrl = Config.baseUrl + Config.apiEndPoints.cityEndPoint + selectedState
+    
     axios
-      // .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
-      .get(cityUrl)
+     
+      // .get(cityUrl)
 
       .then((response) => {
         setCities(response.data.data);
@@ -191,8 +191,14 @@ export default function EditCompanyForm() {
   };
 
   function fetchCity(selectedState) {
+
+
+
+    const cityUrl = Config.baseUrl + Config.apiEndPoints.cityEndPoint + `/${selectedState}`
     axios
-      .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+      // .get(`http://192.168.12.54:8080/sc/all/${selectedState}`)
+
+      .get(cityUrl)
 
       .then((response) => {
         setCities(response.data.data);
@@ -279,7 +285,7 @@ export default function EditCompanyForm() {
 
 
   const [buildingIdError, setBuildingIdError] = useState("");
-  console.log(buildingIdError, "buildingIdError");
+  // console.log(buildingIdError, "buildingIdError");
 
 
 
@@ -393,6 +399,8 @@ export default function EditCompanyForm() {
         formData.append("aboutUs", companyData.aboutUs);
 
         const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editEndPoint + companyId
+
+        const res = await
         axios.post(
           // `http://192.168.12.54:8080/com/update/${companyId}`
           editCompanyUrl
@@ -404,33 +412,45 @@ export default function EditCompanyForm() {
             },
           }
         )
-          .then(response => {
-
-            if (response.data.statusCode === 200) {
-              setUpdateSuccess(true);
-
-              toast.success("Company data updated successfully!", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              });
-              navigate('/companyDetails')
-
-            }
-
-          })
-
-          ;
 
 
 
-      } catch (error) {
-        console.error("Error updating company data:", error);
+        if (res.status === 200) {
+          alert("Form submitted successfully");
+
+       
+          setLogoUpdated(false);
+          navigate('/companyDetails');
+
       }
+
+      // else if (res.status === 409) {
+
+      //     alert(res.data.message);
+      // } 
+
+
+
+
+  } catch (error) {
+
+      if (error.response && error.response.status === 409) {
+
+          alert(error.response.data.message);
+      }
+
+      else if(error.response){
+          alert(error.response.data.error);
+      }
+
+      console.log(error)
+  }
+         
+
+
+
+       
+      
     };
 
     // navigate('/companyDetails')
@@ -557,10 +577,25 @@ export default function EditCompanyForm() {
                     type="text"
                     name="name"
                     value={companyData.name}
-                    onChange={(e) =>
-                      setCompanyData({ ...companyData, name: e.target.value })
-                    }
+                    // onChange={(e) =>
+                    //   setCompanyData({ ...companyData, name: e.target.value })
+                    // }
 
+
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (inputValue.length <= 40 || inputValue === '') {
+                          setCompanyData({ ...companyData, name: inputValue });
+                          setErrors({ ...errors, name: '' }); // Clear any previous error message
+                      } else {
+                          setErrors({ ...errors, name: 'Company Name should be at most 40 characters' });
+                      }
+                  }}
+                  onBlur={() => {
+                      if (!companyData.name.trim()) {
+                          setErrors({ ...errors, name: 'Company Name is required' });
+                      }
+                  }}
                     error={Boolean(errors.name)}
                     helperText={errors.name}
 
@@ -727,6 +762,9 @@ export default function EditCompanyForm() {
                     placeholder=" Email"
                     type="email"
                     name="email"
+
+
+
                     value={companyData.email}
 
                     error={Boolean(errors.email)}
@@ -734,10 +772,26 @@ export default function EditCompanyForm() {
                     // InputProps={{
                     //   readOnly: true,
                     // }}
-                    onChange={(e) =>
-                      setCompanyData({ ...companyData, email: e.target.value })
-                    }
-                  // disabled={disabled}
+                    // onChange={(e) =>
+                    //   setCompanyData({ ...companyData, email: e.target.value })
+                    // }
+
+                    onChange={(e) => setCompanyData({ ...companyData, email: e.target.value })}
+                    onBlur={() => {
+                        if (!companyData.email.trim()) {
+                            setErrors({ ...errors, email: "Email is required" });
+                        } else if (!/\S+@\S+\.\S+/.test(companyData.email)) {
+                            setErrors({ ...errors, email: "Invalid email address" });
+                        } else {
+                            setErrors({ ...errors, email: "" });
+                        }
+                    }}
+
+
+
+
+
+               
                   ></TextField>
                   <TextField
                     sx={{ width: "47%" }}
@@ -748,14 +802,32 @@ export default function EditCompanyForm() {
 
                     name="phoneNumber"
                     value={companyData.phoneNumber}
+                    // onChange={(e) => {
+                    //   const input = e.target.value;
+                    //   const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
+                    //   if (numericValue.length > 10) {
+                    //     return;
+                    //   }
+                    //   setCompanyData({ ...companyData, phoneNumber: numericValue });
+                    // }}
+
+
                     onChange={(e) => {
-                      const input = e.target.value;
-                      const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
-                      if (numericValue.length > 10) {
-                        return;
+                      let value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      setCompanyData({ ...companyData, phoneNumber: value });
+                  }}
+                  onBlur={() => {
+                      if (!companyData.phoneNumber.trim()) {
+                          setErrors({ ...errors, phoneNumber: "Phone number is required" });
+                      } else if (companyData.phoneNumber.length !== 10) {
+                          setErrors({ ...errors, phoneNumber: "Phone number must be exactly 10 digits" });
+                      } else {
+                          setErrors({ ...errors, phoneNumber: "" });
                       }
-                      setCompanyData({ ...companyData, phoneNumber: numericValue });
-                    }}
+                  }}
+
+
+
 
                     error={Boolean(errors.phoneNumber)}
                     helperText={errors.phoneNumber}
@@ -798,6 +870,14 @@ export default function EditCompanyForm() {
                     // onInputChange={(e, newVal)=>{}}
                     onChange={(e, newVal) => handleBuildingChange(e, newVal)}
 
+                    onBlur={() => {
+                      if (!companyData.buildingId) {
+                          setErrors({ ...errors, buildingId: "Building ID is required" });
+                      } else {
+                          setErrors({ ...errors, buildingId: "" });
+                      }
+                  }}
+
 
 
                     renderInput={(params) => (
@@ -826,19 +906,38 @@ export default function EditCompanyForm() {
                     error={Boolean(errors.userLimit)}
                     helperText={errors.userLimit}
 
-                    onChange={(e) => {
+                    // onChange={(e) => {
 
+                    //   const enteredValue = e.target.value;
+                    //   const numericValue = parseInt(enteredValue);
+
+                    //   if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 1000) {
+                    //     setCompanyData({ ...companyData, userLimit: numericValue });
+                    //   } else {
+
+                    //     setCompanyData({ ...companyData, userLimit: '' });
+
+                    //   }
+                    // }}
+
+
+                    onChange={(e) => {
                       const enteredValue = e.target.value;
                       const numericValue = parseInt(enteredValue);
 
                       if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 1000) {
-                        setCompanyData({ ...companyData, userLimit: numericValue });
+                          setCompanyData({ ...companyData, userLimit: numericValue });
                       } else {
-
-                        setCompanyData({ ...companyData, userLimit: '' });
-
+                          setCompanyData({ ...companyData, userLimit: '' });
                       }
-                    }}
+                  }}
+                  onBlur={() => {
+                      if (!companyData.userLimit) {
+                          setErrors({ ...errors, userLimit: "User Limit is required" });
+                      } else {
+                          setErrors({ ...errors, userLimit: "" });
+                      }
+                  }}
                   ></TextField>
                 </div>
 

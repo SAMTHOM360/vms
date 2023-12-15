@@ -186,25 +186,15 @@ export default function Dashboard() {
             navigate(path, {state:{filter: filteredVisitors}});
 
         }
-        // else {
-        //     navigate(path);
-        // }
+       
     }
 
-// const routeChange1 = ()=>{
+const routeChange1 = ()=>{
 
-//     let path1= '/receptionistdashboard';
-//     const today = new Date();
-//     const year = today.getFullYear();
-//     const month = String(today.getMonth() + 1).padStart(2, '0');
-//     const day = String(today.getDate()).padStart(2, '0');
-
-//     const formattedDate = `${year}-${month}-${day}`;
-
-
-//     sessionStorage.setItem("total",formattedDate)
-//     navigate(path1);
-// }
+    let path1= '/receptionistdashboard';
+    
+    navigate(path1,{state:{filter:""}});
+}
 
 
     return (
@@ -239,7 +229,7 @@ export default function Dashboard() {
                                 <Grid sx={{ flexGrow: 1, backgroundColor: "" }} >
                                     <Grid item xs={12} style={{ backgroundColor: "" }}>
                                         <Grid style={{ gap: "10px", marginTop: "20px", flexGrow: 1, backgroundColor: "" }} container justifyContent="space-evenly" >
-                                            <Paper onClick={()=>navigate('/receptionistdashboard')}  elevation={1} sx={{
+                                            <Paper onClick={()=>routeChange1('')}  elevation={1} sx={{
                                                 height: 150,
                                                 width: 300,
                                              

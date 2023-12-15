@@ -30,7 +30,7 @@ export default function CompanyReg() {
     // const url = "http://192.168.12.54:8080/com/add";
 
 
-
+    
     const navigate = useNavigate();
     const [values, setValues] = useState({
         name: "",
@@ -62,17 +62,21 @@ export default function CompanyReg() {
         userLimit: "",
         aboutUs: "",
         buildingId: "",
+        image: false
 
     })
 
     const [logoUpdated, setLogoUpdated] = useState(false);
 
 
+
+
     const handleSubmit = async (e) => {
+
 
         const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint
 
-    
+
         e.preventDefault();
 
 
@@ -89,9 +93,11 @@ export default function CompanyReg() {
         const newErrors = {};
 
         // Check for empty fields and validate their content
-        if (!values.name) {
-            newErrors.name = "Name is required";
-        }
+        // if (!values.name) {
+        //     newErrors.name = "Name is required";
+        // }
+
+
         if (!values.logo) {
             newErrors.logo = "Company Logo is required";
         }
@@ -149,82 +155,88 @@ export default function CompanyReg() {
 
         if (Object.keys(newErrors).length === 0) {
 
-            try {
 
-                const formData = new FormData();
-                formData.append('name', values.name);
-                if (values.logo) {
-                    // Only append the image if it exists
-                    formData.append('image', values.logo);
-                }
-                formData.append('address', values.address);
-                formData.append('state.id', values.state);
-                formData.append('city.id', values.city);
-                formData.append('pincode', values.pincode);
-                formData.append('email', values.email);
-                formData.append('phoneNumber', values.phoneNumber);
-                formData.append('Industry', values.industry);
-                formData.append('aboutUs', values.aboutUs);
-                formData.append('userLimit', values.userLimit);
-                formData.append('building.buildingId', values.buildingId);
 
-                const res = await axios.post(companyUrl, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${sessionStorage.getItem("token")}`
-                    },
+        try {
+            
+
+            const formData = new FormData();
+            formData.append('name', values.name);
+
+            if (values.logo) {
+
+                formData.append('image', values.logo);
+            }
+
+            formData.append('address', values.address);
+            formData.append('state.id', values.state);
+            formData.append('city.id', values.city);
+            formData.append('pincode', values.pincode);
+            formData.append('email', values.email);
+            formData.append('phoneNumber', values.phoneNumber);
+            formData.append('Industry', values.industry);
+            formData.append('aboutUs', values.aboutUs);
+            formData.append('userLimit', values.userLimit);
+            formData.append('building.buildingId', values.buildingId);
+
+            const res = await axios.post(companyUrl, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${sessionStorage.getItem("token")}`
+                },
+
+            });
+
+
+            if (res.status === 200) {
+                alert("Form submitted successfully");
+
+                setValues({
+                    name: "",
+                    logo: "",
+                    address: "",
+                    state: "",
+                    city: "",
+                    pincode: "",
+                    email: "",
+                    phoneNumber: "",
+                    industry: "",
+                    aboutUs: "",
+                    userLimit: "",
+                    buildingId: "",
 
                 });
+                setLogoUpdated(false);
+                navigate('/companyDetails');
 
-
-                if (res.status === 200) {
-                    alert("Form submitted successfully");
-
-                    setValues({
-                        name: "",
-                        logo: "",
-                        address: "",
-                        state: "",
-                        city: "",
-                        pincode: "",
-                        email: "",
-                        phoneNumber: "",
-                        industry: "",
-                        aboutUs: "",
-                        userLimit: "",
-                        buildingId: "",
-
-                    });
-                    setLogoUpdated(false);
-                    navigate('/companyDetails');
-
-                } else if (res.status === 409) {
-              
-                    alert(res.data.message);
-                } else {
-                    alert("An unexpected error occurred");
-                }
-
-
-
-
-            } catch (error) {
-
-                if (error.response && error.response.status === 409) {
-                   
-                    alert(error.response.data.message);
-                } else {
-                    alert("An unexpected error occurred");
-                }
-                console.error("Error during form submission:", error);
-
-
-                console.log(error)
             }
+
+            else if (res.status === 409) {
+
+                alert(res.data.message);
+            } 
+
+
+
+
+        } catch (error) {
+
+            if (error.response && error.response.status === 409) {
+
+                alert(error.response.data.message);
+            }
+
+            else {
+                alert(error.response.data.error);
+            }
+
+            console.log(error)
         }
 
 
+
     }
+}
 
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
@@ -335,7 +347,9 @@ export default function CompanyReg() {
 
 
         if (!logoFile) {
-            // User clicked cancel without selecting a file
+
+            // alert("Select a logo")
+
             return;
         }
 
@@ -428,11 +442,6 @@ export default function CompanyReg() {
     };
 
 
-
-
-
-
-
     return (
         <>
             <Box sx={{ display: "flex", flexGrow: 1, p: 3, }}>
@@ -442,7 +451,7 @@ export default function CompanyReg() {
                         <div className='img'>
 
 
-                            <form onSubmit={(e) => handleSubmit(e)}>
+                            <form  onSubmit={(e) => handleSubmit(e)}>
 
                                 <Box
                                     display="flex" flexDirection='column'
@@ -459,27 +468,75 @@ export default function CompanyReg() {
                                     <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 
 
+                                        {/* 
+                                        <TextField sx={{ width: "47%" }} label="Company Name" required placeholder="Company Name " type="text"  
+                             
+                                        
+                                        
+                                        
+                                        value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })
 
-                                        <TextField sx={{ width: "47%" }} label="Company Name" required placeholder="Company Name " type="text"      
-                                        
-                                        
-                                        
-                                        value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })}
+                                        if (!e.target.value.trim()) {
+                                            setErrors({ ...errors, name: "Name is required" })
+                                        } else {
+                                            setErrors({ ...errors, name: "" });
+                                        }
+
+                                      
+        
+                                    }
+
                                             error={Boolean(errors.name)}
                                             helperText={errors.name}
 
-                                        ></TextField>
+                                        ></TextField> */}
+
+
+<TextField
+    sx={{ width: "47%" }}
+    label="Company Name"
+    required
+    placeholder="Company Name"
+    type="text"
+    value={values.name}
+    onChange={(e) => {
+        const inputValue = e.target.value;
+        if (inputValue.length <= 40 || inputValue === '') {
+            setValues({ ...values, name: inputValue });
+            setErrors({ ...errors, name: '' }); // Clear any previous error message
+        } else {
+            setErrors({ ...errors, name: 'Company Name should be at most 40 characters' });
+        }
+    }}
+    onBlur={() => {
+        if (!values.name.trim()) {
+            setErrors({ ...errors, name: 'Company Name is required' });
+        }
+    }}
+    error={Boolean(errors.name)}
+    helperText={errors.name}
+/>
+
+
+
+
+
 
                                         {/* <label className="custom-file-upload">
                                             <input type="file" id="file-input" onChange={handleLogoChange} />
                                             Upload Company Logo
                                         </label> */}
 
-                                        <div style={{ display: "flex", flexDirection: "column", gap: "" }} >
+                                        <div style={{ display: "flex", flexDirection: "column", gap: "",
+                                        
+                                        // border: errors.image == true ? "1px solid red" : ""
+                                         }} >
                                             <label
                                             >
 
-                                                <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                                                <div style={{
+                                                    display: "flex", flexDirection: "row", gap: "10px",
+                                                }}>
                                                     {imageUrl && (
 
                                                         <img
@@ -491,7 +548,19 @@ export default function CompanyReg() {
 
                                                     )}
                                                     <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                                                        <input type="file"  accept="image/jpeg, image/jpg, image/png" id="file-input" required onChange={handleLogoChange} />
+                                                        <input type="file" accept="image/jpeg, image/jpg, image/png" id="file-input"  onChange={handleLogoChange}
+
+                                                            // onBlur={(e) => {
+                                                            //     const file = e.target.files[0];
+                                                            //     if (!file) {
+                                                            //         setErrors({ ...errors, logo: "Company Logo is required", image:true });
+                                                            //     } else {
+                                                            //         setErrors({ ...errors, logo: "", image:false });
+                                                            //     }
+                                                            // }}
+
+
+                                                        />
                                                         Upload Company Logo
                                                     </span>
 
@@ -502,9 +571,10 @@ export default function CompanyReg() {
                                             </label>
                                             <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
                                                 Allowed file formats: .jpg, .jpeg, .png
+                                               
                                             </Typography>
 
-                                            {errors.logo && (
+                                            {errors.logo &&(
                                                 <Typography variant="caption" color="error" sx={{ fontSize: "15px" }}>
                                                     {errors.logo}
                                                 </Typography>
@@ -516,50 +586,51 @@ export default function CompanyReg() {
                                     </div>
 
 
-                                    <TextField placeholder="Company Address" type="text" label="Company Address" required value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} error={Boolean(errors.address)}
-                                        helperText={errors.address}></TextField>
+                                    {/* <TextField placeholder="Company Address" type="text" label="Company Address" required value={values.address} onChange={(e) => setValues({ ...values, address: e.target.value })} 
+
+                                    error={Boolean(errors.address)}
+                                        helperText={errors.address}></TextField> */}
+
+
+                                    <TextField
+                                        sx={{ width: "100%" }}
+                                        label="Company Address"
+                                        required
+                                        placeholder="Company Address"
+                                        type="text"
+                                        value={values.address}
+                                        onChange={(e) => {
+                                            setValues({ ...values, address: e.target.value });
+
+                                            // Validate input on typing
+                                            if (!e.target.value.trim()) {
+                                                setErrors({ ...errors, address: "Address is required" });
+                                            } else {
+                                                setErrors({ ...errors, address: "" });
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            // Final validation on blur if needed
+                                            if (!values.address.trim()) {
+                                                setErrors({ ...errors, address: "Address is required" });
+                                            } else {
+                                                setErrors({ ...errors, address: "" });
+                                            }
+                                        }}
+                                        error={Boolean(errors.address)}
+                                        helperText={errors.address}
+                                    />
+
                                     <div
                                         className="input"
                                         style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px" }}
                                     >
 
-                                        {/* <div> */}
+
 
                                         {/* <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Select State</InputLabel>
-                                                    <Select
-                                                        sx={{ width: '300px' }}
-
-                                                        // value={selectedState}
-                                                        value={values.state}
-
-                                                        onChange={handleStateChange}
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-
-                                                        label="Select State"
-                                                        MenuProps={menuProps}
-                                                    >
-                                                        <MenuItem value="-"
-                                                            placeholder='Select State' >
-
-                                                        </MenuItem>
-                                                        {states.map((state) => (
-                                                            <MenuItem key={state.id} value={state.id}>
-                                                                {state.name}
-                                                            </MenuItem>
-                                                        ))}
-
-                                                    </Select>
-
-                                                   
-                                                </FormControl>
-                                            </Box> */}
-
-                                        <Box sx={{ minWidth: 120 }}>
                                             <FormControl fullWidth>
-                                                {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
+                                            
                                                 <Autocomplete required
                                                     sx={{ width: '350px' }}
                                                     options={states}
@@ -568,8 +639,6 @@ export default function CompanyReg() {
                                                     onChange={(event, newValue) => {
                                                         setSelectedState(newValue);
                                                         setValues({ ...values, state: newValue ? newValue.id : '' });
-
-
                                                         if (newValue) {
                                                             // axios.get(`http://192.168.12.54:8080/sc/all/${newValue.id}`)
                                                          
@@ -588,6 +657,64 @@ export default function CompanyReg() {
                                                         <TextField
                                                             {...params} required
                                                             label="Select State"
+
+
+
+                                                            onBlur={() => {
+                                                                if (!values.state) {
+                                                                    setErrors({ ...errors, state: "State is required" });
+                                                                } else {
+                                                                    setErrors({ ...errors, state: "" });
+                                                                }
+                                                            }}
+                                                            error={Boolean(errors.state)}
+                                                            helperText={errors.state}
+                                                            InputLabelProps={{
+                                                                shrink: selectedState !== null || params.inputProps?.value,
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box> */}
+
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                {/* <InputLabel id="demo-simple-select-label">Select State</InputLabel> */}
+                                                <Autocomplete
+                                                    required
+                                                    sx={{ width: '350px' }}
+                                                    options={states}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={selectedState}
+                                                    onChange={(event, newValue) => {
+                                                        setSelectedState(newValue);
+                                                        setValues({ ...values, state: newValue ? newValue.id : '' });
+
+                                                        if (newValue) {
+                                                            axios.get(Config.baseUrl + Config.apiEndPoints.cityEndPoint + `/${newValue.id}`)
+                                                                .then((response) => {
+                                                                    setCities(response.data.data);
+                                                                })
+                                                                .catch((error) => {
+                                                                    console.error(error);
+                                                                });
+                                                        } else {
+                                                            setCities([]);
+                                                        }
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            required
+                                                            label="Select State"
+                                                            onBlur={() => {
+                                                                if (!values.state) {
+                                                                    setErrors({ ...errors, state: "State is required" });
+                                                                } else {
+                                                                    setErrors({ ...errors, state: "" });
+                                                                }
+                                                            }}
                                                             error={Boolean(errors.state)}
                                                             helperText={errors.state}
                                                             InputLabelProps={{
@@ -599,11 +726,12 @@ export default function CompanyReg() {
                                             </FormControl>
                                         </Box>
 
-                                        <Box sx={{ minWidth: 120 }}>
+
+                                        {/* <Box sx={{ minWidth: 120 }}>
                                             <FormControl fullWidth>
-                                                {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
+
                                                 <Autocomplete
-                                                required
+                                                    required
 
                                                     sx={{ width: '350px' }}
                                                     options={cities}
@@ -617,6 +745,47 @@ export default function CompanyReg() {
                                                         <TextField
                                                             {...params} required
                                                             label="Select City"
+
+                                                            onBlur={() => {
+                                                                if (!values.city) {
+                                                                    setErrors({ ...errors, city: "City is required" });
+                                                                } else {
+                                                                    setErrors({ ...errors, city: "" });
+                                                                }
+                                                            }}
+                                                            error={Boolean(errors.city)}
+                                                            helperText={errors.city}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Box> */}
+
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                {/* <InputLabel id="demo-simple-select-label">Select City</InputLabel> */}
+                                                <Autocomplete
+                                                    required
+                                                    sx={{ width: '350px' }}
+                                                    options={cities}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={selectedCity}
+                                                    onChange={(event, newValue) => {
+                                                        setSelectedCity(newValue);
+                                                        setValues({ ...values, city: newValue ? newValue.id : '' });
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            required
+                                                            label="Select City"
+                                                            onBlur={() => {
+                                                                if (!values.city) {
+                                                                    setErrors({ ...errors, city: "City is required" });
+                                                                } else {
+                                                                    setErrors({ ...errors, city: "" });
+                                                                }
+                                                            }}
                                                             error={Boolean(errors.city)}
                                                             helperText={errors.city}
                                                         />
@@ -626,78 +795,166 @@ export default function CompanyReg() {
                                         </Box>
 
 
-                                        {/* </div> */}
 
 
-
-
-                                        {/* 
-                                        <Box sx={{ minWidth: 120 }}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Select City</InputLabel>
-                                                <Select
-                                                    sx={{ width: '300px' }}
-
-                                                    // value={selectedCity}
-                                                    value={values.city}
-
-                                                    onChange={handleCityChange}
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    label="Select City"
-                                                    MenuProps={menuProps} >
-
-                                                    <MenuItem value="-"
-                                                        placeholder='Select City' >
-
-                                                    </MenuItem>
-                                                    {cities.map((city) => (
-                                                        <MenuItem key={city.id} value={city.id}>
-                                                            {city.name}
-                                                        </MenuItem>
-                                                    ))}
-
-                                                </Select>
-                                           
-
-                                            </FormControl>
-                                        </Box> */}
                                     </div>
-                                    <TextField label="Pincode" required placeholder="Pincode" value={values.pincode} onChange={(e) => {
+                                    {/* <TextField label="Pincode" required placeholder="Pincode" value={values.pincode} onChange={(e) => {
                                         // Check if entered value is within 6 characters
                                         if (e.target.value.length <= 6) {
                                             setValues({ ...values, pincode: e.target.value });
                                         }
                                     }}
-                                        inputProps={{ maxLength: 6 }} error={Boolean(errors.pincode)}
-                                        helperText={errors.pincode}></TextField>
+                                        inputProps={{ maxLength: 6 }}
+
+
+                                        onBlur={() => {
+                                            if (!values.pincode.trim()) {
+                                                setErrors({ ...errors, pincode: "Pincode is required" });
+                                            } else {
+                                                setErrors({ ...errors, pincode: "" });
+                                            }
+                                        }}
+
+
+
+                                        error={Boolean(errors.pincode)}
+                                        helperText={errors.pincode}></TextField> */}
+                                    <TextField
+                                        label="Pincode"
+                                        required
+                                        placeholder="Pincode"
+                                        value={values.pincode}
+                                        onChange={(e) => {
+                                            // Check if entered value is within 6 characters
+                                            if (/^\d{0,6}$/.test(e.target.value)) {
+                                                setValues({ ...values, pincode: e.target.value });
+                                            }
+                                        }}
+                                        inputProps={{
+                                            maxLength: 6,
+                                            pattern: "[0-9]*" // Allows only numeric input
+                                        }}
+                                        onBlur={() => {
+                                            if (!values.pincode.trim()) {
+                                                setErrors({ ...errors, pincode: "Pincode is required" });
+                                            } else if (!/^\d{6}$/.test(values.pincode)) {
+                                                setErrors({ ...errors, pincode: "Pincode must be exactly 6 digits" });
+                                            } else {
+                                                setErrors({ ...errors, pincode: "" });
+                                            }
+                                        }}
+                                        error={Boolean(errors.pincode)}
+                                        helperText={errors.pincode}
+                                    />
+
+
 
                                     <div className="input" style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                        <TextField sx={{ width: "47%" }} label="Email" required placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={Boolean(errors.email)}
-                                            helperText={errors.email} >
-                                        </TextField>
-                                        {/* <TextField sx={{ width: "47%" }} label="Phone Number" placeholder=" Phone Number " type="number" inputProps={{ maxLength: 10 }} value={values.phoneNumber} onChange={(e) => {
+                                        {/* <TextField sx={{ width: "47%" }} label="Email" required placeholder=" Email" type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })}
 
-                                            if (e.target.value.length <= 10) {
-                                                setValues({ ...values, phoneNumber: e.target.value });
-                                            }
-
-                                        }} error={Boolean(errors.phoneNumber)}
-                                            helperText={errors.phoneNumber}></TextField> */}
-
-
-                                        <TextField sx={{ width: "47%" }} label="Phone Number" required placeholder=" Phone Number " inputProps={{ maxLength: 10 }} value={values.phoneNumber}
-
-                                            onChange={(e) => {
-                                                const input = e.target.value;
-                                                const numericValue = input.replace(/\D/g, ''); // Remove non-numeric characters
-                                                if (numericValue.length > 10) {
-                                                    return;
+                                            onBlur={() => {
+                                                if (!values.email.trim()) {
+                                                    setErrors({ ...errors, email: "Email is required" });
+                                                } else {
+                                                    setErrors({ ...errors, email: "" });
                                                 }
-                                                setValues({ ...values, phoneNumber: numericValue });
+                                            }}
+
+
+
+                                            error={Boolean(errors.email)}
+                                            helperText={errors.email} >
+                                        </TextField> */}
+   
+                                        <TextField
+                                            sx={{ width: "47%" }}
+                                            label="Email"
+                                            required
+                                            placeholder="Email"
+                                            type="email"
+                                            value={values.email}
+                                            onChange={(e) => setValues({ ...values, email: e.target.value })}
+                                            onBlur={() => {
+                                                if (!values.email.trim()) {
+                                                    setErrors({ ...errors, email: "Email is required" });
+                                                } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+                                                    setErrors({ ...errors, email: "Invalid email address" });
+                                                } else {
+                                                    setErrors({ ...errors, email: "" });
+                                                }
+                                            }}
+                                            error={Boolean(errors.email)}
+                                            helperText={errors.email}
+                                        />
+
+
+
+
+                                        {/* <TextField sx={{ width: "47%" }} label="Phone Number" required placeholder=" Phone Number "
+
+
+                                            // inputProps={{ maxLength: 10 }}
+
+
+                                            inputProps={{
+                                                pattern: "^[0-9]*",
+                                                onInput: (event) => {
+                                                    let value = event.target.value;
+                                                    value = value.replace(/\D/g, "");
+                                                    if (value.length > 10) {
+                                                        value = value.slice(0, 10);
+                                                    }
+
+
+                                                    setValues({ ...values, phoneNumber: value })
+
+                                                }
+                                            }}
+
+
+                                            onBlur={() => {
+                                                if (values.phoneNumber.length !== 10) {
+                                                    setErrors({ ...errors, phoneNumber: "Phone number must be exactly 10 digits" });
+                                                } else {
+                                                    setErrors({ ...errors, phoneNumber: "" });
+                                                }
+                                            }}
+
+
+
+                                            value={values.phoneNumber}
+                                            error={Boolean(errors.phoneNumber)}
+                                            helperText={errors.phoneNumber} /> */}
+
+
+
+                                        <TextField
+                                            sx={{ width: "47%" }}
+                                            label="Phone Number"
+                                            required
+                                            placeholder="Phone Number"
+                                            inputProps={{
+                                                pattern: "^[0-9]*",
+                                                maxLength: 10
+                                            }}
+                                            value={values.phoneNumber}
+                                            onChange={(e) => {
+                                                let value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                                setValues({ ...values, phoneNumber: value });
+                                            }}
+                                            onBlur={() => {
+                                                if (!values.phoneNumber.trim()) {
+                                                    setErrors({ ...errors, phoneNumber: "Phone number is required" });
+                                                } else if (values.phoneNumber.length !== 10) {
+                                                    setErrors({ ...errors, phoneNumber: "Phone number must be exactly 10 digits" });
+                                                } else {
+                                                    setErrors({ ...errors, phoneNumber: "" });
+                                                }
                                             }}
                                             error={Boolean(errors.phoneNumber)}
-                                            helperText={errors.phoneNumber}></TextField>
+                                            helperText={errors.phoneNumber}
+                                        />
+
 
 
                                     </div>
@@ -705,19 +962,9 @@ export default function CompanyReg() {
                                     <div className='input' style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} >
 
 
-                                        {/* <TextField sx={{ width: "47%" }} label="Building Id" placeholder="Building Id" type="number" value={values.buildingId} inputProps={{ maxLength: 1 }} // Set the maxLength attribute to restrict the input length to 1 digit
-
-                                            onChange={(e) => {
-                                                // Check if entered value is within 1 digit
-                                                if (e.target.value.length <= 1) {
-                                                    setValues({ ...values, buildingId: e.target.value });
-                                                }
-                                            }} error={Boolean(errors.buildingId)}
-                                            helperText={errors.buildingId}></TextField> */}
-
-
+                                        {/* 
                                         <Autocomplete required
-                                        sx={{ width: "47%" }}
+                                            sx={{ width: "47%" }}
                                             options={buildingOptions}
                                             getOptionLabel={(option) => option !== null ? `Id-${option.id}   ${option.name}` : ""} // Assuming 'name' is the property containing the building name
                                             onChange={handleBuildingChange}
@@ -729,9 +976,11 @@ export default function CompanyReg() {
                                             //     />
                                             // )}
                                             renderInput={(params) => (
-                                                <TextField
+                                           at XMLHttpRequest.onloadend (http://localhost:3000/static/js/bundle.js:140341:66)         <TextField
                                                     {...params} required
                                                     label="Select Building"
+
+
                                                     variant="outlined"
                                                 />
                                             )}
@@ -742,16 +991,59 @@ export default function CompanyReg() {
                                                 </div>
                                             )}
 
+
+                                            onBlur={() => {
+                                                if (!values.buildingId) {
+                                                    setErrors({ ...errors, buildingId: "Name is required" });
+                                                } else {
+                                                    setErrors({ ...errors, buildingId: "" });
+                                                }
+                                            }}
+
+
+
                                             error={Boolean(errors.buildingId)}
                                             helperText={errors.buildingId}
+                                        /> */}
+
+                                        <Autocomplete
+                                            required
+                                            sx={{ width: "47%" }}
+                                            options={buildingOptions}
+                                            getOptionLabel={(option) => option !== null ? `Id-${option.id} ${option.name}` : ""}
+                                            onChange={handleBuildingChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    required
+                                                    label="Select Building"
+                                                    variant="outlined"
+                                                    onBlur={() => {
+                                                        if (!values.buildingId) {
+                                                            setErrors({ ...errors, buildingId: "Building ID is required" });
+                                                        } else {
+                                                            setErrors({ ...errors, buildingId: "" });
+                                                        }
+                                                    }}
+                                                    error={Boolean(errors.buildingId)}
+                                                    helperText={errors.buildingId}
+                                                />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }} {...props}>
+                                                    <div>Id-{option.id}</div>
+                                                    <div>{option.name}</div>
+                                                </div>
+                                            )}
                                         />
+
 
 
                                         <div style={{ display: "flex", flexDirection: "column", width: "47%" }}>
 
 
 
-                                            <TextField sx={{ width: "100%", margingRight: "20px" }} label="User Limit" required placeholder="User Limit" type="" value={values.userLimit}
+                                            {/* <TextField sx={{ width: "100%", margingRight: "20px" }} label="User Limit" required placeholder="User Limit" type="" value={values.userLimit}
                                                 onChange={(e) => {
 
                                                     const enteredValue = e.target.value;
@@ -770,9 +1062,53 @@ export default function CompanyReg() {
                                                 }}
 
 
+                                                onBlur={() => {
+                                                    if (!values.userLimit) {
+                                                        setErrors({ ...errors, userLimit: "Name is required" });
+                                                    } else {
+                                                        setErrors({ ...errors, userLimit: "" });
+                                                    }
+                                                }}
+
+
                                                 error={Boolean(errors.userLimit)}
                                                 helperText={errors.userLimit}
-                                            ></TextField>
+                                            ></TextField> */}
+
+                                            <TextField
+                                                sx={{ width: "100%", margingRight: "20px" }}
+                                                label="User Limit"
+                                                required
+                                                placeholder="User Limit"
+                                                type=""
+                                                value={values.userLimit}
+                                                onChange={(e) => {
+                                                    const enteredValue = e.target.value;
+                                                    const numericValue = parseInt(enteredValue);
+
+                                                    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 1000) {
+                                                        setValues({ ...values, userLimit: numericValue });
+                                                    } else {
+                                                        setValues({ ...values, userLimit: '' });
+                                                    }
+                                                }}
+                                                onBlur={() => {
+                                                    if (!values.userLimit) {
+                                                        setErrors({ ...errors, userLimit: "User Limit is required" });
+                                                    } else {
+                                                        setErrors({ ...errors, userLimit: "" });
+                                                    }
+                                                }}
+                                                error={Boolean(errors.userLimit)}
+                                                helperText={errors.userLimit}
+                                            />
+
+
+
+
+
+
+
                                             <Typography variant="body2" color="textSecondary">
                                                 Maximum value for User Limit: 1000
                                             </Typography>
@@ -781,12 +1117,88 @@ export default function CompanyReg() {
 
                                     </div>
 
-                                    <TextField label="Industry" required placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })} error={Boolean(errors.industry)}
+                                    {/* <TextField label="Industry" required placeholder="Industry" type="text" value={values.industry} onChange={(e) => setValues({ ...values, industry: e.target.value })}
+
+                                        onBlur={() => {
+                                            if (!values.industry.trim()) {
+                                                setErrors({ ...errors, industry: "Name is required" });
+                                            } else {
+                                                setErrors({ ...errors, industry: "" });
+                                            }
+                                        }}
+
+
+                                        error={Boolean(errors.industry)}
                                         helperText={errors.industry}></TextField>
+ */}
 
 
-                                    <TextField label="About" required placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })} error={Boolean(errors.aboutUs)}
-                                        helperText={errors.aboutUs}></TextField>
+
+                                    <TextField
+                                        label="Industry"
+                                        required
+                                        placeholder="Industry"
+                                        type="text"
+                                        value={values.industry}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            if (/^[A-Za-z]+$/.test(inputValue) || inputValue === '') {
+                                                if (inputValue.length <= 20) {
+                                                    setValues({ ...values, industry: inputValue });
+                                                    setErrors({ ...errors, industry: '' }); // Clear any previous error message
+                                                } else {
+                                                    setErrors({ ...errors, industry: 'Industry should be at most 20 characters' });
+                                                }
+                                            } else {
+                                                setErrors({ ...errors, industry: 'Industry should only contain letters' });
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            if (!values.industry.trim()) {
+                                                setErrors({ ...errors, industry: 'Industry is required' });
+                                            }
+                                        }}
+                                        error={Boolean(errors.industry)}
+                                        helperText={errors.industry}
+                                    />
+
+
+                                    {/* <TextField label="About" required placeholder="About" type="text" value={values.aboutUs} onChange={(e) => setValues({ ...values, aboutUs: e.target.value })}
+
+                                        onBlur={() => {
+                                            if (!values.aboutUs.trim()) {
+                                                setErrors({ ...errors, aboutUs: "aboutUs is required" });
+                                            } else {
+                                                setErrors({ ...errors, aboutUs: "" });
+                                            }
+                                        }}
+
+
+
+                                        error={Boolean(errors.aboutUs)}
+                                        helperText={errors.aboutUs}></TextField> */}
+
+
+
+                                    <TextField
+                                        label="About"
+                                        required
+                                        placeholder="About"
+                                        type="text"
+                                        value={values.aboutUs}
+                                        onChange={(e) => setValues({ ...values, aboutUs: e.target.value })}
+                                        onBlur={() => {
+                                            if (!values.aboutUs.trim()) {
+                                                setErrors({ ...errors, aboutUs: "About is required" });
+                                            } else {
+                                                setErrors({ ...errors, aboutUs: "" });
+                                            }
+                                        }}
+                                        error={Boolean(errors.aboutUs)}
+                                        helperText={errors.aboutUs}
+                                    />
+
+
 
                                     <div style={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center" }}>
                                         <Button type="submit" variant="contained" sx={{ width: 130, height: 50 }}  >Register</Button>
@@ -813,7 +1225,6 @@ export default function CompanyReg() {
 
     )
 }
-
 
 
 
