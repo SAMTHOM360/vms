@@ -1213,19 +1213,19 @@ export default function Meetings() {
                       >
                         <TableRow sx={{ border: "1px solid black" }}>
                           <TableCell>Sl No</TableCell>
-                          <TableCell align="left">Full Name</TableCell>
+                          <TableCell align="center">Full Name</TableCell>
 
-                          <TableCell align="left">Email</TableCell>
-                          <TableCell align="left">Phone No.</TableCell>
-                          <TableCell align="left">Company Name</TableCell>
+                          <TableCell align="center">Email</TableCell>
+                          <TableCell align="center">Phone No.</TableCell>
+                          <TableCell align="center">Company Name</TableCell>
 
-                          <TableCell align="left">Start Time</TableCell>
-                          <TableCell align="left">End Time</TableCell>
+                          <TableCell align="center">Start Time</TableCell>
+                          <TableCell align="center">End Time</TableCell>
                           {/* <TableCell align="left">Remarks</TableCell> */}
-                          <TableCell align="left">Status</TableCell>
-                          <TableCell align="left">Room</TableCell>
+                          <TableCell align="center">Status</TableCell>
+                          <TableCell align="center">Room</TableCell>
 
-                          <TableCell align="left">Actions</TableCell>
+                          <TableCell align="center">Actions</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -1244,28 +1244,28 @@ export default function Meetings() {
                                 )}
                               </TableCell>
 
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.visitor.name}
                               </TableCell>
 
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.visitor.email}
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.visitor.phoneNumber}
                               </TableCell>
 
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.visitor.companyName}
                               </TableCell>
 
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.meetingStartDateTime !== null
                                   ? formatMeetingDuration(visitor)
                                   : "NA"}
                               </TableCell>
                               {/* <TableCell align="left">{formatDate(visitor.checkInDateTime)}</TableCell> */}
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.meetingEndDateTime !== null
                                   ? formatMeetingDuration1(visitor)
                                   : "NA"}
@@ -1273,15 +1273,15 @@ export default function Meetings() {
                               {/* <TableCell align="left">
                                     {visitor.remarks}
                                   </TableCell> */}
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.status}
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {visitor.room !== null
                                   ? visitor.room.roomName
                                   : "NA"}
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell align="center">
                                 {/*                                                            
                                                             { visitor.status === 'COMPLETED' || visitor.status === 'CANCELLED' ? (
                                                                 // Disable the Edit button

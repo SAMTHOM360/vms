@@ -31,6 +31,22 @@ const rowsPerPage = 10;
 
 
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+      overflowY: 'auto',
+   
+    
+    },
+  },
+};
+
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -364,16 +380,37 @@ const CompanyTable = () => {
                       <div style={{ display: "flex", justifyContent: "",gap:"20px", backgroundColor: "" ,marginBottom:"10px"}}>
 
 
+
+
+                      <TextField id="outlined-basic" label="Company Name" variant="outlined"
+
+value={selectedCompanyNames}
+// onChange={ (e)handleCompanyNameChange}
+
+onChange={(e) => setSelectedCompanyNames(e.target.value)}
+onKeyPress={handleCompanyNameChange}
+
+
+/>
+
+
                         {/* <div style={{ display: "flex", justifyContent: "yellow" }}> */}
                           <Autocomplete
                             disablePortal
                             id="combo-box-demo"
                             options={buildingIds}
 
+                         
+
                             getOptionLabel={(option) => option !== null ? `Id-${option.id}    ${option.name}` : ""}
                             onChange={handleBuildingIdChange}
                             sx={{ width: 300 }}
-                            renderInput={(params) => <TextField {...params} label="Building id"
+                            renderInput={(params) => <TextField {...params} 
+
+                            MenuProps={MenuProps}
+                            
+                            
+                            label="Building id"
                               // renderOption={(props, option) => (
                               //   <div style={{ display: '', justifyContent: '', backgroundColor: "red" }} {...props}>
                               //     <div>{`Id-${option.id}`}</div>
@@ -382,6 +419,9 @@ const CompanyTable = () => {
                               // )}
 
                               renderOption={(props, option) => (
+
+                               
+
                                 <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: "red" }} {...props}>
                                   <div>{`Id-${option.id}`}</div>
                                   <div style={{ marginLeft: '10px' }}>{option.name}</div> {/* Adjust the margin as needed */}
@@ -392,16 +432,7 @@ const CompanyTable = () => {
 
 
 
-                          <TextField id="outlined-basic" label="Company Name" variant="outlined"
-
-                            value={selectedCompanyNames}
-                            // onChange={ (e)handleCompanyNameChange}
-
-                            onChange={(e) => setSelectedCompanyNames(e.target.value)}
-                            onKeyPress={handleCompanyNameChange}
-
-
-                          />
+                        
 
 
 
@@ -417,22 +448,22 @@ const CompanyTable = () => {
                         <Table aria-label="simple table">
                           <TableHead style={{ backgroundColor: '#2b345386' }}>
                             <TableRow>
-                              <TableCell><h4>Sl.No</h4></TableCell>
-                              <TableCell align="left"><h4>Company Name</h4></TableCell>
-                              <TableCell align="left"><h4>Email</h4></TableCell>
-                              <TableCell align="left"><h4>Phone No.</h4></TableCell>
-                              <TableCell align="left"><h4>Address</h4></TableCell>
-                              <TableCell align="left" sx={{ width: "10 em" }}><h4>Logo</h4></TableCell>
-                              <TableCell align="left"><h4>Industry</h4></TableCell>
-                              <TableCell align="left"><h4>State</h4></TableCell>
-                              <TableCell align="left"><h4>City</h4></TableCell>
-                              <TableCell align="left"><h4>Pin Code</h4></TableCell>
-                              <TableCell align="left"><h4>About Us</h4></TableCell>
-                              <TableCell align="left"><h4>Building Id</h4></TableCell>
-                              <TableCell align="left"><h4>Building Name</h4></TableCell>
+                              <TableCell align="center"><h4>Sl.No</h4></TableCell>
+                              <TableCell align="center"><h4>Company Name</h4></TableCell>
+                              <TableCell align="center"><h4>Email</h4></TableCell>
+                              <TableCell align="center"><h4>Phone No.</h4></TableCell>
+                              <TableCell align="center"><h4>Address</h4></TableCell>
+                              <TableCell align="center" sx={{ width: "10 em" }}><h4>Logo</h4></TableCell>
+                              <TableCell align="center"><h4>Industry</h4></TableCell>
+                              <TableCell align="center"><h4>State</h4></TableCell>
+                              <TableCell align="center"><h4>City</h4></TableCell>
+                              <TableCell align="center"><h4>Pin Code</h4></TableCell>
+                              <TableCell align="center"><h4>About Us</h4></TableCell>
+                              <TableCell align="center"><h4>Building Id</h4></TableCell>
+                              <TableCell align="center"><h4>Building Name</h4></TableCell>
                               {/* <TableCell align="left">Created By</TableCell> */}
-                              <TableCell align="left"><h4>User Limit</h4></TableCell>
-                              <TableCell align="left"><h4>Actions</h4></TableCell>
+                              <TableCell align="center"><h4>User Limit</h4></TableCell>
+                              <TableCell align="center"><h4>Actions</h4></TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -442,11 +473,11 @@ const CompanyTable = () => {
                                 <TableRow key={company.id}>
                                   <TableCell>{calculateSerialNumber(index)}</TableCell>
 
-                                  <TableCell align="left">{company.name}</TableCell>
-                                  <TableCell align="left">{company.email}</TableCell>
-                                  <TableCell align="left">{company.phoneNumber}</TableCell>
-                                  <TableCell align="left">{company.address}</TableCell>
-                                  <TableCell align="left">
+                                  <TableCell align="center">{company.name}</TableCell>
+                                  <TableCell align="center">{company.email}</TableCell>
+                                  <TableCell align="center">{company.phoneNumber}</TableCell>
+                                  <TableCell align="center">{company.address}</TableCell>
+                                  <TableCell align="center">
                                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                       <a href={company.logo} target="_blank" rel="noopener noreferrer">
                                         <img
@@ -457,20 +488,20 @@ const CompanyTable = () => {
                                       </a>
                                     </div>
                                   </TableCell>
-                                  <TableCell align="left">{company.industry}</TableCell>
-                                  <TableCell align="left">{company.state.name}</TableCell>
-                                  <TableCell align="left">{company.city.name}</TableCell>
-                                  <TableCell align="left">{company.pincode}</TableCell>
-                                  <TableCell align="left">{company.aboutUs}</TableCell>
+                                  <TableCell align="center">{company.industry}</TableCell>
+                                  <TableCell align="center">{company.state.name}</TableCell>
+                                  <TableCell align="center">{company.city.name}</TableCell>
+                                  <TableCell align="center">{company.pincode}</TableCell>
+                                  <TableCell align="center">{company.aboutUs}</TableCell>
                                   {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
                                   {/* <TableCell align="left">{company.createdBy}</TableCell> */}
 
 
-                                  <TableCell align="left">{company.building.buildingId}</TableCell>
-                                  <TableCell align="left">{company.building.name}</TableCell>
+                                  <TableCell align="center">{company.building.buildingId}</TableCell>
+                                  <TableCell align="center">{company.building.name}</TableCell>
 
-                                  <TableCell align="left">{company.userLimit}</TableCell>
-                                  <TableCell align="left">
+                                  <TableCell align="center">{company.userLimit}</TableCell>
+                                  <TableCell align="center">
                                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                       <Link to={`/edit/${company.id}`}>
                                         <EditIcon />
