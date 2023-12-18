@@ -602,7 +602,11 @@ const MeetingDetails = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4} lg={4}>
+                {/* DONE CLEAR BELOW CODE */}
+
+
+
+                {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
@@ -659,7 +663,76 @@ const MeetingDetails = () => {
                       option.id === value.id
                     }
                   />
-                </Grid>
+                </Grid> */}
+
+
+
+
+                 {/* DONE CLEAR ABOVE CODE */}
+
+
+                
+                <Grid item xs={12} sm={6} md={4} lg={4}>
+  <Autocomplete
+    disablePortal
+    id="combo-box-demo"
+    sx={{ width: "100%", mt: "10px" }}
+    options={cities}
+    fullWidth
+    value={
+      formData.city &&
+      cities.some((city) => city.id === formData.city.id)
+        ? formData.city
+        : null
+    }
+    onInputChange={(event, newValue) => {
+      const selectedCity = cities.find(
+        (city) => city.name === newValue
+      );
+      const cityId = selectedCity ? selectedCity.id : null;
+      const stateId = selectedCity ? selectedCity.state.id : null;
+
+      setFormData({
+        ...formData,
+        city: {
+          id: cityId,
+          name: newValue,
+        },
+        stateId: stateId,
+      });
+    }}
+    getOptionLabel={(option) => option.name || ""}
+    renderOption={(props, option) => (
+      <li {...props} key={option.id}>
+        {option.name}
+      </li>
+    )}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Visitor's City"
+        id={formData.city ? String(formData.city.id) : ""}
+        value={formData.city ? formData.city.name : ""}
+        required
+      />
+    )}
+    isOptionEqualToValue={(option, value) =>
+      option.id === value.id
+    }
+
+    //THIS IS onChange NOT onInputChange
+    onChange={(event, newValue) => {
+      if (!newValue) {
+        setFormData({
+          ...formData,
+          city: { id: null, name: null },
+          stateId: null,
+        });
+      }
+    }}
+  />
+</Grid>
+
 
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                   <TextField
@@ -754,7 +827,7 @@ const MeetingDetails = () => {
                     value={formData.remarks}
                     name="remarks"
                     onChange={(e) => {
-                      const inputValue = e.target.value.replace(/\s+/g, ' '); // Replace consecutive spaces with a single space
+                      const inputValue = e.target.value.replace(/\s+/g, ' ');
                       setFormData({
                         ...formData,
                         remarks: inputValue,
@@ -777,6 +850,7 @@ const MeetingDetails = () => {
                         shouldDisableDate={shouldDisableDate}
                         minTime={minTime}
                         maxTime={maxTime}
+                        format="DD/MM/YYYY HH:mm"
                         name='meetingStartDateTime'
                         onChange={(value) => {
                           // console.log('Selected date:', value); // Add this line for debugging

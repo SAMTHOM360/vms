@@ -117,7 +117,7 @@ const Building = () => {
   // const BASE_URL = 'http://192.168.12.58:8080/api/user';
 
   let urlAxiosInstance =
-    Config.baseUrl + Config.apiEndPoints.rolesAndDeptsAxiosInstance;
+    Config.baseUrl + Config.apiEndPoints.buildingAxiosInstance;
 
   const axiosInstance = axios.create({
     baseURL: urlAxiosInstance,
@@ -210,8 +210,10 @@ const Building = () => {
 
     try {
       setLoading(true);
+      let url = Config.baseUrl + Config.apiEndPoints.buildingGetAll
       const response = await axios.get(
-        `http://192.168.12.54:8080/api/building/getAll`,
+        // `http://192.168.12.54:8080/api/building/getAll`,
+        url,
         { headers }
       );
       //   const response = await axios.get(`${url}?companyId=${companyId}`);
@@ -344,7 +346,7 @@ const Building = () => {
   }, []);
 
   useEffect(() => {
-    let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState;
+    let url1 = Config.baseUrl + Config.apiEndPoints.buildingGetAllState;
     axios
       // .get("http://192.168.12.54:8080/api/state/all")
       .get(url1)
@@ -357,7 +359,7 @@ const Building = () => {
   }, []);
 
   const fetchCities = async (stateId) => {
-    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllCity;
+    let url = Config.baseUrl + Config.apiEndPoints.buildingGetAllCity;
     try {
       let response = await axios.get(`${url}/${stateId}`);
       setCities(response.data.data);
@@ -367,30 +369,58 @@ const Building = () => {
     }
   };
 
+
   const handleSubmitBuilding = async(e) => {
     toast.dismiss()
     e.preventDefault()
-    if (!buildingFormData.name || !buildingFormData.state || !buildingFormData.city || !buildingFormData.address) {
+
+    let url = Config.baseUrl + Config.apiEndPoints.buildingSubmitBuilding
+
+    const trimmedBuildingName = buildingFormData.name ? buildingFormData.name.trim() : null;
+    const trimmedBuildingAddress = buildingFormData.address ? buildingFormData.address.trim() : null;
+
+
+    if (!buildingFormData.name || !buildingFormData.state.id || !buildingFormData.city.id || !buildingFormData.address) {
         toast.warn("All fields are mandatory");
         return;
     }
+        
+    if(buildingFormData.name) {
+      if (!trimmedBuildingName) {
+        toast.warn("Building name can't be empty !!!");
+        return;
+      }
+  
+    }
+            
+    if(buildingFormData.address) {
+      if (!trimmedBuildingAddress) {
+        toast.warn("Address can't be empty !!!");
+        return;
+      }
+  
+    }
+
     const payload = {
-        name: buildingFormData.name ? buildingFormData.name : null,
-        state: {
+      // name: buildingFormData.name ? buildingFormData.name : null,
+      name: trimmedBuildingName,
+      state: {
             id: buildingFormData.state ? buildingFormData.state.id ? buildingFormData.state.id : null : null,
         },
 
         city: {
             id: buildingFormData.city ? buildingFormData.city.id ? buildingFormData.city.id : null : null,
         },
-        address: buildingFormData.address ? buildingFormData.address : null,
+        // address: buildingFormData.address ? buildingFormData.address : null,
+        address: trimmedBuildingAddress,
     }
 
     console.log('submit payload',payload)
 
     try{
         setBtnLoading(true)
-        const response = await axios.post(`http://192.168.12.54:8080/api/building/save`, payload, {headers})
+        // const response = await axios.post(`http://192.168.12.54:8080/api/building/save`, payload, {headers})
+        const response = await axios.post(url, payload, {headers})
         console.log('submit response',response)
 
         if(response.status === 200) {
@@ -445,7 +475,7 @@ const Building = () => {
   }
 
 //   console.log("buildingFormData", buildingFormData);
-  console.log("edited buildingData", editedBuildingData);
+  // console.log("edited buildingData", editedBuildingData);
 
   return (
     <>
@@ -607,10 +637,12 @@ const Building = () => {
                   value={ buildingFormData.name }
                   inputProps={{ maxLength: 26 }}
                   onChange={(e) => {
-                    const inputValue = e.target.value.replace(
-                      /[^a-zA-Z0-9_]/g,
-                      ""
-                    );
+                    // const inputValue = e.target.value.replace(
+                    //   /[^a-zA-Z0-9_]/g,
+                    //   ""
+                    // );
+
+                    const inputValue = e.target.value.replace(/\s+/g, " ")
                       setBuildingFormData({
                         ...buildingFormData,
                         name: inputValue,
@@ -637,8 +669,8 @@ const Building = () => {
                       ...buildingFormData,
                       state:
                         {
-                          id: newValue.id || "",
-                          name: newValue.name || "",
+                          id: newValue ? newValue.id : "",
+                          name: newValue ? newValue.name : "",
                         } || "",
                       city: { id: "" },
                     });
@@ -711,7 +743,7 @@ const Building = () => {
                   inputProps={{ maxLength: 50 }}
                   onChange={(e) => {
                     let inputValue = e.target.value
-                    inputValue = inputValue.replace(/[^a-zA-Z0-9_:, ']/g, '');
+                    // inputValue = inputValue.replace(/[^a-zA-Z0-9_:, ']/g, '');
                     inputValue = inputValue.replace(/\s+/g, ' ');
 
                       setBuildingFormData({

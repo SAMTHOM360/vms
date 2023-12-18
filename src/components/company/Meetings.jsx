@@ -711,7 +711,7 @@ export default function Meetings() {
                       <Button
                         variant="contained"
                         size="small"
-                        sx={{ marginLeft: "1.2em", height: "3em" }}
+                        sx={{ marginLeft: "1.2em", width:'12.5em', height: "3em", mt:{xs:'2em', md:0} }}
                         onClick={handleOpenAppointMeetingForm}
                       >
                         Appoint A Meeting
@@ -782,103 +782,7 @@ export default function Meetings() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid sx={{ flexGrow: 1, backgroundColor: "" }}>
-              {/* <Grid item xs={12}>
-                                <Grid style={{ gap: "30px", marginTop: "20px" }} container justifyContent="center" >
-                                    <Paper elevation={1} sx={{
-                                        height: 150,
-                                        width: 400,
-                                        boxShadow: "5px 5px 10px grey",
-
-                                        ":hover": {
-                                            boxShadow: "10px 10px 20px grey",
-                                            cursor: "pointer"
-                                        },
-
-                                        backgroundColor: (theme) =>
-                                            theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-
-
-                                    }}>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "skyblue", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "50px" }}>
-                                                <PersonOutlineIcon
-                                                    style={{ fontSize: "50px" }}
-                                                />
-
-                                            </div>
-                                            <div className='info' style={{
-                                                marginRight: "90px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center"
-                                            }}>
-                                                <div><h2>Total Visitors:</h2></div>
-                                                <div><h2>{totalMeetings}</h2></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </Paper>
-                                    <Paper elevation={1} sx={{
-                                        height: 150,
-                                        width: 400,
-                                        boxShadow: "5px 5px 10px grey",
-
-                                        ":hover": {
-                                            boxShadow: "10px 10px 20px grey",
-                                            cursor: "pointer"
-                                        },
-
-                                        backgroundColor: (theme) =>
-                                            theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "orange", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <GroupsIcon
-                                                    style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{ marginRight: "70px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                                                <div><h2>Pending Visitors:</h2></div>
-                                                <div><h2>{pendingMeetings}</h2></div>
-
-                                            </div>
-
-                                        </div>
-                                    </Paper>
-                                    <Paper elevation={1} sx={{
-                                        height: 150,
-                                        width: 400,
-                                        boxShadow: "5px 5px 10px grey",
-
-                                        ":hover": {
-                                            boxShadow: "10px 10px 20px grey",
-                                            cursor: "pointer"
-                                        },
-
-                                        backgroundColor: (theme) =>
-                                            theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                                    }}>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                            <div className='icon' style={{ height: "150px", width: "80px", backgroundColor: "lightpink", marginTop: "", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                <WatchLaterIcon style={{ fontSize: "50px" }} />
-
-                                            </div>
-                                            <div className='info' style={{
-                                                marginRight: "70px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center"
-                                            }}>
-                                                <div><h2>Approved Visitors:</h2></div>
-                                                <div><h2>{approvedMeetings}</h2></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </Paper>
-
-
-                                </Grid>
-                            </Grid> */}
-            </Grid>
+         
             <Grid container style={{ marginTop: "" }}>
               <Grid item xs={12} style={{ backgroundColor: "" }}>
                 <Item
@@ -893,63 +797,22 @@ export default function Meetings() {
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
+                      gap:'1em',
+                      marginBottom:'10px'
                     }}
                   >
-                    {/* <h1 style={{ textAlign: "left" }}>Visitors</h1>
-                                        <input
-                                            type="text"
-                                            placeholder="Search..."
-                                            // value={searchQuery}
-                                            // onChange={handleSearch}
-                                            style={{
-                                                position: '',
-                                                right: 0,
-                                                marginTop: "15px",
-                                                // marginBottom: "15px",
-                                                height: "30px",
-                                                marginRight: "10px",
-                                                borderRadius: "10px",
-                                                // border: "none"
-                                            }}
-                                        /> */}
-
-                    <Grid>
-                      <Box
-                        component="form"
-                        // sx={{
-                        //   "& .MuiTextField-root": { m: 1, width: "25ch" },
-                        // }}
-                        sx={{ width: "95%", mb: "1em" }}
-                        noValidate
-                        autoComplete="off"
-                        // style={{display:"flex",justifyContent:"space-evenly"}}
-                      >
-                        <Grid
-                          style={{
-                            display: "flex",
-                            flexDirection: "",
-                            justifyContent: "",
-                            margin: "",
-                            backgroundColor: "",
-                            gap: "20px",
-                            width: "",
-                          }}
-                        >
-                          <Grid
-                            style={{
-                              backgroundColor: "",
-                              display: "flex",
-                              flexDirection: "row",
-                              gap: 5,
-                            }}
-                          >
-                            <TextField
+                    <Grid container spacing={1}>
+                    <Grid item xs={4} md={4} lg={2}>
+                    <TextField
                               // id="outlined-select-currency"
                               select
                               label="Status"
                               value={selectedStatusOptions}
                               onChange={handleChangeStatus}
-                              style={{ top: "10px", width: "17em" }}
+                              style={{ marginTop: "10px",
+                              //  width: "17em",
+                              width:'100%'
+                               }}
                               InputProps={{
                                 endAdornment: selectedStatusOptions ? (
                                   <div
@@ -980,8 +843,11 @@ export default function Meetings() {
                                   </MenuItem>
                                 ))}
                             </TextField>
+                    </Grid>
 
-                            <TextField
+
+                    <Grid item xs={4} md={4} lg={2}>
+                    <TextField
                               id="outlined-search"
                               label="Phone Number"
                               value={phoneNumberFilter}
@@ -998,16 +864,20 @@ export default function Meetings() {
                                 }
                               }}
                               type="search"
-                              style={{ top: "10px" }}
+                              style={{ marginTop: "10px", //  width: "17em",
+                              width:'100%' }}
                             />
+                    </Grid>
 
-                            <TextField
+                    <Grid item xs={4} md={4} lg={2}>
+                    <TextField
                               id="outlined-select-currency"
                               select
                               label="Room"
                               value={selectedRoom}
                               onChange={handleChange1}
-                              sx={{ width: "17em" }}
+                              sx={{  //  width: "17em",
+                                width:'100%' }}
                               SelectProps={{
                                 MenuProps: {
                                   style: {
@@ -1047,36 +917,20 @@ export default function Meetings() {
                                   </MenuItem>
                                 ))}
                             </TextField>
+                    </Grid>
 
-                            {/* <LocalizationProvider
-                                  dateAdapter={AdapterDayjs}
-                                >
-                                  <DemoContainer
-                                    components={["DatePicker", "DatePicker"]}
-                                  >
-                                    <DatePicker
-                                      label="Start Date"
-                                      value={startDate}
-                                      onChange={handleStartDateChange}
-                                      renderInput={(params) => <TextField {...params} />}
-                                      format="DD/MM/YYYY"
-                                    />
-                                    <DatePicker
-                                      label="End Date"
-                                      value={endDate}
-                                      onChange={handleEndDateChange}
-                                      renderInput={(params) => <TextField {...params} />}
-                                      format="DD/MM/YYYY"
-
-                                    />
-                                  </DemoContainer>
-                                </LocalizationProvider> */}
-
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Grid item xs={6} md={6} lg={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                               {/* <DemoContainer components={["DatePicker", "DatePicker"]}> */}
-                              <DemoContainer components={["DatePicker"]} sx={{ width: {md:"24em", lg:'21em'}, mt:'2px' }}>
+                              <DemoContainer components={["DatePicker"]} sx={{
+                                //  width: {md:"24em", lg:'21em'},
+                                width:"100%",
+                                  mt:'2px' }}>
                                 <DatePicker
-                                  sx={{ width: "20em" }}
+                                  sx={{ 
+                                    // width: "20em",
+                                    width:'100%',
+                                   }}
                                   label="Meet Start Date"
                                   value={startDate}
                                   onChange={handleStartDateChange}
@@ -1093,11 +947,19 @@ export default function Meetings() {
                                 />
                               </DemoContainer>
                             </LocalizationProvider>
+                    </Grid>
 
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DemoContainer components={["DatePicker"]} sx={{ width: {md:"24em", lg:'21em'}, mt:'2px' }}>
+                    <Grid item xs={6} md={6} lg={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoContainer components={["DatePicker"]} sx={{
+                                 width: {md:"24em", lg:'21em'},
+                                 width:'100%',
+                                  mt:'2px' }}>
                                 <DatePicker
-                                  sx={{ width: "20em" }}
+                                  sx={{ 
+                                    // width: "20em",
+                                    width:'100%',
+                                   }}
                                   label="Meet End Date"
                                   value={endDate}
                                   onChange={handleEndDateChange}
@@ -1114,45 +976,13 @@ export default function Meetings() {
                                 />
                               </DemoContainer>
                             </LocalizationProvider>
-{/* 
-                            <Grid style={{ backgroundColor: "", right: 0 }}>
-                              <Button
-                                variant="contained"
-                                onClick={excelExport}
-                                sx={{
-                                  marginLeft: "",
-                                  width: "200px",
-                                  height: "55px",
-                                  top: "9px",
-                                  gap: "5px",
-                                  backgroundColor: "",
-                                }}
-                              >
-                                <FileDownloadIcon />
-                                Meetings Export
-                              </Button>
-                            </Grid> */}
-
-                            {/* universal search */}
-
-                            {/* <TextField
-                                  id="outlined-search"
-                                  label="Search"
-
-                                  value={searchQuery}
-                                  onChange={handleSearch}
-                                  //  value={phoneNumberFilter}
-                                  // onChange={(e) => setPhoneNumberFilter(e.target.value)} // Update phone number filter state
-                                  // onKeyPress={handlePhoneNumberSearch}
-                                  type="search"
-                                  style={{ top: "10px" }}
-                                /> */}
-                          </Grid>
-                        </Grid>
-                      </Box>
                     </Grid>
-                    <Box
-                      sx={{ display: "flex", alignItems: "center", gap: "1em" }}
+                    </Grid>
+
+
+                                        
+            <Box
+                      sx={{ display: "flex", alignItems: "center", gap: "10px",pt:'9px' }}
                     >
                                               <Button
                                 variant="contained"
@@ -1182,7 +1012,7 @@ export default function Meetings() {
                           size="small"
                           sx={{
                             minWidth: "unset",
-                            marginLeft: "1.2em",
+                            // marginLeft: "1.2em",
                             width: "3.9em",
                             height: "3.9em",
                           }}
@@ -1193,6 +1023,8 @@ export default function Meetings() {
                         </Button>
                       </Tooltip>
                     </Box>
+
+
                   </div>
 
                   <TableContainer

@@ -455,13 +455,24 @@ export default function Navbar({ toggleSidebar }) {
     }
   }
 
-  useEffect(() => {
-    const IntervalFetchNotification = setInterval(() => {
-      fetchNotification()
-    }, 7000);
+  // useEffect(() => {
+  //   const IntervalFetchNotification = setInterval(() => {
+  //     fetchNotification()
+  //   }, 7000);
 
-    return () => clearInterval(IntervalFetchNotification)
-  },[])
+  //   return () => clearInterval(IntervalFetchNotification)
+  // },[])
+
+  useEffect(() => {
+    if (loggedUserRole !== "SUPERADMIN") {
+      const intervalFetchNotification = setInterval(() => {
+        fetchNotification();
+      }, 7000);
+  
+      return () => clearInterval(intervalFetchNotification);
+    }
+  }, [loggedUserRole]);
+  
 
   useEffect(() => {
     fetchNotification()

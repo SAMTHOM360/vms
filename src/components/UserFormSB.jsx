@@ -707,7 +707,8 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                         <DatePicker
                           sx={{ width: "100%", mt: "10px" }}
                           label="Date of Birth"
-                          format="YYYY/MM/DD"
+                          // format="YYYY/MM/DD"
+                          format="DD/MM/YYYY"
                           shouldDisableDate={shouldDisableDate}
                           onChange={handleDateChange}
                           slotProps={{
@@ -767,7 +768,7 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                     </Grid> */}
 
 <Grid item xs={12} sm={6} md={4} lg={4}>
-  <Autocomplete
+  {/* <Autocomplete
     disablePortal
     id="state-autocomplete"
     sx={{ width: '100%', mt: '10px' }}
@@ -804,7 +805,45 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
       />
     )}
     isOptionEqualToValue={(option, value) => option.id === value.id}
-  />
+  /> */}
+
+<Autocomplete
+  disablePortal
+  id="state-autocomplete"
+  sx={{ width: '100%', mt: '10px' }}
+  options={states}
+  getOptionLabel={(option) => option.name || ''}
+  value={states.find((state) => state.id === formData.state.id) || null}
+  onChange={(event, newValue) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      state: {
+        id: newValue ? newValue.id : '',
+        name: newValue ? newValue.name : '',
+      },
+      city: { id: '' },
+    }));
+
+    // Rest of your code
+
+    fetchCities(newValue ? newValue.id : '');
+  }}
+  ListboxProps={{
+    style: {
+      maxHeight: '150px',
+    },
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="State"
+      name="state"
+      required
+    />
+  )}
+  isOptionEqualToValue={(option, value) => option.id === value.id}
+/>
+
 </Grid>
 
 
