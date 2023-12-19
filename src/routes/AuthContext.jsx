@@ -5,7 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(!!sessionStorage.getItem('token'));
-  const [userRole, setUserRole] = useState(Cookies.get('userRole') || '');
+  // const [userRole, setUserRole] = useState(Cookies.get('userRole') || '');
+  const [userRole, setUserRole] = useState(sessionStorage.getItem('loggedUserRole') || '');
   const [addLimit, setAddLimit] = useState(sessionStorage.getItem('limit') || '');
   const [currEmpLength, setCurrEmpLength] = useState(sessionStorage.getItem('currEmpLength') || '');
   const [isLimitReached, setIsLimitReached] = useState(false)
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
       const role = sessionStorage.getItem('loggedUserRole');
       if (role) {
         setUserRole(role);
-        Cookies.set('userRole', role);
+        // Cookies.set('userRole', role); 
       }
     }
 

@@ -1028,43 +1028,61 @@ export default function Meetings() {
                   </div>
 
                   <TableContainer
-                    component={Paper}
+                    // component={Paper}
                     sx={{
                       width: "100%",
-                      boxShadow: 6,
+                      // boxShadow: 6,
                       backgroundColor: "",
-                      overflowY:"auto",
-                      maxHeight:"630px"
+                      // maxHeight:'55vh',
+                    
+                      minHeight:'55vh',
+                      maxHeight:{sm:'55vh', lg:'61vh',},
+                      "& .css-dwuj3p-MuiTableCell-root":{
+                        backgroundColor: "#141b2d",
+                        color:'#FFFFFF',
+                        height:'5em'
+
+                      },
                     }}
                   >
-                    <Table sx={{}} aria-label="simple table">
+                    <Table sx={{
+                      //  "& .css-dwuj3p-MuiTableCell-root":{
+                      //   backgroundColor: "#2b345386",
+                      // }
+                    }} 
+                    // aria-label="simple table"
+                    stickyHeader
+                      aria-label="sticky table"
+                     >
                       <TableHead
                         sx={{
-                          // backgroundColor: "#2b345386",
-                          backgroundColor: "#141b2d",
+                          // backgroundColor: "#2b345386 !important",
+                          backgroundColor: "#2b345386",
+                          // "& .css-dwuj3p-MuiTableCell-root":{
+                          //   backgroundColor: "#2b345386",
+                          // },
                           border: "1px solid black",
                           fontWeight: "600",
-                          position:"sticky !important", top:0,
                         }}
                       >
-                        <TableRow sx={{ border: "1px solid black" }}>
-                          <TableCell align="center" sx={{color:"white"}}>Sl No</TableCell>
-                          <TableCell align="center" sx={{color:"white"}}>Full Name</TableCell>
+                        <TableRow sx={{ border: "1px solid black",bgcolor: "#2b345386" }}>
+                          <TableCell align="center">Sl No</TableCell>
+                          <TableCell align="center">Full Name</TableCell>
 
-                          <TableCell align="center" sx={{color:"white"}}>Email</TableCell>
-                          <TableCell align="center" sx={{color:"white"}}>Phone No.</TableCell>
-                          <TableCell align="center" sx={{color:"white"}}>Company Name</TableCell>
+                          <TableCell align="center">Email</TableCell>
+                          <TableCell align="center">Phone No.</TableCell>
+                          <TableCell align="center">Company Name</TableCell>
 
-                          <TableCell align="center" sx={{color:"white"}}>Start Time</TableCell>
-                          <TableCell align="center" sx={{color:"white"}}>End Time</TableCell>
+                          <TableCell align="center">Start Time</TableCell>
+                          <TableCell align="center">End Time</TableCell>
                           {/* <TableCell align="left">Remarks</TableCell> */}
-                          <TableCell align="center" sx={{color:"white"}}>Status</TableCell>
-                          <TableCell align="center" sx={{color:"white"}}>Room</TableCell>
+                          <TableCell align="center">Status</TableCell>
+                          <TableCell align="center">Room</TableCell>
 
-                          <TableCell align="center" sx={{color:"white"}}>Actions</TableCell>
+                          <TableCell align="center">Actions</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody>
+                      <TableBody sx={{}}>
                         {filteredCompanies
                           // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((visitor, index) => (
@@ -1253,12 +1271,27 @@ export default function Meetings() {
                           ))}
                       </TableBody>
                     </Table>
+                    {/* <TablePagination
+                      rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                      component="div"
+                      count={meetings}
+                      // count={visitors}
 
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    /> */}
+                  </TableContainer>
 
-
-<div style={{ position: "sticky", bottom: 0, backgroundColor: "white", zIndex: 1 }}>
-                    <TablePagination
-                      rowsPerPageOptions={[10, 15,20,50,100]}
+                  <TablePagination
+                  sx={{
+                    "& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar": {
+                      bgcolor:'#82889F',
+                      borderRadius:'0 0 5px 5px',
+                    },
+                  }}
+                      rowsPerPageOptions={[5, 10, 25, 50, 100]}
                       component="div"
                       count={meetings}
                       // count={visitors}
@@ -1268,8 +1301,6 @@ export default function Meetings() {
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                    </div>
-                  </TableContainer>
                 </Item>
               </Grid>
             </Grid>

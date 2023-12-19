@@ -73,8 +73,8 @@ const MeetingDetails = () => {
     },
     companyName: "",
     remarks: "",
-    // meetingStartDateTime: null,
-    meetingStartDateTime:dayjs(new Date().setHours(9, 0, 0, 0)),
+    meetingStartDateTime: null,
+    // meetingStartDateTime:dayjs(new Date().setHours(9, 0, 0, 0)),
     context: "",
   };
 
@@ -289,6 +289,12 @@ const MeetingDetails = () => {
       toast.warn("Username must be exactly 10 digits !!!");
       return
     }
+
+
+    if (!dayjs(formData.meetingStartDateTime).isValid()) {
+      toast.warn('Invalid date and time format. Please enter a valid date and time.');
+      return;
+    }
   
 
     const updatedFormData = {
@@ -323,9 +329,7 @@ const MeetingDetails = () => {
         toast.success("Meeting appointed successfully.");
         setFormData({ ...initialFormData });
         handleRedirectMeetings()
-      } else if (response.data.data === null) {
-        console.log("visitor already has pending meetings");
-      }
+      } 
     } catch (err) {
       console.error(err, "There is some issue moving into the database");
     }
@@ -356,12 +360,24 @@ const MeetingDetails = () => {
     return differenceInDays > 90 || date < today;
   };
 
-  const formattedDateTimePicker1 = formData.meetingStartDateTime
-    ? formData.meetingStartDateTime.toISOString()
-    : null;
+  // const formattedDateTimePicker1 = formData.meetingStartDateTime
+  //   ? formData.meetingStartDateTime.toISOString()
+  //   : null;
 
-  const minTime = dayjs().set("hour", 9).startOf("hour");
-  const maxTime = dayjs().set("hour", 18).startOf("hour");
+  const formattedDateTimePicker1 = formData.meetingStartDateTime
+  ? dayjs(formData.meetingStartDateTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+  : null;
+
+  const [minTime, setMinTime] = useState(dayjs().startOf('hour'));
+
+  useEffect(() => {
+    // Update minTime based on the current date and time
+    setMinTime(dayjs().startOf('hour'));
+  }, []); 
+
+  
+  // const minTime = dayjs().set("hour", 9).startOf("hour");
+  // const maxTime = dayjs().set("hour", 18).startOf("hour");
 
   // const handleDateTimePickerChange = (name, value) => {
   //   if (name === "meetingStartDateTime") {
@@ -396,18 +412,15 @@ const MeetingDetails = () => {
 
   const handleDateTimePickerChange = (name, value) => {
   if (name === "meetingStartDateTime") {
-    // console.log('if hit');
-    const selectedDateTime = value instanceof Date && !isNaN(value) ? value : new Date(value);
-    
-    if (!isNaN(selectedDateTime)) {
+    if(value){
+      setFormData({
+           ...formData,
+           [name]: value,
+         });
+    }else {
       setFormData({
         ...formData,
-        [name]: selectedDateTime,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: null, // Set to a default date or handle as per your requirements
+        [name]: null,
       });
     }
   } else {
@@ -481,8 +494,15 @@ const MeetingDetails = () => {
     navigate("/meetings");
   };
 
+  const handleClearDateTime = () => {
+    setFormData({
+      ...formData,
+      meetingStartDateTime:null,
+    })
+  }
 
-  console.log("form data", formData)
+
+  // console.log("form data", formData)
 
 
   //------------------------ JSX ---------------------
@@ -848,8 +868,9 @@ const MeetingDetails = () => {
                         label="Start Time"
                         value={formData.meetingStartDateTime}
                         shouldDisableDate={shouldDisableDate}
-                        minTime={minTime}
-                        maxTime={maxTime}
+                        minTime={dayjs().isSame(formData.meetingStartDateTime, 'day') ? dayjs().startOf('hour') : null}
+                        // minTime={minTime}
+                        // maxTime={maxTime}
                         format="DD/MM/YYYY HH:mm"
                         name='meetingStartDateTime'
                         onChange={(value) => {
@@ -864,18 +885,19 @@ const MeetingDetails = () => {
                         slotProps={{
                           field: {
                             clearable: true,
-                            onClear: () => setCleared(true),
+                            onClear: () => {setCleared(true)},
+                            // onClear: handleClearDateTime,
                           },
                           actionBar: {
                             actions: ['clear'],
                           },  
                         }}
 
-                        componentsProps={{
-                          actionBar: {
-                            actions: ['clear'],
-                          },
-                        }}
+                        // componentsProps={{
+                        //   actionBar: {
+                        //     actions: ['clear'],
+                        //   },
+                        // }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>

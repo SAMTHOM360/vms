@@ -547,6 +547,7 @@ const RolesAndDepartments = () => {
                       "& .MuiDataGrid-footerContainer": {
                         borderTop: "none",
                         backgroundColor: "#2b345386",
+                        borderRadius:'0 0 5px 5px',
                       },
                       // "& .MuiCheckbox-root": {
                       //     color: `${colors.greenAccent[200]} !important`,
@@ -649,6 +650,7 @@ const RolesAndDepartments = () => {
                       "& .MuiDataGrid-footerContainer": {
                         borderTop: "none",
                         backgroundColor: "#2b345386",
+                        borderRadius:'0 0 5px 5px',
                       },
                       // "& .MuiCheckbox-root": {
                       //     color: `${colors.greenAccent[200]} !important`,

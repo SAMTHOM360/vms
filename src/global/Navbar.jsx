@@ -136,6 +136,8 @@ export default function Navbar({ toggleSidebar }) {
   const [isBellVisible, setIsBellVisible] = useState(false);
   const [bellBadgeCount, setBellBadgeCount] = useState();
   const [ isHamburgerAllowed, setIsHamburgerAllowed] = useState(true)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false)
   
 
   useEffect(() => {
@@ -253,6 +255,7 @@ export default function Navbar({ toggleSidebar }) {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
     setIsMenuOpen(true);
+    setIsProfileMenuOpen(true)
   };
 
   const calculateTimeAgo = (createdAt) => {
@@ -564,11 +567,13 @@ export default function Navbar({ toggleSidebar }) {
   const handleOpenBellMenu = (event) => {
     setBellAnchorEl(event.currentTarget);
     setBellMenu(true);
+    setIsNotificationPopupOpen(true)
   };
 
   const handleCloseBellMenu = () => {
     setBellAnchorEl(null);
     setBellMenu(false);
+    setIsNotificationPopupOpen(false)
     handleMarkRead()
 
     // Other logic as needed
@@ -591,6 +596,7 @@ export default function Navbar({ toggleSidebar }) {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setIsMenuOpen(false);
+    setIsProfileMenuOpen(false)
     // handleMobileMenuClose();
   };
 
@@ -1125,7 +1131,7 @@ export default function Navbar({ toggleSidebar }) {
                     size="large"
                     // aria-label="show 17 new notifications"
                     color="inherit"
-                    onClick={handleOpenBellMenu}
+                    onClick={ isNotificationPopupOpen ? handleCloseBellMenu : handleOpenBellMenu}
                     sx={{
                       // ml: "0.5em",
                     }}
@@ -1257,7 +1263,7 @@ export default function Navbar({ toggleSidebar }) {
               aria-label="account of current user"
               // aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={isProfileMenuOpen? handleMenuClose : handleProfileMenuOpen}
               color="inherit"
               // sx={{
               //   display: 'flex',

@@ -797,6 +797,7 @@ const Employee = () => {
                   "& .MuiDataGrid-footerContainer": {
                     borderTop: "none",
                     backgroundColor: "#2b345386",
+                    borderRadius:'0 0 5px 5px',
                   },
                   // "& .MuiCheckbox-root": {
                   //     color: `${colors.greenAccent[200]} !important`,
@@ -806,7 +807,8 @@ const Employee = () => {
                   },
                   mb: "1.5em",
                   // maxWidth: "105em",
-                  maxWidth: "95%",
+                  // maxWidth: "95%",
+                  width:'100%',
                   borderRadius: "5px",
                   // bgcolor:'cyan',
                   // overflowX:'auto'
@@ -843,11 +845,20 @@ const Employee = () => {
                                   </Button>
                                 </Box>
                   <DataGrid
-                    sx={{mt:'0.7em'}}
+                    sx={{mt:'0.7em',}}
                     rows={rows ?? []}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
+                    slotProps={{
+                      toolbar: {
+                        printOptions:{
+                          // pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+                          hideFooter: true,
+                          hideToolbar: true,
+                        }
+                      }
+                    }}
                     // initialState={{
                     //   pinnedColumns: {
                     //     left: ['actions'],

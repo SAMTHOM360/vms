@@ -28,7 +28,7 @@ import NotFound from "../components/NotFound";
 
 
 const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
-  const { authenticated, userRole } = useAuth();
+  const { authenticated, userRole, logout } = useAuth();
 
   if (!authenticated) {
     return <Navigate to="/" />;
@@ -36,7 +36,19 @@ const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
 
   if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <NotFound />;
+
+
+    // alert("Unauthorisez Access !!!")
+    // logout()
+
+
+
+    //NOT IN USE STARTS
+
     // return <Navigate to="lost" />;
+
+    //NOT IN USE ENDS
+
 
   }
 
