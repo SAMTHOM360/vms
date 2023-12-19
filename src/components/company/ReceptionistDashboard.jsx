@@ -1192,20 +1192,31 @@ export default function Dashboard() {
                 </Box>
               </div>
 
+
+              
+
               <TableContainer
                 component={Paper}
-                sx={{ width: "100%", boxShadow: 6, backgroundColor: "" }}
+                sx={{ width: "100%" 
+               , boxShadow: 6, backgroundColor: "", overflowY:"auto",maxHeight:"630px"}}
               >
                 <Table sx={{}} aria-label="simple table">
+
+
+                  
                   <TableHead
                     sx={{
                       backgroundColor: "#141b2d",
                       border: "1px solid white",
                       fontSize: "18px",
                       color: "white",
+                      position:"sticky !important", top:0,
+                      
                     }}
                   >
-                    <TableRow sx={{ border: "1px solid black" }}>
+
+
+                    <TableRow sx={{ border: "1px solid black", }}>
                       <TableCell sx={{ color: "white" }} align="center">Sl No</TableCell>
                       <TableCell sx={{ color: "white" }} align="center">
                         Full Name
@@ -1250,7 +1261,7 @@ export default function Dashboard() {
                       )}
                     </TableRow>
                   </TableHead>
-                  <TableBody>
+                  <TableBody >
                     {visitors.length > 0 ? (
                       visitors.map((visitor, index) => (
                         <TableRow key={index}>
@@ -1409,15 +1420,28 @@ export default function Dashboard() {
                     )}
                   </TableBody>
                 </Table>
-                <TablePagination
-                  rowsPerPageOptions={[10, 15, 20]}
+                {/* <TablePagination
+                  rowsPerPageOptions={[10, 15, 20,50,100]}
                   component="div"
                   count={meetings}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                /> */}
+
+
+<div style={{ position: "sticky", bottom: 0, backgroundColor: "white", zIndex: 1 }}>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 20, 50, 100]}
+          component="div"
+          count={meetings}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
               </TableContainer>
             </Item>
           </Grid>

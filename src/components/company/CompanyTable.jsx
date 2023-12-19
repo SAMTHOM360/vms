@@ -444,26 +444,26 @@ onKeyPress={handleCompanyNameChange}
                       </div>
 
 
-                      <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 }}>
+                      <TableContainer component={Paper} style={{ width: '100%', boxShadow: 6 ,overflowY:"auto",maxHeight:"630px"}}>
                         <Table aria-label="simple table">
-                          <TableHead style={{ backgroundColor: '#2b345386' }}>
+                          <TableHead style={{      backgroundColor: "#141b2d",position:"sticky",top:0,zIndex:10 }}>
                             <TableRow>
-                              <TableCell align="center"><h4>Sl.No</h4></TableCell>
-                              <TableCell align="center"><h4>Company Name</h4></TableCell>
-                              <TableCell align="center"><h4>Email</h4></TableCell>
-                              <TableCell align="center"><h4>Phone No.</h4></TableCell>
-                              <TableCell align="center"><h4>Address</h4></TableCell>
-                              <TableCell align="center" sx={{ width: "10 em" }}><h4>Logo</h4></TableCell>
-                              <TableCell align="center"><h4>Industry</h4></TableCell>
-                              <TableCell align="center"><h4>State</h4></TableCell>
-                              <TableCell align="center"><h4>City</h4></TableCell>
-                              <TableCell align="center"><h4>Pin Code</h4></TableCell>
-                              <TableCell align="center"><h4>About Us</h4></TableCell>
-                              <TableCell align="center"><h4>Building Id</h4></TableCell>
-                              <TableCell align="center"><h4>Building Name</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Sl.No</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Company Name</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Email</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Phone No.</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Address</h4></TableCell>
+                              <TableCell align="center" sx={{ width: "10 em",color:"white" }}><h4>Logo</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Industry</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>State</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>City</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Pin Code</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>About Us</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Building Id</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Building Name</h4></TableCell>
                               {/* <TableCell align="left">Created By</TableCell> */}
-                              <TableCell align="center"><h4>User Limit</h4></TableCell>
-                              <TableCell align="center"><h4>Actions</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>User Limit</h4></TableCell>
+                              <TableCell align="center" sx={{color:"white"}}><h4>Actions</h4></TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -550,7 +550,9 @@ onKeyPress={handleCompanyNameChange}
                               ))}
                           </TableBody>
                         </Table>
-                        <TablePagination
+
+
+                        {/* <TablePagination
                           rowsPerPageOptions={[5, 10, 15,100]}
                           component="div"
                           // count={companies.length}
@@ -559,7 +561,21 @@ onKeyPress={handleCompanyNameChange}
                           page={page}
                           onPageChange={handleChangePage}
                           onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
+                        /> */}
+
+                        <div style={{ position: "sticky", bottom: 0, backgroundColor: "white", zIndex: 1 }}>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 20, 50, 100]}
+          component="div"
+          count={length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
+
+
                       </TableContainer>
                     </Item>
                   </Grid>
