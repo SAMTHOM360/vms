@@ -8,6 +8,8 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import ClearIcon from "@mui/icons-material/Clear";
+
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,7 +19,7 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-import { Autocomplete, Divider, Paper, Typography } from "@mui/material";
+import { Autocomplete, Divider, Paper, Typography, IconButton,InputAdornment } from "@mui/material";
 import Config from "../Config/Config";
 
 function UserForm({ authenticated, closeDialog }) {
@@ -42,6 +44,20 @@ function UserForm({ authenticated, closeDialog }) {
     Authorization: `Bearer ${token}`,
     "Content-Type": "multipart/form-data",
   };
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [dobDate, setDobDate] = useState("");
+  const [cleared, setCleared] = useState(false);
+  const [depts, setDepts] = useState([]);
+
+  const [governmentIdType, setGovernmentIdType] = useState("");
+  const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -76,25 +92,82 @@ function UserForm({ authenticated, closeDialog }) {
     isPermission: true,
     empCode:'',
   });
-  // console.log("form data", formData);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [companies, setCompanies] = useState([]);
-  const [dobDate, setDobDate] = useState("");
-  const [cleared, setCleared] = useState(false);
-  const [depts, setDepts] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+
+
+  const handleClear = (event) => {
+    const fieldName = event.currentTarget.getAttribute("data-field");
+    // console.log(' event', fieldName)
+
+    if(fieldName === "company") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [fieldName]: {
+          id:"",
+          name:"",
+        },
+      }));
+    }
+
+    if(fieldName === "dept") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [fieldName]: {
+          id:"",
+          name:"",
+        },
+      }));
+    }
+
+    if(fieldName === "governmentIdType") {
+      setGovernmentIdType("")
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        govtId: "",
+      }));
+
+    }
+
+    if(fieldName === "role") {
+      setGovernmentIdType("")
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [fieldName]: {
+          id:"",
+          name:"",
+        },
+      }));
+
+    }
+
+    else{
+    
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [fieldName]: "",
+    }));
+  }
+  };
+  // console.log("form data", formData);
+ 
+
 
   const shouldDisableDate = (date) => {
     return date > new Date().setDate(new Date().getDate());
   };
 
+
+  const handleChangeGender = (event) => {
+    const value = event.target.value;
+
+    setFormData({
+      ...formData,
+      gender: value,
+    });
+  };
+
   //ADHAAR STARTS
-  const [governmentIdType, setGovernmentIdType] = useState("");
-  const [error, setError] = useState("");
-  const [warning, setWarning] = useState("");
+  // console.log("govt id type", governmentIdType);
 
   const handleChangeGovernmentIdType = (event) => {
     setGovernmentIdType(event.target.value);
@@ -106,14 +179,7 @@ function UserForm({ authenticated, closeDialog }) {
     });
   };
 
-  const handleChangeGender = (event) => {
-    const value = event.target.value;
 
-    setFormData({
-      ...formData,
-      gender: value,
-    });
-  };
 
   const handleChangeGovernmentId = (event) => {
     let value = event.target.value;
@@ -134,7 +200,7 @@ function UserForm({ authenticated, closeDialog }) {
         errorMessage = "Aadhar Card must be 12 digits only.";
       }
     } else if (governmentIdType === "PAN Card") {
-      if (/^[A-Z0-9]{0,10}$/.test(value)) {
+      if (/^[a-zA-Z0-9]{0,10}$/.test(value)) {
         if (value.length === 10) {
           warningMessage = "";
         } else if (value.length > 0) {
@@ -145,7 +211,7 @@ function UserForm({ authenticated, closeDialog }) {
         }
       } else {
         errorMessage =
-          "PAN Card must be 10 characters, uppercase letters, and digits only.";
+          "PAN Card must be 10 characters, letters, and digits only.";
       }
     } else if (governmentIdType === "") {
       errorMessage = "First Choose Your ID Type.";
@@ -160,7 +226,7 @@ function UserForm({ authenticated, closeDialog }) {
     }
 
     if (governmentIdType === "PAN Card") {
-      value = value.replace(/[^A-Z0-9]/g, "");
+      value = value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
     }
 
     setFormData({
@@ -193,6 +259,19 @@ function UserForm({ authenticated, closeDialog }) {
     .get(url2, { headers })
     .then((response) => {
         setRoles(response.data.data);
+        if(loggedUserRole && loggedUserRole === "SUPERADMIN"){
+            if(response.data.data) {
+              const adminRole = response.data.data.find(role => role.name === "ADMIN")
+            
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              role: {
+                id:adminRole ? adminRole.id : "",
+                // name:"",
+              },
+            }));
+          }
+        }
       })
       .catch((error) => {
         console.error("Error fetching roles", error);
@@ -733,6 +812,20 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                           label="Gender"
                           onChange={handleChangeGender}
                           required
+
+                          endAdornment={
+                            formData.gender ? (
+                              <IconButton
+                                aria-label="clear"
+                                onClick={handleClear}
+                                size="small"
+                                data-field="gender"
+                                sx={{ marginRight: 1 }}
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            ) : null
+                          }
                         >
                           <MenuItem value={"Male"}>Male</MenuItem>
                           <MenuItem value={"Female"}>Female</MenuItem>
@@ -946,6 +1039,21 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                         onChange={handleChangeGovernmentIdType}
                         fullWidth
                         required
+                        InputProps={{
+                          endAdornment: governmentIdType ? (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="clear"
+                                data-field="governmentIdType"
+                                onClick={handleClear}
+                                size="small"
+                                sx={{mr:'0.5em'}}
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ) : null,
+                        }}
                       >
                         <MenuItem value="Aadhar Card">Aadhar Card</MenuItem>
                         <MenuItem value="PAN Card">PAN Card</MenuItem>
@@ -962,6 +1070,20 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                           maxLength:
                             governmentIdType === "Aadhar Card" ? 12 : 10,
                         }}
+                            // InputProps = {{
+                            // endAdornment: formData.govtId ? (
+                            //   <InputAdornment position="end">
+                            //     <IconButton
+                            //       aria-label="clear"
+                            //       data-field="govtId"
+                            //       onClick={handleClear}
+                            //       size="small"
+                            //     >
+                            //       <ClearIcon />
+                            //     </IconButton>
+                            //   </InputAdornment>
+                            // ) : null,
+                            // }}
                         fullWidth
                         required
                         error={Boolean(error)}
@@ -979,6 +1101,21 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                                                   name="company"
                                                   value={formData.company.id || ""}
                                                   onChange={handleChange}
+
+                                                  endAdornment={
+                                                    formData.company.id ? (
+                                                      <IconButton
+                                                        aria-label="clear"
+                                                        onClick={handleClear}
+                                                        size="small"
+                                                        data-field="company"
+                                                        sx={{ marginRight: 1 }}
+                                                      >
+                                                        <ClearIcon />
+                                                      </IconButton>
+                                                    ) : null
+                                                  }
+
                                                   required
                                                   MenuProps={{
                                                     PaperProps: {
@@ -1052,6 +1189,20 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                               },
                             },
                           }}
+
+                          endAdornment={
+                            formData.dept.id ? (
+                              <IconButton
+                                aria-label="clear"
+                                onClick={handleClear}
+                                size="small"
+                                data-field="dept"
+                                sx={{ marginRight: 1 }}
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            ) : null
+                          }
                           required
                         >
                           {depts.map((dept) => (
@@ -1079,6 +1230,21 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                             },
                           }}
                           required
+
+                          endAdornment={
+                            formData.role.id ? (
+                              <IconButton
+                                aria-label="clear"
+                                onClick={handleClear}
+                                size="small"
+                                data-field="role"
+                                sx={{ marginRight: 1 }}
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            ) : null
+                          }
+                          
                         >
                           {roles.map((role) => (
                             <MenuItem key={role.id} value={role.id}>
@@ -1120,23 +1286,27 @@ if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
-                      <FormControl fullWidth sx={{ width: "100%", mt: "10px" }} required>
-                        <InputLabel id="approval-label">
-                          Can Receptionist approve meet?
-                        </InputLabel>
-                        <Select
-                          labelId="approval-label"
-                          name="isPermission"
-                          value={formData.isPermission}
-                          label="Can Receptionist approve meet?"
-                          onChange={handleChange}
-                        >
-                          <MenuItem value="true">YES</MenuItem>
-                          <MenuItem value="false">NO</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                    {loggedUserRole !== "SUPERADMIN" ? (
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                        <FormControl fullWidth sx={{ width: "100%", mt: "10px" }} required>
+                          <InputLabel id="approval-label">
+                            Can Receptionist approve meet?
+                          </InputLabel>
+                          <Select
+                            labelId="approval-label"
+                            name="isPermission"
+                            value={formData.isPermission}
+                            label="Can Receptionist approve meet?"
+                            onChange={handleChange}
+                          >
+                            <MenuItem value="true">YES</MenuItem>
+                            <MenuItem value="false">NO</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    ) : null}
+
+                  
                   </Grid>
 
                   <Box

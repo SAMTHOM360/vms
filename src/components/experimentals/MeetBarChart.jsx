@@ -186,20 +186,21 @@ if(largestCountSum >= largestHourSum) {
             //   33,
             //   0
             // );
-            console.log('value', value)
-            if(value !==431.6) {
+            // console.log('value', value)
+            // if(value) {
               ctx.fillText(
                 y.getValueForPixel(value).toFixed(0) + "  MEETINGS",
                 33,
                 0
               );
-            } else {
-              ctx.fillText(
-                "No Record . . .",
-                33,
-                0
-              );
-            }
+            // } 
+            // else {
+            //   ctx.fillText(
+            //     "No Record . . .",
+            //     33,
+            //     0
+            //   );
+            // }
             ctx.restore();
           }
         });
@@ -246,13 +247,13 @@ if(largestCountSum >= largestHourSum) {
             //   33,
             //   0
             // );
-            if(value !== 431.6) {
+            // if(value) {
               ctx.fillText(
                 y.getValueForPixel(value).toFixed(0) + " HOURS",
                 33,
                 0
               );
-            }
+            // }
 
             ctx.restore();
           }

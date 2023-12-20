@@ -30,6 +30,7 @@ import { Label } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Loader from "./Loader";
+import '../css/ToggleBtn.css'
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
@@ -754,7 +755,7 @@ useEffect(() => {
                   {isPresent ? (
                     <>
                       <p>Switch to Absent</p>
-                      <Button
+                      {/* <Button
                         variant="contained"
                         style={{
                           backgroundColor: "#21CD10",
@@ -766,12 +767,12 @@ useEffect(() => {
                         onClick={handlePresentOff}
                       >
                         Present
-                      </Button>
+                      </Button> */}
                     </>
                   ) : (
                     <>
                       <Typography>Switch to Present</Typography>
-                      <Button
+                      {/* <Button
                         variant="contained"
                         style={{
                           backgroundColor: "#FF4646",
@@ -783,9 +784,26 @@ useEffect(() => {
                         onClick={handlePresentOn}
                       >
                         Absent
-                      </Button>
+                      </Button> */}
+          {/* <div className="bauble_box" style={{ display:'flex', justifyContent:'center', alignItems:'center'}}>
+	<input className="bauble_input" id="bauble_check" name="bauble" type="checkbox" />
+	<label className="bauble_label" htmlFor="bauble_check">Toggle</label>
+</div> */}
                     </>
                   )}
+                             <div className="bauble_box" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <input
+        className="bauble_input"
+        id="bauble_check"
+        name="bauble"
+        type="checkbox"
+        checked={isPresent}
+        onChange={() => (isPresent ? handlePresentOff() : handlePresentOn())}
+      />
+      <label className="bauble_label" htmlFor="bauble_check">
+        Toggle
+      </label>
+    </div>
                 </Box>
               </Box>
 

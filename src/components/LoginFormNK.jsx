@@ -448,6 +448,7 @@ function LoginForm() {
   };
 
   const handleUpdatePassword = async (e) => {
+    toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.loginFormNKSaveForgot
     e.preventDefault();
     const updatePasswordPayload = {
