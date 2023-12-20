@@ -27,6 +27,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
+import InfoIcon from "@mui/icons-material/Info";
 
 import { useParams } from "react-router-dom";
 //modal
@@ -52,6 +53,17 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
+
+
+//dialog
+//dialog
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -682,6 +694,27 @@ export default function Meetings() {
     navigate("/appointmeeting");
   };
 
+
+
+  //dialog
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+
+  const handleClickOpenDialog = (value) => {
+  
+    setOpenDialog(true);
+
+    if (value.remarks !== null && value.remarks !== "") {
+      setSelectedValue(value);
+    }
+  };
+
+  const handleCloseDialog = (value) => {
+    setOpenDialog(false);
+    setSelectedValue(value);
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -1067,16 +1100,25 @@ export default function Meetings() {
                       >
                         <TableRow sx={{ border: "1px solid black",bgcolor: "#2b345386" }}>
                           <TableCell align="center">Sl No</TableCell>
+
+
+                          <TableCell align="center">Visitor Photo</TableCell>
                           <TableCell align="center">Full Name</TableCell>
 
                           <TableCell align="center">Email</TableCell>
                           <TableCell align="center">Phone No.</TableCell>
+
+
+                       
+
                           <TableCell align="center">Company Name</TableCell>
 
                           <TableCell align="center">Start Time</TableCell>
                           <TableCell align="center">End Time</TableCell>
-                          {/* <TableCell align="left">Remarks</TableCell> */}
+                          <TableCell align="center">Duration</TableCell>
+                        
                           <TableCell align="center">Status</TableCell>
+                            <TableCell align="center">Remarks</TableCell>
                           <TableCell align="center">Room</TableCell>
 
                           <TableCell align="center">Actions</TableCell>
@@ -1099,6 +1141,35 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
+                                {visitor.visitor.imageUrl !== null ? 
+                                <div
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <a
+                                          href={visitor.visitor.imageUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <img
+                                            src={visitor.visitor.imageUrl}
+                                            alt="Company Logo"
+                                            style={{
+                                              width: "40px",
+                                              height: "40px",
+                                              marginLeft: "10px",
+                                              cursor: "pointer",
+                                            }}
+                                          />
+                                        </a>
+                                      </div> : 'NA' }
+
+                              </TableCell>
+
+                              <TableCell align="center">
                                 {visitor.visitor.name}
                               </TableCell>
 
@@ -1108,6 +1179,8 @@ export default function Meetings() {
                               <TableCell align="center">
                                 {visitor.visitor.phoneNumber}
                               </TableCell>
+
+                             
 
                               <TableCell align="center">
                                 {visitor.visitor.companyName}
@@ -1124,12 +1197,45 @@ export default function Meetings() {
                                   ? formatMeetingDuration1(visitor)
                                   : "NA"}
                               </TableCell>
+
+                              <TableCell align="center">
+                                {visitor.duration!== null
+                                  ? visitor.duration
+                                  : "NA"}
+                              </TableCell>
                               {/* <TableCell align="left">
                                     {visitor.remarks}
                                   </TableCell> */}
                               <TableCell align="center">
                                 {visitor.status}
                               </TableCell>
+
+                              <TableCell align="center">
+                            {visitor.remarks !== "" ? (
+                              <InfoIcon
+                                style={{
+                                  fontSize: "20px",
+                                  color: "",
+                                  marginTop: "5px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  handleClickOpenDialog(visitor)
+                                }
+                              />
+                            ) : (
+                              <InfoIcon
+                                style={{
+                                  fontSize: "20px",
+                                  color: "lightgrey",
+                                  marginTop: "5px",
+                                  cursor: "",
+                                  pointerEvents: "none",
+                                }}
+                                disabled
+                              />
+                            )}
+                          </TableCell>
                               <TableCell align="center">
                                 {visitor.room !== null
                                   ? visitor.room.roomName
@@ -1374,6 +1480,50 @@ export default function Meetings() {
                 </Box>
               </Box>
             </StyledModal>
+
+            {openDialog && (
+          <Dialog onClose={handleCloseDialog} open={openDialog}>
+            <DialogTitle
+              sx={{
+                color: "black",
+                backgroundColor: "lightblue",
+                textAlign: "center",
+              }}
+            >
+              INFO
+            </DialogTitle>
+            <List sx={{ width: "300px" }}>
+              <ListItem
+                button
+                onClick={() => handleCloseDialog("username@gmail.com")}
+              >
+                <ListItemText
+                  primary={`Remarks: ${
+                    selectedValue.remarks !== null &&
+                    selectedValue.remarks !== ""
+                      ? selectedValue.remarks
+                      : "-"
+                  }`}
+                  sx={{ color: "blue", fontSize: "20px" }}
+                />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => handleCloseDialog("username@gmail.com")}
+              >
+                <ListItemText
+                  primary={`Permission: ${
+                    selectedValue.user.isPermission !== "null" ||
+                    selectedValue.user.isPermission !== ""
+                      ? selectedValue.user.isPermission
+                      : ""
+                  }`}
+                  sx={{ color: "green" }}
+                />
+              </ListItem>
+            </List>
+          </Dialog>
+        )}
           </Grid>
         </Grid>
       </Box>

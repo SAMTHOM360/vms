@@ -367,11 +367,23 @@ export default function CompanyReg() {
         }
 
         // Check if file size exceeds the limit
-        if (logoFile.size > MAX_FILE_SIZE) {
-            alert("Maximum file size exceeded (5MB)");
-            // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
-            return;
-        }
+        // if (logoFile.size > MAX_FILE_SIZE) {
+        //     alert("Maximum file size exceeded (5MB)");
+        //     // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+        //     return;
+        // }
+
+
+         // Check if file size is within the range (between 1MB and 5MB)
+  const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
+  const minSize = 1; // Minimum size in MB
+  const maxSize = 5; // Maximum size in MB
+
+  if (fileSizeInMB < minSize || fileSizeInMB > maxSize) {
+    alert(`File size should be between ${minSize}MB and ${maxSize}MB`);
+    return;
+  }
+
 
         // Proceed with normal logo upload process
         setValues({ ...values, logo: logoFile });

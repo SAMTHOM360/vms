@@ -829,6 +829,18 @@ export default function Dashboard() {
 
   console.log(phoneNumberFilter, "phone num enter");
 
+
+
+
+
+  const handleClearStatus = () => {
+    setSelectedStatusModal('');
+  };
+
+  const handleClearRoom = () => {
+    setSelectedRoom('');
+  };
+
   return (
 
 
@@ -836,25 +848,25 @@ export default function Dashboard() {
 <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
 <Grid container spacing={2} style={{}}>
   <Grid item xs={12} md={12} lg={12}>
-    <div
+    {/* <div
       style={{
         display: "flex",
         justifyContent: "center",
         flexDirection: "",
         flexGrow: 1,
       }}
-    >
-      <div
+    > */}
+      {/* <div
         className="one"
         style={{
           backgroundColor: "",
           border: "1px solid offwhite",
           flexGrow: 1,
         }}
-      >
+      > */}
         <Grid container>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <Box
                 elevation={1}
                 sx={{
@@ -929,7 +941,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Grid>
-        <Grid sx={{ flexGrow: 1, backgroundColor: "" }}></Grid>
+      
         <Grid container style={{ marginTop: "" }}>
           <Grid item xs={12} style={{ backgroundColor: "" }}>
             <Item
@@ -940,20 +952,25 @@ export default function Dashboard() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  width: "100%",
+
+                  gap:'1em',
+                  marginBottom:'10px',
+                  // width: "100%",
                   backgroundColor: "",
                 }}
               >
-                <Grid>
-                  <Box
+                <Grid container spacing={1}>
+                <Grid item xs={4} md={4} lg={2}>
+
+                  {/* <Box
                     component="form"
                     sx={{
                       "& .MuiTextField-root": { m: 1, width: "25ch" },
                     }}
                     noValidate
                     autoComplete="on"
-                  >
-                    <Grid
+                  > */}
+                    {/* <Grid
                       style={{
                         display: "flex",
                         flexDirection: "",
@@ -963,14 +980,14 @@ export default function Dashboard() {
                         gap: "20px",
                         width: "",
                       }}
-                    >
-                      <Grid
+                    > */}
+                      {/* <Grid
                         style={{
                           backgroundColor: "",
                           display: "flex",
                           flexDirection: "row",
                         }}
-                      >
+                      > */}
                         <TextField
                           id="outlined-search"
                           label="Phone Number"
@@ -1018,14 +1035,17 @@ export default function Dashboard() {
                           type="search"
                           style={{ top: "" }}
                         />
+                        </Grid>
 
+
+<Grid item xs={4} md={4} lg={2}>
                         <TextField
                           id="outlined-select-currency"
                           select
                           label="Status"
                           value={selectedStatusOptions}
                           onChange={handleChangeStatus}
-                          style={{ top: "" }}
+                          style={{ width: "100%" }} 
                           SelectProps={{
                             displayEmpty: true,
                             IconComponent: selectedStatusOptions
@@ -1047,10 +1067,15 @@ export default function Dashboard() {
                             ))}
                         </TextField>
 
+                        </Grid>
+  
+
+                        <Grid item xs={4} md={4} lg={2}>
                         <TextField
                           id="outlined-select-currency"
                           select
                           label=" Host"
+                          sx={{width:"100%"}}
                           value={selectedHostOptions}
                           onChange={handleChangeHost}
                           InputProps={{
@@ -1093,11 +1118,15 @@ export default function Dashboard() {
                               </MenuItem>
                             ))}
                         </TextField>
+                        </Grid>
 
+
+                        <Grid item xs={4} md={4} lg={2}>
                         <TextField
                           id="outlined-select-currency"
                           select
                           label="Room"
+                          sx={{width:"100%"}}
                           value={filterSelectedRoom}
                           InputProps={{
                             endAdornment: filterSelectedRoom && (
@@ -1131,24 +1160,34 @@ export default function Dashboard() {
                               </MenuItem>
                             ))}
                         </TextField>
+                        </Grid>
 
+
+
+                        <Grid item xs={4} md={4} lg={2}>
                         <TextField
                           type="date"
                           value={startDate}
+                          sx={{width:"100%"}}
                           onChange={handleStartDateChange}
                         ></TextField>
+
+                        </Grid>
+
+                        <Grid item xs={4} md={4} lg={2}>
                         <TextField
                           type="date"
                           value={endDate}
+                          sx={{width:"100%"}}
                           onChange={handleEndDateChange}
                         ></TextField>
-                      </Grid>
+                      {/* </Grid> */}
 
-                      <Grid style={{ backgroundColor: "", right: 0 }}>
-                        {/* <Button variant="contained" onClick={excelExport} sx={{ marginLeft: "", width: "200px", height: "50px", top: "10px", gap: "3px", backgroundColor: "" }}><FileDownloadIcon />Meetings Export</Button> */}
-                      </Grid>
+                      {/* </Grid> */}
+
+
                     </Grid>
-                  </Box>
+                 
                 </Grid>
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: 1 }}
@@ -1198,7 +1237,13 @@ export default function Dashboard() {
               <TableContainer
                 component={Paper}
                 sx={{ width: "100%" 
-               , boxShadow: 6, backgroundColor: "", overflowY:"auto",maxHeight:"630px"}}
+               , boxShadow: 6, backgroundColor: "",
+              //   overflowY:"auto",
+              //  maxHeight:"630px"
+
+              minHeight:'55vh',
+              maxHeight:{sm:'55vh', lg:'61vh',}
+              }}
               >
                 <Table sx={{}} aria-label="simple table">
 
@@ -1431,7 +1476,7 @@ export default function Dashboard() {
                 /> */}
 
 
-<div style={{ position: "sticky", bottom: 0, backgroundColor: "white", zIndex: 1 }}>
+<div style={{ position: "sticky", bottom: 0, backgroundColor: "#82889F", zIndex: 1 }}>
         <TablePagination
           rowsPerPageOptions={[10, 15, 20, 50, 100]}
           component="div"
@@ -1483,7 +1528,7 @@ export default function Dashboard() {
               {item.status === "PENDING" &&
               item.user.isPermission === true ? (
                 <>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Status
                     </InputLabel>
@@ -1494,14 +1539,11 @@ export default function Dashboard() {
                       label="status"
                       onChange={handleChangeStatusModal}
                       disabled={roomAdded || isCancelled}
+
                       className={
                         roomAdded || isCancelled ? "disabledButton" : ""
                       }
                     >
-                      <MenuItem value="">
-                        <em>Cancel</em>
-                      </MenuItem>
-
                       {Array.isArray(statusModal) &&
                         statusModal.map((options, index) => (
                           <MenuItem key={index} value={options}>
@@ -1509,9 +1551,50 @@ export default function Dashboard() {
                           </MenuItem>
                         ))}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
 
-                  <FormControl>
+<TextField
+        id="status-select-textfield"
+        select
+        label="Status"
+        value={selectedStatusModal}
+        onChange={handleChangeStatusModal}
+        disabled={roomAdded || isCancelled}       
+        className={
+          roomAdded || isCancelled ? "disabledButton" : ""
+        }
+      
+        InputProps={{
+          endAdornment: selectedStatusModal && (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={handleClearStatus}
+                edge="end"
+              >
+                <ClearIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        SelectProps={{
+          IconComponent: selectedStatusModal
+            ? "div"
+            : undefined,
+          MenuProps: {
+            style: {
+              maxHeight: "400px",
+            },
+          },
+        }}
+      >
+        {statusModal.map((option, index) => (
+          <MenuItem key={index} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+
+                  {/* <FormControl>
                     <InputLabel id="demo-simple-select-label">
                       Choose Room
                     </InputLabel>
@@ -1555,7 +1638,71 @@ export default function Dashboard() {
                           </MenuItem>
                         ))}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
+
+<TextField
+        id="room-select-textfield"
+        select
+        label="Choose Room"
+        value={selectedRoom}
+        onChange={handleChange1}
+
+        disabled={
+          selectedStatusModal === "CANCELLED" ||
+          roomAdded ||
+          isCancelled
+        }
+        className={
+          roomAdded || isCancelled ? "disabledButton" : ""
+        }
+        style={{
+          color:
+            selectedStatusModal === "CANCELLED"
+              ? "grey"
+              : "black",
+        }}
+        // className="room-dropdown"
+        MenuProps={MenuProps}
+        // other props...
+        InputProps={{
+          endAdornment: selectedRoom && (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={handleClearRoom}
+                edge="end"
+              >
+                <ClearIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        SelectProps={{
+          IconComponent: selectedRoom
+            ? "div"
+            : undefined,
+          MenuProps: {
+            style: {
+              maxHeight: "400px",
+            },
+          },
+        }}
+      >
+        {rooms.map((room) => (
+          <MenuItem
+            key={room.id}
+            value={room.id}
+            disabled={!room.isAvailable}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              color: room.isAvailable ? 'black' : 'grey',
+            }}
+          >
+            <div>{room.roomName}</div>
+            <div>Capacity: {room.capacity}</div>
+          </MenuItem>
+        ))}
+      </TextField>
 
                   <div
                     style={{
@@ -1746,10 +1893,10 @@ export default function Dashboard() {
             </List>
           </Dialog>
         )}
-      </div>
-    </div>
+      </Grid>
+    {/* </div> */}
   </Grid>
-</Grid>
+{/* // </Grid> */}
 </Box>
 
 

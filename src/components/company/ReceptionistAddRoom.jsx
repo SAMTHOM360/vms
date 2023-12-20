@@ -173,6 +173,9 @@ export default function ReceptionistAddRoom() {
             .catch(error => {
 
                 // if(response.data.message === "capacity is required")
+                if(error.response.data.message){
+                    alert(error.response.data.message)
+                  }
                 console.log(error, "error")
             })
 
