@@ -319,14 +319,27 @@ export default function CompanyReg() {
     // }
 
     // Check if file size is within the range (between 1MB and 5MB)
-    const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
-    const minSize = 1; // Minimum size in MB
-    const maxSize = 5; // Maximum size in MB
+    // const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
+    // const minSize = 1; // Minimum size in MB
+    // const maxSize = 5; // Maximum size in MB
 
-    if (fileSizeInMB < minSize || fileSizeInMB > maxSize) {
-      alert(`File size should be between ${minSize}MB and ${maxSize}MB`);
-      return;
-    }
+    // if (fileSizeInMB < minSize || fileSizeInMB > maxSize) {
+    //   alert(`File size should be between ${minSize}MB and ${maxSize}MB`);
+    //   return;
+    // }
+
+
+    const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
+const minSizeInMB = 0.1; // Minimum size in MB (100KB)
+const maxSizeInMB = 5; // Maximum size in MB
+
+if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+//   alert(`File size should be between ${minSizeInMB}MB and ${maxSizeInMB}MB`);
+alert(`File size should be between 100KB and 5MB`);
+
+  return;
+}
+
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);
