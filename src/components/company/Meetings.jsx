@@ -1207,7 +1207,7 @@ export default function Meetings() {
                                     {visitor.remarks}
                                   </TableCell> */}
                               <TableCell align="center">
-                                {visitor.status}
+                                {visitor.updatedBy}
                               </TableCell>
 
                               <TableCell align="center">

@@ -133,6 +133,7 @@ const Config = Object.freeze({
     exportRecepEndPoint:"api/meeting/exportdata",
     getVisitorRecepEndPoint:"api/meeting/paginate",
     passApiEndPoint:"api/meeting/downloadPass",
+    checkOutEndPoint:"api/meeting/checkout-by-receptionist",
 
 
 
