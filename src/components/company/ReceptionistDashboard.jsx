@@ -351,6 +351,8 @@ export default function Dashboard() {
       },
     };
 
+ 
+
     if (
       !selectedRoom &&
       selectedStatusModal &&
@@ -371,8 +373,8 @@ export default function Dashboard() {
       alert("Choose a status");
     }
 
-    if (!selectedRoom && selectedStatusModal && item.status === "PENDING") {
-      alert("Choose a status");
+    if (!selectedRoom && selectedStatusModal!== 'CANCELLED' && item.status === "PENDING") {
+      alert("Choose a room");
     }
 
     if (!selectedRoom && !selectedStatusModal && item.status === "PENDING") {
@@ -398,7 +400,7 @@ export default function Dashboard() {
         } else {
           console.log(selectedRoom, "selectedRoom");
         }
-
+        setOpen(false);
         setReload(true);
       })
       .catch((error) => {
@@ -1379,7 +1381,7 @@ const [disable,setDisable] = useState(false);
                             </TableCell>
                             {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                             <TableCell align="center">
-                              {visitor.updatedBy}
+                              {visitor.updatedBy !== null ? visitor.updatedBy : "NA"}
                             </TableCell>
 
                             <TableCell align="center">
@@ -1466,7 +1468,7 @@ const [disable,setDisable] = useState(false);
 
                             )}
 
-<TableCell align="center">
+{/* <TableCell align="center">
           <Button variant="outlined" onClick={() =>
                 handlePrintPass(
                   visitor.id,
@@ -1474,10 +1476,32 @@ const [disable,setDisable] = useState(false);
                   visitor.visitor.phoneNumber
                 )
               }>Print</Button>
-        </TableCell>
+        </TableCell> */}
+
+<TableCell align="center">
+  {visitor.status !== 'CANCELLED' && !isADMIN? (
+    <Button
+      variant="outlined"
+      onClick={() =>
+        handlePrintPass(
+          visitor.id,
+          visitor.visitor.name,
+          visitor.visitor.phoneNumber
+        )
+      }
+    >
+      Print
+    </Button>
+  ) : (
+    <Button variant="outlined" disabled>
+      Print
+    </Button>
+  )}
+</TableCell>
+
         <TableCell align="center">
   {/* Conditional rendering of the Checkout button */}
-  {visitor.status === 'INPROCESS' ? (
+  {visitor.status === 'INPROCESS'  && !isADMIN? (
     <Button
       variant="outlined"
       onClick={() => { CheckOut(visitor.visitor.phoneNumber) }}
@@ -1497,7 +1521,7 @@ const [disable,setDisable] = useState(false);
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={12} sx={{ textAlign: "center" }}>
+                          <TableCell colSpan={14} sx={{ textAlign:"center"}}>
                             No data
                           </TableCell>
 

@@ -1132,7 +1132,7 @@ export default function Meetings() {
                               {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
 
-                              <TableCell>
+                              <TableCell align="center">
                                 {calculateSerialNumber(
                                   index,
                                   page,
@@ -1160,7 +1160,7 @@ export default function Meetings() {
                                             style={{
                                               width: "40px",
                                               height: "40px",
-                                              marginLeft: "10px",
+                                              marginLeft: "70px",
                                               cursor: "pointer",
                                             }}
                                           />
@@ -1207,7 +1207,7 @@ export default function Meetings() {
                                     {visitor.remarks}
                                   </TableCell> */}
                               <TableCell align="center">
-                                {visitor.updatedBy}
+                                {visitor.updatedBy !== null ? visitor.updatedBy : "NA"}
                               </TableCell>
 
                               <TableCell align="center">
