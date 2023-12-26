@@ -351,8 +351,6 @@ export default function Dashboard() {
       },
     };
 
- 
-
     if (
       !selectedRoom &&
       selectedStatusModal &&
@@ -373,7 +371,11 @@ export default function Dashboard() {
       alert("Choose a status");
     }
 
-    if (!selectedRoom && selectedStatusModal!== 'CANCELLED' && item.status === "PENDING") {
+    if (
+      !selectedRoom &&
+      selectedStatusModal !== "CANCELLED" &&
+      item.status === "PENDING"
+    ) {
       alert("Choose a room");
     }
 
@@ -818,8 +820,6 @@ export default function Dashboard() {
     setSelectedFilter(selectedValue);
   };
 
- 
-
   const handleClearStatus = () => {
     setSelectedStatusModal("");
   };
@@ -828,38 +828,35 @@ export default function Dashboard() {
     setSelectedRoom("");
   };
 
+  const [disable, setDisable] = useState(false);
 
-const [disable,setDisable] = useState(false);
+  function CheckOut(phoneNumber) {
+    const number = phoneNumber;
+    console.log(number, "numberr");
 
-  function CheckOut(phoneNumber){
-
-    const number=phoneNumber;
-    console.log(number,"numberr")
-
-    const checkOutUrl = Config.baseUrl + Config.apiEndPoints.checkOutEndPoint + `?phone=${number}`;
+    const checkOutUrl =
+      Config.baseUrl +
+      Config.apiEndPoints.checkOutEndPoint +
+      `?phone=${number}`;
 
     axios
-    .get(checkOutUrl)
-    .then(response=>{
-      console.log(response)
-      if(response.data.message === 'success'){
-        alert("Successfully CheckedOut")
-        setReload(true)
-     
-      }
-     
-      // setDisable(true)
+      .get(checkOutUrl)
+      .then((response) => {
+        console.log(response);
+        if (response.data.message === "success") {
+          alert("Successfully CheckedOut");
+          setReload(true);
+        }
 
-    })
-    .catch(error=>{
-      console.log(error)
-      if(error.data.message){
-        alert(error.data.message)
-      }
-    })
-
+        // setDisable(true)
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.data.message) {
+          alert(error.data.message);
+        }
+      });
   }
-
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
     // Construct the pass URL similar to the download functionality
@@ -870,7 +867,7 @@ const [disable,setDisable] = useState(false);
       meetingId;
 
     // Open the pass in a new window or tab
-    const printWindow = window.open(passApiEndpoint, '_blank');
+    const printWindow = window.open(passApiEndpoint, "_blank");
 
     // When the window/tab is fully loaded, trigger the print dialog
     printWindow.onload = () => {
@@ -1251,7 +1248,7 @@ const [disable,setDisable] = useState(false);
                     width: "100%",
                     boxShadow: 6,
                     backgroundColor: "",
-                      overflowY:"auto",
+                    overflowY: "auto",
 
                     //   minHeight:"500px",
                     //  maxHeight:"630px"
@@ -1275,6 +1272,9 @@ const [disable,setDisable] = useState(false);
                       <TableRow sx={{ border: "1px solid black" }}>
                         <TableCell sx={{ color: "white" }} align="center">
                           Sl No
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: "white" }}>
+                          Visitor Photo
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
                           Full Name
@@ -1305,11 +1305,15 @@ const [disable,setDisable] = useState(false);
                           Check Out
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
-                        Duration
+                          Duration
                         </TableCell>
 
                         <TableCell sx={{ color: "white" }} align="center">
                           Status
+                        </TableCell>
+
+                        <TableCell sx={{ color: "white" }} align="center">
+                          Permission
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
                           Remarks
@@ -1321,7 +1325,7 @@ const [disable,setDisable] = useState(false);
                           </TableCell>
                         )}
 
-<TableCell sx={{ color: "white" }} align="center">
+                        <TableCell sx={{ color: "white" }} align="center">
                           Print Pass
                         </TableCell>
 
@@ -1336,6 +1340,37 @@ const [disable,setDisable] = useState(false);
                           <TableRow key={index}>
                             <TableCell>
                               {calculateSerialNumber(page, rowsPerPage, index)}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {visitor.visitor.imageUrl !== null ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <a
+                                    href={visitor.visitor.imageUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img
+                                      src={visitor.visitor.imageUrl}
+                                      alt="Company Logo"
+                                      style={{
+                                        width: "40px",
+                                        height: "40px",
+                                        marginLeft: "70px",
+                                        cursor: "pointer",
+                                      }}
+                                    />
+                                  </a>
+                                </div>
+                              ) : (
+                                "NA"
+                              )}
                             </TableCell>
 
                             <TableCell align="center">
@@ -1384,12 +1419,32 @@ const [disable,setDisable] = useState(false);
                             </TableCell>
 
                             <TableCell align="center">
-                              {visitor.duration !== null ? visitor.duration : "NA"}
+                              {visitor.duration !== null
+                                ? visitor.duration
+                                : "NA"}
                             </TableCell>
 
                             {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                             <TableCell align="center">
-                              {visitor.updatedBy !== null ? visitor.updatedBy : "NA"}
+                              {visitor.status ? (
+                                visitor.updatedBy ? (
+                                  <span>
+                                    {visitor.status} ({visitor.updatedBy})
+                                  </span>
+                                ) : (
+                                  <span>{visitor.status}</span>
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {visitor.user.isPermission !== undefined
+                                ? visitor.user.isPermission === true
+                                  ? "Yes"
+                                  : "No"
+                                : "NA"}
                             </TableCell>
 
                             <TableCell align="center">
@@ -1471,12 +1526,9 @@ const [disable,setDisable] = useState(false);
                                   />
                                 )}
                               </TableCell>
-                              
-
-
                             )}
 
-{/* <TableCell align="center">
+                            {/* <TableCell align="center">
           <Button variant="outlined" onClick={() =>
                 handlePrintPass(
                   visitor.id,
@@ -1486,55 +1538,57 @@ const [disable,setDisable] = useState(false);
               }>Print</Button>
         </TableCell> */}
 
-<TableCell align="center">
-  {visitor.status !== 'CANCELLED' && visitor.status !=='COMPLETED' && visitor.status !=='PENDING' && visitor.status !=='CANCELLED_BY_VISITOR' && !isADMIN? (
-    <Button
-      variant="outlined"
-      onClick={() =>
-        handlePrintPass(
-          visitor.id,
-          visitor.visitor.name,
-          visitor.visitor.phoneNumber
-        )
-      }
-    >
-      Print
-    </Button>
-  ) : (
-    <Button variant="outlined" disabled>
-      Print
-    </Button>
-  )}
-</TableCell>
+                            <TableCell align="center">
+                              {visitor.status !== "CANCELLED" &&
+                              visitor.status !== "COMPLETED" &&
+                              visitor.status !== "PENDING" &&
+                              visitor.status !== "CANCELLED_BY_VISITOR" &&
+                              !isADMIN ? (
+                                <Button
+                                  variant="outlined"
+                                  onClick={() =>
+                                    handlePrintPass(
+                                      visitor.id,
+                                      visitor.visitor.name,
+                                      visitor.visitor.phoneNumber
+                                    )
+                                  }
+                                >
+                                  Print
+                                </Button>
+                              ) : (
+                                <Button variant="outlined" disabled>
+                                  Print
+                                </Button>
+                              )}
+                            </TableCell>
 
-        <TableCell align="center">
-  {/* Conditional rendering of the Checkout button */}
-  {visitor.status === 'INPROCESS'  && !isADMIN? (
-    <Button
-      variant="outlined"
-      onClick={() => { CheckOut(visitor.visitor.phoneNumber) }}
-      disabled={disable}
-      sx={{color:"purple"}}
-    >
-      Checkout
-    </Button>
-  ) : (
-    <Button variant="outlined" disabled>
-      Checkout
-    </Button>
-  )}
-</TableCell>
-
+                            <TableCell align="center">
+                              {/* Conditional rendering of the Checkout button */}
+                              {visitor.status === "INPROCESS" && !isADMIN ? (
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => {
+                                    CheckOut(visitor.visitor.phoneNumber);
+                                  }}
+                                  disabled={disable}
+                                  sx={{ color: "purple" }}
+                                >
+                                  Checkout
+                                </Button>
+                              ) : (
+                                <Button variant="outlined" disabled>
+                                  Checkout
+                                </Button>
+                              )}
+                            </TableCell>
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={14} sx={{ textAlign:"center"}}>
+                          <TableCell colSpan={14} sx={{ textAlign: "center" }}>
                             No data
                           </TableCell>
-
-
-                         
                         </TableRow>
                       )}
                     </TableBody>
@@ -1548,7 +1602,7 @@ const [disable,setDisable] = useState(false);
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 /> */}
-{/* 
+                  {/* 
                   <div
                     style={{
                       position: "sticky",
@@ -1569,20 +1623,16 @@ const [disable,setDisable] = useState(false);
                   </div> */}
                 </TableContainer>
 
-                <TablePagination sx={{  bgcolor:'#82889F',}}
-                      rowsPerPageOptions={[10, 15, 20, 50, 100]}
-                      component="div"
-                      count={meetings}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-
-
-
-
-
+                <TablePagination
+                  sx={{ bgcolor: "#82889F" }}
+                  rowsPerPageOptions={[10, 15, 20, 50, 100]}
+                  component="div"
+                  count={meetings}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
               </Item>
             </Grid>
           </Grid>
@@ -1956,7 +2006,7 @@ const [disable,setDisable] = useState(false);
                   button
                   onClick={() => handleCloseDialog("username@gmail.com")}
                 >
-                  <ListItemText
+                  {/* <ListItemText
                     primary={`Permission: ${
                       selectedValue.user.isPermission !== "null" ||
                       selectedValue.user.isPermission !== ""
@@ -1964,7 +2014,7 @@ const [disable,setDisable] = useState(false);
                         : ""
                     }`}
                     sx={{ color: "green" }}
-                  />
+                  /> */}
                 </ListItem>
               </List>
             </Dialog>

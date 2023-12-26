@@ -54,7 +54,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 
-
 //dialog
 //dialog
 import List from "@mui/material/List";
@@ -402,8 +401,6 @@ export default function Meetings() {
       });
   }
 
-  
-
   const handleAddMeeting = (value, status1) => {
     // console.log("check icon clicked")
     //
@@ -694,15 +691,12 @@ export default function Meetings() {
     navigate("/appointmeeting");
   };
 
-
-
   //dialog
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleClickOpenDialog = (value) => {
-  
     setOpenDialog(true);
 
     if (value.remarks !== null && value.remarks !== "") {
@@ -744,7 +738,12 @@ export default function Meetings() {
                       <Button
                         variant="contained"
                         size="small"
-                        sx={{ marginLeft: "1.2em", width:'12.5em', height: "3em", mt:{xs:'2em', md:0} }}
+                        sx={{
+                          marginLeft: "1.2em",
+                          width: "12.5em",
+                          height: "3em",
+                          mt: { xs: "2em", md: 0 },
+                        }}
                         onClick={handleOpenAppointMeetingForm}
                       >
                         Appoint A Meeting
@@ -815,7 +814,7 @@ export default function Meetings() {
                 </Grid>
               </Grid>
             </Grid>
-         
+
             <Grid container style={{ marginTop: "" }}>
               <Grid item xs={12} style={{ backgroundColor: "" }}>
                 <Item
@@ -830,208 +829,217 @@ export default function Meetings() {
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      gap:'1em',
-                      marginBottom:'10px'
+                      gap: "1em",
+                      marginBottom: "10px",
                     }}
                   >
                     <Grid container spacing={1}>
-                    <Grid item xs={4} md={4} lg={2}>
-                    <TextField
-                              // id="outlined-select-currency"
-                              select
-                              label="Status"
-                              value={selectedStatusOptions}
-                              onChange={handleChangeStatus}
-                              style={{ marginTop: "10px",
-                              //  width: "17em",
-                              width:'100%'
-                               }}
-                              InputProps={{
-                                endAdornment: selectedStatusOptions ? (
-                                  <div
-                                    style={{
-                                      marginRight: "-7px",
-                                      marginTop: "4px",
-                                      background: "",
-                                    }}
-                                  >
-                                    <ClearIcon
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() =>
-                                        setSelectedStatusOptions("")
-                                      }
-                                    />
-                                  </div>
-                                ) : null,
-                              }}
-                            >
-                              {/* <MenuItem value="">
+                      <Grid item xs={4} md={4} lg={2}>
+                        <TextField
+                          // id="outlined-select-currency"
+                          select
+                          label="Status"
+                          value={selectedStatusOptions}
+                          onChange={handleChangeStatus}
+                          style={{
+                            marginTop: "10px",
+                            //  width: "17em",
+                            width: "100%",
+                          }}
+                          InputProps={{
+                            endAdornment: selectedStatusOptions ? (
+                              <div
+                                style={{
+                                  marginRight: "-7px",
+                                  marginTop: "4px",
+                                  background: "",
+                                }}
+                              >
+                                <ClearIcon
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => setSelectedStatusOptions("")}
+                                />
+                              </div>
+                            ) : null,
+                          }}
+                        >
+                          {/* <MenuItem value="">
                                     <em>Cancel</em>
                                   </MenuItem> */}
 
-                              {Array.isArray(statusOptions) &&
-                                statusOptions.map((options, index) => (
-                                  <MenuItem key={index} value={options}>
-                                    {options}
-                                  </MenuItem>
-                                ))}
-                            </TextField>
-                    </Grid>
+                          {Array.isArray(statusOptions) &&
+                            statusOptions.map((options, index) => (
+                              <MenuItem key={index} value={options}>
+                                {options}
+                              </MenuItem>
+                            ))}
+                        </TextField>
+                      </Grid>
 
+                      <Grid item xs={4} md={4} lg={2}>
+                        <TextField
+                          id="outlined-search"
+                          label="Phone Number"
+                          value={phoneNumberFilter}
+                          inputProps={{ maxLength: 10 }}
+                          slotProps={{
+                            field: {
+                              clearable: true,
+                              onClear: () => setPhoneCleared(true),
+                            },
+                          }}
+                          onChange={(e) => {
+                            if (e.target.value.length <= 10) {
+                              setPhoneNumberFilter(e.target.value);
+                            }
+                          }}
+                          type="search"
+                          style={{
+                            marginTop: "10px", //  width: "17em",
+                            width: "100%",
+                          }}
+                        />
+                      </Grid>
 
-                    <Grid item xs={4} md={4} lg={2}>
-                    <TextField
-                              id="outlined-search"
-                              label="Phone Number"
-                              value={phoneNumberFilter}
-                              inputProps={{ maxLength: 10 }}
+                      <Grid item xs={4} md={4} lg={2}>
+                        <TextField
+                          id="outlined-select-currency"
+                          select
+                          label="Room"
+                          value={selectedRoom}
+                          onChange={handleChange1}
+                          sx={{
+                            //  width: "17em",
+                            width: "100%",
+                          }}
+                          SelectProps={{
+                            MenuProps: {
+                              style: {
+                                maxHeight: "300px",
+                              },
+                            },
+                          }}
+                          style={{ top: "10px" }}
+                          InputProps={{
+                            endAdornment: selectedRoom ? (
+                              <div
+                                style={{
+                                  marginRight: "-7px",
+                                  marginTop: "4px",
+                                  background: "",
+                                }}
+                              >
+                                <ClearIcon
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => setSelectedRoom("")}
+                                />
+                              </div>
+                            ) : null,
+                          }}
+                        >
+                          {/* <MenuItem value="">
+                                    <em>Cancel</em>
+                                  </MenuItem> */}
+
+                          {/* {Array.isArray(rooms) && rooms.map((room) => (
+                                                                <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
+                                                            ))} */}
+                          {Array.isArray(rooms) &&
+                            rooms.map((room) => (
+                              <MenuItem key={room.id} value={room.id}>
+                                {room.roomName}{" "}
+                              </MenuItem>
+                            ))}
+                        </TextField>
+                      </Grid>
+
+                      <Grid item xs={6} md={6} lg={3}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          {/* <DemoContainer components={["DatePicker", "DatePicker"]}> */}
+                          <DemoContainer
+                            components={["DatePicker"]}
+                            sx={{
+                              //  width: {md:"24em", lg:'21em'},
+                              width: "100%",
+                              mt: "2px",
+                            }}
+                          >
+                            <DatePicker
+                              sx={{
+                                // width: "20em",
+                                width: "100%",
+                              }}
+                              label="Meet Start Date"
+                              value={startDate}
+                              onChange={handleStartDateChange}
+                              textField={(props) => <TextField {...props} />}
+                              format="DD/MM/YYYY"
                               slotProps={{
                                 field: {
                                   clearable: true,
-                                  onClear: () => setPhoneCleared(true),
+                                  onClear: () => setStartDate(true),
                                 },
                               }}
-                              onChange={(e) => {
-                                if (e.target.value.length <= 10) {
-                                  setPhoneNumberFilter(e.target.value);
-                                }
-                              }}
-                              type="search"
-                              style={{ marginTop: "10px", //  width: "17em",
-                              width:'100%' }}
                             />
-                    </Grid>
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
 
-                    <Grid item xs={4} md={4} lg={2}>
-                    <TextField
-                              id="outlined-select-currency"
-                              select
-                              label="Room"
-                              value={selectedRoom}
-                              onChange={handleChange1}
-                              sx={{  //  width: "17em",
-                                width:'100%' }}
-                              SelectProps={{
-                                MenuProps: {
-                                  style: {
-                                    maxHeight: "300px",
-                                  },
+                      <Grid item xs={6} md={6} lg={3}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={["DatePicker"]}
+                            sx={{
+                              width: { md: "24em", lg: "21em" },
+                              width: "100%",
+                              mt: "2px",
+                            }}
+                          >
+                            <DatePicker
+                              sx={{
+                                // width: "20em",
+                                width: "100%",
+                              }}
+                              label="Meet End Date"
+                              value={endDate}
+                              onChange={handleEndDateChange}
+                              textField={(props) => <TextField {...props} />}
+                              format="DD/MM/YYYY"
+                              slotProps={{
+                                field: {
+                                  clearable: true,
+                                  onClear: () => setEndDate(true),
                                 },
                               }}
-                              style={{ top: "10px" }}
-                              InputProps={{
-                                endAdornment: selectedRoom ? (
-                                  <div
-                                    style={{
-                                      marginRight: "-7px",
-                                      marginTop: "4px",
-                                      background: "",
-                                    }}
-                                  >
-                                    <ClearIcon
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() => setSelectedRoom("")}
-                                    />
-                                  </div>
-                                ) : null,
-                              }}
-                            >
-                              {/* <MenuItem value="">
-                                    <em>Cancel</em>
-                                  </MenuItem> */}
-
-                              {/* {Array.isArray(rooms) && rooms.map((room) => (
-                                                                <MenuItem disabled={!room.isAvailable} key={room.id} value={room.id} style={{ color: room.isAvailable ? 'black' : 'grey' }}>{room.roomName}   </MenuItem>
-                                                            ))} */}
-                              {Array.isArray(rooms) &&
-                                rooms.map((room) => (
-                                  <MenuItem key={room.id} value={room.id}>
-                                    {room.roomName}{" "}
-                                  </MenuItem>
-                                ))}
-                            </TextField>
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
                     </Grid>
 
-                    <Grid item xs={6} md={6} lg={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              {/* <DemoContainer components={["DatePicker", "DatePicker"]}> */}
-                              <DemoContainer components={["DatePicker"]} sx={{
-                                //  width: {md:"24em", lg:'21em'},
-                                width:"100%",
-                                  mt:'2px' }}>
-                                <DatePicker
-                                  sx={{ 
-                                    // width: "20em",
-                                    width:'100%',
-                                   }}
-                                  label="Meet Start Date"
-                                  value={startDate}
-                                  onChange={handleStartDateChange}
-                                  textField={(props) => (
-                                    <TextField {...props} />
-                                  )}
-                                  format="DD/MM/YYYY"
-                                  slotProps={{
-                                    field: {
-                                      clearable: true,
-                                      onClear: () => setStartDate(true),
-                                    },
-                                  }}
-                                />
-                              </DemoContainer>
-                            </LocalizationProvider>
-                    </Grid>
-
-                    <Grid item xs={6} md={6} lg={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DemoContainer components={["DatePicker"]} sx={{
-                                 width: {md:"24em", lg:'21em'},
-                                 width:'100%',
-                                  mt:'2px' }}>
-                                <DatePicker
-                                  sx={{ 
-                                    // width: "20em",
-                                    width:'100%',
-                                   }}
-                                  label="Meet End Date"
-                                  value={endDate}
-                                  onChange={handleEndDateChange}
-                                  textField={(props) => (
-                                    <TextField {...props} />
-                                  )}
-                                  format="DD/MM/YYYY"
-                                  slotProps={{
-                                    field: {
-                                      clearable: true,
-                                      onClear: () => setEndDate(true),
-                                    },
-                                  }}
-                                />
-                              </DemoContainer>
-                            </LocalizationProvider>
-                    </Grid>
-                    </Grid>
-
-
-                                        
-            <Box
-                      sx={{ display: "flex", alignItems: "center", gap: "10px",pt:'9px' }}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        pt: "9px",
+                      }}
                     >
-                                              <Button
-                                variant="contained"
-                                onClick={excelExport}
-                                sx={{
-                                  marginLeft: "",
-                                  width: "200px",
-                                  height: "51px",
-                                  // top: "9px",
-                                  // gap: "5px",
-                                  backgroundColor: "",
-                                }}
-                              >
-                                <FileDownloadIcon />
-                                Meetings Export
-                              </Button>
+                      <Button
+                        variant="contained"
+                        onClick={excelExport}
+                        sx={{
+                          marginLeft: "",
+                          width: "200px",
+                          height: "51px",
+                          // top: "9px",
+                          // gap: "5px",
+                          backgroundColor: "",
+                        }}
+                      >
+                        <FileDownloadIcon />
+                        Meetings Export
+                      </Button>
                       <Tooltip
                         title={
                           <p style={{ fontSize: "12px", fontWeight: 600 }}>
@@ -1056,8 +1064,6 @@ export default function Meetings() {
                         </Button>
                       </Tooltip>
                     </Box>
-
-
                   </div>
 
                   <TableContainer
@@ -1067,26 +1073,28 @@ export default function Meetings() {
                       // boxShadow: 6,
                       backgroundColor: "",
                       // maxHeight:'55vh',
-                    
-                      minHeight:'55vh',
-                      maxHeight:{sm:'55vh', lg:'61vh',},
-                      "& .css-dwuj3p-MuiTableCell-root":{
-                        backgroundColor: "#141b2d",
-                        color:'#FFFFFF',
-                        height:'5em'
 
+                      minHeight: "55vh",
+                      maxHeight: { sm: "55vh", lg: "61vh" },
+                      "& .css-dwuj3p-MuiTableCell-root": {
+                        backgroundColor: "#141b2d",
+                        color: "#FFFFFF",
+                        height: "5em",
                       },
                     }}
                   >
-                    <Table sx={{
-                      //  "& .css-dwuj3p-MuiTableCell-root":{
-                      //   backgroundColor: "#2b345386",
-                      // }
-                    }} 
-                    // aria-label="simple table"
-                    stickyHeader
+                    <Table
+                      sx={
+                        {
+                          //  "& .css-dwuj3p-MuiTableCell-root":{
+                          //   backgroundColor: "#2b345386",
+                          // }
+                        }
+                      }
+                      // aria-label="simple table"
+                      stickyHeader
                       aria-label="sticky table"
-                     >
+                    >
                       <TableHead
                         sx={{
                           // backgroundColor: "#2b345386 !important",
@@ -1098,9 +1106,13 @@ export default function Meetings() {
                           fontWeight: "600",
                         }}
                       >
-                        <TableRow sx={{ border: "1px solid black",bgcolor: "#2b345386" }}>
+                        <TableRow
+                          sx={{
+                            border: "1px solid black",
+                            bgcolor: "#2b345386",
+                          }}
+                        >
                           <TableCell align="center">Sl No</TableCell>
-
 
                           <TableCell align="center">Visitor Photo</TableCell>
                           <TableCell align="center">Full Name</TableCell>
@@ -1108,17 +1120,15 @@ export default function Meetings() {
                           <TableCell align="center">Email</TableCell>
                           <TableCell align="center">Phone No.</TableCell>
 
-
-                       
-
                           <TableCell align="center">Company Name</TableCell>
 
                           <TableCell align="center">Start Time</TableCell>
                           <TableCell align="center">End Time</TableCell>
                           <TableCell align="center">Duration</TableCell>
-                        
+
                           <TableCell align="center">Status</TableCell>
-                            <TableCell align="center">Remarks</TableCell>
+                          <TableCell align="center">Permission</TableCell>
+                          <TableCell align="center">Remarks</TableCell>
                           <TableCell align="center">Room</TableCell>
 
                           <TableCell align="center">Actions</TableCell>
@@ -1141,32 +1151,34 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.imageUrl !== null ? 
-                                <div
+                                {visitor.visitor.imageUrl !== null ? (
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <a
+                                      href={visitor.visitor.imageUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <img
+                                        src={visitor.visitor.imageUrl}
+                                        alt="Company Logo"
                                         style={{
-                                          display: "flex",
-                                          flexDirection: "row",
-                                          alignItems: "center",
+                                          width: "40px",
+                                          height: "40px",
+                                          marginLeft: "70px",
+                                          cursor: "pointer",
                                         }}
-                                      >
-                                        <a
-                                          href={visitor.visitor.imageUrl}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          <img
-                                            src={visitor.visitor.imageUrl}
-                                            alt="Company Logo"
-                                            style={{
-                                              width: "40px",
-                                              height: "40px",
-                                              marginLeft: "70px",
-                                              cursor: "pointer",
-                                            }}
-                                          />
-                                        </a>
-                                      </div> : 'NA' }
-
+                                      />
+                                    </a>
+                                  </div>
+                                ) : (
+                                  "NA"
+                                )}
                               </TableCell>
 
                               <TableCell align="center">
@@ -1179,8 +1191,6 @@ export default function Meetings() {
                               <TableCell align="center">
                                 {visitor.visitor.phoneNumber}
                               </TableCell>
-
-                             
 
                               <TableCell align="center">
                                 {visitor.visitor.companyName}
@@ -1199,7 +1209,7 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.duration!== null
+                                {visitor.duration !== null
                                   ? visitor.duration
                                   : "NA"}
                               </TableCell>
@@ -1207,35 +1217,67 @@ export default function Meetings() {
                                     {visitor.remarks}
                                   </TableCell> */}
                               <TableCell align="center">
-                                {visitor.updatedBy !== null ? visitor.updatedBy : "NA"}
+                                {/* {visitor.status ? (
+                                visitor.updatedBy ? (
+                                  <span>
+                                    {visitor.status} ({visitor.updatedBy})
+                                  </span>
+                                ) : (
+                                  <span>{visitor.status}</span>
+                                )
+                              ) : (
+                                ""
+                              )} */}
+
+                                {visitor.status === "CANCELLED_BY_VISITOR" ? (
+                                  <span>CANCELLED(V)</span>
+                                ) : visitor.status ? (
+                                  visitor.updatedBy ? (
+                                    <span>
+                                      {visitor.status} ({visitor.updatedBy})
+                                    </span>
+                                  ) : (
+                                    <span>{visitor.status}</span>
+                                  )
+                                ) : (
+                                  ""
+                                )}
                               </TableCell>
 
                               <TableCell align="center">
-                            {visitor.remarks !== "" ? (
-                              <InfoIcon
-                                style={{
-                                  fontSize: "20px",
-                                  color: "",
-                                  marginTop: "5px",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() =>
-                                  handleClickOpenDialog(visitor)
-                                }
-                              />
-                            ) : (
-                              <InfoIcon
-                                style={{
-                                  fontSize: "20px",
-                                  color: "lightgrey",
-                                  marginTop: "5px",
-                                  cursor: "",
-                                  pointerEvents: "none",
-                                }}
-                                disabled
-                              />
-                            )}
-                          </TableCell>
+                                {visitor.user.isPermission !== undefined
+                                  ? visitor.user.isPermission === true
+                                    ? "Yes"
+                                    : "No"
+                                  : "NA"}
+                              </TableCell>
+
+                              <TableCell align="center">
+                                {visitor.remarks !== "" ? (
+                                  <InfoIcon
+                                    style={{
+                                      fontSize: "20px",
+                                      color: "",
+                                      marginTop: "5px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() =>
+                                      handleClickOpenDialog(visitor)
+                                    }
+                                  />
+                                ) : (
+                                  <InfoIcon
+                                    style={{
+                                      fontSize: "20px",
+                                      color: "lightgrey",
+                                      marginTop: "5px",
+                                      cursor: "",
+                                      pointerEvents: "none",
+                                    }}
+                                    disabled
+                                  />
+                                )}
+                              </TableCell>
                               <TableCell align="center">
                                 {visitor.room !== null
                                   ? visitor.room.roomName
@@ -1391,22 +1433,23 @@ export default function Meetings() {
                   </TableContainer>
 
                   <TablePagination
-                  sx={{
-                    "& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar": {
-                      bgcolor:'#82889F',
-                      borderRadius:'0 0 5px 5px',
-                    },
-                  }}
-                      rowsPerPageOptions={[5, 10, 25, 50, 100]}
-                      component="div"
-                      count={meetings}
-                      // count={visitors}
+                    sx={{
+                      "& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar":
+                        {
+                          bgcolor: "#82889F",
+                          borderRadius: "0 0 5px 5px",
+                        },
+                    }}
+                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                    component="div"
+                    count={meetings}
+                    // count={visitors}
 
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
                 </Item>
               </Grid>
             </Grid>
@@ -1482,36 +1525,36 @@ export default function Meetings() {
             </StyledModal>
 
             {openDialog && (
-          <Dialog onClose={handleCloseDialog} open={openDialog}>
-            <DialogTitle
-              sx={{
-                color: "black",
-                backgroundColor: "lightblue",
-                textAlign: "center",
-              }}
-            >
-              INFO
-            </DialogTitle>
-            <List sx={{ width: "300px" }}>
-              <ListItem
-                button
-                onClick={() => handleCloseDialog("username@gmail.com")}
-              >
-                <ListItemText
-                  primary={`Remarks: ${
-                    selectedValue.remarks !== null &&
-                    selectedValue.remarks !== ""
-                      ? selectedValue.remarks
-                      : "-"
-                  }`}
-                  sx={{ color: "blue", fontSize: "20px" }}
-                />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => handleCloseDialog("username@gmail.com")}
-              >
-                <ListItemText
+              <Dialog onClose={handleCloseDialog} open={openDialog}>
+                <DialogTitle
+                  sx={{
+                    color: "black",
+                    backgroundColor: "lightblue",
+                    textAlign: "center",
+                  }}
+                >
+                  INFO
+                </DialogTitle>
+                <List sx={{ width: "300px" }}>
+                  <ListItem
+                    button
+                    onClick={() => handleCloseDialog("username@gmail.com")}
+                  >
+                    <ListItemText
+                      primary={`Remarks: ${
+                        selectedValue.remarks !== null &&
+                        selectedValue.remarks !== ""
+                          ? selectedValue.remarks
+                          : "-"
+                      }`}
+                      sx={{ color: "blue", fontSize: "20px" }}
+                    />
+                  </ListItem>
+                  <ListItem
+                    button
+                    onClick={() => handleCloseDialog("username@gmail.com")}
+                  >
+                    {/* <ListItemText
                   primary={`Permission: ${
                     selectedValue.user.isPermission !== "null" ||
                     selectedValue.user.isPermission !== ""
@@ -1519,11 +1562,11 @@ export default function Meetings() {
                       : ""
                   }`}
                   sx={{ color: "green" }}
-                />
-              </ListItem>
-            </List>
-          </Dialog>
-        )}
+                /> */}
+                  </ListItem>
+                </List>
+              </Dialog>
+            )}
           </Grid>
         </Grid>
       </Box>
