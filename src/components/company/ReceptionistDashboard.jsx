@@ -818,7 +818,7 @@ export default function Dashboard() {
     setSelectedFilter(selectedValue);
   };
 
-  console.log(phoneNumberFilter, "phone num enter");
+ 
 
   const handleClearStatus = () => {
     setSelectedStatusModal("");
@@ -1304,6 +1304,9 @@ const [disable,setDisable] = useState(false);
                         <TableCell sx={{ color: "white" }} align="center">
                           Check Out
                         </TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                        Duration
+                        </TableCell>
 
                         <TableCell sx={{ color: "white" }} align="center">
                           Status
@@ -1379,6 +1382,11 @@ const [disable,setDisable] = useState(false);
                                 ? formatMeetingDuration1(visitor)
                                 : "NA"}
                             </TableCell>
+
+                            <TableCell align="center">
+                              {visitor.duration !== null ? visitor.duration : "NA"}
+                            </TableCell>
+
                             {/* <TableCell align="left">{visitor.checkOutDateTime}</TableCell> */}
                             <TableCell align="center">
                               {visitor.updatedBy !== null ? visitor.updatedBy : "NA"}
@@ -1479,7 +1487,7 @@ const [disable,setDisable] = useState(false);
         </TableCell> */}
 
 <TableCell align="center">
-  {visitor.status !== 'CANCELLED' && !isADMIN? (
+  {visitor.status !== 'CANCELLED' && visitor.status !=='COMPLETED' && visitor.status !=='PENDING' && visitor.status !=='CANCELLED_BY_VISITOR' && !isADMIN? (
     <Button
       variant="outlined"
       onClick={() =>
