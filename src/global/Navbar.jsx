@@ -45,6 +45,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import Config from "../Config/Config";
+import nyggsLogo from '../assets/nyggsLogo.png'
 
 const AppBar = styled(
   MuiAppBar,
@@ -138,6 +139,7 @@ export default function Navbar({ toggleSidebar }) {
   const [ isHamburgerAllowed, setIsHamburgerAllowed] = useState(true)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false)
+
   
 
   useEffect(() => {
@@ -977,7 +979,9 @@ export default function Navbar({ toggleSidebar }) {
           </IconButton> */}
 
           {isSUPERADMIN ? 
-          null
+          // null
+
+          <img src={nyggsLogo} alt="Nyggs Logo" style={{ maxWidth: "100px", maxHeight: "50px" }} />
 
           :
           <Typography

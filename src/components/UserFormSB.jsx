@@ -446,6 +446,14 @@ const handleSubmit = async (e) => {
   const trimmedLastName = formData.lastName ? formData.lastName.trim() : null;
   const trimmedEmail = formData.email ? formData.email.trim() : null;
 
+      // const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  // working somehow
+      const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
+
+  if (!emailFormat.test(trimmedEmail)) {
+    toast.warn("Invalid email address. Please enter a valid email address.");
+    return;
+  }
+
   if (!trimmedFirstName) {
     toast.warn("First Name is required !!!");
     return;
@@ -469,7 +477,6 @@ const handleSubmit = async (e) => {
 
   if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
     toast.warn("Invalid date of birth selected. Please choose a date up to today.");
-    // console.error('Invalid date of birth selected. Please choose a date up to today.');
     return;
   }
 
@@ -492,6 +499,15 @@ if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
 if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
   toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.");
   return;
+}
+
+if (governmentIdType === "PAN Card") {
+  const panCardFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+  if (!panCardFormat.test(formData.govtId)) {
+    toast.warn("Invalid PAN Card number. Please enter a valid PAN Card number.");
+    return;
+  }
 }
 
 

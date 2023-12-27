@@ -576,7 +576,8 @@ const Building = () => {
                   },
                   mb: "1.5em",
                   // maxWidth: "105em",
-                  maxWidth: "95%",
+                  // maxWidth: "95%",
+                  minWidth:'85%',
                   borderRadius: "5px",
                   // bgcolor:'cyan',
                   // overflowX:'auto'
@@ -620,7 +621,7 @@ const Building = () => {
           <Dialog
             open={openBuildingDialog}
             //   onClose={handleDeptDialogClose}
-            PaperProps={{ sx: { mt: "5em", borderRadius: "5px" } }}
+            PaperProps={{ sx: { mt: "5em", borderRadius: "5px", height:'465px' } }}
           >
             <DialogTitle
               sx={{ textAlign: "center", fontSize: "29px", fontWeight: "600" }}
@@ -628,7 +629,7 @@ const Building = () => {
               {buildingFormTitle} Building Form
             </DialogTitle>
             <DialogContent>
-              <form style={{ width: "380px" }}>
+              <form style={{ width: "380px", }}>
                 <TextField
                   size="small"
                   sx={{ mt: "1em" }}

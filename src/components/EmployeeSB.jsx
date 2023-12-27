@@ -238,6 +238,14 @@ const Employee = () => {
     const trimmedFirstName = editedItem.firstName ? editedItem.firstName.trim() : null;
     const trimmedLastName = editedItem.lastName ? editedItem.lastName.trim() : null;
     const trimmedEmail = editedItem.email ? editedItem.email.trim() : null;
+    // const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  // working somehow
+    const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
+
+
+    if (!emailFormat.test(trimmedEmail)) {
+      toast.warn("Invalid email address. Please enter a valid email address.");
+      return;
+    }
 
     if (!trimmedFirstName) {
       toast.warn("First Name is required !!!");
@@ -399,7 +407,8 @@ const Employee = () => {
           width: 110,
           fixed: true,
           editable: false,
-          hide: false,
+          // hide: false,
+          hidePrint: true,
           sortable: false,
           filterable: false,
           disableColumnFilter: true,
@@ -845,10 +854,32 @@ const Employee = () => {
                                   </Button>
                                 </Box>
                   <DataGrid
-                    sx={{mt:'0.7em',}}
+                    sx={{mt:'0.7em', }}
                     rows={rows ?? []}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
+                    // components={{
+                    //   Toolbar: GridToolbar,
+                    //   Header: (props) => {
+                    //     const { className, ...other } = props;
+                    //     return (
+                    //       <div className={className}>
+                    //         {columns.map((column) => (
+                    //           <div
+                    //             key={column.field}
+                    //             style={{
+                    //               display: column.hidePrint ? 'none' : 'flex',
+                    //               alignItems: 'center',
+                    //             }}
+                    //           >
+                    //             {column.headerName}
+                    //           </div>
+                    //         ))}
+                    //       </div>
+                    //     );
+                    //   },
+                    //   // ... (other components if needed)
+                    // }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     slotProps={{
                       toolbar: {
