@@ -328,18 +328,16 @@ export default function CompanyReg() {
     //   return;
     // }
 
-
     const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
-const minSizeInMB = 0.1; // Minimum size in MB (100KB)
-const maxSizeInMB = 5; // Maximum size in MB
+    const minSizeInMB = 0.1; // Minimum size in MB (100KB)
+    const maxSizeInMB = 5; // Maximum size in MB
 
-if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
-//   alert(`File size should be between ${minSizeInMB}MB and ${maxSizeInMB}MB`);
-alert(`File size should be between 100KB and 5MB`);
+    if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+      //   alert(`File size should be between ${minSizeInMB}MB and ${maxSizeInMB}MB`);
+      alert(`File size should be between 100KB and 5MB`);
 
-  return;
-}
-
+      return;
+    }
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);
@@ -458,7 +456,9 @@ alert(`File size should be between 100KB and 5MB`);
                       type="text"
                       value={values.name}
                       onChange={(e) => {
-                        const inputValue = e.target.value;
+                        // const inputValue = e.target.value;
+
+                        const inputValue = e.target.value.replace(/\s{2,}/g, ' ');  // Replace multiple spaces with a single space and trim leading/trailing spaces
                         if (inputValue.length <= 40 || inputValue === "") {
                           setValues({ ...values, name: inputValue });
                           setErrors({ ...errors, name: "" }); // Clear any previous error message
@@ -469,14 +469,41 @@ alert(`File size should be between 100KB and 5MB`);
                           });
                         }
                       }}
+                      // onBlur={() => {
+                      //   if (!values.name.trim()) {
+                      //     setErrors({
+                      //       ...errors,
+                      //       name: "Company Name is required",
+                      //     });
+                      //   }
+                      // }}
+
+
+
                       onBlur={() => {
-                        if (!values.name.trim()) {
+                        let trimmedValue = values.name.trim(); // Trim leading/trailing spaces
+                        setValues({ ...values, name: trimmedValue });
+                        
+                        if (!trimmedValue) {
                           setErrors({
                             ...errors,
-                            name: "Company Name is required",
+                            name: "name is required",
                           });
+                        } else {
+                          setErrors({ ...errors, name: "" });
                         }
                       }}
+
+
+
+                      // onKeyDown={(e) => {
+                      //   if (e.key === " " && e.target.value.slice(-1) === " ") {
+                      //     e.preventDefault(); // Prevent multiple spaces
+                      //   }
+                      // }}
+
+
+
                       error={Boolean(errors.name)}
                       helperText={errors.name}
                     />
@@ -573,25 +600,58 @@ alert(`File size should be between 100KB and 5MB`);
                     placeholder="Company Address"
                     type="text"
                     value={values.address}
-                    onChange={(e) => {
-                      setValues({ ...values, address: e.target.value });
+                    // onChange={(e) => {
+                    //   setValues({ ...values, address: e.target.value });
 
-                      // Validate input on typing
-                      if (!e.target.value.trim()) {
-                        setErrors({
-                          ...errors,
-                          address: "Address is required",
-                        });
-                      } else {
-                        setErrors({ ...errors, address: "" });
-                      }
-                    }}
+                    //   // Validate input on typing
+                    //   if (!e.target.value.trim()) {
+                    //     setErrors({
+                    //       ...errors,
+                    //       address: "Address is required",
+                    //     });
+                    //   } else {
+                    //     setErrors({ ...errors, address: "" });
+                    //   }
+                    // }}
+                    // onBlur={() => {
+                    //   // Final validation on blur if needed
+                    //   if (!values.address.trim()) {
+                    //     setErrors({
+                    //       ...errors,
+                    //       address: "Address is required",
+                    //     });
+                    //   } else {
+                    //     setErrors({ ...errors, address: "" });
+                    //   }
+                    // }}
+
+
+                      onChange={(e) => {
+    // Replace multiple spaces with a single space
+    const formattedAddress = e.target.value.replace(/\s\s+/g, ' ');
+    setValues({ ...values, address: formattedAddress });
+
+    // Validate input on typing
+    if (!formattedAddress.trim()) {
+      setErrors({
+        ...errors,
+        address: "Address is required",
+      });
+    } else {
+      setErrors({ ...errors, address: "" });
+    }
+  }}
+
+
+
                     onBlur={() => {
-                      // Final validation on blur if needed
-                      if (!values.address.trim()) {
+                      let trimmedValue = values.address.trim(); // Trim leading/trailing spaces
+                      setValues({ ...values, address: trimmedValue });
+                      
+                      if (!trimmedValue) {
                         setErrors({
                           ...errors,
-                          address: "Address is required",
+                          address: "address is required",
                         });
                       } else {
                         setErrors({ ...errors, address: "" });
@@ -690,7 +750,9 @@ alert(`File size should be between 100KB and 5MB`);
                                   console.error(error);
                                 });
                             } else {
+                              setSelectedCity(null);
                               setCities([]);
+                              setValues({ ...values, city: "" });
                             }
                           }}
                           renderInput={(params) => (
@@ -884,6 +946,10 @@ alert(`File size should be between 100KB and 5MB`);
                         setValues({ ...values, email: e.target.value })
                       }
                       onBlur={() => {
+
+
+                        let trimmedValue = values.email.trim(); // Trim leading/trailing spaces
+                        setValues({ ...values, email: trimmedValue });
                         if (!values.email.trim()) {
                           setErrors({ ...errors, email: "Email is required" });
                         } else if (!/\S+@\S+\.\S+/.test(values.email)) {
@@ -895,6 +961,7 @@ alert(`File size should be between 100KB and 5MB`);
                           setErrors({ ...errors, email: "" });
                         }
                       }}
+
                       error={Boolean(errors.email)}
                       helperText={errors.email}
                     />
@@ -1167,32 +1234,60 @@ alert(`File size should be between 100KB and 5MB`);
                     placeholder="Industry"
                     type="text"
                     value={values.industry}
-                    onChange={(e) => {
-                      const inputValue = e.target.value;
-                      if (/^[A-Za-z]+$/.test(inputValue) || inputValue === "") {
-                        if (inputValue.length <= 20) {
-                          setValues({ ...values, industry: inputValue });
-                          setErrors({ ...errors, industry: "" }); // Clear any previous error message
-                        } else {
-                          setErrors({
-                            ...errors,
-                            industry:
-                              "Industry should be at most 20 characters",
-                          });
-                        }
-                      } else {
-                        setErrors({
-                          ...errors,
-                          industry: "Industry should only contain letters",
-                        });
-                      }
+                    // onChange={(e) => {
+                    //   const inputValue = e.target.value;
+                    //   if (/^[A-Za-z]+$/.test(inputValue) || inputValue === "") {
+                    //     setValues({ ...values, industry: inputValue });
+                    //     setErrors({ ...errors, industry: "" }); // Clear any previous error message
+                    //   } else {
+                    //     setErrors({
+                    //       ...errors,
+                    //       industry: "Industry should only contain letters",
+                    //     });
+                    //   }
+                    // }}
+
+
+                    //code
+                    // onChange={(e) => {
+                    //   setValues({ ...values, industry: e.target.value });
+                    //   setErrors({ ...errors, industry: "" }); // Clear any previous error message
+                    // }}
+
+
+                    inputProps={{
+                     
+                      maxLength: 100,
                     }}
+                  
+                    onChange={(e) => {
+                      let value = e.target.value
+                        // .replace( "")
+                        .replace(/\s{2,}/g, ' ')
+                        .slice(0, 100);
+                      setValues({ ...values, industry: value });
+                    }}
+                    // onBlur={() => {
+                    //   if (!values.industry.trim()) {
+                    //     setErrors({
+                    //       ...errors,
+                    //       industry: "Industry is required",
+                    //     });
+                    //   }
+                    // }}
+
+
                     onBlur={() => {
-                      if (!values.industry.trim()) {
+                      let trimmedValue = values.industry.trim(); // Trim leading/trailing spaces
+                      setValues({ ...values, industry: trimmedValue });
+                      
+                      if (!trimmedValue) {
                         setErrors({
                           ...errors,
                           industry: "Industry is required",
                         });
+                      } else {
+                        setErrors({ ...errors, industry: "" });
                       }
                     }}
                     error={Boolean(errors.industry)}
@@ -1220,14 +1315,43 @@ alert(`File size should be between 100KB and 5MB`);
                     placeholder="About"
                     type="text"
                     value={values.aboutUs}
-                    onChange={(e) =>
-                      setValues({ ...values, aboutUs: e.target.value })
+                    onChange={(e) =>{
+                      let value = e.target.value
+                      // .replace( "")
+                      .replace(/\s{2,}/g, ' ')
+
+                    
+
+                    setValues({ ...values, aboutUs: value })
+
                     }
+                    
+                    }
+
+            
+                    // onBlur={() => {
+                    //   if (!values.aboutUs.trim()) {
+                    //     setErrors({ ...errors, aboutUs: "About is required" });
+                    //   } else {
+                    //     setErrors({ ...errors, aboutUs: "" });
+                    //   }
+                    // }}
+
+
+
+
+
                     onBlur={() => {
-                      if (!values.aboutUs.trim()) {
-                        setErrors({ ...errors, aboutUs: "About is required" });
+                      let trimmedValue = values.aboutUs.trim(); // Trim leading/trailing spaces
+                      setValues({ ...values, aboutUs: trimmedValue });
+                      
+                      if (!trimmedValue) {
+                        setErrors({
+                          ...errors,
+                        aboutUs: "aboutUs is required",
+                        });
                       } else {
-                        setErrors({ ...errors, aboutUs: "" });
+                        setErrors({ ...errors, name: "" });
                       }
                     }}
                     error={Boolean(errors.aboutUs)}

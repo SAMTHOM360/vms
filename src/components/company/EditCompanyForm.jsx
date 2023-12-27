@@ -591,10 +591,22 @@ export default function EditCompanyForm() {
                           setErrors({ ...errors, name: 'Company Name should be at most 40 characters' });
                       }
                   }}
+                  // onBlur={() => {
+                  //     if (!companyData.name.trim()) {
+                  //         setErrors({ ...errors, name: 'Company Name is required' });
+                  //     }
+                  // }}
+
+
+
+
                   onBlur={() => {
-                      if (!companyData.name.trim()) {
-                          setErrors({ ...errors, name: 'Company Name is required' });
-                      }
+                    let trimmedName = companyData.name.trim(); // Trim leading/trailing spaces
+                    setCompanyData({ ...companyData, name: trimmedName });
+                
+                    if (!trimmedName) {
+                      setErrors({ ...errors, name: 'Company Name is required' });
+                    }
                   }}
                     error={Boolean(errors.name)}
                     helperText={errors.name}

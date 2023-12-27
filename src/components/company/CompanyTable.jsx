@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import { TableCell, Tooltip } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import { Box } from "@mui/material";
 import TableHead from "@mui/material/TableHead";
@@ -212,7 +212,6 @@ const CompanyTable = () => {
     // setReload(true)
   };
 
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -342,13 +341,14 @@ const CompanyTable = () => {
                         style={{
                           width: "100%",
                           boxShadow: 6,
-                          // overflowY: "auto",
-                          // overflowX:"auto",
-                         
-                          // maxHeight: "630px",
 
-                          minHeight:'55vh',
-                      maxHeight:{sm:'55vh', lg:'61vh',}
+                          overflowY: "auto",
+                          overflowX: "auto",
+
+                          maxHeight: "550px",
+
+                          // minHeight: "55vh",
+                          // maxHeight: { sm: "55vhzIndex: 1,", lg: "61vh" },
                         }}
                       >
                         <Table aria-label="simple table">
@@ -357,7 +357,7 @@ const CompanyTable = () => {
                               backgroundColor: "#141b2d",
                               position: "sticky",
                               top: 0,
-                              zIndex: 10,
+                              zIndex: 1,
                             }}
                           >
                             <TableRow>
@@ -475,7 +475,16 @@ const CompanyTable = () => {
                                       {company.pincode}
                                     </TableCell>
                                     <TableCell align="center">
-                                      {company.aboutUs}
+                                      <Tooltip title={company.aboutUs}>
+                                        <span>
+                                          {company.aboutUs.length > 15
+                                            ? `${company.aboutUs.slice(
+                                                0,
+                                                15
+                                              )}...`
+                                            : company.aboutUs}
+                                        </span>
+                                      </Tooltip>
                                     </TableCell>
                                     {/* <TableCell align="left">{formatDate(company.createdOn)}</TableCell> */}
                                     {/* <TableCell align="left">{company.createdBy}</TableCell> */}
@@ -567,11 +576,12 @@ const CompanyTable = () => {
                           onRowsPerPageChange={handleChangeRowsPerPage}
                         /> */}
 
-                        <div
+                        {/* <div
                           style={{
                             position: "sticky",
                             bottom: 0,
-                            backgroundColor: "white",
+                            backgroundColor: "#82889F",
+                            
                             zIndex: 1,
                           }}
                         >
@@ -584,8 +594,19 @@ const CompanyTable = () => {
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                           />
-                        </div>
+                        </div> */}
                       </TableContainer>
+
+                      <TablePagination
+                        sx={{ bgcolor: "#82889F" }}
+                        rowsPerPageOptions={[10, 15, 20, 50, 100]}
+                        component="div"
+                        count={length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
                     </Item>
                   </Grid>
                 </Grid>
