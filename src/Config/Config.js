@@ -1,7 +1,10 @@
 const Config = Object.freeze({
-  baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
+  // baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
   // baseUrl: "http://192.168.12.58:8080/", //SMRUTI
   // baseUrl: "https://vms.nyggs.com/backend/",
+
+
+  baseUrl: "http://192.168.12.51:8085/vms/",
 
     ownerSiteLink: "https://www.rapidsofttechnologies.com/",
 
@@ -85,6 +88,8 @@ const Config = Object.freeze({
     fetchCompanyEndPoint: "com/paginated",
     activeDeactiveEndPoint:"com/active",
     editEndPoint:"com/update/",
+    excelEndPoint:"com/exportcompanydata",
+    
     
     
 

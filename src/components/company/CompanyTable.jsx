@@ -212,6 +212,58 @@ const CompanyTable = () => {
     // setReload(true)
   };
 
+
+
+   //export
+   function downloadFile(url) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "meeting_details.xlsx");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function excelExport() {
+    const exportUrl = Config.baseUrl + Config.apiEndPoints.excelEndPoint;
+
+  
+      const payload = {
+        page: page,
+        size: rowsPerPage,
+        companyName: selectedCompanyNames,
+        buildingId: selectedBuildingIds,
+      };
+  
+    
+
+    axios
+      .post(exportUrl, payload, {})
+      .then((response) => {
+        const url = response.data.data;
+
+        downloadFile(url);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -333,6 +385,12 @@ const CompanyTable = () => {
                           )}
                         />
 
+
+
+                        <Button variant="contained"  onClick={excelExport}>EXport Excel
+                        
+                        </Button>
+
                         {/* </div> */}
                       </div>
 
@@ -343,7 +401,9 @@ const CompanyTable = () => {
                           boxShadow: 6,
 
                           overflowY: "auto",
-                          overflowX: "auto",
+                        
+
+                          minHeight:"550px",
 
                           maxHeight: "550px",
 
@@ -415,8 +475,8 @@ const CompanyTable = () => {
                           </TableHead>
                           <TableBody>
                             {companies &&
-                              companies.length > 0 &&
-                              companies
+                              companies.length > 0 ?
+                              (companies
                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((company, index) => (
                                   <TableRow key={company.id}>
@@ -561,7 +621,16 @@ const CompanyTable = () => {
                                       </div>
                                     </TableCell>
                                   </TableRow>
-                                ))}
+                                ))):(
+                                  <TableRow>
+                                  <TableCell colSpan={14} align="center">
+                                    No data available
+                                  </TableCell>
+                                </TableRow>
+
+
+
+                                )}
                           </TableBody>
                         </Table>
 

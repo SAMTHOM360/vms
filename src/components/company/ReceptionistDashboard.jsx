@@ -173,6 +173,12 @@ export default function Dashboard() {
     setFilterSelectedRoom("");
   };
 
+  const handleClearNumberSelection = () => {
+    setPhoneNumberFilter("");
+  };
+
+
+
   //handleclearfilters
   const handleClearFilters = () => {
     setSelectedStatusOptions("");
@@ -711,6 +717,7 @@ export default function Dashboard() {
     filterSelectedRoom,
     selectedHostOptions,
     startDate,
+    phoneNumberFilter,
     endDate,
   ]);
 
@@ -1019,25 +1026,8 @@ export default function Dashboard() {
                         id="outlined-search"
                         label="Phone Number"
                         value={phoneNumberFilter}
-                        // inputProps={{ maxLength: 10 }}
 
-                        // onChange={(e) => {
-
-                        //     console.log(e,"event name")
-
-                        //     if (e.target.value.length <= 10) {
-                        //         setPhoneNumberFilter(e.target.value)
-                        //     }
-
-                        // }}
-
-                        // onChange={(e) => {
-                        //     const { value } = e.target;
-
-                        //     if (value.length <= 10 && phoneNumberRegex.test(value)) {
-                        //       setPhoneNumberFilter(value);
-                        //     }
-                        //   }}
+                 
 
                         inputProps={{
                           pattern: "^[0-9]*",
@@ -1049,7 +1039,19 @@ export default function Dashboard() {
                             .slice(0, 10);
                           setPage(0);
                           setPhoneNumberFilter(value);
+                       
+                         
                         }}
+
+                        InputProps={{
+                          endAdornment: phoneNumberFilter && (
+                            <ClearIcon
+                              style={{ cursor: 'pointer' }}
+                              onClick={handleClearNumberSelection}
+                            />
+                          ),
+                        }}
+
                         onKeyDown={(e) => {
                           const { key } = e;
 
@@ -1059,9 +1061,13 @@ export default function Dashboard() {
                           }
                         }}
                         // onKeyPress={handlePhoneNumberSearch}
-                        type="search"
-                        style={{ top: "" }}
+                        // type="search"
+                        // style={{ top: "" }}
                       />
+
+
+
+                      
                     </Grid>
 
                     <Grid item xs={4} md={4} lg={2}>
@@ -1358,7 +1364,7 @@ export default function Dashboard() {
                                   >
                                     <img
                                       src={visitor.visitor.imageUrl}
-                                      alt="Company Logo"
+                                      alt="Visitor Image"
                                       style={{
                                         width: "40px",
                                         height: "40px",
