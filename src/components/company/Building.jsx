@@ -204,8 +204,11 @@ const Building = () => {
         name: "",
       },
     });
-    setIsEditOn(false);
     setBtnLoading(false);
+    setTimeout(() => {
+      setIsEditOn(false);
+    }, 500);
+    // setIsEditOn(false);
   };
 
   const fetchBuildings = async () => {
@@ -492,6 +495,7 @@ const Building = () => {
     let url = Config.baseUrl + Config.apiEndPoints.buildingGetByBuildingId;
 
     try {
+      setLoading(true)
       const response = await axios.get(`${url}/${item.id}`, { headers });
 
       if (response.status === 200) {
@@ -567,6 +571,7 @@ const Building = () => {
         setIsEditOn(true);
         fetchCities(item.stateId ? item.stateId : "");
         handleBuildingDialogOpen();
+        setLoading(false)
       }
     } catch (error) {
       if (error.request.status === 400) {
@@ -588,6 +593,8 @@ const Building = () => {
           toastId: "bulk-emp-error15",
         });
       }
+    } finally {
+      setLoading(false)
     }
   };
 
