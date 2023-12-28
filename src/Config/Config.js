@@ -4,6 +4,9 @@ const Config = Object.freeze({
   baseUrl:"http://192.168.12.51:8085/vms/" ,//Hosted (no idea)
   // baseUrl: "https://vms.nyggs.com/backend/",
 
+
+  baseUrl: "http://192.168.12.51:8085/vms/",
+
     ownerSiteLink: "https://www.rapidsofttechnologies.com/",
 
   apiEndPoints: {
@@ -86,6 +89,8 @@ const Config = Object.freeze({
     fetchCompanyEndPoint: "com/paginated",
     activeDeactiveEndPoint:"com/active",
     editEndPoint:"com/update/",
+    excelEndPoint:"com/exportcompanydata",
+    
     
     
 
