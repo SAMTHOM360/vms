@@ -267,10 +267,12 @@ const RolesAndDepartments = () => {
   };
 
   const handleSubmitAddDept = async (e) => {
-    toast.dismiss()
+    // toast.dismiss()
     e.preventDefault();
     if (deptFormData.name.length === 0) {
-      toast.warn("Field can't be empty !!!");
+      toast.warn("Field can't be empty !!!", {
+        toastId:"depts-warn1"
+      });
       return; // Stop execution if any field is missing
     }
     const payload = {
@@ -287,7 +289,9 @@ const RolesAndDepartments = () => {
       const response = await axiosInstance.post(url, payload, { headers });
       // console.log('role submit response', response)
       if (response.status >= 200 && response.status < 300) {
-        toast.success("Dept added successfully.");
+        toast.success("Dept added successfully.", {
+          toastId:"depts-succ1"
+        });
 
         setOpenDeptDialog(false);
         setDeptFormData({
@@ -312,10 +316,14 @@ const RolesAndDepartments = () => {
         ) {
           errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage) + " !!!");
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId:"depts-err1"
+          });
         }
       } else {
-        toast.error("Something went wrong !");
+        toast.error("Something went wrong !", {
+          toastId:"depts-err2"
+        });
         console.error("unable to add Dept: ", error);
       }
     }
@@ -324,12 +332,14 @@ const RolesAndDepartments = () => {
   };
 
   const handleUpdateDept = async (e) => {
-    toast.dismiss()
+    // toast.dismiss()
     e.preventDefault();
     // console.log("dept Update got triggered",)
 
     if (!editedDeptData.deptName || editedDeptData.deptName.length === 0) {
-      toast.warn("Field can't be empty !!!");
+      toast.warn("Field can't be empty !!!", {
+        toastId:"depts-warn4"
+      });
       return;
     }
 
@@ -351,7 +361,9 @@ const RolesAndDepartments = () => {
       const response = await axios.post(url, payload, { headers });
 
       if(response.status === 200) {
-        toast.success("Department name successfully edited.")
+        toast.success("Department name successfully edited.", {
+          toastId:"depts-succ5"
+        })
         handleDeptDialogClose();
         fetchDepts();
       }
@@ -383,7 +395,9 @@ const RolesAndDepartments = () => {
       const response = await axiosInstance.post(url, payload, { headers });
       // console.log('role submit response', response)
       if (response.status === "200") {
-        toast.success("Role added succesfully.");
+        toast.success("Role added succesfully.", {
+          toastId:"depts-succ7"
+        });
 
         setOpenRoleDialog(false);
         setRoleFormData({
@@ -392,7 +406,9 @@ const RolesAndDepartments = () => {
         fetchRoles();
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"depts-err9"
+      });
       console.error("unable to add role: ", error);
     }
     setBtnLoading(false);

@@ -121,7 +121,7 @@ const MeetingDetails = () => {
   }, [adminId]);
 
   const handlePhoneNumberChange = async (event) => {
-    toast.dismiss()
+    // toast.dismiss()
     const phone = event.target.value;
     let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormGetVisitorByPhone
   
@@ -177,7 +177,9 @@ const MeetingDetails = () => {
             if (error.response && error.response.data && error.response.data.message) {
               errMessage = error.response.data.message;
               const cleanedMessage = JSON.stringify(errMessage);
-              toast.error(JSON.parse(cleanedMessage)+' !!!');
+              toast.error(JSON.parse(cleanedMessage)+' !!!', {
+                toastId:"appmeet-error1"
+              });
 
             setFormData({
               ...initialFormData,
@@ -192,7 +194,9 @@ const MeetingDetails = () => {
      
           }
            else {
-            toast.error('Something went wrong !!!');
+            toast.error('Something went wrong !!!', {
+              toastId:"appmeet-error2"
+            });
           setFormData({
             ...initialFormData,
             phoneNumber: phone,
@@ -227,7 +231,7 @@ const MeetingDetails = () => {
 
 
   const handleSubmit = async (e) => {
-    toast.dismiss()
+    // toast.dismiss()
     e.preventDefault();
 
     const trimmedName = formData.name ? formData.name.trim() : null;
@@ -236,25 +240,33 @@ const MeetingDetails = () => {
     const trimmedRemarks = formData.remarks ? formData.remarks.trim() : null;
 
     if (!trimmedName) {
-      toast.warn("Name is required !!!");
+      toast.warn("Name is required !!!", {
+        toastId:"appmeet-warn1"
+      });
       return;
     }
   
     if (!trimmedEmail) {
-      toast.warn("Email is required !!!");
+      toast.warn("Email is required !!!", {
+        toastId:"appmeet-warn2"
+      });
       return;
     }
 
     if(formData.companyName) {
       if (!trimmedCompanyName) {
-        toast.warn("Company Name can\'t be empty (if required) !!!");
+        toast.warn("Company Name can\'t be empty (if required) !!!", {
+          toastId:"appmeet-warn3"
+        });
         return;
       }
     }
     
     if(formData.remarks) {
       if (!trimmedRemarks) {
-        toast.warn("Remarks can\'t be empty (if required) !!!");
+        toast.warn("Remarks can\'t be empty (if required) !!!", {
+          toastId:"appmeet-warn4"
+        });
         return;
       }
   
@@ -263,6 +275,7 @@ const MeetingDetails = () => {
 
     if (!formData.meetingStartDateTime) {
       toast.warn('Meeting start date and time is required.', {
+        toastId:"appmeet-warn5"
       });
       return;
     }
@@ -274,25 +287,33 @@ const MeetingDetails = () => {
   const currentDateTime = new Date();
 
     if (formData.meetingStartDateTime < currentDateTime) {
-      toast.warn('Meeting start date and time cannot be in the past.');
+      toast.warn('Meeting start date and time cannot be in the past.', {
+        toastId:"appmeet-warn6"
+      });
       return;
     }
 
     const differenceInDays = Math.floor((formData.meetingStartDateTime - today) / (1000 * 60 * 60 * 24));
   
     if (differenceInDays < 0 || differenceInDays > 90) {
-      toast.warn('Meeting start date and time must be within the next 90 days and not in the past.');
+      toast.warn('Meeting start date and time must be within the next 90 days and not in the past.', {
+        toastId:"appmeet-warn7"
+      });
       return;
     }
 
     if(formData.phoneNumber.length!== 10) {
-      toast.warn("Username must be exactly 10 digits !!!");
+      toast.warn("Username must be exactly 10 digits !!!", {
+        toastId:"appmeet-warn8"
+      });
       return
     }
 
 
     if (!dayjs(formData.meetingStartDateTime).isValid()) {
-      toast.warn('Invalid date and time format. Please enter a valid date and time.');
+      toast.warn('Invalid date and time format. Please enter a valid date and time.', {
+        toastId:"appmeet-warn9"
+      });
       return;
     }
   
@@ -326,7 +347,9 @@ const MeetingDetails = () => {
         updatedFormData
       );
       if (response.status === 200) {
-        toast.success("Meeting appointed successfully.");
+        toast.success("Meeting appointed successfully.", {
+          toastId:"appmeet-succ5"
+        });
         setFormData({ ...initialFormData });
         handleRedirectMeetings()
       } 

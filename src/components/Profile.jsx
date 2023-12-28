@@ -221,32 +221,38 @@ useEffect(() => {
         console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error1"
+      });
       console.error("Error fetching data:", error);
     }
     setLoading(false);
   }
   const handlePresentOn = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
     try {
       setLoading(true);
       const response = await axios.post(`${url}`, statusOnPayload, { headers });
 
       if (response.status === 200) {
-        toast.success("Status updated successfully");
+        toast.success("Status updated successfully", {
+          toastId:"profile-success1"
+        });
         setIsPresent(true);
         setAutoStatusChange(true);
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error2"
+      });
       console.error("Catched Error: ", error);
     }
     setLoading(false);
   };
 
   const handlePresentOff = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profilePresent;
 
     try {
@@ -262,12 +268,16 @@ useEffect(() => {
         headers: headers,
       });
       if (response.status === 200) {
-        toast.success("Status updated successfully");
+        toast.success("Status updated successfully", {
+          toastId:"profile-success2"
+        });
         setIsPresent(false);
         setAutoStatusChange(false);
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error3"
+      });
       console.error("Catched Error: ", error);
     }
     setLoading(false);
@@ -406,14 +416,16 @@ useEffect(() => {
   };
 
   const handleFileUpload = async (event) => {
-    toast.dismiss()
+    // toast.dismiss()
     event.preventDefault();
     let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
     const file = event.target.files[0];
 
     const fileSizeInMB = file.size / (1024 * 1024);
     if (fileSizeInMB > 5) {
-        toast.warn("Image size shouldn't be larger than 5 MB !");
+        toast.warn("Image size shouldn't be larger than 5 MB !", {
+          toastId:"profile-warn1"
+        });
         return;
     }
 
@@ -438,7 +450,9 @@ useEffect(() => {
         }
         setIsUpload(true);
       } catch (error) {
-        toast.error("Something went wrong !");
+        toast.error("Something went wrong !", {
+          toastId:"profile-error4"
+        });
         console.error("unable to send: ", error);
       } finally {
         setUploadFromDeviceBtnLoading(false);
@@ -447,7 +461,7 @@ useEffect(() => {
   };
 
   const handleSubmitImgUpload = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     const imgPayload = {
       id: formData.id,
       image: tempImgLink,
@@ -474,7 +488,9 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Profile Picture updated successfully");
+        toast.success("Profile Picture updated successfully", {
+          toastId:"profile-success3"
+        });
 
         const submitImgApiData = response;
         handleUploadImgDialogClose();
@@ -482,7 +498,9 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error5"
+      });
       console.error("unable to submit image  ", error);
     } finally {
       setUploadImgBtnLoading(false);
@@ -490,19 +508,23 @@ useEffect(() => {
   };
 
   const handleBasicInfoUpdate = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     const trimmedFirstName = editedBasicInfo.firstName ? editedBasicInfo.firstName.trim() : null;
     const trimmedLastName = editedBasicInfo.lastName ? editedBasicInfo.lastName.trim() : null;
 
     if (!trimmedFirstName) {
-      toast.warn("First Name is required !!!");
+      toast.warn("First Name is required !!!", {
+        toastId:"profile-edit-firstname"
+      });
       return;
     }
   
     if (!trimmedLastName) {
-      toast.warn("Last Name is required !!!");
+      toast.warn("Last Name is required !!!", {
+        toastId:"profile-edit-lastname"
+      });
       return;
     }
 
@@ -516,7 +538,9 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Basic info updated successfully");
+        toast.success("Basic info updated successfully", {
+          toastId:"profile-success6"
+        });
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -536,7 +560,9 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error7"
+      });
       console.error("unable to submit basic info  ", error);
     } finally {
       setEditBtnLoading(false);
@@ -544,7 +570,7 @@ useEffect(() => {
   };
 
   const HandleAddressInfoUpdate = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
@@ -558,7 +584,9 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Address info updated successfully");
+        toast.success("Address info updated successfully", {
+          toastId:"profile-success8"
+        });
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -579,7 +607,9 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error9"
+      });
       console.error("unable to submit address info  ", error);
     } finally {
       setAddressBtnLoading(false);
@@ -587,7 +617,7 @@ useEffect(() => {
   };
 
   const HandleCompanyInfoUpdate = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.profileAddUser;
 
     try {
@@ -601,7 +631,9 @@ useEffect(() => {
       });
 
       if (response.status === 200) {
-        toast.success("Company info updated successfully");
+        toast.success("Company info updated successfully", {
+          toastId:"profile-success10"
+        });
 
         const submitApiData = response;
         handleUploadImgDialogClose();
@@ -622,7 +654,9 @@ useEffect(() => {
         fetchData();
       }
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"profile-error10"
+      });
       console.error("unable to submit company info  ", error);
     } finally {
       setCompanyBtnLoading(false);

@@ -54,8 +54,8 @@ let largestHourSum = 0;
   largestHourSum += largestHour;
 });
 
-console.log('Largest Count Sum:', largestCountSum);
-console.log('Largest Hour Sum:', largestHourSum);
+// console.log('Largest Count Sum:', largestCountSum);
+// console.log('Largest Hour Sum:', largestHourSum);
 
 let meanScale = 15
 

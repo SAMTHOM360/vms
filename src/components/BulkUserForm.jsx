@@ -124,7 +124,7 @@ function BulkUserForm() {
   // console.log("excel up data", excelUpData);
 
   const handleSaveUpload = async () => {
-    toast.dismiss();
+    // toast.dismiss();
     let url = Config.baseUrl + Config.apiEndPoints.bulkUserFormSaveUpload
     try {
       setBtnLoading(true);
@@ -152,10 +152,14 @@ function BulkUserForm() {
 
 
          if(excelApiData.duplicateData === 0 && excelApiData.failedData === 0) {
-          toast.success("File uploaded Successfully.");
+          toast.success("File uploaded Successfully.", {
+            toastId:"bulk-emp-success"
+          });
 
         } else {
-          toast.warn(`File uploaded Successfully. ${toastMsg}`);
+          toast.warn(`File uploaded Successfully. ${toastMsg}`, {
+            toastId:"bulk-emp-warn1"
+          });
         }
 
          
@@ -210,13 +214,17 @@ function BulkUserForm() {
         if (error.response && error.response.data && error.response.data.message) {
           errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!');
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            toastId:"bulk-emp-error1"
+          });
         }
  
  
       }
        else {
-        toast.error('Something went wrong !!!');
+        toast.error('Something went wrong !!!', {
+          toastId:"bulk-emp-error2"
+        });
       }
     }
     setBtnLoading(false)

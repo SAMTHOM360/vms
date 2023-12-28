@@ -139,10 +139,12 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
-    toast.dismiss();
+    // toast.dismiss();
     let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete;
     if (id == adminId) {
-      toast.error("You cannot delete yourself !!!");
+      toast.error("You cannot delete yourself !!!", {
+        toastId:"profile-error1"
+      });
       return;
     } else {
       if (window.confirm("Are you sure you want to delete this row?")) {
@@ -157,7 +159,9 @@ const Employee = () => {
           });
           // console.log("deleted", response)
           if (response.status === 200) {
-            toast.success("User is succesfully deleted.");
+            toast.success("User is succesfully deleted.", {
+              toastId:"emp-success1"
+            });
             const updatedRows = rows.map((row) =>
               row.id === id ? { ...row, isActive: true } : row
             );
@@ -233,7 +237,7 @@ const Employee = () => {
 
   const handleSaveEdit = async (e) => {
     e.preventDefault();
-    toast.dismiss();
+    // toast.dismiss();
 
     const trimmedFirstName = editedItem.firstName ? editedItem.firstName.trim() : null;
     const trimmedLastName = editedItem.lastName ? editedItem.lastName.trim() : null;
@@ -243,22 +247,30 @@ const Employee = () => {
 
 
     if (!emailFormat.test(trimmedEmail)) {
-      toast.warn("Invalid email address. Please enter a valid email address.");
+      toast.warn("Invalid email address. Please enter a valid email address.", {
+        toastId:"edit-emp-email"
+      });
       return;
     }
 
     if (!trimmedFirstName) {
-      toast.warn("First Name is required !!!");
+      toast.warn("First Name is required !!!", {
+        toastId:"edit-emp-firstName"
+      });
       return;
     }
   
     if (!trimmedLastName) {
-      toast.warn("Last Name is required !!!");
+      toast.warn("Last Name is required !!!", {
+        toastId:"edit-emp-lastname"
+      });
       return;
     }
   
     if (!trimmedEmail) {
-      toast.warn("Email is required !!!");
+      toast.warn("Email is required !!!", {
+        toastId:"edit-emp-emptyEmail"
+      });
       return;
     }
 
@@ -293,7 +305,9 @@ const Employee = () => {
     // console.log('missing fields', missingFields)
 
     if (missingFields.length > 0) {
-      toast.warn("All fields are required!");
+      toast.warn("All fields are required!", {
+        toastId:"edit-emp-missFields"
+      });
       return;
     }
     // debugger
@@ -305,7 +319,9 @@ const Employee = () => {
         headers,
       });
       if (response.status === 200) {
-        toast.success("Selected user is successfully updated.");
+        toast.success("Selected user is successfully updated.", {
+          toastId:"edit-emp-submitSuccess"
+        });
         let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById;
 
         const response = await axiosInstance.get(`${url2}/${editedItem.id}`);
@@ -334,7 +350,9 @@ const Employee = () => {
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("Something went wrong !");
+        toast.error("Something went wrong !", {
+          toastId:"edit-emp-error1"
+        });
 
         let errMessage = "";
 
@@ -347,16 +365,22 @@ const Employee = () => {
         ) {
           errMessage = error.response.data.empCode;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage) + " !!!");
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId:"emp-error5"
+          });
         }
       } else if (error.response.status === 401) {
         // alert(
         //   "Error in submitting data:  " +
         //     JSON.stringify(error.response.data.message)
         // );
-        toast.error("Something went wrong !");
+        toast.error("Something went wrong !", {
+          toastId:"edit-emp-editerror2"
+        });
       } else {
-        toast.error("Something went wrong !");
+        toast.error("Something went wrong !", {
+          toastId:"edit-emp-editerror3"
+        });
         console.error("Error saving changes:", error);
       }
     }
@@ -607,7 +631,9 @@ const Employee = () => {
       setRows(gridRows);
       setDivText("");
     } catch (error) {
-      toast.error("Something went wrong !");
+      toast.error("Something went wrong !", {
+        toastId:"emp-error6"
+      });
       console.error("Error fetching data:", error);
     } finally {
       setDivText("NO DATA FOUND !!!");
@@ -1115,9 +1141,9 @@ const Employee = () => {
                         loggedUserRole === editedItem.roleName ? true : false
                       }
                     >
-                      <MenuItem value="" disabled>
+                      {/* <MenuItem value="" disabled>
                         Select a role
-                      </MenuItem>
+                      </MenuItem> */}
                       {roles &&
                         roles.length > 0 &&
                         roles.map((role) => (

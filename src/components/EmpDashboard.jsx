@@ -110,7 +110,7 @@ const EmpDashboard = () => {
   // console.log('to date', empFilteredToDate)
 
   async function fetchData(fromDate, toDate) {
-    toast.dismiss();
+    // toast.dismiss();
     const payLoad = {
       user: {
         id: adminId,
@@ -160,7 +160,9 @@ const EmpDashboard = () => {
         });
       }
     } catch (error) {
-      toast.error("Something went wrong!");
+      toast.error("Something went wrong!", {
+        toastId:"profile-error1"
+      });
       console.error("Error fetching data:", error);
     }
 

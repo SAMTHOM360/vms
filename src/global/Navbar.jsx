@@ -630,7 +630,7 @@ export default function Navbar({ toggleSidebar }) {
   }
 
   const handleSavePasswordChange = async (e) => {
-    toast.dismiss()
+    // toast.dismiss()
     e.preventDefault();
     const changePayload = {
       username: loggedUserUsername,
@@ -641,19 +641,25 @@ export default function Navbar({ toggleSidebar }) {
     const hasEmptyField = Object.values(changedItem).some(value => value.length === 0);
 
     if (hasEmptyField) {
-      toast.warn("Please fill in all fields.");
+      toast.warn("Please fill in all fields.", {
+        toastId:"navbar-warn1"
+      });
       return;
     }
 
     if (changedItem.newPassword.length < 4) {
-      toast.warn("New Password mustn't be less than 4 !!");
+      toast.warn("New Password mustn't be less than 4 !!", {
+        toastId:"navbar-warn2"
+      });
       return;
     }
 
     let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword
 
     if (changedItem.newPassword != changedItem.confirmPassword) {
-      toast.warn("Confirm Password mismatched !");
+      toast.warn("Confirm Password mismatched !", {
+        toastId:"navbar-warn3"
+      });
       return;
     }
     try {
@@ -673,7 +679,9 @@ export default function Navbar({ toggleSidebar }) {
         }
       );
       if (response.status === 200) {
-        toast.success("Password has been successfully changed.");
+        toast.success("Password has been successfully changed.", {
+          toastId:"navbar-succ1"
+        });
         handleChangePasswordDialogClose();
         logout();
       }
@@ -682,9 +690,13 @@ export default function Navbar({ toggleSidebar }) {
       const cleanedMessage = JSON.stringify(errMessage);
 
       if (error.response.status === 400) {
-        toast.warn("Old " + JSON.parse(cleanedMessage) + ".");
+        toast.warn("Old " + JSON.parse(cleanedMessage) + ".", {
+          toastId:"navbar-warn5"
+        });
       } else {
-        toast.error("Something went Wrong !");
+        toast.error("Something went Wrong !", {
+          toastId:"navbar-err3"
+        });
       }
 
       console.error("Error saving changes:", error.response.data.message);
@@ -695,11 +707,13 @@ export default function Navbar({ toggleSidebar }) {
   const { authenticated, setAuthenticated } = useAuth();
 
   const handleLogout = () => {
-    toast.dismiss()
+    // toast.dismiss()
     const confirmLogout = window.confirm("Are you sure you want to log out?");
 
     if (confirmLogout) {
-      toast.success("Successfully logged out.");
+      toast.success("Successfully logged out.", {
+        toastId:"navbar-succ3"
+      });
 
       logout();
       navigate("/");

@@ -72,7 +72,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
   const [loading, setLoading] = useState(false);
 
   const handleMeetDialogOpen = async (dataitem) => {
-    toast.dismiss()
+    // toast.dismiss()
     // console.log("indiii", dataitem.id);
     const meetById = dataitem.id;
     let url = Config.baseUrl + Config.apiEndPoints.meetingTimeLineFetchData
@@ -104,14 +104,16 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         setOpenMeetDialog(true);
       }
     } catch (error) {
-      toast.error("Something went wrong !!");
+      toast.error("Something went wrong !!", {
+        toastId:"meetTimeline-err1"
+      });
       console.error("unable to fetch data", error);
     }
     setLoading(false);
   };
 
   const handleMeetApprove = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     const payLoad = {
       id: meetByIdData.meetId,
       status: "APPROVED",
@@ -133,21 +135,25 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         { headers: headers }
       );
       if (response.status === 200) {
-        toast.success("Meeting has been APPROVED !!");
+        toast.success("Meeting has been APPROVED !!", {
+          toastId:"meetTimeline-succ1"
+        });
         // console.log("Meet update response", response);
           handleTodayClick();
         setOpenMeetDialog(false);
         setBellItemChanged((prev) => !prev);
       }
     } catch (error) {
-      toast.error("Something went wrong !!");
+      toast.error("Something went wrong !!", {
+        toastId:"meetTimeline-err2"
+      });
       console.error("Unable to update meet status: ", error);
     }
     setLoading(false);
   };
 
   const handleMeetReject = async () => {
-    toast.dismiss()
+    // toast.dismiss()
     const payLoad = {
       id: meetByIdData.meetId,
       status: "CANCELLED",
@@ -169,7 +175,9 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         { headers: headers }
       );
       if (response.status === 200) {
-        toast.warning("Meeting Has been REJECTED !!");
+        toast.warning("Meeting Has been REJECTED !!", {
+          toastId:"meetTimeline-warn3"
+        });
       }
       // console.log("Meet update response", response);
         handleTodayClick();
@@ -177,7 +185,9 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
       handleMeetDialogClose();
       setBellItemChanged((prev) => !prev);
     } catch (error) {
-      toast.error("Something went wrong !!");
+      toast.error("Something went wrong !!", {
+        toastId:"meetTimeline-err5"
+      });
       console.error("Unable to update meet status: ", error);
     }
     setLoading(false);

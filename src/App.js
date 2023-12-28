@@ -125,6 +125,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import { useAuth } from './routes/AuthContext';
 // import NotFound from './components/NotFound';
 import DynamicMonthData from './components/unused/DynamicMonthData';
+import Example from './components/unused/LoginForm';
 // import RolesAndDepartments from './components/RolesAndDepartments';
 
 
@@ -167,8 +168,8 @@ function App() {
   // const currentPath = window.location.pathname;
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
-  const isExcludedRouteForNavBar = !['/', '/lost',].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
-  const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRouteForNavBar = !['/', '/lost','/toast'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen','/toast'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
    const toggleSidebar = () => {
     setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
@@ -209,6 +210,7 @@ function App() {
 <Suspense fallback={<Loader />}>
 <Routes>
 <Route path="/" element={<LoginForm />} />
+<Route path="/toast" element={<Example />} />
 
 {/* <Route path= '*' element={<NotFound />} /> */}
 
@@ -279,7 +281,7 @@ function App() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          limit={4}
+          limit={2}
           theme="light"
         />
       </Box>

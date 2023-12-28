@@ -146,34 +146,36 @@ const Building = () => {
   const [depts, setDepts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEditOn, setIsEditOn] = useState(false);
+  const [isSameData, setIsSameData] = useState(false)
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
   const [buildingFormData, setBuildingFormData] = useState({
-    id:"",
+    id: null,
+    name: "",
+    address: "",
+    state: {
+      id: null,
       name: "",
-      address: "",
-      state: {
-          id: "",
-          name: "",
-        },
-        city: {
-            id: "",
-            name: "",
-        },
-    });
-    const [editedBuildingData, setEditedBuildingData] = useState({
-        name: "",
-        address: "",
-        state: {
-          id: "",
-          name: "",
-        },
-        city: {
-          id: "",
-          name: "",
-        },
-    });
+    },
+    city: {
+      id: null,
+      name: "",
+    },
+  });
+  const [editedBuildingData, setEditedBuildingData] = useState({
+    id:null,
+    name: "",
+    address: "",
+    state: {
+      id: null,
+      name: "",
+    },
+    city: {
+      id: null,
+      name: "",
+    },
+  });
 
   let buildingFormTitle = "Add";
 
@@ -190,19 +192,20 @@ const Building = () => {
   const handleBuildingDialogClose = () => {
     setOpenBuildingDialog(false);
     setBuildingFormData({
-        id:"",
+      id: null,
+      name: "",
+      address: "",
+      state: {
+        id: null,
         name: "",
-        address: "",
-        state: {
-          id: "",
-          name: "",
-        },
-        city: {
-          id: "",
-          name: "",
-        },
-    })
+      },
+      city: {
+        id: null,
+        name: "",
+      },
+    });
     setIsEditOn(false);
+    setBtnLoading(false);
   };
 
   const fetchBuildings = async () => {
@@ -210,7 +213,7 @@ const Building = () => {
 
     try {
       setLoading(true);
-      let url = Config.baseUrl + Config.apiEndPoints.buildingGetAll
+      let url = Config.baseUrl + Config.apiEndPoints.buildingGetAll;
       const response = await axios.get(
         // `http://192.168.12.54:8080/api/building/getAll`,
         url,
@@ -230,31 +233,31 @@ const Building = () => {
       }
 
       const gridColumns = [
-        // {
-        //   field: "actions",
-        //   align: "center",
-        //   headerAlign: "center",
-        //   headerName: "Actions",
-        //   width: 110,
-        //   fixed: true,
-        //   editable: false,
-        //   hide: false,
-        //   sortable: false,
-        //   filterable: false,
-        //   disableColumnFilter: true,
-        //   disableColumnMenu: true,
-        //   disableColumnSelector: true,
-        //   renderCell: (params) => (
-        //     <div>
-        //       <IconButton
-        //         color="primary"
-        //         onClick={() => handleEditBuilding(params.row)}
-        //       >
-        //         <EditIcon />
-        //       </IconButton>
-        //     </div>
-        //   ),
-        // },
+        {
+          field: "actions",
+          align: "center",
+          headerAlign: "center",
+          headerName: "Actions",
+          width: 110,
+          fixed: true,
+          editable: false,
+          hide: false,
+          sortable: false,
+          filterable: false,
+          disableColumnFilter: true,
+          disableColumnMenu: true,
+          disableColumnSelector: true,
+          renderCell: (params) => (
+            <div>
+              <IconButton
+                color="primary"
+                onClick={() => handleEditBuilding(params.row)}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>
+          ),
+        },
         {
           field: "serialNo",
           headerName: "Sl No",
@@ -315,7 +318,7 @@ const Building = () => {
             ? apiDataItem.city.name
             : "N/A"
           : "N/A",
-          cityId: apiDataItem.city
+        cityId: apiDataItem.city
           ? apiDataItem.city.id
             ? apiDataItem.city.id
             : null
@@ -325,7 +328,7 @@ const Building = () => {
             ? apiDataItem.state.name
             : "N/A"
           : "N/A",
-          stateId: apiDataItem.state
+        stateId: apiDataItem.state
           ? apiDataItem.state.id
             ? apiDataItem.state.id
             : null
@@ -369,117 +372,386 @@ const Building = () => {
     }
   };
 
+  const handleSubmitBuilding = async (e) => {
+    // toast.dismiss()
+    e.preventDefault();
 
-  const handleSubmitBuilding = async(e) => {
-    toast.dismiss()
-    e.preventDefault()
+    let url = Config.baseUrl + Config.apiEndPoints.buildingSubmitBuilding;
 
-    let url = Config.baseUrl + Config.apiEndPoints.buildingSubmitBuilding
+    const trimmedBuildingName = buildingFormData.name
+      ? buildingFormData.name.trim()
+      : null;
+    const trimmedBuildingAddress = buildingFormData.address
+      ? buildingFormData.address.trim()
+      : null;
 
-    const trimmedBuildingName = buildingFormData.name ? buildingFormData.name.trim() : null;
-    const trimmedBuildingAddress = buildingFormData.address ? buildingFormData.address.trim() : null;
-
-
-    if (!buildingFormData.name || !buildingFormData.state.id || !buildingFormData.city.id || !buildingFormData.address) {
-        toast.warn("All fields are mandatory");
-        return;
+    if (
+      !buildingFormData.name ||
+      !buildingFormData.state.id ||
+      !buildingFormData.city.id ||
+      !buildingFormData.address
+    ) {
+      toast.warn("All fields are mandatory", {
+        toastId: "build-warn1",
+      });
+      return;
     }
-        
-    if(buildingFormData.name) {
+
+    if (buildingFormData.name) {
       if (!trimmedBuildingName) {
-        toast.warn("Building name can't be empty !!!");
+        toast.warn("Building name can't be empty !!!", {
+          toastId: "build-warn2",
+        });
         return;
       }
-  
     }
-            
-    if(buildingFormData.address) {
+
+    if (buildingFormData.address) {
       if (!trimmedBuildingAddress) {
-        toast.warn("Address can't be empty !!!");
+        toast.warn("Address can't be empty !!!", {
+          toastId: "build-warn3",
+        });
         return;
       }
-  
     }
 
     const payload = {
       // name: buildingFormData.name ? buildingFormData.name : null,
       name: trimmedBuildingName,
       state: {
-            id: buildingFormData.state ? buildingFormData.state.id ? buildingFormData.state.id : null : null,
-        },
+        id: buildingFormData.state
+          ? buildingFormData.state.id
+            ? buildingFormData.state.id
+            : null
+          : null,
+      },
 
-        city: {
-            id: buildingFormData.city ? buildingFormData.city.id ? buildingFormData.city.id : null : null,
-        },
-        // address: buildingFormData.address ? buildingFormData.address : null,
-        address: trimmedBuildingAddress,
-    }
+      city: {
+        id: buildingFormData.city
+          ? buildingFormData.city.id
+            ? buildingFormData.city.id
+            : null
+          : null,
+      },
+      // address: buildingFormData.address ? buildingFormData.address : null,
+      address: trimmedBuildingAddress,
+    };
 
-    console.log('submit payload',payload)
+    // console.log("submit payload", payload);
 
-    try{
-        setBtnLoading(true)
-        // const response = await axios.post(`http://192.168.12.54:8080/api/building/save`, payload, {headers})
-        const response = await axios.post(url, payload, {headers})
-        console.log('submit response',response)
+    try {
+      setBtnLoading(true);
+      // const response = await axios.post(`http://192.168.12.54:8080/api/building/save`, payload, {headers})
+      const response = await axios.post(url, payload, { headers });
+      // console.log("submit response", response);
 
-        if(response.status === 200) {
-            setBuildingFormData({
-                id:"",
-                name: "",
-                address: "",
-                state: {
-                  id: "",
-                  name: "",
-                },
-                city: {
-                  id: "",
-                  name: "",
-                },
-            })
-            handleBuildingDialogClose()
-            fetchBuildings()
+      if (response.status === 200) {
+        setBuildingFormData({
+          id: "",
+          name: "",
+          address: "",
+          state: {
+            id: "",
+            name: "",
+          },
+          city: {
+            id: "",
+            name: "",
+          },
+        });
+        handleBuildingDialogClose();
+        fetchBuildings();
+      }
+    } catch (error) {
+      if (error.request.status === 400) {
+        let errMessage = "";
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage), {
+            toastId: "building-error9",
+          });
         }
-    } catch(error) {
-        console.error('unable to add a building', error)
-    } finally{
-         setBtnLoading(false)
+      } else {
+        toast.error("Something went wrong !!!", {
+          toastId: "bulk-emp-error10",
+        });
+      }
+      // console.error('unable to add a building', error)
+    } finally {
+      setBtnLoading(false);
     }
-  }
-  
-  const handleEditBuilding = (item) => {
-    setIsEditOn(true)
-    handleBuildingDialogOpen()
-    setBuildingFormData({
-        id: item.id,
-        name: item.buildingName,
-        address: item.address,
-        state: {
-          id: item.stateId,
-          name: item.state,
-        },
-        city: {
-          id: item.cityId,
-          name: item.city,
-        },
-    })
+  };
 
-  }
+  const handleEditBuilding = async (item) => {
+    let url = Config.baseUrl + Config.apiEndPoints.buildingGetByBuildingId;
 
-  const handleUpdateBuilding = async(e) => {
-    toast.dismiss()
-    e.preventDefault()
-    const payload ={
+    try {
+      const response = await axios.get(`${url}/${item.id}`, { headers });
 
+      if (response.status === 200) {
+        const GetByBuildingIdData = response.data.data;
+        // console.log("GetByBuildingIdData", GetByBuildingIdData);
+        setBuildingFormData({
+          id: GetByBuildingIdData.buildingId
+            ? GetByBuildingIdData.buildingId
+            : null,
+          name: GetByBuildingIdData.name ? GetByBuildingIdData.name : "",
+          address: GetByBuildingIdData.address
+            ? GetByBuildingIdData.address
+            : "",
+          state: {
+            id: GetByBuildingIdData.state
+              ? GetByBuildingIdData.state.id
+                ? GetByBuildingIdData.state.id
+                : null
+              : null,
+            name: GetByBuildingIdData.state
+              ? GetByBuildingIdData.state.id
+                ? GetByBuildingIdData.state.name
+                : ""
+              : "",
+          },
+          city: {
+            id: GetByBuildingIdData.state
+              ? GetByBuildingIdData.city.id
+                ? GetByBuildingIdData.city.id
+                : null
+              : null,
+            name: GetByBuildingIdData.state
+              ? GetByBuildingIdData.city.id
+                ? GetByBuildingIdData.city.name
+                : ""
+              : "",
+          },
+        });
+
+        setEditedBuildingData({
+          id: GetByBuildingIdData.buildingId
+            ? GetByBuildingIdData.buildingId
+            : null,
+          name: GetByBuildingIdData.name ? GetByBuildingIdData.name : "",
+          address: GetByBuildingIdData.address
+            ? GetByBuildingIdData.address
+            : "",
+          state: {
+            id: GetByBuildingIdData.state
+              ? GetByBuildingIdData.state.id
+                ? GetByBuildingIdData.state.id
+                : null
+              : null,
+            name: GetByBuildingIdData.state
+              ? GetByBuildingIdData.state.id
+                ? GetByBuildingIdData.state.name
+                : ""
+              : "",
+          },
+          city: {
+            id: GetByBuildingIdData.state
+              ? GetByBuildingIdData.city.id
+                ? GetByBuildingIdData.city.id
+                : null
+              : null,
+            name: GetByBuildingIdData.state
+              ? GetByBuildingIdData.city.id
+                ? GetByBuildingIdData.city.name
+                : ""
+              : "",
+          },
+        })
+        setIsEditOn(true);
+        fetchCities(item.stateId ? item.stateId : "");
+        handleBuildingDialogOpen();
+      }
+    } catch (error) {
+      if (error.request.status === 400) {
+        let errMessage = "";
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage), {
+            toastId: "building-error14",
+          });
+        }
+      } else {
+        toast.error("Something went wrong !!!", {
+          toastId: "bulk-emp-error15",
+        });
+      }
     }
-  }
+  };
 
-//   console.log("buildingFormData", buildingFormData);
+  const areObjectsEqual = (obj1, obj2) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (let key of keys1) {
+      const val1 = obj1[key];
+      const val2 = obj2[key];
+
+      if (typeof val1 === 'object' && val1 !== null) {
+        if (!areObjectsEqual(val1, val2)) {
+          return false;
+        }
+      } else if (val1 !== val2) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  useEffect(() => {
+    setIsSameData(areObjectsEqual(buildingFormData, editedBuildingData));
+  },[buildingFormData])
+
+
+  // console.log('isSameData', isSameData)
+
+  // console.log("building form data", buildingFormData);
+  // console.log("edied building", editedBuildingData);
+
+  // console.log('cities', cities)
+
+  const handleUpdateBuilding = async (e) => {
+    // toast.dismiss()
+    e.preventDefault();
+
+    const trimmedBuildingName = buildingFormData.name
+      ? buildingFormData.name.trim()
+      : null;
+    const trimmedBuildingAddress = buildingFormData.address
+      ? buildingFormData.address.trim()
+      : null;
+
+    if (
+      !buildingFormData.name ||
+      !buildingFormData.state.id ||
+      !buildingFormData.city.id ||
+      !buildingFormData.address
+    ) {
+      toast.warn("All fields are mandatory", {
+        toastId: "build-warn11",
+      });
+      return;
+    }
+
+    if (buildingFormData.name) {
+      if (!trimmedBuildingName) {
+        toast.warn("Building name can't be empty !!!", {
+          toastId: "build-warn12",
+        });
+        return;
+      }
+    }
+
+    if (buildingFormData.address) {
+      if (!trimmedBuildingAddress) {
+        toast.warn("Address can't be empty !!!", {
+          toastId: "build-warn13",
+        });
+        return;
+      }
+    }
+
+    let url = Config.baseUrl + Config.apiEndPoints.buildingUpdateBuilding;
+    const payload = {
+      id: buildingFormData.id,
+      // name: buildingFormData.name,
+      name: trimmedBuildingName,
+      // address: buildingFormData.address,
+      address: trimmedBuildingAddress,
+
+      city: {
+        id: buildingFormData.city.id,
+      },
+      state: {
+        id: buildingFormData.state.id,
+      },
+    };
+
+    try {
+      setBtnLoading(true);
+      const response = await axios.post(url, payload, { headers });
+      if (response.status === 200) {
+        toast.success("Building successfully updated.", {
+          toastId: "building-update-building",
+        });
+        setBuildingFormData({
+          id: null,
+          name: "",
+          address: "",
+          state: {
+            id: null,
+            name: "",
+          },
+          city: {
+            id: null,
+            name: "",
+          },
+        });
+        setEditedBuildingData({
+          id: null,
+          name: "",
+          address: "",
+          state: {
+            id: null,
+            name: "",
+          },
+          city: {
+            id: null,
+            name: "",
+          },
+        })
+        handleBuildingDialogClose();
+        fetchBuildings();
+      }
+    } catch (error) {
+      if (error.request.status === 400) {
+        let errMessage = "";
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage), {
+            toastId: "building-error12",
+          });
+        }
+      } else {
+        toast.error("Something went wrong !!!", {
+          toastId: "bulk-emp-error13",
+        });
+      }
+      // console.error('unable to add a building', error)
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  //   console.log("buildingFormData", buildingFormData);
   // console.log("edited buildingData", editedBuildingData);
 
   return (
     <>
       {/* <Navbar toggleSidebar={toggleSidebar}/> */}
+      <Loader isLoading={loading} />
       <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         {/* <Sidebar open={sidebarOpen} /> */}
         <Grid container spacing={2}>
@@ -577,7 +849,7 @@ const Building = () => {
                   mb: "1.5em",
                   // maxWidth: "105em",
                   // maxWidth: "95%",
-                  minWidth:'85%',
+                  width: "100%",
                   borderRadius: "5px",
                   // bgcolor:'cyan',
                   // overflowX:'auto'
@@ -621,7 +893,9 @@ const Building = () => {
           <Dialog
             open={openBuildingDialog}
             //   onClose={handleDeptDialogClose}
-            PaperProps={{ sx: { mt: "5em", borderRadius: "5px", height:'465px' } }}
+            PaperProps={{
+              sx: { mt: "5em", borderRadius: "5px", height: "465px" },
+            }}
           >
             <DialogTitle
               sx={{ textAlign: "center", fontSize: "29px", fontWeight: "600" }}
@@ -629,25 +903,25 @@ const Building = () => {
               {buildingFormTitle} Building Form
             </DialogTitle>
             <DialogContent>
-              <form style={{ width: "380px", }}>
+              <form style={{ width: "380px" }}>
                 <TextField
                   size="small"
                   sx={{ mt: "1em" }}
                   label="Building Name"
                   fullWidth
-                  value={ buildingFormData.name }
-                  inputProps={{ maxLength: 26 }}
+                  value={buildingFormData.name}
+                  inputProps={{ maxLength: 35 }}
                   onChange={(e) => {
                     // const inputValue = e.target.value.replace(
                     //   /[^a-zA-Z0-9_]/g,
                     //   ""
                     // );
 
-                    const inputValue = e.target.value.replace(/\s+/g, " ")
-                      setBuildingFormData({
-                        ...buildingFormData,
-                        name: inputValue,
-                      });
+                    const inputValue = e.target.value.replace(/\s+/g, " ");
+                    setBuildingFormData({
+                      ...buildingFormData,
+                      name: inputValue,
+                    });
                   }}
                   required
                   // helperText="Only digits, letters, and _ are allowed."
@@ -666,6 +940,7 @@ const Building = () => {
                     ) || null
                   }
                   onChange={(event, newValue) => {
+                    const newStateId = newValue ? newValue.id : "";
                     setBuildingFormData({
                       ...buildingFormData,
                       state:
@@ -698,6 +973,40 @@ const Building = () => {
                   }
                 />
 
+                {/* <Autocomplete
+  disablePortal
+  id="city-autocomplete"
+  size="small"
+  sx={{ width: "100%", mt: "1em" }}
+  options={cities}
+  getOptionLabel={(option) => option.name || ""}
+  value={
+    buildingFormData.city.id
+      ? buildingFormData.city
+      : null
+  }
+  onChange={(event, newValue) => {
+    setBuildingFormData({
+      ...buildingFormData,
+      city: {
+        id: newValue ? newValue.id : "",
+        name: newValue ? newValue.name : "",
+      },
+    });
+  }}
+  ListboxProps={{
+    style: {
+      maxHeight: "150px",
+    },
+  }}
+  renderInput={(params) => (
+    <TextField {...params} label="City" name="city" required />
+  )}
+  isOptionEqualToValue={(option, value) =>
+    value === null || option.id === value.id
+  }
+/> */}
+
                 <Autocomplete
                   disablePortal
                   id="city-autocomplete"
@@ -706,12 +1015,11 @@ const Building = () => {
                   options={cities}
                   getOptionLabel={(option) => option.name || ""}
                   value={
-                    cities.find(
-                      (city) => city.id === buildingFormData.city.id
-                    ) || null
+                    buildingFormData.city && buildingFormData.city.id
+                      ? buildingFormData.city
+                      : null
                   }
                   onChange={(event, newValue) => {
-                    // const selectedCity = cities.find((city) => city.id === newValue);
                     setBuildingFormData({
                       ...buildingFormData,
                       city: {
@@ -719,8 +1027,6 @@ const Building = () => {
                         name: newValue ? newValue.name : "",
                       },
                     });
-
-                    // console.log('selected city', newValue);
                   }}
                   ListboxProps={{
                     style: {
@@ -731,7 +1037,8 @@ const Building = () => {
                     <TextField {...params} label="City" name="city" required />
                   )}
                   isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
+                    value === null ||
+                    (option.id === value.id && option.name === value.name)
                   }
                 />
 
@@ -741,16 +1048,16 @@ const Building = () => {
                   label="Address"
                   fullWidth
                   value={buildingFormData.address}
-                  inputProps={{ maxLength: 50 }}
+                  inputProps={{ maxLength: 100 }}
                   onChange={(e) => {
-                    let inputValue = e.target.value
+                    let inputValue = e.target.value;
                     // inputValue = inputValue.replace(/[^a-zA-Z0-9_:, ']/g, '');
-                    inputValue = inputValue.replace(/\s+/g, ' ');
+                    inputValue = inputValue.replace(/\s+/g, " ");
 
-                      setBuildingFormData({
-                        ...buildingFormData,
-                        address: inputValue,
-                      });
+                    setBuildingFormData({
+                      ...buildingFormData,
+                      address: inputValue,
+                    });
                   }}
                   required
                 />
@@ -790,10 +1097,11 @@ const Building = () => {
               </Button>
               <Button
                 variant="contained"
-                  onClick={isEditOn ? handleUpdateBuilding : handleSubmitBuilding}
+                onClick={isEditOn ? handleUpdateBuilding : handleSubmitBuilding}
                 color="primary"
                 sx={{ width: "6em" }}
-                disabled={btnLoading}
+                // disabled={btnLoading}
+                disabled={btnLoading || (isEditOn && isSameData)}
               >
                 {btnLoading ? <CircularProgress size="2em" /> : "Save"}
               </Button>

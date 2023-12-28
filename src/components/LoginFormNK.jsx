@@ -310,9 +310,11 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.dismiss();
+    // toast.dismiss();
     if(credentials.username.length!== 10) {
-      toast.warn("Username must be exactly 10 digits !!!");
+      toast.warn("Username must be exactly 10 digits !!!", {
+        toastId:"log-warn1"
+      });
       return
     }
 
@@ -324,7 +326,9 @@ function LoginForm() {
       const response = await axios.post(`${url}`, credentials);
 
       if (response.status === 200) {
-        toast.success("Successfully Logged In");
+        toast.success("Successfully Logged In", {
+          toastId:"log-success1"
+        });
         const token = response.data.token;
         const loggedUserName = response.data.name;
         const loggedUserRole = response.data.role;
@@ -381,9 +385,13 @@ function LoginForm() {
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("Incorrect username or password");
+        toast.error("Incorrect username or password", {
+          toastId:"log-error1"
+        });
       } else {
-        toast.error("Something went wrong !!!");
+        toast.error("Something went wrong !!!", {
+          toastId:"log-err02"
+        })
       }
     }
     setBtnLoading(false);
@@ -417,7 +425,9 @@ function LoginForm() {
     let url = Config.baseUrl + Config.apiEndPoints.loginFormNKGetOtp
 
     if (!updateCreds.username) {
-      toast.warn("Username can't be empty.");
+      toast.warn("Username can't be empty.", {
+        toastId:"log-warn3"
+      });
 
       return;
     }
@@ -431,24 +441,32 @@ function LoginForm() {
       );
       // console.log("get otp", response);
       if (response.status === 200) {
-        toast.success("OTP sent successfully. Please check your mail.");
+        toast.success("OTP sent successfully. Please check your mail.", {
+          toastId:"log-succ4"
+        });
         setItemVisible1(true);
         setItemVisible2(false);
       } else {
-        toast.error("Something went wrong !!!");
+        toast.error("Something went wrong !!!", {
+          toastId:"log-err6"
+        });
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("User not found !!!",);
+        toast.error("User not found !!!", {
+          toastId:"log-err7"
+        });
       } else {
-        toast.error("Something went wrong !!!");
+        toast.error("Something went wrong !!!", {
+          toastId:"log-err8"
+        });
       }
     }
     setLoading(false);
   };
 
   const handleUpdatePassword = async (e) => {
-    toast.dismiss()
+    // toast.dismiss()
     let url = Config.baseUrl + Config.apiEndPoints.loginFormNKSaveForgot
     e.preventDefault();
     const updatePasswordPayload = {
@@ -461,7 +479,9 @@ function LoginForm() {
       updatePasswordPayload.otp.trim() === "" ||
       updatePasswordPayload.newPassword.trim() === ""
     ) {
-      toast.warn("Please fill all details !!");
+      toast.warn("Please fill all details !!", {
+        toastId:"log-warn7"
+      });
 
       return;
     }
@@ -473,7 +493,9 @@ function LoginForm() {
     // );
 
     if (updateCreds.newPassword != updateCreds.confirmPassword) {
-      toast.error("New and Confirm passwords mismatched !!!");
+      toast.error("New and Confirm passwords mismatched !!!", {
+        toastId:"log-err9"
+      });
 
       return;
     }
@@ -489,7 +511,9 @@ function LoginForm() {
         updatePasswordPayload
       );
       if (response.status === 200) {
-        toast.success("Password updated succesfully.");
+        toast.success("Password updated succesfully.", {
+          toastId:"log-succ7"
+        });
         handleForgotPasswordClose();
         logout();
       }
@@ -498,9 +522,13 @@ function LoginForm() {
       if (error.request.status === 400) {
         const errMessage = error.response.data.message;
         const cleanedMessage = JSON.stringify(errMessage);
-        toast.error(JSON.parse(cleanedMessage) + " !!!");
+        toast.error(JSON.parse(cleanedMessage) + " !!!", {
+          toastId:"log-err10"
+        });
       } else {
-        toast.error("Something went wrong !!!");
+        toast.error("Something went wrong !!!", {
+          toastId:"log-err11"
+        });
       }
     }
     setLoading(false);

@@ -438,7 +438,7 @@ function UserForm({ authenticated, closeDialog }) {
 
 const handleSubmit = async (e) => {
   
-  toast.dismiss()
+  // toast.dismiss()
   e.preventDefault();
 
 
@@ -450,33 +450,45 @@ const handleSubmit = async (e) => {
       const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
 
   if (!emailFormat.test(trimmedEmail)) {
-    toast.warn("Invalid email address. Please enter a valid email address.");
+    toast.warn("Invalid email address. Please enter a valid email address.", {
+      toastId:"userfrom-warn1"
+    });
     return;
   }
 
   if (!trimmedFirstName) {
-    toast.warn("First Name is required !!!");
+    toast.warn("First Name is required !!!", {
+      toastId:"userfrom-warn2"
+    });
     return;
   }
 
   if (!trimmedLastName) {
-    toast.warn("Last Name is required !!!");
+    toast.warn("Last Name is required !!!", {
+      toastId:"userfrom-warn3"
+    });
     return;
   }
 
   if (!trimmedEmail) {
-    toast.warn("Email is required !!!");
+    toast.warn("Email is required !!!", {
+      toastId:"userfrom-warn4"
+    });
     return;
   }
 
   if (!formData.dob) {
-    toast.warn("Date of birth is required !!!");
+    toast.warn("Date of birth is required !!!", {
+      toastId:"userfrom-warn5"
+    });
     return;
   }
   const currentDate = new Date();
 
   if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
-    toast.warn("Invalid date of birth selected. Please choose a date up to today.");
+    toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
+      toastId:"userfrom-warn6"
+    });
     return;
   }
 
@@ -486,18 +498,24 @@ dob.setDate(dob.getDate() + 1);
 const dobISOString = dob.toISOString().split("T")[0];
 
 if (formData.empCode.length < 4) {
-  toast.warn("Employee Code must be at least 4 characters !!!");
+  toast.warn("Employee Code must be at least 4 characters !!!", {
+    toastId:"userfrom-warn7"
+  });
   return;
 }
 
 
 if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
-  toast.warn("Aadhar Card must be 12 digits only.");
+  toast.warn("Aadhar Card must be 12 digits only.", {
+    toastId:"userfrom-warn8"
+  });
   return;
 } 
 
 if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
-  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.");
+  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
+    toastId:"userfrom-warn9"
+  });
   return;
 }
 
@@ -505,7 +523,9 @@ if (governmentIdType === "PAN Card") {
   const panCardFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 
   if (!panCardFormat.test(formData.govtId)) {
-    toast.warn("Invalid PAN Card number. Please enter a valid PAN Card number.");
+    toast.warn("Invalid PAN Card number. Please enter a valid PAN Card number.", {
+      toastId:"userfrom-warn10"
+    });
     return;
   }
 }
@@ -557,7 +577,9 @@ if (governmentIdType === "PAN Card") {
       { headers }
     );
     if (response.status === 200) {
-      toast.success("New Employee Added Successfully.");
+      toast.success("New Employee Added Successfully.", {
+        toastId:"userfrom-succ3"
+      });
 
       // closeDialog()
       handleEmployeeRedirect();
@@ -594,13 +616,17 @@ if (governmentIdType === "PAN Card") {
         if (error.response && error.response.data && error.response.data.message) {
           errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!');
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            toastId:"userfrom-err5"
+          });
         }
  
  
       }
        else {
-        toast.error('Something went wrong !!!');
+        toast.error('Something went wrong !!!', {
+          toastId:"userfrom-err6"
+        });
       }
   } finally {
     setLoading(false);
