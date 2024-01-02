@@ -81,13 +81,16 @@ const RolesAndDepartments = () => {
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedDept, setSelectedDept] = useState("");
-  const [divText, setDivText] = useState("");
+  const [divText1, setDivText1] = useState("");
+  const [divText2, setDivText2] = useState("");
   const [isSUPERADMINAllowed, setIsSUPERADMINAllowed] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const [isReceptAllowed, setIsReceptAllowed] = useState();
   const navigate = useNavigate();
   const [depts, setDepts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isRoleLoading, setIsRoleLoading] = useState(false)
+  const [isDeptLoading, setIsDeptLoading] = useState(false)
   const [editedDeptData, setEditedDeptData] = useState(null);
   const [isEditOn, setIsEditOn] = useState(false);
 
@@ -110,10 +113,21 @@ const RolesAndDepartments = () => {
     deptFormTitle = "Add";
   }
 
+  useEffect(() => {
+    // setLoading(isRoleLoading && isDeptLoading)
+    setLoading(isRoleLoading || isDeptLoading)
+  }, [isRoleLoading, isDeptLoading])
+
+  // console.log('isRoleLoading', isRoleLoading)
+  // console.log('isDeptLoading', isDeptLoading)
+  // console.log('loading', loading)
+
   async function fetchRoles() {
     let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsGetAllRole;
     try {
-      setLoading(true);
+      setDivText1("GETTING ROLES...");
+      // setLoading(true);
+      setIsRoleLoading(true)
       // const response = await axios.get(
       //   "http://192.168.12.54:8080/api/role/getall", { headers }
       // );
@@ -121,6 +135,7 @@ const RolesAndDepartments = () => {
       const response = await axios.get(url, { headers });
 
       const roleApiData = response.data.data;
+      // const roleApiData = [];
       // console.log('roleApiData',roleApiData)
 
       if (!Array.isArray(roleApiData) || roleApiData.length === 0) {
@@ -128,7 +143,9 @@ const RolesAndDepartments = () => {
           "API response does not contain the expected array or the array is empty:",
           roleApiData
         );
-        setLoading(false);
+        setDivText1("THERE IS NO ROLE !!!");
+        // setLoading(false);
+        setIsRoleLoading(false)
         return;
       }
 
@@ -156,20 +173,26 @@ const RolesAndDepartments = () => {
 
       setColumns(gridColumns);
       setRows(gridRows);
+      setDivText1("");
     } catch (error) {
       console.error("Error fetching roles:", error);
     } finally {
-      setLoading(false);
+      setDivText1("THERE IS NO ROLE !!!");
+      // setLoading(false);
+      setIsRoleLoading(false)
     }
   }
   const fetchDepts = async () => {
     let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsGetAllDept;
 
     try {
-      setLoading(true);
+      setDivText2("GETTING DEPARTMENTS...");
+      // setLoading(true);
+      setIsDeptLoading(true)
       // const response = await axios.get(`http://192.168.12.54:8080/api/department/companyId?companyId=${companyId}`)
       const response = await axios.get(`${url}?companyId=${companyId}`);
       const deptApiData = response.data.data;
+      // const deptApiData = [];
       // console.log('deptApiData',deptApiData)
 
       if (!Array.isArray(deptApiData) || deptApiData.length === 0) {
@@ -177,7 +200,9 @@ const RolesAndDepartments = () => {
           "API response does not contain the expected array or the array is empty:",
           deptApiData
         );
-        setLoading(false);
+        setDivText2("THERE IS NO DEPARTMENT !!!");
+        // setLoading(false);
+        setIsDeptLoading(false)
         return;
       }
 
@@ -232,10 +257,13 @@ const RolesAndDepartments = () => {
 
       setColumns2(gridColumns);
       setRows2(gridRows);
+      setDivText2("");
     } catch (error) {
       console.error("Error in fetching depts", error);
     } finally {
-      setLoading(false);
+      setDivText2("THERE IS NO DEPARTMENT !!!");
+      // setLoading(false);
+      setIsDeptLoading(false)
     }
   };
 
@@ -592,7 +620,8 @@ const RolesAndDepartments = () => {
                           width: "100%",
                         }}
                       >
-                        NO RECORDS FOUND !!!
+                        {/* NO ROLE FOUND !!! */}
+                        {divText1}
                       </div>
                     )}
                   </Box>
@@ -695,7 +724,8 @@ const RolesAndDepartments = () => {
                           width: "100%",
                         }}
                       >
-                        NO RECORDS FOUND !!!
+                        {/* NO DEPARTMENT FOUND !!! */}
+                        {divText2}
                       </div>
                     )}
                   </Box>

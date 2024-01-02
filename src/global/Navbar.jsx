@@ -995,7 +995,7 @@ export default function Navbar({ toggleSidebar }) {
           {isSUPERADMIN ? 
           // null
 
-          <img src={nyggsLogo} alt="Nyggs Logo" style={{ maxWidth: "100px", maxHeight: "50px" }} />
+          <img src={nyggsLogo} alt="Nyggs Logo" style={{ maxWidth: "100px", maxHeight: "50px", pointerEvents:'none', }} />
 
           :
           <Typography

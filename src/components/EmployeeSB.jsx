@@ -94,6 +94,8 @@ const Employee = () => {
   const [depts, setDepts] = useState([]);
   const [scopeIsLimitReached, setScopeIsLimitReached] = useState();
   const [excelUrl, setExcelUrl] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   let formattedHead;
 
@@ -126,9 +128,6 @@ const Employee = () => {
     handleIsSUPERADMINAllowed();
   }, [loggedUserRole]);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const [loading, setLoading] = useState(false);
 
   const openDialog = () => {
     setDialogOpen(true);
@@ -350,23 +349,20 @@ const Employee = () => {
       }
     } catch (error) {
       if (error.request.status === 400) {
-        toast.error("Something went wrong !", {
-          toastId:"edit-emp-error1"
-        });
+        // toast.error("Something went wrong !", {
+        //   toastId:"edit-emp-error1"
+        // });
 
         let errMessage = "";
 
         // console.log("got error", error.response)
 
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.empCode
-        ) {
-          errMessage = error.response.data.empCode;
+        // console.log(" holaaa",  error.response.data)
+        if (error.response && error.response.data && error.response.data.message) {
+          errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage) + " !!!", {
-            toastId:"emp-error5"
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            toastId:"userfrom-error5"
           });
         }
       } else if (error.response.status === 401) {
@@ -636,7 +632,7 @@ const Employee = () => {
       });
       console.error("Error fetching data:", error);
     } finally {
-      setDivText("NO DATA FOUND !!!");
+      setDivText("NO RECORDS FOUND !!!");
       setLoading(false);
     }
   }

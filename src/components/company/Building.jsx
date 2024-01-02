@@ -215,6 +215,7 @@ const Building = () => {
     let url = Config.baseUrl + Config.apiEndPoints.rolesAndDeptsGetAllDept;
 
     try {
+      setDivText("GETTING BUILDING DATA...");
       setLoading(true);
       let url = Config.baseUrl + Config.apiEndPoints.buildingGetAll;
       const response = await axios.get(
@@ -231,6 +232,7 @@ const Building = () => {
           "API response does not contain the expected array or the array is empty:",
           deptApiData
         );
+        setDivText("NO RECORDS FOUND !!!");
         setLoading(false);
         return;
       }
@@ -338,11 +340,13 @@ const Building = () => {
           : null,
       }));
 
+      setDivText("");
       setColumns2(gridColumns);
       setRows2(gridRows);
     } catch (error) {
       console.error("Error in fetching depts", error);
     } finally {
+      setDivText("NO RECORDS FOUND !!!");
       setLoading(false);
     }
   };
@@ -881,7 +885,8 @@ const Building = () => {
                       width: "100%",
                     }}
                   >
-                    NO RECORDS FOUND !!!
+                    {/* NO RECORDS FOUND !!! */}
+                    {divText}
                   </div>
                 )}
               </Box>

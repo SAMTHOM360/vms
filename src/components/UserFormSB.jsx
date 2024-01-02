@@ -1176,6 +1176,38 @@ if (governmentIdType === "PAN Card") {
                                                 </Select>
                                               </>
                                           </FormControl>
+
+{/* <Autocomplete
+  disablePortal
+  id="company-autocomplete"
+  sx={{ width: '100%', mt: '10px' }}
+  options={companies}
+  getOptionLabel={(option) => option.name || ''}
+  value={companies.find((company) => company.id === formData.company.id) || null}
+  onChange={(event, newValue) => {
+    setFormData({
+      ...formData,
+      company: {
+        id: newValue ? newValue.id : '',
+        name: newValue ? newValue.name : '',
+      },
+    });
+  }}
+  ListboxProps={{
+    style: {
+      maxHeight: '150px',
+    },
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Company"
+      name="company"
+      required
+    />
+  )}
+  isOptionEqualToValue={(option, value) => option.id === value.id}
+/> */}
                                         </Grid>
                     ) : null }
 

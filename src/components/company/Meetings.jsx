@@ -1071,16 +1071,10 @@ export default function Meetings() {
                     sx={{
                       width: "100%",
                       // boxShadow: 6,
-                      backgroundColor: "",
                       // maxHeight:'55vh',
 
                       minHeight: "55vh",
                       maxHeight: { sm: "55vh", lg: "61vh" },
-                      "& .css-dwuj3p-MuiTableCell-root": {
-                        backgroundColor: "#141b2d",
-                        color: "#FFFFFF",
-                        height: "5em",
-                      },
                     }}
                   >
                     <Table
@@ -1091,47 +1085,49 @@ export default function Meetings() {
                           // }
                         }
                       }
-                      // aria-label="simple table"
-                      stickyHeader
-                      aria-label="sticky table"
+                      aria-label="simple table"
+                      // stickyHeader
+                      // aria-label="sticky table"
                     >
                       <TableHead
                         sx={{
-                          // backgroundColor: "#2b345386 !important",
-                          backgroundColor: "#2b345386",
-                          // "& .css-dwuj3p-MuiTableCell-root":{
-                          //   backgroundColor: "#2b345386",
-                          // },
-                          border: "1px solid black",
-                          fontWeight: "600",
+                          backgroundColor: "#141b2d",
+                          // border: "1px solid white",
+                          fontSize: "18px",
+                          color: "white",
+                          position: "sticky !important",
+                          top: 0,
+                          zIndex: 1,
                         }}
                       >
                         <TableRow
                           sx={{
-                            border: "1px solid black",
-                            bgcolor: "#2b345386",
+                            // border: "1px solid black",
+                            // bgcolor: "#2b345386",
+                            color:'white',
+                            
                           }}
                         >
-                          <TableCell align="center">Sl No</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Sl No</TableCell>
 
-                          <TableCell align="center">Visitor Photo</TableCell>
-                          <TableCell align="center">Full Name</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Visitor Photo</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Full Name</TableCell>
 
-                          <TableCell align="center">Email</TableCell>
-                          <TableCell align="center">Phone No.</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Email</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Phone No.</TableCell>
 
-                          <TableCell align="center">Company Name</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Company Name</TableCell>
 
-                          <TableCell align="center">Start Time</TableCell>
-                          <TableCell align="center">End Time</TableCell>
-                          <TableCell align="center">Duration</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Start Time</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>End Time</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Duration</TableCell>
 
-                          <TableCell align="center">Status</TableCell>
-                          <TableCell align="center">Permission</TableCell>
-                          <TableCell align="center">Remarks</TableCell>
-                          <TableCell align="center">Room</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Status</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Permission</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Remarks</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Room</TableCell>
 
-                          <TableCell align="center">Actions</TableCell>
+                          <TableCell align="center" sx={{color:'white'}}>Actions</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody sx={{}}>
