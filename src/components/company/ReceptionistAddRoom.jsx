@@ -310,8 +310,8 @@ export default function ReceptionistAddRoom() {
       .then((response) => {
 
         setOpen(false)
-        if (response.data.message === "success") {
-          alert("switched succesfully");
+        if (response.data.message) {
+          alert(response.data.message);
 
           // setActive(newActiveStatus);
 
