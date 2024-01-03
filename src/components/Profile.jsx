@@ -162,11 +162,12 @@ useEffect(() => {
     try {
       setLoading(true);
       const response = await axios.get(`${url}/${adminId}`);
+      // const response = await axios.get(`${url}/500`, {headers});
       if (response.status === 200) {
         const apiData = response.data.data.data;
         // console.log(" profile data", apiData);
 
-        const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
+        const formatCreatedOn = apiData.createdOn && apiData.createdOn.split(" ")[0] || "";
         setFormattedCreatedOn(formatCreatedOn);
         setIsPresent(apiData.isPresent);
         setFormData({
@@ -218,13 +219,30 @@ useEffect(() => {
           }));
         }
       } else {
-        console.error("Error fetching data:", response.statusText);
+        // console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      toast.error("Something went wrong !", {
-        toastId:"profile-error1"
-      });
-      console.error("Error fetching data:", error);
+      // console.error('error 4000000', error)
+      if(error.request.status === 400){
+
+        let errMessage = '';
+
+
+        if (error.response && error.response.data && error.response.data.message) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            toastId:"profile-error12"
+          });
+        }
+ 
+ 
+      }
+       else {
+        toast.error('Something went wrong !!!', {
+          toastId:"profile-error13"
+        });
+      }
     }
     setLoading(false);
   }

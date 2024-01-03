@@ -513,8 +513,9 @@ if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
 } 
 
 if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
-  toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
-    toastId:"userfrom-warn9"
+  // toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
+    toast.warn("PAN Card must be 10 characters and format should be \"ABCDE1234F\".", {
+      toastId:"userfrom-warn9"
   });
   return;
 }
@@ -902,7 +903,7 @@ if (governmentIdType === "PAN Card") {
                       </FormControl>
                     </Grid> */}
 
-<Grid item xs={12} sm={6} md={4} lg={4}>
+<Grid item xs={12} sm={6} md={6} lg={4}>
   {/* <Autocomplete
     disablePortal
     id="state-autocomplete"
@@ -1009,7 +1010,7 @@ if (governmentIdType === "PAN Card") {
                       </FormControl>
                     </Grid> */}
 
-<Grid item xs={12} sm={6} md={4} lg={4}>
+<Grid item xs={12} sm={6} md={6} lg={4}>
   <Autocomplete
     disablePortal
     id="city-autocomplete"
@@ -1048,7 +1049,7 @@ if (governmentIdType === "PAN Card") {
 
 
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
                       <TextField
                         sx={{ width: "100%", mt: "10px" }}
                         label="PIN Code"
@@ -1134,7 +1135,7 @@ if (governmentIdType === "PAN Card") {
                     </Grid>
 
                     {loggedUserRole === "SUPERADMIN" ? (
-                                          <Grid item xs={12} sm={4} md={4} lg={4}>
+                                          <Grid item xs={12} sm={6} md={6} lg={4}>
                                           <FormControl sx={{ width: "100%", mt: "10px" }} required>
                                               <>
                                                 <InputLabel htmlFor="company">Company</InputLabel>
@@ -1248,7 +1249,7 @@ if (governmentIdType === "PAN Card") {
                       </FormControl>
                     </Grid> */}
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
                         <InputLabel htmlFor="dept">Department</InputLabel>
                         <Select
@@ -1288,7 +1289,7 @@ if (governmentIdType === "PAN Card") {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
                         <InputLabel htmlFor="role">Role</InputLabel>
                         <Select
@@ -1329,7 +1330,7 @@ if (governmentIdType === "PAN Card") {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
                       <TextField
                         sx={{ width: "100%", mt: "10px" }}
                         label="Employee Code"
@@ -1361,7 +1362,7 @@ if (governmentIdType === "PAN Card") {
                     </Grid>
 
                     {loggedUserRole !== "SUPERADMIN" ? (
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={6} lg={4}>
                         <FormControl fullWidth sx={{ width: "100%", mt: "10px" }} required>
                           <InputLabel id="approval-label">
                             Can Receptionist approve meet?

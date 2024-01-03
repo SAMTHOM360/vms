@@ -729,6 +729,7 @@ export default function Navbar({ toggleSidebar }) {
         // overflow: "visible",
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
         mt: "3.2em",
+        zIndex: theme => theme.zIndex.modal + 4,
         // bgcolor:'red'
         // mr: "7em",
       }}
@@ -1174,7 +1175,8 @@ export default function Navbar({ toggleSidebar }) {
               horizontal: 'right',
             }}
             sx={{
-              mt:"0.6em"
+              mt:"0.6em",
+              zIndex: theme => theme.zIndex.modal + 3
             }}
           >
             <Box

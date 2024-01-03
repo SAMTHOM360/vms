@@ -74,7 +74,7 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
-  zIndex: theme.zIndex.modal + 1,
+  zIndex: theme.zIndex.modal + 2,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {

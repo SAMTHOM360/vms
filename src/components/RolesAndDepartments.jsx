@@ -354,9 +354,12 @@ const RolesAndDepartments = () => {
         });
         console.error("unable to add Dept: ", error);
       }
-    }
 
     setBtnLoading(false);
+    } finally {
+      setBtnLoading(false)
+    }
+
   };
 
   const handleUpdateDept = async (e) => {
@@ -398,6 +401,7 @@ const RolesAndDepartments = () => {
 
     } catch (error) {
       console.error("unable to update dept", error);
+      setBtnLoading(false)
     } finally {
       setBtnLoading(false)
     }
