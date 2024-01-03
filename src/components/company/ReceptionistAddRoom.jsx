@@ -160,6 +160,7 @@ export default function ReceptionistAddRoom() {
   function handleSaveRoom() {
 
      setOpen(true); 
+    
     const addRoomUrl = Config.baseUrl + Config.apiEndPoints.addRoomEndPoint;
 
     const payload = {
@@ -293,6 +294,8 @@ export default function ReceptionistAddRoom() {
   //switch room
 
   function handleSwitch(row) {
+
+    setOpen(true)
     const isActiveRoomUrl =
       Config.baseUrl + Config.apiEndPoints.isActiveRoomEndPoint;
 
@@ -305,7 +308,9 @@ export default function ReceptionistAddRoom() {
     axios
       .post(isActiveRoomUrl, payload)
       .then((response) => {
-        if (response.data.message === "Success") {
+
+        setOpen(false)
+        if (response.data.message === "success") {
           alert("switched succesfully");
 
           // setActive(newActiveStatus);
@@ -325,6 +330,8 @@ export default function ReceptionistAddRoom() {
         // console.log(response)
       })
       .catch((error) => {
+
+        setOpen(false)
         console.log(error, "error");
       });
   }
@@ -674,8 +681,8 @@ export default function ReceptionistAddRoom() {
       <div>
       {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
       <Backdrop
-        style={{ zIndex: 1500 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 99 }}
+        // style={{ zIndex: 1000}} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
         open={open}
         onClick={handleClose}
       >

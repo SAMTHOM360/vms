@@ -711,8 +711,8 @@ const CompanyTable = () => {
         <div>
       {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
       <Backdrop
-        style={{ zIndex: 1500 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 99 }}
+        // style={{ zIndex: 1 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
         open={open}
         // onClick={handleClose}
       >

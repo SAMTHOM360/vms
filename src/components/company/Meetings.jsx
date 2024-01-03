@@ -64,6 +64,12 @@ import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
+
 const StyledModal = styled(Modal)({
   display: "flex",
   justifyContent: "center",
@@ -88,6 +94,10 @@ export default function Meetings() {
   const [endDateCleared, setEndDateCleared] = useState(false);
 
   // sessionStorage.setItem('activeListItem', '/meetings')
+
+
+     //loader
+     const [openLoader, setOpenLoader] = useState(false);  
   useEffect(() => {
     setActiveListItem("/meetings");
   }, [setActiveListItem]);
@@ -351,7 +361,7 @@ export default function Meetings() {
   // now previous
   function fetchData() {
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
-
+ setOpenLoader(true)
     const payload = {
       page: page,
       size: rowsPerPage,
@@ -381,6 +391,8 @@ export default function Meetings() {
       .post(getVisitorUrl, payload)
 
       .then((response) => {
+
+        setOpenLoader(false)
         const responseData = response.data.data.meetings;
         // console.log(" meet all payload", responseData);
 
@@ -397,13 +409,14 @@ export default function Meetings() {
         setApprovedMeetings(approvedCount);
       })
       .catch((error) => {
+        setOpenLoader(false)
         console.error("Error fetching data:", error);
       });
   }
 
   const handleAddMeeting = (value, status1) => {
     // console.log("check icon clicked")
-    //
+    setOpenLoader(true)
     const meetingData = {
       id: value.id,
       status: status1,
@@ -430,6 +443,7 @@ export default function Meetings() {
       .then((response) => {
         // handleCloseModal();
         // setSelectedRoom('');
+        setOpenLoader(false)
         setStatus("");
 
         if (response.data.data.status === "CANCELLED") {
@@ -441,6 +455,7 @@ export default function Meetings() {
         fetchData();
       })
       .catch((error) => {
+        setOpenLoader(false)
         console.error("Error adding meeting:", error);
       });
     // }
@@ -1162,7 +1177,7 @@ export default function Meetings() {
                                     >
                                       <img
                                         src={visitor.visitor.imageUrl}
-                                        alt="Company Logo"
+                                        alt="Visitor Image"
                                         style={{
                                           width: "40px",
                                           height: "40px",
@@ -1565,6 +1580,18 @@ export default function Meetings() {
             )}
           </Grid>
         </Grid>
+
+        <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        // style={{ zIndex: 1 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
+        open={openLoader}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
       </Box>
     </>
   );
