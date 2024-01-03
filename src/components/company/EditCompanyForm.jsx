@@ -23,6 +23,12 @@ import Grid from '@mui/material/Grid';
 import Autocomplete from '@mui/material/Autocomplete';
 import Config from "../../Config/Config";
 
+
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 export default function EditCompanyForm() {
   const { companyId } = useParams();
 
@@ -242,6 +248,8 @@ export default function EditCompanyForm() {
 
 
     if (!logoFile) {
+
+      setOpen(false)
       // User clicked cancel without selecting a file
       return;
     }
@@ -249,7 +257,7 @@ export default function EditCompanyForm() {
 
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
-
+      setOpen(false)
 
       alert("Allowed file formats: .jpg, .jpeg, .png")
       // setErrors({
@@ -261,6 +269,7 @@ export default function EditCompanyForm() {
 
     // Check if file size exceeds the limit
     if (logoFile.size > MAX_FILE_SIZE) {
+      setOpen(false)
       alert("Maximum file size exceeded (5MB)");
       // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
       return;
@@ -287,10 +296,15 @@ export default function EditCompanyForm() {
   const [buildingIdError, setBuildingIdError] = useState("");
   // console.log(buildingIdError, "buildingIdError");
 
-
+//loader
+const [open, setOpen] = React.useState(false);
+// const handleClose = () => {
+//   setOpen(false);
+// };
 
 
   const handleSave = async (e) => {
+    setOpen(true); 
 
     e.preventDefault();
     console.log(companyData, "companydata")
@@ -416,9 +430,12 @@ export default function EditCompanyForm() {
 
 
         if (res.status === 200) {
+
+          setOpen(false); 
+
           alert("Form submitted successfully");
 
-       
+     
           setLogoUpdated(false);
           navigate('/companyDetails');
 
@@ -433,7 +450,7 @@ export default function EditCompanyForm() {
 
 
   } catch (error) {
-
+    setOpen(false); 
       if (error.response && error.response.status === 409) {
 
           alert(error.response.data.message);
@@ -993,6 +1010,18 @@ export default function EditCompanyForm() {
             </form>
           </Grid>
         </Grid>
+
+        <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        style={{ zIndex: 1500 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 99 }}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
       </Box>
     </>
   );

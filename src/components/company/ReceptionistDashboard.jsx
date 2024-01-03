@@ -63,6 +63,11 @@ import { style } from "@mui/system";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 
+
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -115,6 +120,9 @@ export default function Dashboard() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    //loader
+    const [open, setOpen] = useState(false);  
 
   const [visitors, setVisitors] = useState([]);
 
@@ -286,7 +294,7 @@ export default function Dashboard() {
     return page * rowsPerPage + index + 1;
   }
 
-  const [open, setOpen] = useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
 
   const handleOpenModal = (value) => {
     setItem(value);
@@ -343,6 +351,8 @@ export default function Dashboard() {
 
   //  add meeting details
   const handleAddMeeting = () => {
+
+    setOpenLoader(true)
     const meetingData = {
       id: item.id,
       status:
@@ -362,6 +372,8 @@ export default function Dashboard() {
       selectedStatusModal &&
       selectedStatusModal !== "CANCELLED"
     ) {
+
+      setOpenLoader(false)
       // console.log("alert room")
       alert("Choose a room");
       return;
@@ -369,11 +381,15 @@ export default function Dashboard() {
 
     if (!selectedRoom && item.status === "APPROVED") {
       // console.log("alert room")
+
+      setOpenLoader(false)
       alert("Choose a room");
       return;
     }
 
     if (!selectedStatusModal && selectedRoom && item.status === "PENDING") {
+
+      setOpenLoader(false)
       alert("Choose a status");
     }
 
@@ -397,6 +413,8 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
+
+        setOpenLoader(false)
         if (response.data.message === "Meeting is cancelled") {
           alert("Meeting cancelled succesfully");
           setIsCancelled(true);
@@ -418,7 +436,7 @@ export default function Dashboard() {
         // } else {
         //   alert("An unexpected error occurred");
         // }
-
+        setOpenLoader(false)
         if (error.response.data.message) {
           alert(error.response.data.message);
         }
@@ -485,6 +503,8 @@ export default function Dashboard() {
   const [adminData, setAdminData] = useState([]);
 
   function fetchData() {
+
+    setOpenLoader(true)
     // setSelectedStatusOptions(location?.state?.filter)
     // setStartDate(formattedDate)
     // setEndDate(formattedDate)
@@ -512,6 +532,8 @@ export default function Dashboard() {
     axios
       .post(getVisitorUrl, payload)
       .then((response) => {
+
+        setOpenLoader(false)
         const responseData = response.data.data.meetings;
 
         const responseDataLength = response.data.data.meetings.length;
@@ -538,6 +560,8 @@ export default function Dashboard() {
         setApprovedVisitors(response.data.data.totalApproved);
       })
       .catch((error) => {
+
+        setOpenLoader(false)
         console.error("Error fetching data:", error);
       });
   }
@@ -1331,13 +1355,22 @@ export default function Dashboard() {
                           </TableCell>
                         )}
 
-                        <TableCell sx={{ color: "white" }} align="center">
-                          Print Pass
-                        </TableCell>
 
-                        <TableCell sx={{ color: "white" }} align="center">
-                          Visitor Checkout
-                        </TableCell>
+{isADMIN ? null : (
+    <TableCell sx={{ color: "white" }} align="center">
+    Print Pass
+  </TableCell>
+
+)}
+                      
+{isADMIN ? null : (
+
+<TableCell sx={{ color: "white" }} align="center">
+Visitor Checkout
+</TableCell>
+
+)}
+                      
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -1543,51 +1576,56 @@ export default function Dashboard() {
                 )
               }>Print</Button>
         </TableCell> */}
+                      {isADMIN ? null :(
+                        <TableCell align="center">
+                        {visitor.status !== "CANCELLED" &&
+                        visitor.status !== "COMPLETED" &&
+                        visitor.status !== "PENDING" &&
+                        visitor.status !== "CANCELLED_BY_VISITOR" &&
+                        !isADMIN ? (
+                          <Button
+                            variant="outlined"
+                            onClick={() =>
+                              handlePrintPass(
+                                visitor.id,
+                                visitor.visitor.name,
+                                visitor.visitor.phoneNumber
+                              )
+                            }
+                          >
+                            Print
+                          </Button>
+                        ) : (
+                          <Button variant="outlined" disabled>
+                            Print
+                          </Button>
+                        )}
+                      </TableCell>
+                      )}
+                            
+{isADMIN ? null :(
+     <TableCell align="center">
+     {/* Conditional rendering of the Checkout button */}
+     {visitor.status === "INPROCESS" && !isADMIN ? (
+       <Button
+         variant="outlined"
+         onClick={() => {
+           CheckOut(visitor.visitor.phoneNumber);
+         }}
+         disabled={disable}
+         sx={{ color: "purple" }}
+       >
+         Checkout
+       </Button>
+     ) : (
+       <Button variant="outlined" disabled>
+         Checkout
+       </Button>
+     )}
+   </TableCell>
 
-                            <TableCell align="center">
-                              {visitor.status !== "CANCELLED" &&
-                              visitor.status !== "COMPLETED" &&
-                              visitor.status !== "PENDING" &&
-                              visitor.status !== "CANCELLED_BY_VISITOR" &&
-                              !isADMIN ? (
-                                <Button
-                                  variant="outlined"
-                                  onClick={() =>
-                                    handlePrintPass(
-                                      visitor.id,
-                                      visitor.visitor.name,
-                                      visitor.visitor.phoneNumber
-                                    )
-                                  }
-                                >
-                                  Print
-                                </Button>
-                              ) : (
-                                <Button variant="outlined" disabled>
-                                  Print
-                                </Button>
-                              )}
-                            </TableCell>
-
-                            <TableCell align="center">
-                              {/* Conditional rendering of the Checkout button */}
-                              {visitor.status === "INPROCESS" && !isADMIN ? (
-                                <Button
-                                  variant="outlined"
-                                  onClick={() => {
-                                    CheckOut(visitor.visitor.phoneNumber);
-                                  }}
-                                  disabled={disable}
-                                  sx={{ color: "purple" }}
-                                >
-                                  Checkout
-                                </Button>
-                              ) : (
-                                <Button variant="outlined" disabled>
-                                  Checkout
-                                </Button>
-                              )}
-                            </TableCell>
+)}
+                         
                           </TableRow>
                         ))
                       ) : (
@@ -2028,6 +2066,18 @@ export default function Dashboard() {
         </Grid>
         {/* </div> */}
       </Grid>
+
+      <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        style={{ zIndex: 1500 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 99 }}
+        open={openLoader}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
       {/* // </Grid> */}
     </Box>
   );

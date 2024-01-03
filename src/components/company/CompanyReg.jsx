@@ -21,6 +21,11 @@ import Sidebar from "../../global/Sidebar";
 import Loader from "../Loader";
 import Autocomplete from "@mui/material/Autocomplete";
 
+
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import Config from "../../Config/Config";
 
 export default function CompanyReg() {
@@ -69,7 +74,16 @@ export default function CompanyReg() {
 
   const [logoUpdated, setLogoUpdated] = useState(false);
 
+//loader
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleSubmit = async (e) => {
+
+
+    setOpen(true); 
     const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint;
 
     e.preventDefault();
@@ -139,6 +153,8 @@ export default function CompanyReg() {
     setErrors(newErrors); // Update errors state
 
     if (Object.keys(newErrors).length === 0) {
+     
+
       try {
         const formData = new FormData();
         formData.append("name", values.name);
@@ -166,7 +182,11 @@ export default function CompanyReg() {
         });
 
         if (res.status === 200) {
+
+          setOpen(false); 
           alert("Form submitted successfully");
+
+         
 
           setValues({
             name: "",
@@ -188,6 +208,8 @@ export default function CompanyReg() {
           alert(res.data.message);
         }
       } catch (error) {
+
+        setOpen(false); 
         if (error.response && error.response.status === 409) {
           alert(error.response.data.message);
         } else {
@@ -297,12 +319,14 @@ export default function CompanyReg() {
 
     if (!logoFile) {
       // alert("Select a logo")
-
+      setOpen(false)
       return;
     }
 
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
+
+      setOpen(false)
       alert("Allowed file formats: .jpg, .jpeg, .png");
       // setErrors({
       //     ...errors,
@@ -333,9 +357,11 @@ export default function CompanyReg() {
     const maxSizeInMB = 5; // Maximum size in MB
 
     if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+
+      setOpen(false)
       //   alert(`File size should be between ${minSizeInMB}MB and ${maxSizeInMB}MB`);
       alert(`File size should be between 100KB and 5MB`);
-
+     
       return;
     }
 
@@ -1389,6 +1415,19 @@ export default function CompanyReg() {
             </div>
           </Grid>
         </Grid>
+
+
+        <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        style={{ zIndex: 1500 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 99 }}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
       </Box>
     </>
   );
