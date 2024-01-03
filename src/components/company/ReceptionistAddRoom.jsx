@@ -31,11 +31,31 @@ import { TextField } from "@mui/material";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 
+
+
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+// import Button from '@mui/material/Button';
+
+
+
+
+
+
+
+
+
+
 // import DialogContent from '@material-ui/core/DialogContent';
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
+
+
+
+
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
   const { setActiveListItem } = useAuth();
 
@@ -59,6 +79,17 @@ export default function ReceptionistAddRoom() {
 
   const [reload, setReload] = useState(false);
 
+
+  //loader
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+
   //switch
 
   const [active, setActive] = useState("");
@@ -75,6 +106,7 @@ export default function ReceptionistAddRoom() {
   // Function to handle opening the Add Room modal
   const handleOpenAddRoomDialog = () => {
     setOpenAddRoomDialog(true);
+
     setRoomName("");
     setCapacity("");
     setEditMode(false);
@@ -84,6 +116,7 @@ export default function ReceptionistAddRoom() {
   // Function to handle closing the Add Room modal
   const handleCloseAddRoomDialog = () => {
     setOpenAddRoomDialog(false);
+  
     // setEditMode(false);
   };
 
@@ -107,17 +140,27 @@ export default function ReceptionistAddRoom() {
   // Function to handle changes in the capacity field
   const handleCapacityChange = (event) => {
     const enteredValue = event.target.value;
-    const numericValue = parseInt(enteredValue);
+  const numericValue = enteredValue.replace(/\D/, ''); 
 
-    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
-      setCapacity(event.target.value);
+    // if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
+    //   setCapacity(event.target.value);
+    // } else {
+    //   setCapacity("");
+    // }
+    if (numericValue !== '' && numericValue >= 1 && numericValue <= 100) {
+      setCapacity(numericValue);
     } else {
-      setCapacity("");
+      setCapacity(''); // Reset the capacity if the entered value is invalid
     }
+
+
   };
 
   //save room
   function handleSaveRoom() {
+
+     setOpen(true); 
+    
     const addRoomUrl = Config.baseUrl + Config.apiEndPoints.addRoomEndPoint;
 
     const payload = {
@@ -129,13 +172,19 @@ export default function ReceptionistAddRoom() {
     };
 
     if (!roomName) {
+      setOpen(false)
       alert("Room is required");
+
       return;
     }
     if (!capacity) {
+      setOpen(false)
       alert("Capacity is required");
       return;
     }
+
+
+   
 
     axios
       .post(addRoomUrl, payload)
@@ -143,13 +192,18 @@ export default function ReceptionistAddRoom() {
         handleCloseAddRoomDialog();
         setReload(!reload);
         setPage(0);
+        setOpen(false); 
         // console.log(response)
-
-        alert("Room added");
+        if(response.data.message === "success"){
+            alert("Room added");
         setRoomName("");
         setCapacity("");
+
+        }
+      
       })
       .catch((error) => {
+        setOpen(false); 
         // if(response.data.message === "capacity is required")
         if (error.response.data.message) {
           alert(error.response.data.message);
@@ -170,6 +224,8 @@ export default function ReceptionistAddRoom() {
   };
 
   function handleUpdateRoom() {
+
+    setOpen(true)
     const updateRoomUrl =
       Config.baseUrl + Config.apiEndPoints.updateRoomEndPoint;
 
@@ -183,10 +239,12 @@ export default function ReceptionistAddRoom() {
     };
 
     if (!roomName) {
+      setOpen(false)
       alert("Room is required");
       return;
     }
     if (!capacity) {
+      setOpen(false)
       alert("Capacity is required");
       return;
     }
@@ -201,11 +259,13 @@ export default function ReceptionistAddRoom() {
 
           setReload(!reload);
           setPage(0);
+          setOpen(false); 
 
           // console.log(response);
         }
       })
       .catch((error) => {
+        setOpen(false); 
         console.log(error);
       });
   }
@@ -234,6 +294,8 @@ export default function ReceptionistAddRoom() {
   //switch room
 
   function handleSwitch(row) {
+
+    setOpen(true)
     const isActiveRoomUrl =
       Config.baseUrl + Config.apiEndPoints.isActiveRoomEndPoint;
 
@@ -246,8 +308,10 @@ export default function ReceptionistAddRoom() {
     axios
       .post(isActiveRoomUrl, payload)
       .then((response) => {
-        if (response.data.message === "Success") {
-          alert("switched succesfully");
+
+        setOpen(false)
+        if (response.data.message) {
+          alert(response.data.message);
 
           // setActive(newActiveStatus);
 
@@ -266,6 +330,8 @@ export default function ReceptionistAddRoom() {
         // console.log(response)
       })
       .catch((error) => {
+
+        setOpen(false)
         console.log(error, "error");
       });
   }
@@ -336,6 +402,8 @@ export default function ReceptionistAddRoom() {
 
   //fetchRoomDetails function
   function fetchRoomDetails() {
+
+    setOpen(true)
     const roomDetailsUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsEndPoint +
@@ -347,6 +415,8 @@ export default function ReceptionistAddRoom() {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
+
+        setOpen(false)
         response.data.data
           ? setRoomDetails(response.data.data)
           : console.log("no rooms");
@@ -357,6 +427,7 @@ export default function ReceptionistAddRoom() {
         // console.log(response.data.data,"roomdetailsdata")
       })
       .catch((error) => {
+        setOpen(false)
         console.error("Error fetching data", error);
       });
   }
@@ -554,7 +625,7 @@ export default function ReceptionistAddRoom() {
                   value={capacity}
                   onChange={handleCapacityChange}
                   // fullWidth
-
+                placeholder="Max Limit:100"
                   variant="outlined"
                   margin="normal"
                 />
@@ -606,6 +677,18 @@ export default function ReceptionistAddRoom() {
           </Dialog>
         </Grid>
       </Grid>
+
+      <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        // style={{ zIndex: 1000}} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
     </Box>
   );
 }

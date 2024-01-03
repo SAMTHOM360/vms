@@ -26,6 +26,12 @@ import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 import InfoIcon from "@mui/icons-material/Info";
 
+
+
+//loader
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const rowsPerPage = 10;
 
@@ -91,6 +97,10 @@ const CompanyTable = () => {
   // const [companyNames, setCompanyNames] = useState([])
   const [selectedCompanyNames, setSelectedCompanyNames] = useState("");
 
+
+   //loader
+  const [open, setOpen] = useState(false);  
+
   useEffect(() => {
     fetchAllData();
   }, [page, rowsPerPage, reload]);
@@ -108,6 +118,8 @@ const CompanyTable = () => {
   }, [selectedBuildingIds, selectedCompanyNames]);
 
   function fetchAllData() {
+
+    setOpen(true)
     const apiUrl = Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint;
     const payload = {
       page: page,
@@ -122,12 +134,16 @@ const CompanyTable = () => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
+
+        setOpen(false)
         const responseData = response.data.data.companies;
         setLength(response.data.data.totalElements);
 
         setCompanies(responseData);
       })
       .catch((error) => {
+
+        setOpen(false)
         console.error("Error fetching data:", error);
       });
   }
@@ -178,6 +194,8 @@ const CompanyTable = () => {
   };
 
   const handleSwitchToggle = (companyId, isActive) => {
+
+    setOpen(true);
     console.log(isActive, "isActive");
 
     const activeDeactiveUrl =
@@ -198,6 +216,8 @@ const CompanyTable = () => {
         // } else  if(isActive === false){
         //   toast.success(`Company is deactivated.`);
         // }
+
+        setOpen(false)
         if (response.data.message) {
           alert(response.data.message);
           setReload(!reload);
@@ -206,6 +226,8 @@ const CompanyTable = () => {
         // setPage(0)
       })
       .catch((error) => {
+
+        setOpen(false)
         console.error("Error toggling switch:", error);
       });
 
@@ -684,6 +706,19 @@ const CompanyTable = () => {
             </div>
           </Grid>
         </Grid>
+
+
+        <div>
+      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+      <Backdrop
+        // style={{ zIndex: 1 }} 
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
       </Box>
     </>
   );
