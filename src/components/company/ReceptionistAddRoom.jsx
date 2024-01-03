@@ -266,6 +266,9 @@ export default function ReceptionistAddRoom() {
       })
       .catch((error) => {
         setOpen(false); 
+        if (error.response.data.message) {
+          alert(error.response.data.message);
+        }
         console.log(error);
       });
   }
