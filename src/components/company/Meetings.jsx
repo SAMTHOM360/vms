@@ -1146,9 +1146,8 @@ export default function Meetings() {
                         </TableRow>
                       </TableHead>
                       <TableBody sx={{}}>
-                        {filteredCompanies
-                          // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          .map((visitor, index) => (
+                        {filteredCompanies.length > 0 ? (
+                          filteredCompanies .map((visitor, index) => (
                             <TableRow key={index}>
                               {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
@@ -1427,7 +1426,20 @@ export default function Meetings() {
                                                             <ClearIcon style={{cursor:"pointer"}}onClick={()=>handleAddMeeting(visitor,'CANCELLED')}/> */}
                               </TableCell>
                             </TableRow>
-                          ))}
+                          ))
+
+                        ):(
+                          <TableRow>
+                          <TableCell colSpan={14} sx={{ textAlign: "center" }}>
+                            No data
+                          </TableCell>
+                        </TableRow>
+
+                        )
+                        
+                        }
+                        
+                        
                       </TableBody>
                     </Table>
                     {/* <TablePagination
