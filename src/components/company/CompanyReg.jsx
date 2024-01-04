@@ -83,7 +83,7 @@ export default function CompanyReg() {
   const handleSubmit = async (e) => {
 
 
-    setOpen(true); 
+   
     const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint;
 
     e.preventDefault();
@@ -153,6 +153,7 @@ export default function CompanyReg() {
     setErrors(newErrors); // Update errors state
 
     if (Object.keys(newErrors).length === 0) {
+      setOpen(true); 
      
 
       try {
@@ -314,33 +315,29 @@ export default function CompanyReg() {
   // };
 
   const handleLogoChange = (event) => {
+
+    setOpen(false)
     const allowedExtensions = ["image/jpeg", "image/jpg", "image/png"];
     const logoFile = event.target.files[0];
 
     if (!logoFile) {
-      // alert("Select a logo")
-      setOpen(false)
+     
       return;
     }
 
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
-
-      setOpen(false)
       alert("Allowed file formats: .jpg, .jpeg, .png");
-      // setErrors({
-      //     ...errors,
-      //     logo: "Allowed file formats: .jpg, .jpeg, .png"
-      // });
+   
       return;
     }
 
-    // Check if file size exceeds the limit
-    // if (logoFile.size > MAX_FILE_SIZE) {
-    //     alert("Maximum file size exceeded (5MB)");
-    //     // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
-    //     return;
-    // }
+ 
+    if (logoFile.size > MAX_FILE_SIZE) {
+        alert("Maximum file size exceeded (5MB)");
+        // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+        return;
+    }
 
     // Check if file size is within the range (between 1MB and 5MB)
     // const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
@@ -352,18 +349,17 @@ export default function CompanyReg() {
     //   return;
     // }
 
-    const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
-    const minSizeInMB = 0.1; // Minimum size in MB (100KB)
-    const maxSizeInMB = 5; // Maximum size in MB
+    const fileSizeInMB = logoFile.size / (1024 * 1024);
+    const minSizeInMB = 0.1;
+    const maxSizeInMB = 5; 
 
-    if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+    // if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
 
-      setOpen(false)
-      //   alert(`File size should be between ${minSizeInMB}MB and ${maxSizeInMB}MB`);
-      alert(`File size should be between 100KB and 5MB`);
      
-      return;
-    }
+    //   alert(`File size should be between 100KB and 5MB`);
+     
+    //   return;
+    // }
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);

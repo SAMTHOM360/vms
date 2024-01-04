@@ -243,13 +243,15 @@ export default function EditCompanyForm() {
 
 
   const handleLogoChange = (event) => {
+
+    setOpen(false)
     const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
     const logoFile = event.target.files[0];
 
 
     if (!logoFile) {
 
-      setOpen(false)
+      // setOpen(false)
       // User clicked cancel without selecting a file
       return;
     }
@@ -257,7 +259,7 @@ export default function EditCompanyForm() {
 
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
-      setOpen(false)
+      // setOpen(false)
 
       alert("Allowed file formats: .jpg, .jpeg, .png")
       // setErrors({
@@ -269,7 +271,7 @@ export default function EditCompanyForm() {
 
     // Check if file size exceeds the limit
     if (logoFile.size > MAX_FILE_SIZE) {
-      setOpen(false)
+      // setOpen(false)
       alert("Maximum file size exceeded (5MB)");
       // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
       return;
@@ -304,7 +306,7 @@ const [open, setOpen] = React.useState(false);
 
 
   const handleSave = async (e) => {
-    setOpen(true); 
+   
 
     e.preventDefault();
     console.log(companyData, "companydata")
@@ -380,6 +382,7 @@ const [open, setOpen] = React.useState(false);
 
 
     if (Object.keys(newErrors).length === 0) {
+      setOpen(true); 
 
       try {
         const formData = new FormData();

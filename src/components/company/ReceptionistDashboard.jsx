@@ -1582,6 +1582,7 @@ Visitor Checkout
                         visitor.status !== "COMPLETED" &&
                         visitor.status !== "PENDING" &&
                         visitor.status !== "CANCELLED_BY_VISITOR" &&
+                        !(visitor.status === "APPROVED" && visitor.room === null) &&
                         !isADMIN ? (
                           <Button
                             variant="outlined"
