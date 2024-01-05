@@ -381,6 +381,9 @@ const RolesAndDepartments = () => {
           : null
         : null,
       name: editedDeptData.deptName,
+      company: {
+        id: deptFormData.company.id,
+      },
     };
 
     // console.log('update dept payload', payload)
@@ -400,8 +403,27 @@ const RolesAndDepartments = () => {
       }
 
     } catch (error) {
-      console.error("unable to update dept", error);
-      setBtnLoading(false)
+      if(error.request.status === 400){
+
+        let errMessage = '';
+
+
+        if (error.response && error.response.data && error.response.data.message) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage)+' !!!', {
+            toastId:"dept-err15"
+          });
+        }
+ 
+ 
+      }
+       else {
+        toast.error('Something went wrong !!!', {
+          toastId:"depts-err16"
+        });
+        setBtnLoading(false)
+      }
     } finally {
       setBtnLoading(false)
     }

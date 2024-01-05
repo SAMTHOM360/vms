@@ -117,6 +117,55 @@ export default function Navbar({ toggleSidebar }) {
     Authorization: `Bearer ${AuthToken}`,
   };
 
+
+    
+  const companyName = sessionStorage.getItem("companyName");
+
+  const [formData, setFormData] = useState({
+    id: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    dob: "",
+    gender: "",
+    govtId: "",
+    image: "",
+    dept: {
+      id: "",
+      name: "",
+    },
+    state: {
+      id: "",
+      name: "",
+    },
+    city: {
+      id: "",
+      name: "",
+    },
+    role: {
+      id: "",
+      name: "",
+    },
+    pincode: "",
+    empCode: "",
+    createdOn: "",
+  });
+
+  const [changedItem, setChangedItem] = useState({
+    oldpassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword2, setShowPassword2] = useState(false);
+    const [showPassword3, setShowPassword3] = useState(false);
+    const [statusDotstatus, setStatusDotStatus] = useState();
+
+
   const adminId = sessionStorage.getItem("adminId");
   const loggedUserName = sessionStorage.getItem("loggedUserName");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
@@ -139,6 +188,8 @@ export default function Navbar({ toggleSidebar }) {
   const [ isHamburgerAllowed, setIsHamburgerAllowed] = useState(true)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false)
+  const [avatarLink, setAvatarLink] = useState("");
+  const [isAvatarLinkPresent, setIsAvatarLinkPresent] = useState(false);
 
   
 
@@ -187,52 +238,29 @@ export default function Navbar({ toggleSidebar }) {
     // console.log('hambuger is changing', )
   }, [isHamburgerAllowed])
 
-  
-  const companyName = sessionStorage.getItem("companyName");
 
-  const [formData, setFormData] = useState({
-    id: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    dob: "",
-    gender: "",
-    govtId: "",
-    image: "",
-    dept: {
-      id: "",
-      name: "",
-    },
-    state: {
-      id: "",
-      name: "",
-    },
-    city: {
-      id: "",
-      name: "",
-    },
-    role: {
-      id: "",
-      name: "",
-    },
-    pincode: "",
-    empCode: "",
-    createdOn: "",
-  });
+  const isValidLink = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
-  const [changedItem, setChangedItem] = useState({
-    oldpassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
-    useState(false);
+  useEffect(() => {
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPassword2, setShowPassword2] = useState(false);
-    const [showPassword3, setShowPassword3] = useState(false);
-    const [statusDotstatus, setStatusDotStatus] = useState();
+    if (isValidLink(avatarLink)) {
+      setIsAvatarLinkPresent(true);
+    } else {
+      setIsAvatarLinkPresent(false);
+    }
+  }, [avatarLink]);
+
+  // console.log('avatarLink', avatarLink)
+
+  // console.log('isAvatarLinkPresent', isAvatarLinkPresent)
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -518,6 +546,7 @@ export default function Navbar({ toggleSidebar }) {
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
+        setAvatarLink(apiData.image ? apiData.image : "")
         setStatusDotStatus(apiData.isPresent);
         setAutoStatusChange(apiData.isPresent);
 
@@ -532,7 +561,7 @@ export default function Navbar({ toggleSidebar }) {
           // dob: apiData.dob || "",
           // gender: apiData.gender || "",
           // govtId: apiData.govtId || "",
-          // image: apiData.image || "",
+          image: apiData.image ? apiData.image : "",
           dept: {
             id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
             name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
@@ -560,6 +589,8 @@ export default function Navbar({ toggleSidebar }) {
       console.error("Error fetching data:", error);
     }
   }
+
+  // console.log('formData', formData)
 
 
   const handleMobileMenuClose = () => {
@@ -730,6 +761,7 @@ export default function Navbar({ toggleSidebar }) {
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
         mt: "3.2em",
         zIndex: theme => theme.zIndex.modal + 4,
+        paddingTop:0,
         // bgcolor:'red'
         // mr: "7em",
       }}
@@ -757,8 +789,18 @@ export default function Navbar({ toggleSidebar }) {
               justifyContent:'center',
               alignItems:'center',
               mb:'0.5em',
-              // bgcolor:'red'
+              bgcolor:'#1B2541',
               userSelect:'none',
+              color:'white',
+              mt:-1, 
+              py:1,
+              maxWidth:'13.6em',
+              minHeight:'4em',
+              background:'#99AAC6',
+              backgroundImage:`linear-gradient(to left bottom, #051937, #091d3a, #0e203d, #122441, #162844, #22334f, #2e3e5a, #3a4a65, #51617c, #687894, #8091ad, #99aac6);`,
+              // position:'sticky !important',
+              // top:0,
+              // zIndex: (theme) => theme.zIndex.modal + 4
             }}
           >
             <Typography
@@ -766,16 +808,23 @@ export default function Navbar({ toggleSidebar }) {
               sx={{
                 // fontSize: { xs: "17px", sm: "20px" },
                 fontSize:'19px',
-                fontWeight:'600'
+                fontWeight:'600',
+                color:'#E6E6E6',
+                wordBreak:'break-word',
+                textAlign:'center',
+                px:0.5
                 
               }}
             >
               {formData.firstName} {formData.lastName}
+
+              {/* ejfeifhnienfien eodinoefoefoinem */}
             </Typography>
             <Typography
               component={"span"}
               sx={{
-                fontSize:'15px'
+                fontSize:'13px',
+                color:'#E8E7E7',
               }}
             >
               ({loggedUserRole})
@@ -790,6 +839,7 @@ export default function Navbar({ toggleSidebar }) {
               key="profileMenuItem"
               onClick={handleProfileOpen}
               sx={{
+                minHeight:'unset',
                 height: "2em",
                 fontSize: "15px",
               }}
@@ -815,6 +865,7 @@ export default function Navbar({ toggleSidebar }) {
             key="receptComScreenItem"
             onClick={handleChangeCompanyScreen}
             sx={{
+              minHeight:'unset',
               height: "2em",
               fontSize: "15px",
             }}
@@ -842,6 +893,7 @@ export default function Navbar({ toggleSidebar }) {
       <MenuItem
         onClick={handleChangePasswordDialogOpen}
         sx={{
+          minHeight:'unset',
           height: "2em",
           fontSize: "15px",
         }}
@@ -863,6 +915,7 @@ export default function Navbar({ toggleSidebar }) {
       <MenuItem
         onClick={handleLogout}
         sx={{
+          minHeight:'unset',
           height: "2em",
           fontSize: "15px",
         }}
@@ -1093,7 +1146,8 @@ export default function Navbar({ toggleSidebar }) {
 
           <Box sx={{ flexGrow: 1,
              bgcolor:'cyan',
-              minWidth:'12em',
+              // minWidth:'12em',
+              minWidth:{lg:'12em', md:'10em', sm:'7em', xs:'3em'}
                }} />
 
           <Box sx={{
@@ -1235,7 +1289,8 @@ export default function Navbar({ toggleSidebar }) {
                 md: "flex",
                 color: "#ffffff",
                 position: "relative",
-                bgcolor:'orange'
+                // bgcolor:'orange',
+                height:"100%",
               },
             }}
           >
@@ -1255,27 +1310,12 @@ export default function Navbar({ toggleSidebar }) {
                   zIndex: 1,
                   width: "13px",
                   height: "13px",
-                  backgroundColor: statusDot, // Change the color to represent "present" or "absent"
+                  backgroundColor: statusDot,
                   borderRadius: "50%",
                   border: "2px solid #fff",
                 }}
               />
             )}
-
-            {/* <div
-              // onClick={handleStatusUpdate}
-              style={{
-                position: "absolute",
-                top: "2.2em",
-                left: "0.8em",
-                zIndex: 1,
-                width: "13px",
-                height: "13px",
-                backgroundColor: statusDot, // Change the color to represent "present" or "absent"
-                borderRadius: "50%",
-                border: "2px solid #fff",
-              }}
-            /> */}
 
             <IconButton
               size="large"
@@ -1290,7 +1330,12 @@ export default function Navbar({ toggleSidebar }) {
               //   alignItems: 'center',
               // }}
             >
+              {isAvatarLinkPresent ? 
+              <Avatar alt="NA" src={formData.image} />
+              :
               <AccountCircle sx={{ fontSize: "40px" }} />
+              }
+
             </IconButton>
           </Box>
           {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>

@@ -311,8 +311,8 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
         }}
       >
         {timelineApiData.map((dataItem, index) => {
-          const meetingStartDateTime = dataItem.meetingStartDateTime || "";
-          const meetingEndDateTime = dataItem.meetingEndDateTime || "";
+          const meetingStartDateTime = dataItem.meetingStartDateTime ? dataItem.meetingStartDateTime : "";
+          const meetingEndDateTime = dataItem.meetingEndDateTime ?dataItem.meetingEndDateTime : "";
           const formattedMeetingStartDateTime =
             formatMeetingStartDateTime(meetingStartDateTime);
           const formattedMeetingEndDateTime =
@@ -326,7 +326,7 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
               dotColor = "#FFA635";
             } else if (dataItem.status === "COMPLETED") {
               dotColor = "#34E60C";
-              roomNo = `|| ${dataItem.room.roomName}`;
+              roomNo = `|| ${dataItem.room?.roomName}`;
             } else if (dataItem.status === "CANCELLED") {
               dotColor = "red";
             }
@@ -347,15 +347,15 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
           let chipColor = "#E9E9E9";
           let chipBgColor = "#E2E2E21f";
           if (dataItem) {
-            if (dataItem.context === "BUSINESS") {
+            if (dataItem.context && dataItem.context === "BUSINESS") {
               chipText = "Business";
               chipColor = "#6CD221";
               chipBgColor = "#6CD2211f";
-            } else if (dataItem.context === "CASUAL") {
+            } else if (dataItem.context && dataItem.context === "CASUAL") {
               chipText = "Casual";
               chipColor = "#F9E927";
               chipBgColor = "#F9E9271f";
-            } else if (dataItem.context === "INTERVIEW") {
+            } else if (dataItem.context && dataItem.context === "INTERVIEW") {
               chipText = "Interview";
               chipColor = "#FF8A52";
               chipBgColor = "#FF8A521f";
@@ -363,12 +363,12 @@ export default function MeetingTimeline({ timelineApiData, handleTodayClick }) {
           }
 
           let info = false;
-          if (dataItem.status === "PENDING") {
+          if (dataItem.status && dataItem.status === "PENDING") {
             info = true;
           }
 
           if (
-            dataItem &&
+            dataItem && dataItem.status &&
             (dataItem.status === "PENDING" ||
               dataItem.status === "COMPLETED" ||
               dataItem.status === "CANCELLED")

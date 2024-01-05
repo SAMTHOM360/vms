@@ -418,7 +418,148 @@ const Employee = () => {
         return;
       }
 
-      const commonColumns = [
+      // const commonColumns = [
+      //   {
+      //     field: "actions",
+      //     align: "center",
+      //     headerAlign: "center",
+      //     headerName: "Actions",
+      //     width: 110,
+      //     fixed: true,
+      //     editable: false,
+      //     // hide: false,
+      //     hidePrint: true,
+      //     sortable: false,
+      //     filterable: false,
+      //     disableColumnFilter: true,
+      //     disableColumnMenu: true,
+      //     disableColumnSelector: true,
+      //     renderCell: (params) => (
+      //       <div>
+      //         <IconButton
+      //           color="primary"
+      //           onClick={() => handleEdit(params.row)}
+      //         >
+      //           <EditIcon />
+      //         </IconButton>
+      //         <IconButton
+      //           color="secondary"
+      //           onClick={() => handleDelete(params.row.id)}
+      //         >
+      //           <DeleteIcon />
+      //         </IconButton>
+      //       </div>
+      //     ),
+      //   },
+
+      //   {
+      //     field: "serialNo",
+      //     headerName: "Sl No",
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 120,
+      //   },
+
+      //   {
+      //     field: "name",
+      //     headerName: "Name",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 400,
+      //   },
+
+      //   {
+      //     field: "phone",
+      //     headerName: "Phone",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 180,
+      //   },
+      //   {
+      //     field: "email",
+      //     headerName: "Email",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 330,
+      //   },
+
+      //   {
+      //     field: "state",
+      //     headerName: "State",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 220,
+      //   },
+
+      //   {
+      //     field: "city",
+      //     headerName: "City",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 200,
+      //   },
+
+      //   {
+      //     field: "govtId",
+      //     headerName: "Government ID",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 190,
+      //   },
+      //   // {
+      //   //   field: "company",
+      //   //   headerName: "Company",
+      //   //   flex: 1,
+      //   //   align: "center",
+      //   //   headerAlign: "center",
+      //   // },
+      //   {
+      //     field: "dept",
+      //     headerName: "Department",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 180,
+      //   },
+      //   {
+      //     field: "role",
+      //     headerName: "Role",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 180,
+      //   },
+
+      //   {
+      //     field: "empCode",
+      //     headerName: "Employee Code",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 180,
+      //   },
+      // ];
+
+
+
+      let gridColumns = []
+
+
+
+
+
+
+
+
+
+
+      let firstSegment = [
         {
           field: "actions",
           align: "center",
@@ -461,21 +602,14 @@ const Employee = () => {
         },
 
         {
-          field: "firstName",
-          headerName: "First Name",
+          field: "name",
+          headerName: "Name",
           // flex: 1,
           align: "center",
           headerAlign: "center",
-          width: 180,
+          width: 400,
         },
-        {
-          field: "lastName",
-          headerName: "Last Name",
-          // flex: 1,
-          align: "center",
-          headerAlign: "center",
-          width: 180,
-        },
+
         {
           field: "phone",
           headerName: "Phone",
@@ -491,6 +625,37 @@ const Employee = () => {
           align: "center",
           headerAlign: "center",
           width: 330,
+        },
+      ]
+
+
+      let secondSegment = [
+        {
+          field: "dept",
+          headerName: "Department",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+        {
+          field: "role",
+          headerName: "Role",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 180,
+        },
+      ]
+
+      let thirdSegment = [
+        {
+          field: "govtId",
+          headerName: "Government ID",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 190,
         },
 
         {
@@ -510,97 +675,110 @@ const Employee = () => {
           headerAlign: "center",
           width: 200,
         },
+      ]
 
-        {
-          field: "govtId",
-          headerName: "Government ID",
-          // flex: 1,
-          align: "center",
-          headerAlign: "center",
-          width: 190,
-        },
-        // {
-        //   field: "company",
-        //   headerName: "Company",
-        //   flex: 1,
-        //   align: "center",
-        //   headerAlign: "center",
-        // },
-        {
-          field: "dept",
-          headerName: "Department",
-          // flex: 1,
-          align: "center",
-          headerAlign: "center",
-          width: 180,
-        },
-        {
-          field: "role",
-          headerName: "Role",
-          // flex: 1,
-          align: "center",
-          headerAlign: "center",
-          width: 180,
-        },
+      // let isPermissionColumn = [];
+      // let companyColumn = [];
 
+      let adminSegmentOne = [
         {
-          field: "empCode",
-          headerName: "Employee Code",
-          // flex: 1,
-          align: "center",
-          headerAlign: "center",
-          width: 180,
-        },
-      ];
-
-      let isPermissionColumn = [];
-      let companyColumn = [];
-
-      if (loggedUserRole !== "SUPERADMIN") {
-        isPermissionColumn.push({
           field: "isPermission",
           headerName: "Recpst. Meet Permissions",
           // flex: 1,
           align: "center",
           headerAlign: "center",
           width: 220,
-        });
+        }
+      ]
+
+      let superadminSegmentOne = [
+        {
+          field: "company",
+          headerName: "Company",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 200,
+        },
+      ]
+      let superadminSegmentTwo = [
+        {
+          field: "building",
+          headerName: "Building",
+          // flex: 1,
+          align: "center",
+          headerAlign: "center",
+          width: 350,
+        }
+      ]
+
+
+
+      // if (loggedUserRole === "ADMIN") {
+      //   isPermissionColumn.push({
+      //     field: "isPermission",
+      //     headerName: "Recpst. Meet Permissions",
+      //     // flex: 1,
+      //     align: "center",
+      //     headerAlign: "center",
+      //     width: 220,
+      //   });
+      // }
+
+      // if (loggedUserRole === "SUPERADMIN") {
+      //   companyColumn.push(
+      //     {
+      //       field: "company",
+      //       headerName: "Company",
+      //       // flex: 1,
+      //       align: "center",
+      //       headerAlign: "center",
+      //       width: 200,
+      //     },
+      //     {
+      //       field: "buildingId",
+      //       headerName: "Building ID",
+      //       // flex: 1,
+      //       align: "center",
+      //       headerAlign: "center",
+      //       width: 120,
+      //     }
+      //   );
+      // }
+
+      if(loggedUserRole === "ADMIN") {
+        gridColumns = [
+          ...firstSegment,
+          ...secondSegment,
+          ...thirdSegment,
+          ...adminSegmentOne,
+        ]
       }
 
-      if (loggedUserRole === "SUPERADMIN") {
-        companyColumn.push(
-          {
-            field: "company",
-            headerName: "Company",
-            // flex: 1,
-            align: "center",
-            headerAlign: "center",
-            width: 200,
-          },
-          {
-            field: "buildingId",
-            headerName: "Building ID",
-            // flex: 1,
-            align: "center",
-            headerAlign: "center",
-            width: 120,
-          }
-        );
+      if(loggedUserRole === "SUPERADMIN") {
+        gridColumns = [
+          ...firstSegment,
+          ...superadminSegmentOne,
+          ...secondSegment,
+          ...superadminSegmentTwo,
+          ...thirdSegment,
+        ]
       }
 
-      const gridColumns = [
-        ...commonColumns,
-        ...isPermissionColumn,
-        ...companyColumn,
-      ];
+      // const gridColumns = [
+      //   ...commonColumns,
+      //   ...isPermissionColumn,
+      //   ...companyColumn,
+      // ];
 
-      // console.log(" empSB", apiDataArray);
+      console.log(" empSB", apiDataArray);
 
       const gridRows = apiDataArray.map((apiDataItem, index) => ({
         id: apiDataItem.id,
         serialNo: index + 1,
-        firstName: apiDataItem.firstName,
-        lastName: apiDataItem.lastName,
+        // firstName: apiDataItem.firstName,
+        // lastName: apiDataItem.lastName,
+        name: `${apiDataItem.firstName} ${apiDataItem.lastName} (${apiDataItem.empCode ? apiDataItem.empCode : "N/A"})`,
         phone: apiDataItem.phone,
         email: apiDataItem.email,
         // govtId:apiDataItem.govtId,
@@ -616,11 +794,21 @@ const Employee = () => {
         role: apiDataItem.role ? apiDataItem.role.name : "",
         empCode: apiDataItem.empCode ? apiDataItem.empCode : "N/A",
         isPermission: apiDataItem.isPermission ? "YES" : "NO",
-        buildingId: apiDataItem.company
+        // buildingId: apiDataItem.company
+        //   ? apiDataItem.company.building
+        //     ? apiDataItem.company.building.buildingId || ""
+        //     : ""
+        //   : "",
+
+        building: `${apiDataItem.company
+        ? apiDataItem.company.building
+          ? apiDataItem.company.building.name || ""
+          : ""
+        : ""} (${apiDataItem.company
           ? apiDataItem.company.building
             ? apiDataItem.company.building.buildingId || ""
             : ""
-          : "",
+          : ""})`,
       }));
 
       setColumns(gridColumns);
