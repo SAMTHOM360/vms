@@ -49,6 +49,7 @@ const MeetingDetails = () => {
   const userUrl = "http://192.168.12.54:8080/api/user/alluser";
   const meetingContextUrl = "http://192.168.12.54:8080/vis/meetCon";
   const adminId = sessionStorage.getItem("adminId");
+  const loggedUserName = sessionStorage.getItem("loggedUserName")
   const companyId =sessionStorage.getItem("companyId");
 
 
@@ -80,45 +81,57 @@ const MeetingDetails = () => {
 
   const [formData, setFormData] = useState({ ...initialFormData });
 
+  useEffect(() => {
+    if(adminId){
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        user: {
+          id:adminId,
+          username:loggedUserName,
+        },
+      }));
+    }
+  },[adminId])
+
   
 
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormFetchUsers
-      try {
-        // const response = await axios.get(`${userUrl}?companyId=${companyId}`);
-        const response = await axios.get(`${url}?companyId=${companyId}`);
-        if (response.status === 200 && response.data.data) {
-          const userList = response.data.data.map((user) => ({
-            id: user.id,
-            username: user.name,
-            profilePhoto: user.image,
-          }));
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormFetchUsers
+  //     try {
+  //       // const response = await axios.get(`${userUrl}?companyId=${companyId}`);
+  //       const response = await axios.get(`${url}?companyId=${companyId}`);
+  //       if (response.status === 200 && response.data.data) {
+  //         const userList = response.data.data.map((user) => ({
+  //           id: user.id,
+  //           username: user.name,
+  //           profilePhoto: user.image,
+  //         }));
 
-          setUsers(userList);
+  //         setUsers(userList);
 
-          const matchedAdminUser = userList.find(
-            (user) => user.id === Number(adminId)
-          );
+  //         const matchedAdminUser = userList.find(
+  //           (user) => user.id === Number(adminId)
+  //         );
 
-          if (matchedAdminUser) {
-            setFormData((prevData) => ({
-              ...prevData,
-              user: {
-                id: matchedAdminUser.id,
-                username: matchedAdminUser.username,
-              },
-            }));
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching users", error);
-      }
-    };
+  //         if (matchedAdminUser) {
+  //           setFormData((prevData) => ({
+  //             ...prevData,
+  //             user: {
+  //               id: matchedAdminUser.id,
+  //               username: matchedAdminUser.username,
+  //             },
+  //           }));
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching users", error);
+  //     }
+  //   };
 
-    fetchUsers();
-  }, [adminId]);
+  //   fetchUsers();
+  // }, [adminId]);
 
   const handlePhoneNumberChange = async (event) => {
     // toast.dismiss()

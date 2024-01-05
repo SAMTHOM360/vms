@@ -273,6 +273,13 @@ const Employee = () => {
       return;
     }
 
+    if (editedItem.phone.length !== 10) {
+      toast.warn("Phone Number must be of 10 digits !!!", {
+        toastId:"edit-emp-phone-warn11"
+      });
+      return;
+    }
+
     // console.log("edited item role", editedItem)
     let url1 = Config.baseUrl + Config.apiEndPoints.employeeSBAddUser;
     const payload = {
@@ -608,6 +615,15 @@ const Employee = () => {
           align: "center",
           headerAlign: "center",
           width: 400,
+          renderCell: (params) => {
+            const apiDataItem = params.row;
+            // console.log('apiDataItem', apiDataItem)
+            return (
+              <div>
+                <span style={{ fontSize: '16px' }}>{apiDataItem.firstName}</span> <span style={{ fontSize: '16px' }}>{apiDataItem.lastName}</span> <span style={{ fontSize: '13px' }}>({apiDataItem.empCode ? apiDataItem.empCode : 'N/A'})</span>
+              </div>
+            );
+          },
         },
 
         {
@@ -683,11 +699,13 @@ const Employee = () => {
       let adminSegmentOne = [
         {
           field: "isPermission",
-          headerName: "Recpst. Meet Permissions",
+          headerName: "Receptionist Meet Permissions",
+              // headerName: 'Receptionist&nbsp;Meet&nbsp;Permissions',
+
           // flex: 1,
           align: "center",
           headerAlign: "center",
-          width: 220,
+          width: 270,
         }
       ]
 
@@ -709,6 +727,15 @@ const Employee = () => {
           align: "center",
           headerAlign: "center",
           width: 350,
+          renderCell: (params) => {
+            const apiDataItem = params.row;
+            // console.log('apiDataItem', apiDataItem)
+            return (
+              <div>
+                <span style={{ fontSize: '15px' }}>{apiDataItem.buildingName}</span> <span style={{ fontSize: '13px' }}>({apiDataItem.buildingId ? apiDataItem.buildingId : 'N/A'})</span>
+              </div>
+            );
+          },
         }
       ]
 
@@ -771,13 +798,13 @@ const Employee = () => {
       //   ...companyColumn,
       // ];
 
-      console.log(" empSB", apiDataArray);
+      // console.log(" empSB", apiDataArray);
 
       const gridRows = apiDataArray.map((apiDataItem, index) => ({
         id: apiDataItem.id,
         serialNo: index + 1,
-        // firstName: apiDataItem.firstName,
-        // lastName: apiDataItem.lastName,
+        firstName: apiDataItem.firstName,
+        lastName: apiDataItem.lastName,
         name: `${apiDataItem.firstName} ${apiDataItem.lastName} (${apiDataItem.empCode ? apiDataItem.empCode : "N/A"})`,
         phone: apiDataItem.phone,
         email: apiDataItem.email,
@@ -794,21 +821,26 @@ const Employee = () => {
         role: apiDataItem.role ? apiDataItem.role.name : "",
         empCode: apiDataItem.empCode ? apiDataItem.empCode : "N/A",
         isPermission: apiDataItem.isPermission ? "YES" : "NO",
-        // buildingId: apiDataItem.company
-        //   ? apiDataItem.company.building
-        //     ? apiDataItem.company.building.buildingId || ""
-        //     : ""
-        //   : "",
-
-        building: `${apiDataItem.company
-        ? apiDataItem.company.building
-          ? apiDataItem.company.building.name || ""
-          : ""
-        : ""} (${apiDataItem.company
+        buildingId: apiDataItem.company
           ? apiDataItem.company.building
             ? apiDataItem.company.building.buildingId || ""
             : ""
-          : ""})`,
+          : "",
+
+        // building: `${apiDataItem.company
+        // ? apiDataItem.company.building
+        //   ? apiDataItem.company.building.name || ""
+        //   : ""
+        // : ""} (${apiDataItem.company
+        //   ? apiDataItem.company.building
+        //     ? apiDataItem.company.building.buildingId || ""
+        //     : ""
+        //   : ""})`,
+        buildingName: apiDataItem.company
+          ? apiDataItem.company.building
+            ? apiDataItem.company.building.name || ""
+            : ""
+          : "",
       }));
 
       setColumns(gridColumns);
