@@ -33,6 +33,9 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
 import Config from "../Config/Config";
+// import * as XLSX from "xlsx";
+
+import * as XLSX from "sheetjs-style"
 
 const Employee = () => {
   const {
@@ -113,6 +116,7 @@ const Employee = () => {
   const [excelUrl, setExcelUrl] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [exportExcelData, setExportExcelData] = useState("")
 
   let formattedHead;
 
@@ -445,6 +449,8 @@ const Employee = () => {
     setLoading(false);
   };
 
+  // console.log('exportExcelData', exportExcelData)
+
   async function fetchData() {
     let url = Config.baseUrl + Config.apiEndPoints.employeeSBFetchData;
     try {
@@ -478,6 +484,8 @@ const Employee = () => {
         setLoading(false);
         return;
       }
+
+      setExportExcelData(apiDataArray)
 
       // const commonColumns = [
       //   {
@@ -1013,6 +1021,211 @@ const Employee = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+
+
+
+  const XLSX_HEADER_STYLE = {
+    font: { bold: true, size: 24, color: { rgb: '000000' } },
+    fill: { fgColor: { rgb: '9A9A9A' } },
+  };
+
+function fitToColumn(arrayOfObjects) {
+  if (!Array.isArray(arrayOfObjects) || arrayOfObjects.length === 0) {
+    return [];
+  }
+
+  const keys = Object.keys(arrayOfObjects[0]);
+
+  const columnWidths = keys.map((key) => ({
+    wch: key.toString().length,
+  }));
+
+  keys.forEach((key, index) => {
+    columnWidths[index].wch = Math.max(
+      columnWidths[index].wch,
+      key.toString().length
+    );
+  });
+
+  arrayOfObjects.forEach((obj) => {
+    keys.forEach((key, index) => {
+      const cellValue = obj[key] ? obj[key].toString() : '';
+      columnWidths[index].wch = Math.max(
+        columnWidths[index].wch,
+        cellValue.length
+      );
+    });
+  });
+
+  return columnWidths;
+}
+
+
+
+
+
+const handleExportExcelAllData = () => {
+
+
+  
+  if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
+
+    console.log('cxcel data inside print', exportExcelData)
+    let headers = []
+    let data ;
+    if (loggedUserRole === "SUPERADMIN") {
+
+      headers = ["Sl.no", "Name", "Phone", "Email", "Company", "Department", "Role", "Building", "Government ID", "State", "City",];
+
+      data = exportExcelData?.map((dataItem, index) => ({
+        "Sl.no": index + 1,
+        "Name":  `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode ? dataItem.empCode : "N/A"})`,
+        "Phone": dataItem.phone,
+        "Email": dataItem.email,
+        "Company": dataItem.company ? dataItem.company.name ? dataItem.company.name : "" : "",
+        "Department": dataItem.departmentDto ? dataItem.departmentDto.name ? dataItem.departmentDto.name : "" : "",
+        "Role":  dataItem.role ? dataItem.role.name ? dataItem.role.name : "" : "",
+        "Building": `${ dataItem.company
+          ? dataItem.company.building
+            ? dataItem.company.building.name ? dataItem.company.building.name : "" || ""
+            : ""
+          : ""} (${dataItem.company
+            ? dataItem.company.building
+              ? dataItem.company.building.buildingId || ""
+              : ""
+            : ""})`,
+        "Government ID": dataItem.govtId
+        ? dataItem.govtId.length === 12
+          ? `${dataItem.govtId} (Aadhar)`
+          : `${dataItem.govtId} (PAN)`
+        : 'N/A',
+        "State": dataItem.state ? dataItem.state.name ? dataItem.state.name : "" : "",
+        "City": dataItem.city ? dataItem.city.name ? dataItem.city.name : "" : "",
+      }));
+    }
+
+    if(loggedUserRole === "ADMIN") {
+      headers = ["Sl.no", "Name", "Phone", "Email", "Department", "Role", "Government ID", "State", "City", "Receptionist Meet Permissions"];
+
+
+    data = exportExcelData?.map((dataItem, index) => ({
+      "Sl.no": index + 1,
+      "Name":  `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode ? dataItem.empCode : "N/A"})`,
+      "Phone": dataItem.phone,
+      "Email": dataItem.email,
+      "Department": dataItem.departmentDto ? dataItem.departmentDto.name : "",
+      "Role":  dataItem.role ? dataItem.role.name : "",
+      "Government ID": dataItem.govtId
+      ? dataItem.govtId.length === 12
+        ? `${dataItem.govtId} (Aadhar)`
+        : `${dataItem.govtId} (PAN)`
+      : 'N/A',
+      "State": dataItem.state.name ? dataItem.state.name : "",
+      "City": dataItem.city.name ? dataItem.city.name : "",
+      "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
+    }));
+
+  }
+
+    const ws = XLSX.utils.json_to_sheet(data, {
+      header: headers, 
+    });
+
+    headers.forEach((key, index) => {
+      const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
+      if (headerCell) {
+        headerCell.s = XLSX_HEADER_STYLE;
+      }
+    });
+
+    ws['!cols'] = fitToColumn(data);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+    XLSX.writeFile(wb, 'User_List_All_Data.xlsx');
+  } else {
+    // console.error('Invalid data format for export.');
+    alert('Invalid data format for export.');
+  }
+};
+
+
+// console.log('excel data outside print', exportExcelData[2]);
+
+// const handleExportExcelAllData = () => {
+//   if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
+// //  let maal = exportExcelData.data
+//     console.log('excel data inside print', exportExcelData[0]);
+    
+//     let headers = [];
+//     let data = [];
+
+//     if (loggedUserRole === "SUPERADMIN") {
+//       console.log('i got hit')
+//       headers = ["Sl.no", "Name", "Phone", "Email", "Company", "Department", "Role", "Building", "Government ID", "State", "City"];
+
+//       data = exportExcelData?.map((dataItem, index) => ({
+//         "Sl.no": index + 1,
+//         "Email": dataItem.email || "",
+//         // "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
+//         // "Phone": dataItem.phone || "",
+//         // "Email": dataItem.email || "",
+//         // "Company": dataItem.company?.name || "",
+//         // "Department": dataItem.departmentDto?.name || "",
+//         // "Role": dataItem.role?.name || "",
+//         // "Building": `${dataItem.company?.building?.name || ""} (${dataItem.company?.building?.buildingId || ""})`,
+//         // "Government ID": dataItem.govtId
+//         //   ? dataItem.govtId.length === 12
+//         //     ? `${dataItem.govtId} (Aadhar)`
+//         //     : `${dataItem.govtId} (PAN)`
+//         //   : 'N/A',
+//         // "State": dataItem.state?.name || "",
+//         // "City": dataItem.city?.name || "",
+//       }));
+//     }
+
+//     if (loggedUserRole === "ADMIN") {
+//       headers = ["Sl.no", "Name", "Phone", "Email", "Department", "Role", "Government ID", "State", "City", "Receptionist Meet Permissions"];
+
+//       data = exportExcelData?.map((dataItem, index) => ({
+//         "Sl.no": index + 1,
+//         "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
+//         "Phone": dataItem.phone || "",
+//         "Email": dataItem.email || "",
+//         "Department": dataItem.departmentDto?.name || "",
+//         "Role": dataItem.role?.name || "",
+//         "Government ID": dataItem.govtId
+//           ? dataItem.govtId.length === 12
+//             ? `${dataItem.govtId} (Aadhar)`
+//             : `${dataItem.govtId} (PAN)`
+//           : 'N/A',
+//         "State": dataItem.state?.name || "",
+//         "City": dataItem.city?.name || "",
+//         "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
+//       }));
+//     }
+
+//     const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+
+//     headers.forEach((key, index) => {
+//       const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
+//       if (headerCell) {
+//         headerCell.s = XLSX_HEADER_STYLE;
+//       }
+//     });
+
+//     ws['!cols'] = fitToColumn(data);
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+//     XLSX.writeFile(wb, 'User_List_All_Data.xlsx');
+//   } else {
+//     // console.error('Invalid data format for export.');
+//     alert('Invalid data format for export.');
+//   }
+// };
+
+
   return (
     <>
       <Loader isLoading={loading} />
@@ -1180,7 +1393,8 @@ const Employee = () => {
                                       zIndex:1,
                                       // float:'right'
                                     }}
-                                    onClick={handleDownloadExcel}
+                                    // onClick={handleDownloadExcel}
+                                    onClick={handleExportExcelAllData}
                                   >
                                    <DownloadIcon/> Export Excel
                                   </Button>
