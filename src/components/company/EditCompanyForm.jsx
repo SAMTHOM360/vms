@@ -251,8 +251,7 @@ export default function EditCompanyForm() {
 
     if (!logoFile) {
 
-      // setOpen(false)
-      // User clicked cancel without selecting a file
+    
       return;
     }
 
@@ -262,6 +261,7 @@ export default function EditCompanyForm() {
       // setOpen(false)
 
       alert("Allowed file formats: .jpg, .jpeg, .png")
+      resetFileInput()
       // setErrors({
       //     ...errors,
       //     logo: "Allowed file formats: .jpg, .jpeg, .png"
@@ -286,6 +286,7 @@ export default function EditCompanyForm() {
 
      
       alert(`File size should be between 1KB and 5MB`);
+      resetFileInput()
      
       return;
     }
@@ -301,6 +302,14 @@ export default function EditCompanyForm() {
       setImageUrl(reader.result);
     };
     reader.readAsDataURL(logoFile);
+  };
+
+
+
+  const resetFileInput = () => {
+    // Resetting the file input by keying it out of the DOM and back in
+    const fileInput = document.getElementById('file-input');
+    fileInput.value = ''; // Resetting the value
   };
 
 

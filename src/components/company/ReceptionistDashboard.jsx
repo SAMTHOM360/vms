@@ -411,11 +411,15 @@ export default function Dashboard() {
         if (response.data.message === "Meeting is cancelled") {
           alert("Meeting cancelled succesfully");
           setIsCancelled(true);
+          handleCloseModal();
+       
+
         }
         if (response.data.message === "Success") {
           alert("Meeting added succesfully");
           setRoomAdded(true);
           setIsCancelled(true);
+          handleCloseModal();
         } else {
           console.log(selectedRoom, "selectedRoom");
         }
@@ -738,11 +742,17 @@ export default function Dashboard() {
   ]);
 
   useEffect(() => {
-    getRoomsOption();
+    // getRoomsOption();
     fetchStatusOptions();
     fetchStatusOptions1();
     fetchHostOptions();
   }, []);
+
+
+  useEffect(()=>{
+    getRoomsOption()
+
+  },[reload])
 
   // useEffect(() => {
   //     if (location.state && location.state.filter) {
@@ -1622,7 +1632,7 @@ export default function Dashboard() {
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={14} sx={{ textAlign: "center" }}>
+                          <TableCell colSpan={17} sx={{ textAlign: "center" }}>
                             No data
                           </TableCell>
                         </TableRow>
@@ -1905,7 +1915,7 @@ export default function Dashboard() {
                           gap: "5px",
                         }}
                       >
-                        {roomAdded && (
+                        {/* {roomAdded && (
                           <Button
                             variant="contained"
                             onClick={() =>
@@ -1918,7 +1928,7 @@ export default function Dashboard() {
                           >
                             Generate Pass
                           </Button>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </>
@@ -1990,7 +2000,7 @@ export default function Dashboard() {
                           gap: "5px",
                         }}
                       >
-                        {roomAdded && (
+                        {/* {roomAdded && (
                           <Button
                             variant="contained"
                             onClick={() =>
@@ -2003,7 +2013,7 @@ export default function Dashboard() {
                           >
                             Generate Pass
                           </Button>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </>

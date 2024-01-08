@@ -328,7 +328,7 @@ export default function CompanyReg() {
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
       alert("Allowed file formats: .jpg, .jpeg, .png");
-   
+      resetFileInput(); 
       return;
     }
 
@@ -348,8 +348,9 @@ export default function CompanyReg() {
     //   alert(`File size should be between ${minSize}MB and ${maxSize}MB`);
     //   return;
     // }
-
+ 
     const fileSizeInMB = logoFile.size / (1024 * 1024);
+    console.log(fileSizeInMB,"filesizemb")
     const minSizeInMB = 0.001;
     const maxSizeInMB = 5; 
 
@@ -357,6 +358,7 @@ export default function CompanyReg() {
 
      
       alert(`File size should be between 1KB and 5MB`);
+      resetFileInput(); 
      
       return;
     }
@@ -370,6 +372,14 @@ export default function CompanyReg() {
       setImageUrl(reader.result);
     };
     reader.readAsDataURL(logoFile);
+  };
+
+
+
+  const resetFileInput = () => {
+    // Resetting the file input by keying it out of the DOM and back in
+    const fileInput = document.getElementById('file-input');
+    fileInput.value = ''; // Resetting the value
   };
 
   //building options

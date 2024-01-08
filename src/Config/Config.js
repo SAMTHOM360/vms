@@ -1,6 +1,6 @@
 const Config = Object.freeze({
-  // baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
-  baseUrl: "http://192.168.12.58:8080/", //SMRUTI
+  baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
+  // baseUrl: "http://192.168.12.58:8080/", //SMRUTI
   // baseUrl:"http://192.168.12.51:8085/vms/" ,//Hosted (no idea)
   // baseUrl: "https://vms.nyggs.com/backend/",
 
