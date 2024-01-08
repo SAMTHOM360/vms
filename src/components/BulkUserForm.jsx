@@ -82,9 +82,20 @@ function BulkUserForm() {
     formData.append("companyId", companyId);
     formData.append("file", files[0]);
   
-    const fileName = files[0] ? files[0].name : "";
+    let fileName = files[0] ? files[0].name : "";
+
+    if (!formData || !isValidExcelFile(formData)) {
+      toast.warn("Please upload a valid Excel file.", {
+        toastId: "bulk-emp-warn12",
+      });
+      // setBtnLoading(false);
+      let fileName = "";
+      return;
+    }
+
 
     e.dataTransfer.clearData();
+
     setExcelUpData(formData);
     setIsUpload(true);
     setIsFileSelected(fileName);
@@ -413,11 +424,14 @@ function BulkUserForm() {
                       borderRadius: "5px 5px 0 0",
                       border: "2px dashed #A6A6A6",
                       borderBottom: "none", 
+                      wordBreak:'break-word',
+                      textAlign:'center',
+                      color:'#5A5A5A'
                     }}
                   >
                     {isFileSelected
                       ? isFileSelected
-                      : "You can Drag & Drop or Press \"+\" to add file"}
+                      : "You can Drag & Drop or Press \"+\" to add file. Only \".xlsx\" files are allowed"}
                   </Box>
 
                   <Box
@@ -463,6 +477,7 @@ function BulkUserForm() {
                             type="file"
                             hidden
                             id="fileInputExcel"
+                            accept=".xlsx"
                             onChange={handleChooseFile}
                           />
                         )}
