@@ -106,7 +106,12 @@ function UserForm({ authenticated, closeDialog }) {
           id:"",
           name:"",
         },
+        dept: {
+          id: "",
+          name: "",
+        },
       }));
+      setDepts([]);
     }
 
     if(fieldName === "dept") {
@@ -240,59 +245,128 @@ function UserForm({ authenticated, closeDialog }) {
 
   //ADHAAR ENDS
 
-  useEffect(() => {
-    let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState
-    let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole
-    let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll
-    axios
-    // .get("http://192.168.12.54:8080/api/state/all")
-    .get(url1)
-    .then((response) => {
-        setStates(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching states", error);
-      });
 
-    axios
-    // .get("http://192.168.12.54:8080/api/role/getall", { headers })
-    .get(url2, { headers })
-    .then((response) => {
-        setRoles(response.data.data);
-        if(loggedUserRole && loggedUserRole === "SUPERADMIN"){
-            if(response.data.data) {
-              const adminRole = response.data.data.find(role => role.name === "ADMIN")
+  // DONT REMOVE !!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@
+
+
+  // useEffect(() => {
+  //   let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState
+  //   let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole
+  //   let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll
+  //   axios
+  //   // .get("http://192.168.12.54:8080/api/state/all")
+  //   .get(url1)
+  //   .then((response) => {
+  //       setStates(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching states", error);
+  //     });
+
+  //   axios
+  //   // .get("http://192.168.12.54:8080/api/role/getall", { headers })
+  //   .get(url2, { headers })
+  //   .then((response) => {
+  //       setRoles(response.data.data);
+  //       if(loggedUserRole && loggedUserRole === "SUPERADMIN"){
+  //           if(response.data.data) {
+  //             const adminRole = response.data.data.find(role => role.name === "ADMIN")
             
-            setFormData((prevFormData) => ({
-              ...prevFormData,
-              role: {
-                id:adminRole ? adminRole.id : "",
-                // name:"",
-              },
-            }));
-          }
+  //           setFormData((prevFormData) => ({
+  //             ...prevFormData,
+  //             role: {
+  //               id:adminRole ? adminRole.id : "",
+  //               // name:"",
+  //             },
+  //           }));
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching roles", error);
+  //     });
+
+  //   if (loggedUserRole === "SUPERADMIN") {
+  //     axios
+  //     // .get("http://192.168.12.54:8080/com/all", { headers })
+  //     .get(url3, { headers })
+  //     .then((response) => {
+  //         setCompanies(response.data.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching roles", error);
+  //       });
+  //   }
+  // }, []);
+
+
+
+// DONT REMOVE !!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@
+
+
+useEffect(() => {
+  const fetchData = async () => {
+    let response1, response2, response3;
+
+    try {
+      setLoading(true)
+      let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState;
+      let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole;
+      let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll;
+
+      response1 = await axios.get(url1);
+      setStates(response1.data.data);
+
+      response2 = await axios.get(url2, { headers });
+      setRoles(response2.data.data);
+
+      if (loggedUserRole && loggedUserRole === "SUPERADMIN") {
+        if (response2.data.data) {
+          const adminRole = response2.data.data.find(role => role.name === "ADMIN");
+
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            role: {
+              id: adminRole ? adminRole.id : "",
+            },
+          }));
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching roles", error);
-      });
+      }
 
-    if (loggedUserRole === "SUPERADMIN") {
-      axios
-      // .get("http://192.168.12.54:8080/com/all", { headers })
-      .get(url3, { headers })
-      .then((response) => {
-          setCompanies(response.data.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching roles", error);
-        });
+      if (loggedUserRole === "SUPERADMIN") {
+        response3 = await axios.get(url3, { headers });
+        setCompanies(response3.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data", error);
+
+      // Display toast notifications for failed API calls
+      if (!error.response || error.response.status !== 200) {
+        if (!response1) {
+          toast.warn("Unable to load States");
+        }
+
+        if (!response2) {
+          toast.warn("Unable to load Roles");
+        }
+
+        if (!response3) {
+          toast.warn("Unable to load Companies");
+        }
+      }
+    } finally {
+      setLoading(false)
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    fetchDepts();
-  }, [companyId]);
+  fetchData();
+}, [loggedUserRole]);
+
+  
+
+  // useEffect(() => {
+  //   fetchDepts();
+  // }, [companyId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -364,16 +438,31 @@ function UserForm({ authenticated, closeDialog }) {
             name: selectedCompany ? selectedCompany.name : "",
           },
         });
+
+        // console.log('value', value)
+
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          dept: {
+            id: "",
+            name: "",
+          },
+        }));
+        
+        fetchDepts({selectedCompanyId: value })
       }
-      // else if (loggedUserRole === 'ADMIN') {
-      //   setFormData({
-      //     ...formData,
-      //     [name]: {
-      //       id: companyId,
-      //       name: companyName,
+      // if (loggedUserRole === 'ADMIN') {
+      //   setFormData((prevFormData) => ({
+      //     ...prevFormData,
+      //     dept: {
+      //       id: "",
+      //       name: "",
       //     },
-      //   });
+      //   }));
+        
+      //   fetchDepts({selectedCompanyId: companyId })
       // }
+
     } else {
       setFormData({
         ...formData,
@@ -381,6 +470,20 @@ function UserForm({ authenticated, closeDialog }) {
       });
     }
   };
+
+  useEffect(() => {
+    if (loggedUserRole === 'ADMIN') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        dept: {
+          id: "",
+          name: "",
+        },
+      }));
+      
+      fetchDepts({selectedCompanyId: companyId })
+    }
+  },[loggedUserRole])
 
   const fetchCities = async (stateId) => {
     let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllCity
@@ -395,19 +498,56 @@ function UserForm({ authenticated, closeDialog }) {
     }
   };
 
-  const fetchDepts = async () => {
-    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllDept
+  // const fetchDepts = async () => {
+  //   let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllDept
+  //   try {
+  //     const response = await axios.get(
+  //       `${url}?companyId=${companyId}`
+  //     );
+  //     const deptApiData = response.data.data;
+  //     // console.log("dept data", response.data.data);
+  //     setDepts(deptApiData);
+  //   } catch (error) {
+  //     console.error("Error in fetching depts", error);
+  //   }
+  // };
+
+  const fetchDepts = async ({ selectedCompanyId }) => {
+    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllDept;
     try {
-      const response = await axios.get(
-        `${url}?companyId=${companyId}`
-      );
-      const deptApiData = response.data.data;
-      // console.log("dept data", response.data.data);
-      setDepts(deptApiData);
+      const response = await axios.get(`${url}?companyId=${selectedCompanyId}`);
+      if (response.status === 200) {
+        const deptApiData = response.data.data;
+        if (deptApiData === null || deptApiData instanceof Error) {
+          setDepts([]);
+        } else {
+          setDepts(deptApiData);
+        }
+      }
     } catch (error) {
-      console.error("Error in fetching depts", error);
+      setDepts([]);
+      if (error.response && error.response.status === 400) {
+        let errMessage = "";
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId: "userfrom-err7",
+          });
+        }
+      } else {
+        toast.error("Something went wrong !", {
+          toastId: "userform-err9",
+        });
+        console.error("Error saving changes:", error);
+      }
     }
   };
+  
 
   // const handleDateChange = (date) => {
   //   const adjustedDate = date ? date.add(1, "day") : null;
@@ -504,7 +644,6 @@ if (formData.empCode.length < 4) {
   return;
 }
 
-
 if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
   toast.warn("Aadhar Card must be 12 digits only.", {
     toastId:"userfrom-warn8"
@@ -529,6 +668,13 @@ if (governmentIdType === "PAN Card") {
     });
     return;
   }
+}
+
+if (formData.phone.length !== 10) {
+  toast.warn("Phone Number must be of 10 digits !!!", {
+    toastId:"userfrom-warn11"
+  });
+  return;
 }
 
 

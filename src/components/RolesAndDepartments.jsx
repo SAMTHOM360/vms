@@ -837,7 +837,9 @@ const RolesAndDepartments = () => {
             {deptFormTitle} Dept Form
           </DialogTitle>
           <DialogContent>
-            <form style={{ width: "380px" }}>
+            <form
+             onSubmit={isEditOn ? handleUpdateDept : handleSubmitAddDept}
+              style={{ width: "380px" }}>
               <TextField
                 size="small"
                 sx={{ mt: "1em" }}

@@ -111,6 +111,15 @@ function BulkUserForm() {
   };
   // console.log("is upload", isUpload);
 
+  // console.log("FORM DATA:");
+  // for (const pair of excelUpData.entries()) {
+  //   console.log(pair[0] + ', ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
+  // }
+  
+  // // Get the file name separately
+  // const fileName = excelUpData.get("file") instanceof File ? excelUpData?.get("file").name : "";
+  // console.log("File Name:", fileName);
+
   const handleCancel = (e) => {
     e.preventDefault()
     setIsUpload(false);
@@ -121,11 +130,33 @@ function BulkUserForm() {
     setIsFileSelected("");
   };
 
-  // console.log("excel up data", excelUpData);
+
+  const isValidExcelFile = (formData) => {
+    if (formData && typeof formData.get === 'function') {
+      const file = formData.get("file");
+  
+      if (file && file.name) {
+        const lowerCaseFileName = file.name.toLowerCase();
+        return lowerCaseFileName.endsWith(".xlsx");
+      }
+    }
+  
+    return false;
+  };
+  
+
 
   const handleSaveUpload = async () => {
     // toast.dismiss();
     let url = Config.baseUrl + Config.apiEndPoints.bulkUserFormSaveUpload
+
+    if (!excelUpData || !isValidExcelFile(excelUpData)) {
+      toast.warn("Please upload a valid Excel file.", {
+        toastId: "bulk-emp-warn2",
+      });
+      // setBtnLoading(false);
+      return;
+    }
     try {
       setBtnLoading(true);
       const response = await axios.post(
@@ -134,20 +165,23 @@ function BulkUserForm() {
         {
           headers: excelHeaders,
         }
-      );
-      if(response.status === 200) {
+        );
+        if(response.status === 200) {
         const excelApiData = response.data.data;
 
+        // console.log('dup', excelApiData.duplicateData)
+        // console.log('failed', excelApiData.failedData)
+
         let toastMsg
+        if(excelApiData.duplicateData !== 0 && excelApiData.failedData !== 0) {
+         toastMsg = "Please check for Duplicate & Failed data."
+        }
          if(excelApiData.duplicateData !== 0) {
           toastMsg = "Please check for Duplicate data."
          } 
-         if(excelApiData.failedDataLink !== 0) {
+         if(excelApiData.failedData !== 0) {
           toastMsg = "Please check for Failed data."
          } 
-         if(excelApiData.duplicateData !== 0 && excelApiData.failedData !== 0) {
-          toastMsg = "Please check for Duplicate & Failed data."
-         }
 
 
 
@@ -199,10 +233,10 @@ function BulkUserForm() {
         }
         setIsFileSelected("");
       }
-      else if(response.status === 400){
-        // console.log("400 response", response)
-        // toast.error("New Employee Added Successfully.");
-      }
+      // else if(response.status === 400){
+      //   // console.log("400 response", response)
+      //   // toast.error("New Employee Added Successfully.");
+      // }
     } 
     catch(error){
       // console.error('Error Updating Password:', error);

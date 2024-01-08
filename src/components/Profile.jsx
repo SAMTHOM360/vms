@@ -313,6 +313,8 @@ useEffect(() => {
         id: formData.role.id,
       },
       empCode: formData.empCode,
+      pincode: formData.pincode,
+      isPermission: formData.isPermission,
     });
   };
 
@@ -328,6 +330,8 @@ useEffect(() => {
         id: "",
       },
       empCode: "",
+      pincode: "",
+      isPermission: "",
     });
   };
 
@@ -546,6 +550,13 @@ useEffect(() => {
       return;
     }
 
+    if(editedBasicInfo.pincode.length !== 6){
+      toast.warn("pincode is required and must be 6 digits !!!", {
+        toastId:"profile-edit-pincode"
+      });
+      return;
+    }
+
     try {
       setEditBtnLoading(true);
       // const response = await axios.post(`${BASE_URL}/adduser`, editedBasicInfo, {
@@ -574,6 +585,8 @@ useEffect(() => {
             id: "",
           },
           empCode: "",
+          pincode: "",
+          isPermission: "",
         });
         fetchData();
       }
@@ -684,6 +697,7 @@ useEffect(() => {
   // console.log('basic data', editedBasicInfo)
   // console.log('address data', editedAddressInfo)
   // console.log("company data", editedCompanyInfo);
+  // console.log('form data', formData)
 
   return (
     <>
@@ -878,7 +892,7 @@ useEffect(() => {
                   display: "flex",
                   alignItems: "center",
                   paddingX: "1em",
-                  mb: "3em",
+                  mb: "1.5em",
                 }}
               >
                 <Grid container spacing={2}>
@@ -1118,7 +1132,7 @@ useEffect(() => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={12} lg={12}>
-                    <Box
+                    {/* <Box
                       sx={{
                         width: "100%",
                         display: "flex",
@@ -1140,7 +1154,7 @@ useEffect(() => {
                           "Save"
                         )}
                       </Button>
-                    </Box>
+                    </Box> */}
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}></Grid>
@@ -1160,7 +1174,8 @@ useEffect(() => {
                   width: "100%",
                   // height: "4.5em",
                   // borderRadius: "5px",
-                  marginBottom: "15px",
+                  // marginBottom: "15px",
+                  mb:'1.5em',
                   // color: "white",
                   // bgcolor: "#2D3E5F",
                   display: "flex",
@@ -1182,7 +1197,7 @@ useEffect(() => {
                       <Typography sx={{ fontSize: "19px", fontWeight: "550" }}>
                         Address Info
                       </Typography>
-
+{/* 
                       {isAddress ? (
                         <Button
                           variant="outlined"
@@ -1201,7 +1216,7 @@ useEffect(() => {
                         >
                           Edit
                         </Button>
-                      )}
+                      )} */}
                     </Box>
                   </Grid>
 
@@ -1255,7 +1270,7 @@ useEffect(() => {
                       value={formData.state.name}
                       InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
-                      required={isAddress}
+                      required={isEdit}
                     />
                   </Grid>
 
@@ -1295,7 +1310,7 @@ useEffect(() => {
                       value={formData.city.name}
                       InputLabelProps={{ shrink: true }}
                       // onChange={handleChange}
-                      required={isAddress}
+                      required={isEdit}
                     />
                   </Grid>
 
@@ -1305,9 +1320,9 @@ useEffect(() => {
                       label="PIN Code"
                       name="pincode"
                       size="small"
-                      disabled={!isAddress}
+                      disabled={!isEdit}
                       value={
-                        isAddress ? editedAddressInfo.pincode : formData.pincode
+                        isEdit ? editedBasicInfo.pincode : formData.pincode
                       }
                       // onChange={(e) =>
                       //   setEditedAddressInfo({ ...editedAddressInfo, pincode: e.target.value })
@@ -1316,7 +1331,7 @@ useEffect(() => {
                         pattern: "^[0-9]*",
                         maxLength: 6,
                         onInput: (event) => {
-                          if (isAddress) {
+                          if (isEdit) {
                             let value = event.target.value;
 
                             // Remove non-numeric characters
@@ -1327,20 +1342,20 @@ useEffect(() => {
                               value = value.slice(0, 6);
                             }
 
-                            setEditedAddressInfo({
-                              ...editedAddressInfo,
+                            setEditedBasicInfo({
+                              ...editedBasicInfo,
                               pincode: value,
                             });
                           }
                         },
                       }}
                       InputLabelProps={{ shrink: true }}
-                      required={isAddress}
+                      required={isEdit}
                     />
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={12} lg={12}>
-                    <Box
+                    {/* <Box
                       sx={{
                         width: "100%",
                         display: "flex",
@@ -1361,7 +1376,7 @@ useEffect(() => {
                           "Save"
                         )}
                       </Button>
-                    </Box>
+                    </Box> */}
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}></Grid>
@@ -1404,7 +1419,7 @@ useEffect(() => {
                         Company Info
                       </Typography>
 
-                      {isUserAllowed ? (
+                      {/* {isUserAllowed ? (
                         isCompany ? (
                           <Button
                             variant="outlined"
@@ -1424,7 +1439,7 @@ useEffect(() => {
                             Edit
                           </Button>
                         )
-                      ) : null}
+                      ) : null} */}
                     </Box>
                   </Grid>
 
@@ -1481,7 +1496,7 @@ useEffect(() => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}>
-                    {isCompany ? (
+                    {isUserAllowed && isEdit ? (
                       <FormControl
                         sx={{ width: "100%", mt: "10px" }}
                         size="small"
@@ -1494,21 +1509,21 @@ useEffect(() => {
                           labelId="approval-label"
                           name="isPermission"
                           value={
-                            isCompany
-                              ? editedCompanyInfo.isPermission
+                            isEdit
+                              ? editedBasicInfo.isPermission
                               : formData.isPermission
                           }
                           label="Can Receptionist Approve/Reject meets?"
                           onChange={(e) => {
                             // setIsReceptAllowed(e.target.value);
-                            setEditedCompanyInfo({
-                              ...editedCompanyInfo,
+                            setEditedBasicInfo({
+                              ...editedBasicInfo,
                               isPermission: e.target.value,
                             });
                           }}
                         >
-                          <MenuItem value="true">YES</MenuItem>
-                          <MenuItem value="false">NO</MenuItem>
+                          <MenuItem value={true}>YES</MenuItem>
+                          <MenuItem value={false}>NO</MenuItem>
                         </Select>
                       </FormControl>
                     ) : (
@@ -1562,8 +1577,6 @@ useEffect(() => {
                     </FormControl> */}
                   </Grid>
 
-                  {isUserAllowed ?
-
 <Grid item xs={12} sm={12} md={12} lg={12}>
 <Box
   sx={{
@@ -1576,12 +1589,12 @@ useEffect(() => {
   <Button
     variant="contained"
     size="small"
-    disabled={!isCompany || companyBtnLoading}
+    disabled={!isEdit || editBtnLoading}
     sx={{ height: "3em", fontSize: "10px" }}
-    onClick={HandleCompanyInfoUpdate}
+    onClick={handleBasicInfoUpdate}
     // disabled={btnLoading}
   >
-    {companyBtnLoading ? (
+    {editBtnLoading ? (
       <CircularProgress size="2em" />
     ) : (
       "Save"
@@ -1590,11 +1603,6 @@ useEffect(() => {
 </Box>
 </Grid>
 
-:
-
-null
-                  
-                }
 
 
 
