@@ -102,7 +102,7 @@ export default function EditCompanyForm() {
 
   function fetchData() {
 
-    const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editCompanyEndPoint + companyId
+    const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editCompanyEndPoint + "?id="+ companyId
     axios
       // .get(`http://192.168.12.54:8080/com/get/${companyId}`, 
 
@@ -429,7 +429,7 @@ const [open, setOpen] = React.useState(false);
         formData.append("building.buildingId", companyData.buildingId.buildingId);
         formData.append("aboutUs", companyData.aboutUs);
 
-        const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editEndPoint + companyId
+        const editCompanyUrl = Config.baseUrl + Config.apiEndPoints.editEndPoint + "?id=" + companyId
 
         const res = await
         axios.post(
