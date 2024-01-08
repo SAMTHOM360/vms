@@ -270,12 +270,26 @@ export default function EditCompanyForm() {
     }
 
     // Check if file size exceeds the limit
-    if (logoFile.size > MAX_FILE_SIZE) {
-      // setOpen(false)
-      alert("Maximum file size exceeded (5MB)");
-      // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+    // if (logoFile.size > MAX_FILE_SIZE) {
+    //   // setOpen(false)
+    //   alert("Maximum file size exceeded (5MB)");
+    //   // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+    //   return;
+    // }
+
+
+    const fileSizeInMB = logoFile.size / (1024 * 1024);
+    const minSizeInMB = 0.001;
+    const maxSizeInMB = 5; 
+
+    if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+
+     
+      alert(`File size should be between 1KB and 5MB`);
+     
       return;
     }
+
 
     // Proceed with normal logo upload process
     setCompanyData({ ...companyData, logo: logoFile });
@@ -682,6 +696,13 @@ const [open, setOpen] = React.useState(false);
                     <Typography variant="caption" color="black" sx={{ fontSize: "15px" }}>
                       Allowed file formats: .jpg, .jpeg, .png
                     </Typography>
+                    <Typography
+                        variant="caption"
+                        color="black"
+                        sx={{ fontSize: "15px" }}
+                      >
+                        Logo size (1Kb - 5Mb)
+                      </Typography>
 
 
                   </div>

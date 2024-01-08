@@ -63,10 +63,9 @@ import { style } from "@mui/system";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 
-
 //loader
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -121,8 +120,8 @@ export default function Dashboard() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    //loader
-    const [open, setOpen] = useState(false);  
+  //loader
+  const [open, setOpen] = useState(false);
 
   const [visitors, setVisitors] = useState([]);
 
@@ -184,8 +183,6 @@ export default function Dashboard() {
   const handleClearNumberSelection = () => {
     setPhoneNumberFilter("");
   };
-
-
 
   //handleclearfilters
   const handleClearFilters = () => {
@@ -351,8 +348,7 @@ export default function Dashboard() {
 
   //  add meeting details
   const handleAddMeeting = () => {
-
-    setOpenLoader(true)
+    setOpenLoader(true);
     const meetingData = {
       id: item.id,
       status:
@@ -372,8 +368,7 @@ export default function Dashboard() {
       selectedStatusModal &&
       selectedStatusModal !== "CANCELLED"
     ) {
-
-      setOpenLoader(false)
+      setOpenLoader(false);
       // console.log("alert room")
       alert("Choose a room");
       return;
@@ -382,14 +377,13 @@ export default function Dashboard() {
     if (!selectedRoom && item.status === "APPROVED") {
       // console.log("alert room")
 
-      setOpenLoader(false)
+      setOpenLoader(false);
       alert("Choose a room");
       return;
     }
 
     if (!selectedStatusModal && selectedRoom && item.status === "PENDING") {
-
-      setOpenLoader(false)
+      setOpenLoader(false);
       alert("Choose a status");
     }
 
@@ -413,8 +407,7 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
-
-        setOpenLoader(false)
+        setOpenLoader(false);
         if (response.data.message === "Meeting is cancelled") {
           alert("Meeting cancelled succesfully");
           setIsCancelled(true);
@@ -436,7 +429,7 @@ export default function Dashboard() {
         // } else {
         //   alert("An unexpected error occurred");
         // }
-        setOpenLoader(false)
+        setOpenLoader(false);
         if (error.response.data.message) {
           alert(error.response.data.message);
         }
@@ -459,7 +452,6 @@ export default function Dashboard() {
 
     const payload = {
       page: 0,
-      size: 1000,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       fromDate: startDate,
       toDate: endDate,
@@ -503,8 +495,7 @@ export default function Dashboard() {
   const [adminData, setAdminData] = useState([]);
 
   function fetchData() {
-
-    setOpenLoader(true)
+    setOpenLoader(true);
     // setSelectedStatusOptions(location?.state?.filter)
     // setStartDate(formattedDate)
     // setEndDate(formattedDate)
@@ -521,6 +512,7 @@ export default function Dashboard() {
       user: {
         id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
       },
+      //     noUser:isADMIN ? adminId : null,
 
       room: {
         id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
@@ -530,10 +522,11 @@ export default function Dashboard() {
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint;
     axios
-      .post(getVisitorUrl, payload)
+      .post(getVisitorUrl, payload, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
       .then((response) => {
-
-        setOpenLoader(false)
+        setOpenLoader(false);
         const responseData = response.data.data.meetings;
 
         const responseDataLength = response.data.data.meetings.length;
@@ -560,8 +553,7 @@ export default function Dashboard() {
         setApprovedVisitors(response.data.data.totalApproved);
       })
       .catch((error) => {
-
-        setOpenLoader(false)
+        setOpenLoader(false);
         console.error("Error fetching data:", error);
       });
   }
@@ -795,9 +787,12 @@ export default function Dashboard() {
   const handleClickOpenDialog = (value) => {
     setOpenDialog(true);
 
-    if (value.remarks !== null && value.remarks !== "") {
-      setSelectedValue(value);
-    }
+    // if (value.remarks !== null && value.remarks !== "" && value.context) {
+    //   console.log(value.context, "context");
+    //   setSelectedValue(value);
+    // }
+    setSelectedValue(value);
+
   };
 
   const handleCloseDialog = (value) => {
@@ -1050,9 +1045,6 @@ export default function Dashboard() {
                         id="outlined-search"
                         label="Phone Number"
                         value={phoneNumberFilter}
-
-                 
-
                         inputProps={{
                           pattern: "^[0-9]*",
                           maxLength: 10,
@@ -1063,19 +1055,15 @@ export default function Dashboard() {
                             .slice(0, 10);
                           setPage(0);
                           setPhoneNumberFilter(value);
-                       
-                         
                         }}
-
                         InputProps={{
                           endAdornment: phoneNumberFilter && (
                             <ClearIcon
-                              style={{ cursor: 'pointer' }}
+                              style={{ cursor: "pointer" }}
                               onClick={handleClearNumberSelection}
                             />
                           ),
                         }}
-
                         onKeyDown={(e) => {
                           const { key } = e;
 
@@ -1088,10 +1076,6 @@ export default function Dashboard() {
                         // type="search"
                         // style={{ top: "" }}
                       />
-
-
-
-                      
                     </Grid>
 
                     <Grid item xs={4} md={4} lg={2}>
@@ -1346,7 +1330,7 @@ export default function Dashboard() {
                           Permission
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
-                          Remarks
+                          Info
                         </TableCell>
 
                         {isADMIN ? null : (
@@ -1355,22 +1339,17 @@ export default function Dashboard() {
                           </TableCell>
                         )}
 
+                        {isADMIN ? null : (
+                          <TableCell sx={{ color: "white" }} align="center">
+                            Print Pass
+                          </TableCell>
+                        )}
 
-{isADMIN ? null : (
-    <TableCell sx={{ color: "white" }} align="center">
-    Print Pass
-  </TableCell>
-
-)}
-                      
-{isADMIN ? null : (
-
-<TableCell sx={{ color: "white" }} align="center">
-Visitor Checkout
-</TableCell>
-
-)}
-                      
+                        {isADMIN ? null : (
+                          <TableCell sx={{ color: "white" }} align="center">
+                            Visitor Checkout
+                          </TableCell>
+                        )}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -1487,7 +1466,8 @@ Visitor Checkout
                             </TableCell>
 
                             <TableCell align="center">
-                              {visitor.remarks !== "" ? (
+                              {/* {visitor.remarks !== "" && visitor.context ? ( */}
+                              {/* { visitor.context ? (
                                 <InfoIcon
                                   style={{
                                     fontSize: "20px",
@@ -1508,7 +1488,17 @@ Visitor Checkout
                                   }}
                                   disabled
                                 />
-                              )}
+                              )} */}
+
+                              <InfoIcon
+                                style={{
+                                  fontSize: "20px",
+                                  color: "",
+                                  marginTop: "5px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleClickOpenDialog(visitor)}
+                              />
                             </TableCell>
 
                             {isADMIN ? null : (
@@ -1576,57 +1566,58 @@ Visitor Checkout
                 )
               }>Print</Button>
         </TableCell> */}
-                      {isADMIN ? null :(
-                        <TableCell align="center">
-                        {visitor.status !== "CANCELLED" &&
-                        visitor.status !== "COMPLETED" &&
-                        visitor.status !== "PENDING" &&
-                        visitor.status !== "CANCELLED_BY_VISITOR" &&
-                        !(visitor.status === "APPROVED" && visitor.room === null) &&
-                        !isADMIN ? (
-                          <Button
-                            variant="outlined"
-                            onClick={() =>
-                              handlePrintPass(
-                                visitor.id,
-                                visitor.visitor.name,
-                                visitor.visitor.phoneNumber
-                              )
-                            }
-                          >
-                            Print
-                          </Button>
-                        ) : (
-                          <Button variant="outlined" disabled>
-                            Print
-                          </Button>
-                        )}
-                      </TableCell>
-                      )}
-                            
-{isADMIN ? null :(
-     <TableCell align="center">
-     {/* Conditional rendering of the Checkout button */}
-     {visitor.status === "INPROCESS" && !isADMIN ? (
-       <Button
-         variant="outlined"
-         onClick={() => {
-           CheckOut(visitor.visitor.phoneNumber);
-         }}
-         disabled={disable}
-         sx={{ color: "purple" }}
-       >
-         Checkout
-       </Button>
-     ) : (
-       <Button variant="outlined" disabled>
-         Checkout
-       </Button>
-     )}
-   </TableCell>
+                            {isADMIN ? null : (
+                              <TableCell align="center">
+                                {visitor.status !== "CANCELLED" &&
+                                visitor.status !== "COMPLETED" &&
+                                visitor.status !== "PENDING" &&
+                                visitor.status !== "CANCELLED_BY_VISITOR" &&
+                                !(
+                                  visitor.status === "APPROVED" &&
+                                  visitor.room === null
+                                ) &&
+                                !isADMIN ? (
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                      handlePrintPass(
+                                        visitor.id,
+                                        visitor.visitor.name,
+                                        visitor.visitor.phoneNumber
+                                      )
+                                    }
+                                  >
+                                    Print
+                                  </Button>
+                                ) : (
+                                  <Button variant="outlined" disabled>
+                                    Print
+                                  </Button>
+                                )}
+                              </TableCell>
+                            )}
 
-)}
-                         
+                            {isADMIN ? null : (
+                              <TableCell align="center">
+                                {/* Conditional rendering of the Checkout button */}
+                                {visitor.status === "INPROCESS" && !isADMIN ? (
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() => {
+                                      CheckOut(visitor.visitor.phoneNumber);
+                                    }}
+                                    disabled={disable}
+                                    sx={{ color: "purple" }}
+                                  >
+                                    Checkout
+                                  </Button>
+                                ) : (
+                                  <Button variant="outlined" disabled>
+                                    Checkout
+                                  </Button>
+                                )}
+                              </TableCell>
+                            )}
                           </TableRow>
                         ))
                       ) : (
@@ -2033,24 +2024,38 @@ Visitor Checkout
                 INFO
               </DialogTitle>
               <List sx={{ width: "300px" }}>
-                <ListItem
-                  button
-                  onClick={() => handleCloseDialog("username@gmail.com")}
-                >
-                  <ListItemText
+                <ListItem button onClick={() => handleCloseDialog("")}>
+                  {/* <ListItemText
                     primary={`Remarks: ${
-                      selectedValue.remarks !== null &&
+                      selectedValue.remarks !== null ||
                       selectedValue.remarks !== ""
                         ? selectedValue.remarks
                         : "-"
                     }`}
                     sx={{ color: "blue", fontSize: "20px" }}
+                  /> */}
+
+                  <ListItemText
+                    primary={`Remarks: ${
+                      
+                      selectedValue.remarks !== ""
+                        ? selectedValue.remarks
+                        : "NA"
+                    }`}
+                    sx={{ color: "blue", fontSize: "20px" }}
                   />
                 </ListItem>
-                <ListItem
-                  button
-                  onClick={() => handleCloseDialog("username@gmail.com")}
-                >
+                <ListItem button onClick={() => handleCloseDialog("")}>
+                  <ListItemText
+                    primary={`Context: ${
+                    
+                      selectedValue.context !== ""
+                        ? selectedValue.context
+                        : "NA"
+                    }`}
+                    sx={{ color: "blue", fontSize: "20px" }}
+                  />
+
                   {/* <ListItemText
                     primary={`Permission: ${
                       selectedValue.user.isPermission !== "null" ||
@@ -2069,16 +2074,16 @@ Visitor Checkout
       </Grid>
 
       <div>
-      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
-      <Backdrop
-        // style={{ zIndex: 1 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
-        open={openLoader}
-        // onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+        {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+        <Backdrop
+          // style={{ zIndex: 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+          open={openLoader}
+          // onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       {/* // </Grid> */}
     </Box>
   );

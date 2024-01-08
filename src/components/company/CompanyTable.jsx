@@ -409,7 +409,7 @@ const CompanyTable = () => {
 
 
 
-                        <Button variant="contained"  onClick={excelExport}>EXport Excel
+                        <Button variant="contained"  sx={{marginRight:""}} onClick={excelExport}>EXPORT EXCEL
                         
                         </Button>
 
@@ -449,6 +449,12 @@ const CompanyTable = () => {
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Company Name</h4>
                               </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{ width: "10 em", color: "white" }}
+                              >
+                                <h4>Logo</h4>
+                              </TableCell>
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Email</h4>
                               </TableCell>
@@ -458,12 +464,7 @@ const CompanyTable = () => {
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Address</h4>
                               </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{ width: "10 em", color: "white" }}
-                              >
-                                <h4>Logo</h4>
-                              </TableCell>
+                             
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Industry</h4>
                               </TableCell>
@@ -509,15 +510,7 @@ const CompanyTable = () => {
                                     <TableCell align="center">
                                       {company.name}
                                     </TableCell>
-                                    <TableCell align="center">
-                                      {company.email}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                      {company.phoneNumber}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                      {company.address}
-                                    </TableCell>
+
                                     <TableCell align="center">
                                       <div
                                         style={{
@@ -544,6 +537,16 @@ const CompanyTable = () => {
                                         </a>
                                       </div>
                                     </TableCell>
+                                    <TableCell align="center">
+                                      {company.email}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {company.phoneNumber}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {company.address}
+                                    </TableCell>
+                               
                                     <TableCell align="center">
                                       {company.industry}
                                     </TableCell>

@@ -333,11 +333,11 @@ export default function CompanyReg() {
     }
 
  
-    if (logoFile.size > MAX_FILE_SIZE) {
-        alert("Maximum file size exceeded (5MB)");
-        // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
-        return;
-    }
+    // if (logoFile.size > MAX_FILE_SIZE) {
+    //     alert("Maximum file size exceeded (5MB)");
+    //     // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
+    //     return;
+    // }
 
     // Check if file size is within the range (between 1MB and 5MB)
     // const fileSizeInMB = logoFile.size / (1024 * 1024); // Size in MB
@@ -350,16 +350,16 @@ export default function CompanyReg() {
     // }
 
     const fileSizeInMB = logoFile.size / (1024 * 1024);
-    const minSizeInMB = 0.1;
+    const minSizeInMB = 0.001;
     const maxSizeInMB = 5; 
 
-    // if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
+    if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
 
      
-    //   alert(`File size should be between 100KB and 5MB`);
+      alert(`File size should be between 1KB and 5MB`);
      
-    //   return;
-    // }
+      return;
+    }
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);
@@ -415,11 +415,11 @@ export default function CompanyReg() {
 
   return (
     <>
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3 ,}}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <div className="img">
-              <form onSubmit={(e) => handleSubmit(e)}>
+            <div className="img" >
+              <form onSubmit={(e) => handleSubmit(e)} >
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -596,7 +596,18 @@ export default function CompanyReg() {
                         sx={{ fontSize: "15px" }}
                       >
                         Allowed file formats: .jpg, .jpeg, .png
+                        
+
                       </Typography>
+                      <Typography
+                        variant="caption"
+                        color="black"
+                        sx={{ fontSize: "15px" }}
+                      >
+                        Logo size (1Kb - 5Mb)
+                      </Typography>
+
+
 
                       {errors.logo && (
                         <Typography

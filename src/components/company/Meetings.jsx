@@ -360,19 +360,22 @@ export default function Meetings() {
 
   // now previous
   function fetchData() {
+
+    const companyId = sessionStorage.getItem("companyId");
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
  setOpenLoader(true)
     const payload = {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
-      //         companyId: companyId,
+      companyId: companyId,
       fromDate: startDate,
       toDate: endDate,
       status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
       user: {
         id: adminId,
       },
+      
 
       room: {
         id: selectedRoom.length === 0 ? null : selectedRoom,
