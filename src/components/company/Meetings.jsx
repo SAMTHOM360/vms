@@ -717,9 +717,10 @@ export default function Meetings() {
   const handleClickOpenDialog = (value) => {
     setOpenDialog(true);
 
-    if (value.remarks !== null && value.remarks !== "") {
-      setSelectedValue(value);
-    }
+    // if (value.remarks !== null && value.remarks !== "") {
+    //   setSelectedValue(value);
+    // }
+    setSelectedValue(value);
   };
 
   const handleCloseDialog = (value) => {
@@ -1566,7 +1567,7 @@ export default function Meetings() {
                     button
                     onClick={() => handleCloseDialog("username@gmail.com")}
                   >
-                    <ListItemText
+                    {/* <ListItemText
                       primary={`Remarks: ${
                         selectedValue.remarks !== null &&
                         selectedValue.remarks !== ""
@@ -1574,12 +1575,36 @@ export default function Meetings() {
                           : "-"
                       }`}
                       sx={{ color: "blue", fontSize: "20px" }}
-                    />
+                    /> */}
+
+<ListItemText
+                    primary={`Remarks: ${
+                      
+                      selectedValue.remarks !== ""
+                        ? selectedValue.remarks
+                        : "NA"
+                    }`}
+                    sx={{ color: "blue", fontSize: "20px" }}
+                  />
                   </ListItem>
-                  <ListItem
+                  {/* <ListItem
                     button
                     onClick={() => handleCloseDialog("username@gmail.com")}
-                  >
+                  > */}
+
+<ListItem button onClick={() => handleCloseDialog("")}>
+                  <ListItemText
+                    primary={`Context: ${
+                    
+                      selectedValue.context !== ""
+                        ? selectedValue.context
+                        : "NA"
+                    }`}
+                    sx={{ color: "blue", fontSize: "20px" }}
+                  />
+
+
+
                     {/* <ListItemText
                   primary={`Permission: ${
                     selectedValue.user.isPermission !== "null" ||

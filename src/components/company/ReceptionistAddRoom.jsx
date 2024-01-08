@@ -608,9 +608,11 @@ export default function ReceptionistAddRoom() {
           />
 
           <Dialog open={openAddRoomDialog} onClose={handleCloseAddRoomDialog}>
-            <DialogTitle>Add Room</DialogTitle>
+            <DialogTitle sx={{textAlign:"center"}}>Room Info</DialogTitle>
             <DialogContent>
               <div style={{ display: "flex", flexDirection: "column" }}>
+
+               
                 <TextField
                   label="Room Name"
                   required

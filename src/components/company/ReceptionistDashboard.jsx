@@ -340,6 +340,7 @@ export default function Dashboard() {
       .then((response) => {
         const data = response.data.data;
         setRooms(data);
+        setReload(false)
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -420,11 +421,10 @@ export default function Dashboard() {
           setRoomAdded(true);
           setIsCancelled(true);
           handleCloseModal();
-        } else {
-          console.log(selectedRoom, "selectedRoom");
-        }
+          setReload(true);
+        } 
         setOpen(false);
-        setReload(true);
+       
       })
       .catch((error) => {
         // if (error.response.data.message === "You cannot update a meeting now") {
@@ -542,6 +542,8 @@ export default function Dashboard() {
         responseData.forEach((meeting) => {
           const meetingId = meeting.id;
         });
+
+        setReload(false)
 
         setMeetingsLength(responseDataLength);
 
@@ -753,6 +755,7 @@ export default function Dashboard() {
     getRoomsOption()
 
   },[reload])
+
 
   // useEffect(() => {
   //     if (location.state && location.state.filter) {
