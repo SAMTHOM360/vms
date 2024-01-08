@@ -81,7 +81,24 @@ const Employee = () => {
   const [rows, setRows] = useState([]);
   const [AddUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editedItem, setEditedItem] = useState(null);
+  const [editedItem, setEditedItem] = useState({
+    id:"",
+    firstName:"",
+    lastName:"",
+    email:"",
+    phone:"",
+    dept: {
+      id:"",
+      name:"",
+    },
+    role:"",
+    roleName:"",
+    isPermission:false,
+    empCode:"",
+    company:{
+      id:null, 
+    }
+  });
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedDept, setSelectedDept] = useState("");
@@ -185,8 +202,17 @@ const Employee = () => {
 
       if (response.status === 200) {
         const apiData = response.data.data.data;
+        let selectedUserCompanyId = apiData.company ? apiData.company.id ? apiData.company.id : null : null
+
+        await fetchDepts({selectedCompanyId: selectedUserCompanyId })
 
         // console.log('handle edit api data', apiData)
+        // const departmentIdFromApi = apiData.departmentDto ? apiData.departmentDto.id || "" : "";
+        // const isValidDepartmentId = depts.some(dept => dept.id === departmentIdFromApi);
+
+        // console.log('depts', depts)
+        // console.log('departmentIdFromApi', departmentIdFromApi)
+        // console.log('isValidDepartmentId', isValidDepartmentId)
 
         setEditedItem({
           id: apiData.id || "",
@@ -196,6 +222,7 @@ const Employee = () => {
           phone: apiData.phone || "",
           dept: {
             id: apiData.departmentDto ? apiData.departmentDto.id || "" : "",
+            // id: isValidDepartmentId ? departmentIdFromApi : "",
             name: apiData.departmentDto ? apiData.departmentDto.name || "" : "",
           },
 
@@ -203,6 +230,9 @@ const Employee = () => {
           roleName: apiData.role ? apiData.role.name || "" : "",
           isPermission: apiData.isPermission || false,
           empCode: apiData.empCode || "",
+          company:{
+            id: apiData.company ? apiData.company.id ? apiData.company.id : null : null, 
+          }
         });
 
         setOpenEditDialog(true);
@@ -215,6 +245,30 @@ const Employee = () => {
     }
     setLoading(false);
   };
+
+  // console.log('depts outside handle edit', depts)
+
+  useEffect(() => {
+    // Check the validity of the department ID here
+    const departmentIdFromApi = editedItem.dept ? editedItem.dept.id || "" : "";
+    const isValidDepartmentId = depts.some(dept => dept.id === departmentIdFromApi);
+
+    // console.log('departmentIdFromApi', departmentIdFromApi);
+    // console.log('isValidDepartmentId', isValidDepartmentId);
+
+    // If the department ID is not valid, update it to a valid value
+    if (!isValidDepartmentId && depts.length > 0) {
+      const validDepartmentId = depts[0].id; // Use the first department ID as a fallback
+      const updatedItem = {
+        ...editedItem,
+        dept: {
+          ...editedItem.dept,
+          id: validDepartmentId,
+        },
+      };
+      setEditedItem(updatedItem);
+    }
+  }, [depts, editedItem.dept.id]);
 
   const handleOpenSingleUserForm = () => {
     // setAddUserDialogOpen(true)
@@ -894,21 +948,57 @@ const Employee = () => {
       console.error("Error fetching roles:", error);
     }
   }
-  const fetchDepts = async () => {
+  // const fetchDepts = async () => {
+  //   let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllDept;
+  //   try {
+  //     const response = await axios.get(`${url}?companyId=${companyId}`);
+  //     const deptApiData = response.data.data;
+  //     // console.log("dept data", response.data.data)
+  //     setDepts(deptApiData);
+  //   } catch (error) {
+  //     console.error("Error in fetching depts", error);
+  //   }
+  // };
+
+  const fetchDepts = async ({ selectedCompanyId }) => {
     let url = Config.baseUrl + Config.apiEndPoints.employeeSBGetAllDept;
     try {
-      const response = await axios.get(`${url}?companyId=${companyId}`);
-      const deptApiData = response.data.data;
-      // console.log("dept data", response.data.data)
-      setDepts(deptApiData);
+      const response = await axios.get(`${url}?companyId=${selectedCompanyId}`);
+      if (response.status === 200) {
+        const deptApiData = response.data.data;
+        if (deptApiData === null || deptApiData instanceof Error) {
+          setDepts([]);
+        } else {
+          setDepts(deptApiData);
+        }
+      }
     } catch (error) {
-      console.error("Error in fetching depts", error);
+      setDepts([]);
+      if (error.response && error.response.status === 400) {
+        let errMessage = "";
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId: "edit-employee-err17",
+          });
+        }
+      } else {
+        toast.error("Something went wrong !", {
+          toastId: "edit-employee-err18",
+        });
+        console.error("Error saving changes:", error);
+      }
     }
   };
 
-  useEffect(() => {
-    fetchDepts();
-  }, [companyId]);
+  // useEffect(() => {
+  //   fetchDepts();
+  // }, [companyId]);
 
   useEffect(() => {
     fetchData();

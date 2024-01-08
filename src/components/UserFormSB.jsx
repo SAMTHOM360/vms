@@ -55,6 +55,7 @@ function UserForm({ authenticated, closeDialog }) {
 
   const [governmentIdType, setGovernmentIdType] = useState("");
   const [error, setError] = useState("");
+  const [error2, setError2] = useState("");
   const [warning, setWarning] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -153,7 +154,7 @@ function UserForm({ authenticated, closeDialog }) {
     }));
   }
   };
-  // console.log("form data", formData);
+  // console.log('form data', formData);
  
 
 
@@ -562,16 +563,24 @@ useEffect(() => {
   const handleDateChange = (date) => {
     const currentDate = new Date();
     const selectedDate = date ? new Date(date) : null;
+
+    let errMsg2 = ""
+
+    // console.log('selectedDate', selectedDate)
   
     if (selectedDate && selectedDate > currentDate) {
-      console.error("Invalid date selected. Please choose a date up to today.");
-      return;
+      errMsg2 = "Invalid date selected. Please choose a date up to today."
+      // console.error("Invalid date selected. Please choose a date up to today.");
+    } else{
+      errMsg2 = ""
     }
   
     setFormData({
       ...formData,
       dob: selectedDate,
     });
+
+    setError2(errMsg2)
   };
 
 
@@ -625,10 +634,26 @@ const handleSubmit = async (e) => {
   }
   const currentDate = new Date();
 
-  if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
-    toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
-      toastId:"userfrom-warn6"
-    });
+  // if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
+  //   toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
+  //     toastId:"userfrom-warn6"
+  //   });
+  //   return;
+  // }
+
+  const selectedDate = formData.dob ? new Date(formData.dob) : null;
+
+  if (
+    !selectedDate ||
+    isNaN(selectedDate) ||
+    selectedDate > currentDate
+  ) {
+    toast.warn(
+      "Invalid date of birth selected. Please choose a date up to today.",
+      {
+        toastId: "userfrom-warn6",
+      }
+    );
     return;
   }
 
@@ -970,7 +995,7 @@ if (formData.phone.length !== 10) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6} lg={6}>
+                    {/* <Grid item xs={12} sm={6} md={6} lg={6}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           sx={{ width: "100%", mt: "10px" }}
@@ -987,7 +1012,31 @@ if (formData.phone.length !== 10) {
                           }}
                         />
                       </LocalizationProvider>
-                    </Grid>
+                    </Grid> */}
+
+<Grid item xs={12} sm={6} md={6} lg={6}>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <DatePicker
+      sx={{ width: "100%", mt: "10px" }}
+      label="Date of Birth"
+      format="DD/MM/YYYY"
+      shouldDisableDate={shouldDisableDate}
+      onChange={handleDateChange}
+      slotProps={{
+        textField: {
+          error: Boolean(error2),
+          helperText: error2,
+        },
+        field: {
+          clearable: true,
+          onClear: () => setCleared(true),
+        },
+      }}
+    />
+  </LocalizationProvider>
+</Grid>
+
+
 
                     <Grid item xs={12} sm={6} md={6} lg={6}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth required>

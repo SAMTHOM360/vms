@@ -573,6 +573,7 @@ const Building = () => {
           },
         })
         setIsEditOn(true);
+        setCities([])
         fetchCities(item.stateId ? item.stateId : "");
         handleBuildingDialogOpen();
         setLoading(false)
@@ -985,40 +986,6 @@ const Building = () => {
                   }
                 />
 
-                {/* <Autocomplete
-  disablePortal
-  id="city-autocomplete"
-  size="small"
-  sx={{ width: "100%", mt: "1em" }}
-  options={cities}
-  getOptionLabel={(option) => option.name || ""}
-  value={
-    buildingFormData.city.id
-      ? buildingFormData.city
-      : null
-  }
-  onChange={(event, newValue) => {
-    setBuildingFormData({
-      ...buildingFormData,
-      city: {
-        id: newValue ? newValue.id : "",
-        name: newValue ? newValue.name : "",
-      },
-    });
-  }}
-  ListboxProps={{
-    style: {
-      maxHeight: "150px",
-    },
-  }}
-  renderInput={(params) => (
-    <TextField {...params} label="City" name="city" required />
-  )}
-  isOptionEqualToValue={(option, value) =>
-    value === null || option.id === value.id
-  }
-/> */}
-
                 <Autocomplete
                   disablePortal
                   id="city-autocomplete"
@@ -1045,14 +1012,56 @@ const Building = () => {
                       maxHeight: "150px",
                     },
                   }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="City" name="city" required />
+                  renderInput={(params) =>
+                     (
+                    <TextField key={buildingFormData.city ? buildingFormData.city.id : 'defaultKey'} {...params} label="City" name="city" required />
                   )}
                   isOptionEqualToValue={(option, value) =>
                     value === null ||
                     (option.id === value.id && option.name === value.name)
                   }
                 />
+
+{/* <Autocomplete
+  disablePortal
+  id="city-autocomplete"
+  size="small"
+  sx={{ width: "100%", mt: "1em" }}
+  // options={cities.filter(city => city.stateId === (buildingFormData.state.id || null))}
+  options={cities}
+  getOptionLabel={(option) => option.name || ""}
+  value={
+    buildingFormData.city && buildingFormData.city.id
+      ? buildingFormData.city
+      : null
+  }
+  onChange={(event, newValue) => {
+    setBuildingFormData({
+      ...buildingFormData,
+      city: {
+        id: newValue ? newValue.id : "",
+        name: newValue ? newValue.name : "",
+      },
+    });
+  }}
+  ListboxProps={{
+    style: {
+      maxHeight: "150px",
+    },
+  }}
+  renderInput={(params) => (
+    <TextField {...params} label="City" name="city" required />
+  )}
+  isOptionEqualToValue={(option, value) =>
+    value === null ||
+    (option.id === value.id && option.name === value.name)
+  }
+  // Add a key property to ensure uniqueness
+  renderOption={(option) => (
+    <li key={option.id}>{option.name}</li>
+  )}
+/> */}
+
 
                 <TextField
                   size="small"
@@ -1073,21 +1082,6 @@ const Building = () => {
                   }}
                   required
                 />
-
-                {/* <Textarea
-                  placeholder="Type in here…"
-                  //   defaultValue="Try to put text longer than 4 lines."
-                  minRows={2}
-                  maxRows={4}
-                  maxLength={50}
-                  style={{ 
-                    resize: "none", 
-                    width: "100%", 
-                    height:"4em",
-                    marginTop: "1em",
-
-                 }}
-                /> */}
               </form>
             </DialogContent>
             <DialogActions
