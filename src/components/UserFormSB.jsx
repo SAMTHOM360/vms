@@ -19,7 +19,14 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-import { Autocomplete, Divider, Paper, Typography, IconButton,InputAdornment } from "@mui/material";
+import {
+  Autocomplete,
+  Divider,
+  Paper,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import Config from "../Config/Config";
 
 function UserForm({ authenticated, closeDialog }) {
@@ -91,21 +98,19 @@ function UserForm({ authenticated, closeDialog }) {
       name: "",
     },
     isPermission: true,
-    empCode:'',
+    empCode: "",
   });
-
-
 
   const handleClear = (event) => {
     const fieldName = event.currentTarget.getAttribute("data-field");
     // console.log(' event', fieldName)
 
-    if(fieldName === "company") {
+    if (fieldName === "company") {
       setFormData((prevFormData) => ({
         ...prevFormData,
         [fieldName]: {
-          id:"",
-          name:"",
+          id: "",
+          name: "",
         },
         dept: {
           id: "",
@@ -115,53 +120,45 @@ function UserForm({ authenticated, closeDialog }) {
       setDepts([]);
     }
 
-    if(fieldName === "dept") {
+    if (fieldName === "dept") {
       setFormData((prevFormData) => ({
         ...prevFormData,
         [fieldName]: {
-          id:"",
-          name:"",
+          id: "",
+          name: "",
         },
       }));
     }
 
-    if(fieldName === "governmentIdType") {
-      setGovernmentIdType("")
+    if (fieldName === "governmentIdType") {
+      setGovernmentIdType("");
       setFormData((prevFormData) => ({
         ...prevFormData,
         govtId: "",
       }));
-
     }
 
-    if(fieldName === "role") {
-      setGovernmentIdType("")
+    if (fieldName === "role") {
+      setGovernmentIdType("");
       setFormData((prevFormData) => ({
         ...prevFormData,
         [fieldName]: {
-          id:"",
-          name:"",
+          id: "",
+          name: "",
         },
       }));
-
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [fieldName]: "",
+      }));
     }
-
-    else{
-    
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [fieldName]: "",
-    }));
-  }
   };
   // console.log('form data', formData);
- 
-
 
   const shouldDisableDate = (date) => {
     return date > new Date().setDate(new Date().getDate());
   };
-
 
   const handleChangeGender = (event) => {
     const value = event.target.value;
@@ -184,8 +181,6 @@ function UserForm({ authenticated, closeDialog }) {
       govtId: "",
     });
   };
-
-
 
   const handleChangeGovernmentId = (event) => {
     let value = event.target.value;
@@ -246,9 +241,7 @@ function UserForm({ authenticated, closeDialog }) {
 
   //ADHAAR ENDS
 
-
   // DONT REMOVE !!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@
-
 
   // useEffect(() => {
   //   let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState
@@ -272,7 +265,7 @@ function UserForm({ authenticated, closeDialog }) {
   //       if(loggedUserRole && loggedUserRole === "SUPERADMIN"){
   //           if(response.data.data) {
   //             const adminRole = response.data.data.find(role => role.name === "ADMIN")
-            
+
   //           setFormData((prevFormData) => ({
   //             ...prevFormData,
   //             role: {
@@ -300,70 +293,67 @@ function UserForm({ authenticated, closeDialog }) {
   //   }
   // }, []);
 
+  // DONT REMOVE !!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@
 
+  useEffect(() => {
+    const fetchData = async () => {
+      let response1, response2, response3;
 
-// DONT REMOVE !!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@
+      try {
+        setLoading(true);
+        let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState;
+        let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole;
+        let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll;
 
+        response1 = await axios.get(url1);
+        setStates(response1.data.data);
 
-useEffect(() => {
-  const fetchData = async () => {
-    let response1, response2, response3;
+        response2 = await axios.get(url2, { headers });
+        setRoles(response2.data.data);
 
-    try {
-      setLoading(true)
-      let url1 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllState;
-      let url2 = Config.baseUrl + Config.apiEndPoints.userformSBGetAllRole;
-      let url3 = Config.baseUrl + Config.apiEndPoints.userformSBGetCompanyAll;
+        if (loggedUserRole && loggedUserRole === "SUPERADMIN") {
+          if (response2.data.data) {
+            const adminRole = response2.data.data.find(
+              (role) => role.name === "ADMIN"
+            );
 
-      response1 = await axios.get(url1);
-      setStates(response1.data.data);
-
-      response2 = await axios.get(url2, { headers });
-      setRoles(response2.data.data);
-
-      if (loggedUserRole && loggedUserRole === "SUPERADMIN") {
-        if (response2.data.data) {
-          const adminRole = response2.data.data.find(role => role.name === "ADMIN");
-
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            role: {
-              id: adminRole ? adminRole.id : "",
-            },
-          }));
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              role: {
+                id: adminRole ? adminRole.id : "",
+              },
+            }));
+          }
         }
+
+        if (loggedUserRole === "SUPERADMIN") {
+          response3 = await axios.get(url3, { headers });
+          setCompanies(response3.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+
+        // Display toast notifications for failed API calls
+        if (!error.response || error.response.status !== 200) {
+          if (!response1) {
+            toast.warn("Unable to load States");
+          }
+
+          if (!response2) {
+            toast.warn("Unable to load Roles");
+          }
+
+          if (!response3) {
+            toast.warn("Unable to load Companies");
+          }
+        }
+      } finally {
+        setLoading(false);
       }
+    };
 
-      if (loggedUserRole === "SUPERADMIN") {
-        response3 = await axios.get(url3, { headers });
-        setCompanies(response3.data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data", error);
-
-      // Display toast notifications for failed API calls
-      if (!error.response || error.response.status !== 200) {
-        if (!response1) {
-          toast.warn("Unable to load States");
-        }
-
-        if (!response2) {
-          toast.warn("Unable to load Roles");
-        }
-
-        if (!response3) {
-          toast.warn("Unable to load Companies");
-        }
-      }
-    } finally {
-      setLoading(false)
-    }
-  };
-
-  fetchData();
-}, [loggedUserRole]);
-
-  
+    fetchData();
+  }, [loggedUserRole]);
 
   // useEffect(() => {
   //   fetchDepts();
@@ -449,8 +439,8 @@ useEffect(() => {
             name: "",
           },
         }));
-        
-        fetchDepts({selectedCompanyId: value })
+
+        fetchDepts({ selectedCompanyId: value });
       }
       // if (loggedUserRole === 'ADMIN') {
       //   setFormData((prevFormData) => ({
@@ -460,10 +450,9 @@ useEffect(() => {
       //       name: "",
       //     },
       //   }));
-        
+
       //   fetchDepts({selectedCompanyId: companyId })
       // }
-
     } else {
       setFormData({
         ...formData,
@@ -473,7 +462,7 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    if (loggedUserRole === 'ADMIN') {
+    if (loggedUserRole === "ADMIN") {
       setFormData((prevFormData) => ({
         ...prevFormData,
         dept: {
@@ -481,17 +470,15 @@ useEffect(() => {
           name: "",
         },
       }));
-      
-      fetchDepts({selectedCompanyId: companyId })
+
+      fetchDepts({ selectedCompanyId: companyId });
     }
-  },[loggedUserRole])
+  }, [loggedUserRole]);
 
   const fetchCities = async (stateId) => {
-    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllCity
+    let url = Config.baseUrl + Config.apiEndPoints.userformSBGetAllCity;
     try {
-      let response = await axios.get(
-        `${url}/${stateId}`
-      );
+      let response = await axios.get(`${url}/${stateId}`);
       setCities(response.data.data);
     } catch (error) {
       console.error("Error fetching cities", error);
@@ -548,7 +535,6 @@ useEffect(() => {
       }
     }
   };
-  
 
   // const handleDateChange = (date) => {
   //   const adjustedDate = date ? date.add(1, "day") : null;
@@ -559,274 +545,256 @@ useEffect(() => {
   //   });
   // };
 
-
   const handleDateChange = (date) => {
     const currentDate = new Date();
     const selectedDate = date ? new Date(date) : null;
 
-    let errMsg2 = ""
+    let errMsg2 = "";
 
     // console.log('selectedDate', selectedDate)
-  
+
     if (selectedDate && selectedDate > currentDate) {
-      errMsg2 = "Invalid date selected. Please choose a date up to today."
+      errMsg2 = "Invalid date selected. Please choose a date up to today.";
       // console.error("Invalid date selected. Please choose a date up to today.");
-    } else{
-      errMsg2 = ""
+    } else {
+      errMsg2 = "";
     }
-  
+
     setFormData({
       ...formData,
       dob: selectedDate,
     });
 
-    setError2(errMsg2)
+    setError2(errMsg2);
   };
 
+  const handleSubmit = async (e) => {
+    // toast.dismiss()
+    e.preventDefault();
 
+    const trimmedFirstName = formData.firstName
+      ? formData.firstName.trim()
+      : null;
+    const trimmedLastName = formData.lastName ? formData.lastName.trim() : null;
+    const trimmedEmail = formData.email ? formData.email.trim() : null;
 
-const handleSubmit = async (e) => {
-  
-  // toast.dismiss()
-  e.preventDefault();
+    // const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  // working somehow
+    const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
 
-
-  const trimmedFirstName = formData.firstName ? formData.firstName.trim() : null;
-  const trimmedLastName = formData.lastName ? formData.lastName.trim() : null;
-  const trimmedEmail = formData.email ? formData.email.trim() : null;
-
-      // const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  // working somehow
-      const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
-
-  if (!emailFormat.test(trimmedEmail)) {
-    toast.warn("Invalid email address. Please enter a valid email address.", {
-      toastId:"userfrom-warn1"
-    });
-    return;
-  }
-
-  if (!trimmedFirstName) {
-    toast.warn("First Name is required !!!", {
-      toastId:"userfrom-warn2"
-    });
-    return;
-  }
-
-  if (!trimmedLastName) {
-    toast.warn("Last Name is required !!!", {
-      toastId:"userfrom-warn3"
-    });
-    return;
-  }
-
-  if (!trimmedEmail) {
-    toast.warn("Email is required !!!", {
-      toastId:"userfrom-warn4"
-    });
-    return;
-  }
-
-  if (!formData.dob) {
-    toast.warn("Date of birth is required !!!", {
-      toastId:"userfrom-warn5"
-    });
-    return;
-  }
-  const currentDate = new Date();
-
-  // if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
-  //   toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
-  //     toastId:"userfrom-warn6"
-  //   });
-  //   return;
-  // }
-
-  const selectedDate = formData.dob ? new Date(formData.dob) : null;
-
-  if (
-    !selectedDate ||
-    isNaN(selectedDate) ||
-    selectedDate > currentDate
-  ) {
-    toast.warn(
-      "Invalid date of birth selected. Please choose a date up to today.",
-      {
-        toastId: "userfrom-warn6",
-      }
-    );
-    return;
-  }
-
-  const dob = new Date(formData.dob);
-dob.setDate(dob.getDate() + 1); 
-
-const dobISOString = dob.toISOString().split("T")[0];
-
-if (formData.empCode.length < 4) {
-  toast.warn("Employee Code must be at least 4 characters !!!", {
-    toastId:"userfrom-warn7"
-  });
-  return;
-}
-
-if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
-  toast.warn("Aadhar Card must be 12 digits only.", {
-    toastId:"userfrom-warn8"
-  });
-  return;
-} 
-
-if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
-  // toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
-    toast.warn("PAN Card must be 10 characters and format should be \"ABCDE1234F\".", {
-      toastId:"userfrom-warn9"
-  });
-  return;
-}
-
-if (governmentIdType === "PAN Card") {
-  const panCardFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-
-  if (!panCardFormat.test(formData.govtId)) {
-    toast.warn("Invalid PAN Card number. Please enter a valid PAN Card number.", {
-      toastId:"userfrom-warn10"
-    });
-    return;
-  }
-}
-
-if (formData.phone.length !== 10) {
-  toast.warn("Phone Number must be of 10 digits !!!", {
-    toastId:"userfrom-warn11"
-  });
-  return;
-}
-
-
-  const user = {
-    id: null,
-    firstName: formData.firstName,
-    image: "alt img",
-    lastName: formData.lastName,
-    email: formData.email,
-    phone: formData.phone,
-    dob: dobISOString,
-    gender: formData.gender,
-    govtId: formData.govtId,
-    pincode: formData.pincode,
-    company: {
-      id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
-    },
-    departmentDto: {
-      id: formData.dept.id,
-    },
-    role: {
-      id: formData.role.id,
-    },
-    state: {
-      id: formData.state.id,
-    },
-    city: {
-      id: formData.city.id,
-    },
-    isPermission: formData.isPermission,
-    empCode: formData.empCode,
-  };
-
-  // console.log("user", user);
-  let url = Config.baseUrl + Config.apiEndPoints.userformSBAddUser
-
-  try {
-    setLoading(true);
-    // let response = await axios.post(
-    //   `${BASE_URL}/adduser`,
-    //   user,
-    //   { headers }
-    // );
-    let response = await axios.post(
-      `${url}`,
-      user,
-      { headers }
-    );
-    if (response.status === 200) {
-      toast.success("New Employee Added Successfully.", {
-        toastId:"userfrom-succ3"
+    if (!emailFormat.test(trimmedEmail)) {
+      toast.warn("Invalid email address. Please enter a valid email address.", {
+        toastId: "userfrom-warn1",
       });
-
-      // closeDialog()
-      handleEmployeeRedirect();
-      // setAddUserDialogOpen(false)
-      setGovernmentIdType("");
-      setDobDate("");
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        dob: null,
-        gender: "",
-        govtId: "",
-        pincode: "",
-        company: { id: "", name: "" },
-        dept: { id: "", name: "" },
-        role: { id: "", name: "" },
-        state: { id: "", name: "" },
-        city: { id: "", name: "" },
-        isPermission: true,
-        empCode: '',
-      });
+      return;
     }
-  } catch (error) {
-    // toast.error("Something went wrong !!!");
-    // console.error("Error submitting user data", error);
 
-          if(error.request.status === 400){
+    if (!trimmedFirstName) {
+      toast.warn("First Name is required !!!", {
+        toastId: "userfrom-warn2",
+      });
+      return;
+    }
 
-        let errMessage = '';
+    if (!trimmedLastName) {
+      toast.warn("Last Name is required !!!", {
+        toastId: "userfrom-warn3",
+      });
+      return;
+    }
 
+    if (!trimmedEmail) {
+      toast.warn("Email is required !!!", {
+        toastId: "userfrom-warn4",
+      });
+      return;
+    }
 
-        if (error.response && error.response.data && error.response.data.message) {
-          errMessage = error.response.data.message;
-          const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!', {
-            toastId:"userfrom-err5"
-          });
+    if (!formData.dob) {
+      toast.warn("Date of birth is required !!!", {
+        toastId: "userfrom-warn5",
+      });
+      return;
+    }
+    const currentDate = new Date();
+
+    // if (!(formData.dob instanceof Date) || isNaN(formData.dob) || formData.dob > currentDate) {
+    //   toast.warn("Invalid date of birth selected. Please choose a date up to today.", {
+    //     toastId:"userfrom-warn6"
+    //   });
+    //   return;
+    // }
+
+    const selectedDate = formData.dob ? new Date(formData.dob) : null;
+
+    if (!selectedDate || isNaN(selectedDate) || selectedDate > currentDate) {
+      toast.warn(
+        "Invalid date of birth selected. Please choose a date up to today.",
+        {
+          toastId: "userfrom-warn6",
         }
- 
- 
+      );
+      return;
+    }
+
+    const dob = new Date(formData.dob);
+    dob.setDate(dob.getDate() + 1);
+
+    const dobISOString = dob.toISOString().split("T")[0];
+
+    if (formData.empCode.length < 4) {
+      toast.warn("Employee Code must be at least 4 characters !!!", {
+        toastId: "userfrom-warn7",
+      });
+      return;
+    }
+
+    if (governmentIdType === "Aadhar Card" && formData.govtId.length !== 12) {
+      toast.warn("Aadhar Card must be 12 digits only.", {
+        toastId: "userfrom-warn8",
+      });
+      return;
+    }
+
+    if (governmentIdType === "PAN Card" && formData.govtId.length !== 10) {
+      // toast.warn("PAN Card must be 10 characters, uppercase letters, and digits only.", {
+      toast.warn(
+        'PAN Card must be 10 characters and format should be "ABCDE1234F".',
+        {
+          toastId: "userfrom-warn9",
+        }
+      );
+      return;
+    }
+
+    if (governmentIdType === "PAN Card") {
+      const panCardFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+      if (!panCardFormat.test(formData.govtId)) {
+        toast.warn(
+          "Invalid PAN Card number. Please enter a valid PAN Card number.",
+          {
+            toastId: "userfrom-warn10",
+          }
+        );
+        return;
       }
-       else {
-        toast.error('Something went wrong !!!', {
-          toastId:"userfrom-err6"
+    }
+
+    if (formData.phone.length !== 10) {
+      toast.warn("Phone Number must be of 10 digits !!!", {
+        toastId: "userfrom-warn11",
+      });
+      return;
+    }
+
+    const user = {
+      id: null,
+      firstName: formData.firstName,
+      image: "alt img",
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      dob: dobISOString,
+      gender: formData.gender,
+      govtId: formData.govtId,
+      pincode: formData.pincode,
+      company: {
+        id: loggedUserRole === "SUPERADMIN" ? formData.company.id : companyId,
+      },
+      departmentDto: {
+        id: formData.dept.id,
+      },
+      role: {
+        id: formData.role.id,
+      },
+      state: {
+        id: formData.state.id,
+      },
+      city: {
+        id: formData.city.id,
+      },
+      isPermission: formData.isPermission,
+      empCode: formData.empCode,
+    };
+
+    // console.log("user", user);
+    let url = Config.baseUrl + Config.apiEndPoints.userformSBAddUser;
+
+    try {
+      setLoading(true);
+      // let response = await axios.post(
+      //   `${BASE_URL}/adduser`,
+      //   user,
+      //   { headers }
+      // );
+      let response = await axios.post(`${url}`, user, { headers });
+      if (response.status === 200) {
+        toast.success("New Employee Added Successfully.", {
+          toastId: "userfrom-succ3",
+        });
+
+        // closeDialog()
+        handleEmployeeRedirect();
+        // setAddUserDialogOpen(false)
+        setGovernmentIdType("");
+        setDobDate("");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          dob: null,
+          gender: "",
+          govtId: "",
+          pincode: "",
+          company: { id: "", name: "" },
+          dept: { id: "", name: "" },
+          role: { id: "", name: "" },
+          state: { id: "", name: "" },
+          city: { id: "", name: "" },
+          isPermission: true,
+          empCode: "",
         });
       }
-  } finally {
-    setLoading(false);
-  }
-};
+    } catch (error) {
+      // toast.error("Something went wrong !!!");
+      // console.error("Error submitting user data", error);
 
+      if (error.request.status === 400) {
+        let errMessage = "";
 
-
-
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          errMessage = error.response.data.message;
+          const cleanedMessage = JSON.stringify(errMessage);
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId: "userfrom-err5",
+          });
+        }
+      } else {
+        toast.error("Something went wrong !!!", {
+          toastId: "userfrom-err6",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // async function fetchData() {
   //   try {
   //     const response = await axios.get(`${BASE_URL}/getall`, { headers });
-  
+
   //     const apiDataArray = response.data;
-  
+
   //     sessionStorage.setItem("currEmpLength", apiDataArray.length);
   //   } catch(error) {
   //     console.error('Error in getting data: ', error)
   //   }
   // }
-
-
-
-  
-
-
-
 
   const handleEmployeeRedirect = () => {
     navigate("/employee");
@@ -901,18 +869,18 @@ if (formData.phone.length !== 10) {
                           maxLength: 26,
                           onInput: (event) => {
                             let value = event.target.value;
-                      
+
                             // Remove characters other than lowercase, uppercase, and spaces
-                            value = value.replace(/[^a-zA-Z\s]/g, '');
-                      
+                            value = value.replace(/[^a-zA-Z\s]/g, "");
+
                             // Replace consecutive spaces with a single space
-                            value = value.replace(/\s{2,}/g, ' ');
-                      
+                            value = value.replace(/\s{2,}/g, " ");
+
                             // Ensure the length does not exceed maxLength
                             if (value.length > 26) {
                               value = value.slice(0, 26);
                             }
-                      
+
                             setFormData({
                               ...formData,
                               firstName: value,
@@ -935,18 +903,18 @@ if (formData.phone.length !== 10) {
                           maxLength: 26,
                           onInput: (event) => {
                             let value = event.target.value;
-                      
+
                             // Remove characters other than lowercase, uppercase, and spaces
-                            value = value.replace(/[^a-zA-Z\s]/g, '');
-                      
+                            value = value.replace(/[^a-zA-Z\s]/g, "");
+
                             // Replace consecutive spaces with a single space
-                            value = value.replace(/\s{2,}/g, ' ');
-                      
+                            value = value.replace(/\s{2,}/g, " ");
+
                             // Ensure the length does not exceed maxLength
                             if (value.length > 26) {
                               value = value.slice(0, 26);
                             }
-                      
+
                             setFormData({
                               ...formData,
                               lastName: value,
@@ -1014,32 +982,34 @@ if (formData.phone.length !== 10) {
                       </LocalizationProvider>
                     </Grid> */}
 
-<Grid item xs={12} sm={6} md={6} lg={6}>
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <DatePicker
-      sx={{ width: "100%", mt: "10px" }}
-      label="Date of Birth"
-      format="DD/MM/YYYY"
-      shouldDisableDate={shouldDisableDate}
-      onChange={handleDateChange}
-      slotProps={{
-        textField: {
-          error: Boolean(error2),
-          helperText: error2,
-        },
-        field: {
-          clearable: true,
-          onClear: () => setCleared(true),
-        },
-      }}
-    />
-  </LocalizationProvider>
-</Grid>
-
-
+                    <Grid item xs={12} sm={6} md={6} lg={6}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          sx={{ width: "100%", mt: "10px" }}
+                          label="Date of Birth"
+                          format="DD/MM/YYYY"
+                          shouldDisableDate={shouldDisableDate}
+                          onChange={handleDateChange}
+                          slotProps={{
+                            textField: {
+                              error: Boolean(error2),
+                              helperText: error2,
+                            },
+                            field: {
+                              clearable: true,
+                              onClear: () => setCleared(true),
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
 
                     <Grid item xs={12} sm={6} md={6} lg={6}>
-                      <FormControl sx={{ width: "100%", mt: "10px" }} fullWidth required>
+                      <FormControl
+                        sx={{ width: "100%", mt: "10px" }}
+                        fullWidth
+                        required
+                      >
                         <InputLabel htmlFor="demo-simple-select-label">
                           Gender
                         </InputLabel>
@@ -1050,7 +1020,6 @@ if (formData.phone.length !== 10) {
                           label="Gender"
                           onChange={handleChangeGender}
                           required
-
                           endAdornment={
                             formData.gender ? (
                               <IconButton
@@ -1098,8 +1067,8 @@ if (formData.phone.length !== 10) {
                       </FormControl>
                     </Grid> */}
 
-<Grid item xs={12} sm={6} md={6} lg={4}>
-  {/* <Autocomplete
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
+                      {/* <Autocomplete
     disablePortal
     id="state-autocomplete"
     sx={{ width: '100%', mt: '10px' }}
@@ -1138,46 +1107,49 @@ if (formData.phone.length !== 10) {
     isOptionEqualToValue={(option, value) => option.id === value.id}
   /> */}
 
-<Autocomplete
-  disablePortal
-  id="state-autocomplete"
-  sx={{ width: '100%', mt: '10px' }}
-  options={states}
-  getOptionLabel={(option) => option.name || ''}
-  value={states.find((state) => state.id === formData.state.id) || null}
-  onChange={(event, newValue) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: {
-        id: newValue ? newValue.id : '',
-        name: newValue ? newValue.name : '',
-      },
-      city: { id: '' },
-    }));
+                      <Autocomplete
+                        disablePortal
+                        id="state-autocomplete"
+                        sx={{ width: "100%", mt: "10px" }}
+                        options={states}
+                        getOptionLabel={(option) => option.name || ""}
+                        value={
+                          states.find(
+                            (state) => state.id === formData.state.id
+                          ) || null
+                        }
+                        onChange={(event, newValue) => {
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            state: {
+                              id: newValue ? newValue.id : "",
+                              name: newValue ? newValue.name : "",
+                            },
+                            city: { id: "" },
+                          }));
 
-    // Rest of your code
+                          // Rest of your code
 
-    fetchCities(newValue ? newValue.id : '');
-  }}
-  ListboxProps={{
-    style: {
-      maxHeight: '150px',
-    },
-  }}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="State"
-      name="state"
-      required
-    />
-  )}
-  isOptionEqualToValue={(option, value) => option.id === value.id}
-/>
-
-</Grid>
-
-
+                          fetchCities(newValue ? newValue.id : "");
+                        }}
+                        ListboxProps={{
+                          style: {
+                            maxHeight: "150px",
+                          },
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="State"
+                            name="state"
+                            required
+                          />
+                        )}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                      />
+                    </Grid>
 
                     {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
@@ -1205,44 +1177,47 @@ if (formData.phone.length !== 10) {
                       </FormControl>
                     </Grid> */}
 
-<Grid item xs={12} sm={6} md={6} lg={4}>
-  <Autocomplete
-    disablePortal
-    id="city-autocomplete"
-    sx={{ width: '100%', mt: '10px' }}
-    options={cities}
-    getOptionLabel={(option) => option.name || ''}
-    value={cities.find((city) => city.id === formData.city.id) || null}
-    onChange={(event, newValue) => {
-      // const selectedCity = cities.find((city) => city.id === newValue);
-      setFormData({
-        ...formData,
-        city: {
-          id: newValue? newValue.id : '',
-          name: newValue ? newValue.name : '',
-        },
-      });
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
+                      <Autocomplete
+                        disablePortal
+                        id="city-autocomplete"
+                        sx={{ width: "100%", mt: "10px" }}
+                        options={cities}
+                        getOptionLabel={(option) => option.name || ""}
+                        value={
+                          cities.find((city) => city.id === formData.city.id) ||
+                          null
+                        }
+                        onChange={(event, newValue) => {
+                          // const selectedCity = cities.find((city) => city.id === newValue);
+                          setFormData({
+                            ...formData,
+                            city: {
+                              id: newValue ? newValue.id : "",
+                              name: newValue ? newValue.name : "",
+                            },
+                          });
 
-      // console.log('selected city', newValue);
-    }}
-    ListboxProps={{
-      style: {
-        maxHeight: '150px',
-      },
-    }}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        label="City"
-        name="city"
-        required
-      />
-    )}
-    isOptionEqualToValue={(option, value) => option.id === value.id}
-  />
-</Grid>
-
-
+                          // console.log('selected city', newValue);
+                        }}
+                        ListboxProps={{
+                          style: {
+                            maxHeight: "150px",
+                          },
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="City"
+                            name="city"
+                            required
+                          />
+                        )}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                      />
+                    </Grid>
 
                     <Grid item xs={12} sm={6} md={6} lg={4}>
                       <TextField
@@ -1285,7 +1260,7 @@ if (formData.phone.length !== 10) {
                                 data-field="governmentIdType"
                                 onClick={handleClear}
                                 size="small"
-                                sx={{mr:'0.5em'}}
+                                sx={{ mr: "0.5em" }}
                               >
                                 <ClearIcon />
                               </IconButton>
@@ -1308,20 +1283,20 @@ if (formData.phone.length !== 10) {
                           maxLength:
                             governmentIdType === "Aadhar Card" ? 12 : 10,
                         }}
-                            // InputProps = {{
-                            // endAdornment: formData.govtId ? (
-                            //   <InputAdornment position="end">
-                            //     <IconButton
-                            //       aria-label="clear"
-                            //       data-field="govtId"
-                            //       onClick={handleClear}
-                            //       size="small"
-                            //     >
-                            //       <ClearIcon />
-                            //     </IconButton>
-                            //   </InputAdornment>
-                            // ) : null,
-                            // }}
+                        // InputProps = {{
+                        // endAdornment: formData.govtId ? (
+                        //   <InputAdornment position="end">
+                        //     <IconButton
+                        //       aria-label="clear"
+                        //       data-field="govtId"
+                        //       onClick={handleClear}
+                        //       size="small"
+                        //     >
+                        //       <ClearIcon />
+                        //     </IconButton>
+                        //   </InputAdornment>
+                        // ) : null,
+                        // }}
                         fullWidth
                         required
                         error={Boolean(error)}
@@ -1330,8 +1305,8 @@ if (formData.phone.length !== 10) {
                     </Grid>
 
                     {loggedUserRole === "SUPERADMIN" ? (
-                                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                                          <FormControl sx={{ width: "100%", mt: "10px" }} required>
+                      <Grid item xs={12} sm={6} md={6} lg={4}>
+                        {/* <FormControl sx={{ width: "100%", mt: "10px" }} required>
                                               <>
                                                 <InputLabel htmlFor="company">Company</InputLabel>
                                                 <Select
@@ -1371,7 +1346,7 @@ if (formData.phone.length !== 10) {
                                                   ))}
                                                 </Select>
                                               </>
-                                          </FormControl>
+                                          </FormControl> */}
 
 {/* <Autocomplete
   disablePortal
@@ -1381,13 +1356,29 @@ if (formData.phone.length !== 10) {
   getOptionLabel={(option) => option.name || ''}
   value={companies.find((company) => company.id === formData.company.id) || null}
   onChange={(event, newValue) => {
-    setFormData({
-      ...formData,
-      company: {
-        id: newValue ? newValue.id : '',
-        name: newValue ? newValue.name : '',
-      },
-    });
+    if (loggedUserRole === 'SUPERADMIN') {
+      const selectedCompany = companies.find((company) => company.id === (newValue ? newValue.id : ''));
+      setFormData({
+        ...formData,
+        company: {
+          id: newValue ? newValue.id : '',
+          name: newValue ? newValue.name : '',
+        },
+        dept: {
+          id: '',
+          name: '',
+        },
+      });
+      fetchDepts({ selectedCompanyId: selectedCompany ? selectedCompany.id : '' });
+    } else {
+      setFormData({
+        ...formData,
+        company: {
+          id: newValue ? newValue.id : '',
+          name: newValue ? newValue.name : '',
+        },
+      });
+    }
   }}
   ListboxProps={{
     style: {
@@ -1404,8 +1395,61 @@ if (formData.phone.length !== 10) {
   )}
   isOptionEqualToValue={(option, value) => option.id === value.id}
 /> */}
-                                        </Grid>
-                    ) : null }
+
+
+<Autocomplete
+  disablePortal
+  id="company-autocomplete"
+  sx={{ width: '100%', mt: '10px' }}
+  options={companies}
+  getOptionLabel={(option) => option.name || ''}
+  value={companies.find((company) => company.id === formData.company.id) || null}
+  onChange={(event, newValue) => {
+    if (loggedUserRole === 'SUPERADMIN') {
+      const selectedCompany = companies.find((company) => company.id === (newValue ? newValue.id : ''));
+      setFormData({
+        ...formData,
+        company: {
+          id: newValue ? newValue.id : '',
+          name: newValue ? newValue.name : '',
+        },
+        dept: {
+          id: '',
+          name: '',
+        },
+      });
+      fetchDepts({ selectedCompanyId: selectedCompany ? selectedCompany.id : '' });
+    } else {
+      setFormData({
+        ...formData,
+        company: {
+          id: newValue ? newValue.id : '',
+          name: newValue ? newValue.name : '',
+        },
+      });
+    }
+  }}
+  ListboxProps={{
+    style: {
+      maxHeight: '150px',
+    },
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Company"
+      name="company"
+      required
+    />
+  )}
+  isOptionEqualToValue={(option, value) => option.id === value.id}
+/>
+
+
+
+
+                      </Grid>
+                    ) : null}
 
                     {/* <Grid item xs={12} sm={4} md={4} lg={4}>
                       <FormControl sx={{ width: "100%", mt: "10px" }} required>
@@ -1459,7 +1503,6 @@ if (formData.phone.length !== 10) {
                               },
                             },
                           }}
-
                           endAdornment={
                             formData.dept.id ? (
                               <IconButton
@@ -1500,7 +1543,6 @@ if (formData.phone.length !== 10) {
                             },
                           }}
                           required
-
                           endAdornment={
                             formData.role.id ? (
                               <IconButton
@@ -1514,7 +1556,6 @@ if (formData.phone.length !== 10) {
                               </IconButton>
                             ) : null
                           }
-                          
                         >
                           {roles.map((role) => (
                             <MenuItem key={role.id} value={role.id}>
@@ -1536,15 +1577,15 @@ if (formData.phone.length !== 10) {
                           maxLength: 10,
                           onInput: (event) => {
                             let value = event.target.value;
-                    
+
                             // Remove characters other than lowercase, uppercase, and numbers
-                            value = value.replace(/[^a-zA-Z0-9]/g, '');
-                    
+                            value = value.replace(/[^a-zA-Z0-9]/g, "");
+
                             // Ensure the length does not exceed 10
                             if (value.length > 10) {
                               value = value.slice(0, 10);
                             }
-                    
+
                             setFormData({
                               ...formData,
                               empCode: value,
@@ -1557,8 +1598,12 @@ if (formData.phone.length !== 10) {
                     </Grid>
 
                     {loggedUserRole !== "SUPERADMIN" ? (
-                        <Grid item xs={12} sm={6} md={6} lg={4}>
-                        <FormControl fullWidth sx={{ width: "100%", mt: "10px" }} required>
+                      <Grid item xs={12} sm={6} md={6} lg={4}>
+                        <FormControl
+                          fullWidth
+                          sx={{ width: "100%", mt: "10px" }}
+                          required
+                        >
                           <InputLabel id="approval-label">
                             Can Receptionist approve meet?
                           </InputLabel>
@@ -1575,8 +1620,6 @@ if (formData.phone.length !== 10) {
                         </FormControl>
                       </Grid>
                     ) : null}
-
-                  
                   </Grid>
 
                   <Box

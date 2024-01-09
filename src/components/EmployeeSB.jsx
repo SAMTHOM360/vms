@@ -33,8 +33,8 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../routes/AuthContext";
 import Config from "../Config/Config";
-// import * as XLSX from "xlsx";
 
+// import * as XLSX from "xlsx";
 import * as XLSX from "sheetjs-style"
 
 const Employee = () => {
@@ -116,7 +116,7 @@ const Employee = () => {
   const [excelUrl, setExcelUrl] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [exportExcelData, setExportExcelData] = useState("")
+  const [exportExcelData, setExportExcelData] = useState([])
 
   let formattedHead;
 
@@ -1057,6 +1057,10 @@ function fitToColumn(arrayOfObjects) {
     });
   });
 
+  columnWidths.forEach((column) => {
+    column.wch += 5;
+  });
+
   return columnWidths;
 }
 
@@ -1070,7 +1074,7 @@ const handleExportExcelAllData = () => {
   
   if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
 
-    console.log('cxcel data inside print', exportExcelData)
+    // console.log('cxcel data inside print', exportExcelData)
     let headers = []
     let data ;
     if (loggedUserRole === "SUPERADMIN") {
@@ -1378,7 +1382,8 @@ const handleExportExcelAllData = () => {
                                     // bgcolor: "orange",
                                     display:'flex',
                                     justifyContent:'end',
-                                    mt:'0.5em'
+                                    mt:'0.5em',
+                                    position:'relative',
                                   }}
                                 >
                                   <Button

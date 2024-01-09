@@ -22,6 +22,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Config from "../Config/Config";
 
+// import * as XLSX from "xlsx";
+import * as XLSX from "sheetjs-style"
+
 function BulkUserForm() {
   const { isLimitReached } = useAuth();
 
@@ -31,7 +34,7 @@ function BulkUserForm() {
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
-  // const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const companyId = sessionStorage.getItem("companyId");
   // const companyName = sessionStorage.getItem("companyName");
 
@@ -64,6 +67,8 @@ function BulkUserForm() {
     duplicateDataLink: "",
   });
 
+  const [failedExcelData, setFailedExcelData] = useState([])
+  const [duplicateExcelData, setDuplicateExcelData] = useState([])
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -236,7 +241,20 @@ function BulkUserForm() {
           downloadLink: excelApiData.downloadLink || "",
           failedDataLink: excelApiData.failedDataLink || "",
           duplicateDataLink: excelApiData.duplicateDataLink || "",
+          // failedElement: excelApiData.failedElement || null,
+          // duplicateElement: excelApiData.duplicateElement || null,
         });
+
+        if(excelApiData.failedElement) {
+          // console.log('i p hit')
+          setFailedExcelData(excelApiData.failedElement)
+        }
+
+        if(excelApiData.duplicateElement) {
+          // console.log('o p hit')
+          setDuplicateExcelData(excelApiData.duplicateElement)
+        }
+        
         setIsUpload(false);
         const fileInput = document.getElementById("fileInputExcel");
         if (fileInput) {
@@ -274,6 +292,9 @@ function BulkUserForm() {
     }
     setBtnLoading(false)
   }
+
+  // console.log('failedExcelData', failedExcelData)
+  // console.log('duplicateExcelData', duplicateExcelData)
 
   // async function fetchData() {
   //   try {
@@ -337,6 +358,382 @@ function BulkUserForm() {
   //   anchor.click();
   //   document.body.removeChild(anchor);
   // };
+
+
+  const XLSX_HEADER_STYLE = {
+    font: { bold: true, size: 24, color: { rgb: '000000' } },
+    fill: { fgColor: { rgb: '9A9A9A' } },
+  };
+
+  const XLSX_NULL_CELL_STYLE = { fill: { fgColor: { rgb: 'FFA500' } } };
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // console.log('date', date)
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+  
+
+function fitToColumn(arrayOfObjects) {
+  if (!Array.isArray(arrayOfObjects) || arrayOfObjects.length === 0) {
+    return [];
+  }
+
+  const keys = Object.keys(arrayOfObjects[0]);
+
+  const columnWidths = keys.map((key) => ({
+    wch: key.toString().length,
+  }));
+
+  keys.forEach((key, index) => {
+    columnWidths[index].wch = Math.max(
+      columnWidths[index].wch,
+      key.toString().length
+    );
+  });
+
+  arrayOfObjects.forEach((obj) => {
+    keys.forEach((key, index) => {
+      const cellValue = obj[key] ? obj[key].toString() : '';
+      columnWidths[index].wch = Math.max(
+        columnWidths[index].wch,
+        cellValue.length
+      );
+    });
+  });
+
+  columnWidths.forEach((column) => {
+    column.wch += 5;
+  });
+
+  return columnWidths;
+}
+
+const handleExportExcelFailedData = () => {
+
+
+  
+  if (Array.isArray(failedExcelData) && failedExcelData.length > 0) {
+
+    // console.log('excel data inside print', failedExcelData)
+    let headers = []
+    let data ;
+    if (loggedUserRole === "SUPERADMIN") {
+
+      headers = ["FIRSTNAME", "LASTNAME", "PHONE", "GENDER", "EMAIL", "DOB", "GOVT_ID", "EMPCODE", "PINCODE", "ROLE", "STATE", "CITY", "DEPARTMENT", "PERMISSION"];
+
+      data = failedExcelData?.map((dataItem, index) => ({
+        "FIRSTNAME":  dataItem.firstName || null,
+        "LASTNAME":  dataItem.lastName || null,
+        "PHONE": dataItem.phone || null,
+        "GENDER": dataItem.gender || null,
+        "EMAIL": dataItem.email || null,
+        // "DOB": dataItem.dob || null,
+        "DOB": dataItem.dob ? formatDate(dataItem.dob) : null,
+        "GOVT_ID": dataItem.govt_id || null,
+        "EMPCODE": dataItem.empCode || null,
+        "PINCODE": dataItem.pincode || null,
+        "ROLE": dataItem.role || null,
+        "STATE": dataItem.state || null,
+        "CITY": dataItem.city || null,
+        "DEPARTMENT": dataItem.department || null,
+        "PERMISSION": dataItem.permission || null,
+      }));
+    }
+
+    if(loggedUserRole === "ADMIN") {
+      headers = ["FIRSTNAME", "LASTNAME", "PHONE", "GENDER", "EMAIL", "DOB", "GOVT_ID", "EMPCODE", "PINCODE", "ROLE", "STATE", "CITY", "DEPARTMENT", "PERMISSION"];
+
+
+      data = failedExcelData?.map((dataItem, index) => ({
+        "FIRSTNAME":  dataItem.firstName || null,
+        "LASTNAME":  dataItem.lastName || null,
+        "PHONE": dataItem.phone || null,
+        "GENDER": dataItem.gender || null,
+        "EMAIL": dataItem.email || null,
+        // "DOB": dataItem.dob || null,
+        "DOB": dataItem.dob ? formatDate(dataItem.dob) : null,
+        "GOVT_ID": dataItem.govt_id || null,
+        "EMPCODE": dataItem.empCode || null,
+        "PINCODE": dataItem.pincode || null,
+        "ROLE": dataItem.role || null,
+        "STATE": dataItem.state || null,
+        "CITY": dataItem.city || null,
+        "DEPARTMENT": dataItem.department || null,
+        "PERMISSION": dataItem.permission || null,
+      }));
+
+  }
+    const ws = XLSX.utils.json_to_sheet(data, {
+      header: headers,
+    });
+    
+    headers.forEach((key, index) => {
+      const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
+      if (headerCell) {
+        headerCell.s = XLSX_HEADER_STYLE;
+      }
+    });
+    
+// data.forEach((dataItem, rowIndex) => {
+//   headers.forEach((key, colIndex) => {
+//     const cellValue = dataItem[key];
+//     const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+//     ws[cellAddress] = { 
+//       v: cellValue === null || cellValue === undefined ? '' : cellValue, 
+//       s: {}
+//     };
+
+//     if (cellValue === null || cellValue === undefined) {
+//       ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+//       ws[cellAddress].s.border = {
+//         top: { style: 'thin', color: { rgb: '484848' } }, 
+//         bottom: { style: 'thin', color: { rgb: '484848' } },
+//         left: { style: 'thin', color: { rgb: '484848' } },
+//         right: { style: 'thin', color: { rgb: '484848' } }
+//       };
+//       delete ws[cellAddress].t;
+//     }
+//   });
+// });
+
+// data.forEach((dataItem, rowIndex) => {
+//   headers.forEach((key, colIndex) => {
+//     const cellValue = dataItem[key];
+//     const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+//     ws[cellAddress] = { 
+//       v: cellValue === null || cellValue === undefined ? '' : cellValue, 
+//       // t: 's',  // Set cell type to string
+//       s: {}
+//     };
+
+//     if (cellValue === null || cellValue === undefined) {
+//       ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+//       ws[cellAddress].s.border = {
+//         top: { style: 'thin', color: { rgb: '484848' } }, 
+//         bottom: { style: 'thin', color: { rgb: '484848' } },
+//         left: { style: 'thin', color: { rgb: '484848' } },
+//         right: { style: 'thin', color: { rgb: '484848' } }
+//       };
+//     }
+//   });
+// });
+
+data.forEach((dataItem, rowIndex) => {
+  headers.forEach((key, colIndex) => {
+    const cellValue = dataItem[key];
+    const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+    ws[cellAddress] = { 
+      v: cellValue === null || cellValue === undefined ? '' : cellValue,
+      s: {}
+    };
+
+    if (typeof cellValue === 'number' || !isNaN(Number(cellValue))) {
+      ws[cellAddress].t = 's'; 
+      ws[cellAddress].v = `\u200C${cellValue === null || cellValue === undefined ? '' : cellValue}`;
+    }
+
+    if (cellValue === null || cellValue === undefined) {
+      ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+      ws[cellAddress].s.border = {
+        top: { style: 'thin', color: { rgb: '484848' } }, 
+        bottom: { style: 'thin', color: { rgb: '484848' } },
+        left: { style: 'thin', color: { rgb: '484848' } },
+        right: { style: 'thin', color: { rgb: '484848' } }
+      };
+    }
+  });
+});
+
+    
+
+    ws['!cols'] = fitToColumn(data);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+    XLSX.writeFile(wb, 'Failed_Add_User_Data.xlsx');
+  } else {
+    alert('Invalid data format for export.');
+  }
+};
+
+
+const handleExportExcelDuplicateData = () => {
+ 
+  if (Array.isArray(duplicateExcelData) && duplicateExcelData.length > 0) {
+
+    // const testDate = duplicateExcelData[0].dob
+
+    // console.log('test date', formatDate(testDate))
+
+    // console.log('excel data inside print', duplicateExcelData)
+    let headers = []
+    let data ;
+    if (loggedUserRole === "SUPERADMIN") {
+
+      headers = ["FIRSTNAME", "LASTNAME", "PHONE", "GENDER", "EMAIL", "DOB", "GOVT_ID", "EMPCODE", "PINCODE", "ROLE", "STATE", "CITY", "DEPARTMENT", "PERMISSION"];
+
+
+      data = duplicateExcelData?.map((dataItem, index) => ({
+        "FIRSTNAME":  dataItem.firstName || null,
+        "LASTNAME":  dataItem.lastName || null,
+        "PHONE": dataItem.phone || null,
+        "GENDER": dataItem.gender || null,
+        "EMAIL": dataItem.email || null,
+        // "DOB": dataItem.dob || null,
+        "DOB": dataItem.dob ? formatDate(dataItem.dob) : null,
+        "GOVT_ID": dataItem.govt_id || null,
+        "EMPCODE": dataItem.empCode || null,
+        "PINCODE": dataItem.pincode || null,
+        "ROLE": dataItem.role || null,
+        "STATE": dataItem.state || null,
+        "CITY": dataItem.city || null,
+        "DEPARTMENT": dataItem.department || null,
+        "PERMISSION": dataItem.permission || null,
+      }));
+    }
+
+    if(loggedUserRole === "ADMIN") {
+      headers = ["FIRSTNAME", "LASTNAME", "PHONE", "GENDER", "EMAIL", "DOB", "GOVT_ID", "EMPCODE", "PINCODE", "ROLE", "STATE", "CITY", "DEPARTMENT", "PERMISSION"];
+
+
+      data = duplicateExcelData?.map((dataItem, index) => ({
+        "FIRSTNAME":  dataItem.firstName || null,
+        "LASTNAME":  dataItem.lastName || null,
+        "PHONE": dataItem.phone || null,
+        "GENDER": dataItem.gender || null,
+        "EMAIL": dataItem.email || null,
+        // "DOB": dataItem.dob || null,
+        "DOB": dataItem.dob ? formatDate(dataItem.dob) : null,
+        "GOVT_ID": dataItem.govt_id || null,
+        "EMPCODE": dataItem.empCode || null,
+        "PINCODE": dataItem.pincode || null,
+        "ROLE": dataItem.role || null,
+        "STATE": dataItem.state || null,
+        "CITY": dataItem.city || null,
+        "DEPARTMENT": dataItem.department || null,
+        "PERMISSION": dataItem.permission || null,
+      }));
+
+  }
+
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: headers,
+  });
+  
+  headers.forEach((key, index) => {
+    const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
+    if (headerCell) {
+      headerCell.s = XLSX_HEADER_STYLE;
+    }
+  });
+
+  
+// data.forEach((dataItem, rowIndex) => {
+// headers.forEach((key, colIndex) => {
+//   const cellValue = dataItem[key];
+//   const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+//   ws[cellAddress] = { 
+//     v: cellValue === null || cellValue === undefined ? '' : cellValue, 
+//     s: {}
+//   };
+
+//   if (cellValue === null || cellValue === undefined) {
+//     ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+//     ws[cellAddress].s.border = {
+//       top: { style: 'thin', color: { rgb: '484848' } }, 
+//       bottom: { style: 'thin', color: { rgb: '484848' } },
+//       left: { style: 'thin', color: { rgb: '484848' } },
+//       right: { style: 'thin', color: { rgb: '484848' } }
+//     };
+//     delete ws[cellAddress].t;
+//   }
+// });
+// });
+
+// data.forEach((dataItem, rowIndex) => {
+//   headers.forEach((key, colIndex) => {
+//     const cellValue = dataItem[key];
+//     const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+//     ws[cellAddress] = { 
+//       v: cellValue === null || cellValue === undefined ? '' : cellValue, 
+//       // t: 's',  // Set cell type to string
+//       s: {}
+//     };
+
+//     if (cellValue === null || cellValue === undefined) {
+//       ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+//       ws[cellAddress].s.border = {
+//         top: { style: 'thin', color: { rgb: '484848' } }, 
+//         bottom: { style: 'thin', color: { rgb: '484848' } },
+//         left: { style: 'thin', color: { rgb: '484848' } },
+//         right: { style: 'thin', color: { rgb: '484848' } }
+//       };
+//     }
+//   });
+// });
+
+
+data.forEach((dataItem, rowIndex) => {
+  headers.forEach((key, colIndex) => {
+    const cellValue = dataItem[key];
+    const cellAddress = XLSX.utils.encode_col(colIndex) + (rowIndex + 2);
+
+    // Create a new cell object
+    ws[cellAddress] = { 
+      v: cellValue === null || cellValue === undefined ? '' : cellValue,
+      s: {}
+    };
+
+    // Check if the cellValue is a number
+    if (typeof cellValue === 'number' || !isNaN(Number(cellValue))) {
+      ws[cellAddress].t = 's';  // Set cell type to string
+      // Append zero-width non-joiner character to the value
+      ws[cellAddress].v = `\u200C${cellValue === null || cellValue === undefined ? '' : cellValue}`;
+    }
+
+    if (cellValue === null || cellValue === undefined) {
+      ws[cellAddress].s.fill = XLSX_NULL_CELL_STYLE.fill;
+      ws[cellAddress].s.border = {
+        top: { style: 'thin', color: { rgb: '484848' } }, 
+        bottom: { style: 'thin', color: { rgb: '484848' } },
+        left: { style: 'thin', color: { rgb: '484848' } },
+        right: { style: 'thin', color: { rgb: '484848' } }
+      };
+    }
+  });
+});
+
+
+
+    ws['!cols'] = fitToColumn(data);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+    XLSX.writeFile(wb, 'Duplicate_Add_User_Data.xlsx');
+  } else {
+    alert('Invalid data format for export.');
+  }
+};
+
+const handleExcelDownload = () => {
+  if(excelDownData.failedData && excelDownData.failedData !==0) {
+    handleExportExcelFailedData()
+  }
+
+  if(excelDownData.duplicateData && excelDownData.duplicateData !==0) {
+    handleExportExcelDuplicateData()
+  }
+}
 
   return (
     <>
@@ -610,7 +1007,8 @@ function BulkUserForm() {
                       disabled={!isDownload}
                       color="error"
                       sx={{ width: "9em", height: "44px" }}
-                      onClick={handleDownloadExcel}
+                      // onClick={handleDownloadExcel}
+                      onClick={handleExcelDownload}
                     >
                       Download
                     </Button>

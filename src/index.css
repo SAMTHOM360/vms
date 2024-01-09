@@ -19,6 +19,7 @@ html, body, #root, .app, .content {
   width: 100vw;
   font-family: "Source Sans Pro", sans-serif;
   /* overflow: hidden; */
+  overflow-x: hidden;
 }
 
 /* .app{
