@@ -728,6 +728,9 @@ export default function Meetings() {
     setSelectedValue(value);
   };
 
+
+  
+
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -1165,12 +1168,14 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.imageUrl !== null ? (
+                                {visitor.visitor.imageUrl !== null ? 
+                                (
                                   <div
                                     style={{
-                                      display: "flex",
-                                      flexDirection: "row",
-                                      alignItems: "center",
+                                      // display: "flex",
+                                      // flexDirection: "row",
+                                      // alignItems: "center",
+                                      // border:"1px solid black"
                                     }}
                                   >
                                     <a

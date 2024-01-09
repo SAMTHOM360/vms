@@ -69,6 +69,9 @@ const CompanyTable = () => {
 
   const [reload, setReload] = useState(false);
 
+
+  const[tempCompany,setTempCompany] = useState('');
+
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
   }
@@ -115,7 +118,7 @@ const CompanyTable = () => {
     } else {
       setPage(0);
     }
-  }, [selectedBuildingIds, selectedCompanyNames]);
+  }, [selectedBuildingIds,selectedCompanyNames]);
 
   function fetchAllData() {
 
@@ -272,16 +275,30 @@ const CompanyTable = () => {
       });
   }
 
+// let time;
 
+// const companyChange=(e)=>{
 
+//   clearTimeout(time)
+//  time = setTimeout(() => {
+//     setSelectedCompanyNames(e.target.value)
+    
+//   }, 20)
+// }
 
+let timerId
+// const companyChange = (event) => {
+//   const inputValue = event.target.value;
+//   // setTempCompany(inputValue); // Update temporary input value immediately
 
+//   // Clear previous timeout (if any)
+//   clearTimeout(timerId);
 
-
-
-
-
-
+//   // Set a new timeout to update the state after 500 milliseconds
+//   timerId = setTimeout(() => {
+//     setSelectedCompanyNames(inputValue);
+//   }, "1000");
+// };
 
 
 
@@ -358,8 +375,18 @@ const CompanyTable = () => {
                           // onChange={ (e)handleCompanyNameChange}
 
                           onChange={(e) =>
-                            setSelectedCompanyNames(e.target.value)
+                            {
+                            clearTimeout(timerId);
+
+                            // Set a new timeout to update the state after 500 milliseconds
+                            timerId = setTimeout(() => {
+                              setSelectedCompanyNames(e.target.value);
+                            }, "1000");
                           }
+                          }
+                          
+
+                          // onChange={(e)=>companyChange(e)}
                           onKeyPress={handleCompanyNameChange}
                         />
 

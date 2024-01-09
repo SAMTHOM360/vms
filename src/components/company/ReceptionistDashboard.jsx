@@ -565,7 +565,7 @@ export default function Dashboard() {
   }
 
   function getFullName(user) {
-    return `${user.firstName} ${user.lastName}`;
+    return `${user.firstName} ${user.lastName} (${user.departmentDto.name})`;
   }
 
   function formatMeetingDurationStartTime(meeting) {
@@ -1417,14 +1417,16 @@ export default function Dashboard() {
                             </TableCell>
 
                             <TableCell align="center">
-                              {visitor.user.role.name === "ADMIN" ? (
+                              {/* {visitor.user.role.name === "ADMIN" ? (
                                 <span>
                                   {" "}
                                   {getFullName(visitor.user)} (Admin)
                                 </span>
                               ) : (
                                 getFullName(visitor.user)
-                              )}
+                              )} */}
+
+{getFullName(visitor.user)}
                             </TableCell>
 
                             <TableCell align="center">
