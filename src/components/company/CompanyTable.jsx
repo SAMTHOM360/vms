@@ -376,12 +376,11 @@ let timerId
 
                           onChange={(e) =>
                             {
-                            clearTimeout(timerId);
-
+                   
                             // Set a new timeout to update the state after 500 milliseconds
-                            timerId = setTimeout(() => {
+                     
                               setSelectedCompanyNames(e.target.value);
-                            }, "1000");
+                         
                           }
                           }
                           
