@@ -25,12 +25,11 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 import InfoIcon from "@mui/icons-material/Info";
-
-
+import * as XLSX from "xlsx";
 
 //loader
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const rowsPerPage = 10;
@@ -69,8 +68,7 @@ const CompanyTable = () => {
 
   const [reload, setReload] = useState(false);
 
-
-  const[tempCompany,setTempCompany] = useState('');
+  const [tempCompany, setTempCompany] = useState("");
 
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
@@ -100,9 +98,8 @@ const CompanyTable = () => {
   // const [companyNames, setCompanyNames] = useState([])
   const [selectedCompanyNames, setSelectedCompanyNames] = useState("");
 
-
-   //loader
-  const [open, setOpen] = useState(false);  
+  //loader
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     fetchAllData();
@@ -118,11 +115,10 @@ const CompanyTable = () => {
     } else {
       setPage(0);
     }
-  }, [selectedBuildingIds,selectedCompanyNames]);
+  }, [selectedBuildingIds, selectedCompanyNames]);
 
   function fetchAllData() {
-
-    setOpen(true)
+    setOpen(true);
     const apiUrl = Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint;
     const payload = {
       page: page,
@@ -137,16 +133,14 @@ const CompanyTable = () => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
-
-        setOpen(false)
+        setOpen(false);
         const responseData = response.data.data.companies;
         setLength(response.data.data.totalElements);
 
         setCompanies(responseData);
       })
       .catch((error) => {
-
-        setOpen(false)
+        setOpen(false);
         console.error("Error fetching data:", error);
       });
   }
@@ -197,7 +191,6 @@ const CompanyTable = () => {
   };
 
   const handleSwitchToggle = (companyId, isActive) => {
-
     setOpen(true);
     console.log(isActive, "isActive");
 
@@ -220,7 +213,7 @@ const CompanyTable = () => {
         //   toast.success(`Company is deactivated.`);
         // }
 
-        setOpen(false)
+        setOpen(false);
         if (response.data.message) {
           alert(response.data.message);
           setReload(!reload);
@@ -229,18 +222,15 @@ const CompanyTable = () => {
         // setPage(0)
       })
       .catch((error) => {
-
-        setOpen(false)
+        setOpen(false);
         console.error("Error toggling switch:", error);
       });
 
     // setReload(true)
   };
 
-
-
-   //export
-   function downloadFile(url) {
+  //export
+  function downloadFile(url) {
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "meeting_details.xlsx");
@@ -250,10 +240,83 @@ const CompanyTable = () => {
     document.body.removeChild(link);
   }
 
-  function excelExport() {
-    const exportUrl = Config.baseUrl + Config.apiEndPoints.excelEndPoint;
+  // function excelExport() {
+  //   const exportUrl = Config.baseUrl + Config.apiEndPoints.excelEndPoint;
 
-  
+  //     const payload = {
+  //       page: page,
+  //       size: rowsPerPage,
+  //       companyName: selectedCompanyNames,
+  //       buildingId: selectedBuildingIds,
+  //     };
+
+  //   axios
+  //     .post(exportUrl, payload, {})
+  //     .then((response) => {
+  //       const url = response.data.data;
+
+  //       downloadFile(url);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }
+
+  // const exportAllDataToExcel = () => {
+  //   const wb = XLSX.utils.book_new();
+  //   const allCompaniesData = [];
+
+  //   // Loop through each page of companies and accumulate all data
+  //   for (let i = 0; i < Math.ceil(length / rowsPerPage); i++) {
+  //     const exportUrl =
+  //       Config.baseUrl + Config.apiEndPoints.fetchCompanyEndPoint;
+
+  //     // Make sure to fetch data for each page here (if needed) and update the 'companies' state
+
+  //     const payload = {
+  //       page: i,
+  //       size: rowsPerPage,
+  //       companyName: selectedCompanyNames,
+  //       buildingId: selectedBuildingIds,
+  //     };
+
+  //     // You can also directly use 'companies' state without fetching if it already contains all the data
+
+  //     const pageCompaniesData = companies.map((company, index) => {
+  //       return {
+  //         "Sl. No": calculateSerialNumber(i * rowsPerPage + index),
+  //         "Company Name": company.name,
+  //         "Logo": company.logo,
+  //         "Email": company.email,
+  //         "Phone No": company.phoneNumber,
+  //         "Address": company.address,
+  //         "Industry": company.industry,
+  //         "State": company.state,
+  //         "City": company.city,
+  //         "Pin Code": company.pincode,
+  //         "About Us": company.aboutUs,
+  //         "Building Id": company.buildingId,
+  //         "Building Name": company.buildingName,
+  //         "User Limit": company.userLimit,
+  //       };
+  //     });
+
+  //     allCompaniesData.push(...pageCompaniesData);
+  //   }
+
+  //   const ws = XLSX.utils.json_to_sheet(allCompaniesData);
+  //   XLSX.utils.book_append_sheet(wb, ws, "All Companies");
+
+  //   // Save the Excel file
+  //   XLSX.writeFile(wb, "all_companies.xlsx");
+  // };
+
+
+
+
+
+  const testExcel = async() => {
+ 
       const payload = {
         page: page,
         size: rowsPerPage,
@@ -261,47 +324,33 @@ const CompanyTable = () => {
         buildingId: selectedBuildingIds,
       };
   
-    
-
-    axios
-      .post(exportUrl, payload, {})
-      .then((response) => {
-        const url = response.data.data;
-
-        downloadFile(url);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+  let url = "http://192.168.12.58:8080/com/exportcompanydata"
+  try{
+    const response = await axios.post(url, payload, { responseType: 'arraybuffer',});
+  
+    const byteArray = new Uint8Array(response.data);
+  
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+    const link = document.createElement('a');
+  
+    link.href = URL.createObjectURL(blob);
+    link.download = 'company_details.xlsx'; 
+  
+    document.body.appendChild(link);
+  
+    link.click();
+  
+    document.body.removeChild(link);
+  
+    console.log('Download initiated successfully');
+  }
+  catch(error){
+    console.error('error coming', error)
+  }
   }
 
-// let time;
-
-// const companyChange=(e)=>{
-
-//   clearTimeout(time)
-//  time = setTimeout(() => {
-//     setSelectedCompanyNames(e.target.value)
-    
-//   }, 20)
-// }
-
-let timerId
-// const companyChange = (event) => {
-//   const inputValue = event.target.value;
-//   // setTempCompany(inputValue); // Update temporary input value immediately
-
-//   // Clear previous timeout (if any)
-//   clearTimeout(timerId);
-
-//   // Set a new timeout to update the state after 500 milliseconds
-//   timerId = setTimeout(() => {
-//     setSelectedCompanyNames(inputValue);
-//   }, "1000");
-// };
-
-
-
+  let timerId;
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => {
@@ -374,17 +423,11 @@ let timerId
                           value={selectedCompanyNames}
                           // onChange={ (e)handleCompanyNameChange}
 
-                          onChange={(e) =>
-                            {
-                   
+                          onChange={(e) => {
                             // Set a new timeout to update the state after 500 milliseconds
-                     
-                              setSelectedCompanyNames(e.target.value);
-                         
-                          }
-                          }
-                          
 
+                            setSelectedCompanyNames(e.target.value);
+                          }}
                           // onChange={(e)=>companyChange(e)}
                           onKeyPress={handleCompanyNameChange}
                         />
@@ -433,10 +476,12 @@ let timerId
                           )}
                         />
 
-
-
-                        <Button variant="contained"  sx={{marginRight:""}} onClick={excelExport}>EXPORT EXCEL
-                        
+                        <Button
+                          variant="contained"
+                          sx={{ marginRight: "" }}
+                          onClick={testExcel}
+                        >
+                          EXPORT EXCEL
                         </Button>
 
                         {/* </div> */}
@@ -449,9 +494,8 @@ let timerId
                           boxShadow: 6,
 
                           overflowY: "auto",
-                        
 
-                          minHeight:"550px",
+                          minHeight: "550px",
 
                           maxHeight: "550px",
 
@@ -490,7 +534,7 @@ let timerId
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Address</h4>
                               </TableCell>
-                             
+
                               <TableCell align="center" sx={{ color: "white" }}>
                                 <h4>Industry</h4>
                               </TableCell>
@@ -523,9 +567,8 @@ let timerId
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {companies &&
-                              companies.length > 0 ?
-                              (companies
+                            {companies && companies.length > 0 ? (
+                              companies
                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((company, index) => (
                                   <TableRow key={company.id}>
@@ -572,7 +615,7 @@ let timerId
                                     <TableCell align="center">
                                       {company.address}
                                     </TableCell>
-                               
+
                                     <TableCell align="center">
                                       {company.industry}
                                     </TableCell>
@@ -672,16 +715,14 @@ let timerId
                                       </div>
                                     </TableCell>
                                   </TableRow>
-                                ))):(
-                                  <TableRow>
-                                  <TableCell colSpan={14} align="center">
-                                    No data available
-                                  </TableCell>
-                                </TableRow>
-
-
-
-                                )}
+                                ))
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={14} align="center">
+                                  No data available
+                                </TableCell>
+                              </TableRow>
+                            )}
                           </TableBody>
                         </Table>
 
@@ -736,18 +777,17 @@ let timerId
           </Grid>
         </Grid>
 
-
         <div>
-      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
-      <Backdrop
-        // style={{ zIndex: 1 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
-        open={open}
-        // onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+          {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+          <Backdrop
+            // style={{ zIndex: 1 }}
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+            open={open}
+            // onClick={handleClose}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </div>
       </Box>
     </>
   );

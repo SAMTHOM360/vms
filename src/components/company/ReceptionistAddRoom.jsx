@@ -30,32 +30,18 @@ import MenuItem from "@mui/material/MenuItem";
 import { TextField } from "@mui/material";
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
-
-
+import CustomRows from "./CustomRows";
 
 //loader
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 // import Button from '@mui/material/Button';
-
-
-
-
-
-
-
-
-
 
 // import DialogContent from '@material-ui/core/DialogContent';
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
-
-
-
-
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
   const { setActiveListItem } = useAuth();
 
@@ -79,7 +65,6 @@ export default function ReceptionistAddRoom() {
 
   const [reload, setReload] = useState(false);
 
-
   //loader
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
@@ -88,7 +73,6 @@ export default function ReceptionistAddRoom() {
   // const handleOpen = () => {
   //   setOpen(true);
   // };
-
 
   //switch
 
@@ -116,7 +100,7 @@ export default function ReceptionistAddRoom() {
   // Function to handle closing the Add Room modal
   const handleCloseAddRoomDialog = () => {
     setOpenAddRoomDialog(false);
-  
+
     // setEditMode(false);
   };
 
@@ -140,27 +124,24 @@ export default function ReceptionistAddRoom() {
   // Function to handle changes in the capacity field
   const handleCapacityChange = (event) => {
     const enteredValue = event.target.value;
-  const numericValue = enteredValue.replace(/\D/, ''); 
+    const numericValue = enteredValue.replace(/\D/, "");
 
     // if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
     //   setCapacity(event.target.value);
     // } else {
     //   setCapacity("");
     // }
-    if (numericValue !== '' && numericValue >= 1 && numericValue <= 100) {
+    if (numericValue !== "" && numericValue >= 1 && numericValue <= 100) {
       setCapacity(numericValue);
     } else {
-      setCapacity(''); // Reset the capacity if the entered value is invalid
+      setCapacity(""); // Reset the capacity if the entered value is invalid
     }
-
-
   };
 
   //save room
   function handleSaveRoom() {
+    setOpen(true);
 
-     setOpen(true); 
-    
     const addRoomUrl = Config.baseUrl + Config.apiEndPoints.addRoomEndPoint;
 
     const payload = {
@@ -172,19 +153,16 @@ export default function ReceptionistAddRoom() {
     };
 
     if (!roomName) {
-      setOpen(false)
+      setOpen(false);
       alert("Room is required");
 
       return;
     }
     if (!capacity) {
-      setOpen(false)
+      setOpen(false);
       alert("Capacity is required");
       return;
     }
-
-
-   
 
     axios
       .post(addRoomUrl, payload)
@@ -192,18 +170,16 @@ export default function ReceptionistAddRoom() {
         handleCloseAddRoomDialog();
         setReload(!reload);
         setPage(0);
-        setOpen(false); 
+        setOpen(false);
         // console.log(response)
-        if(response.data.message === "success"){
-            alert("Room added");
-        setRoomName("");
-        setCapacity("");
-
+        if (response.data.message === "success") {
+          alert("Room added");
+          setRoomName("");
+          setCapacity("");
         }
-      
       })
       .catch((error) => {
-        setOpen(false); 
+        setOpen(false);
         // if(response.data.message === "capacity is required")
         if (error.response.data.message) {
           alert(error.response.data.message);
@@ -223,9 +199,10 @@ export default function ReceptionistAddRoom() {
     setEditMode(true);
   };
 
-  function handleUpdateRoom() {
 
-    setOpen(true)
+
+  function handleUpdateRoom() {
+    setOpen(true);
     const updateRoomUrl =
       Config.baseUrl + Config.apiEndPoints.updateRoomEndPoint;
 
@@ -239,12 +216,12 @@ export default function ReceptionistAddRoom() {
     };
 
     if (!roomName) {
-      setOpen(false)
+      setOpen(false);
       alert("Room is required");
       return;
     }
     if (!capacity) {
-      setOpen(false)
+      setOpen(false);
       alert("Capacity is required");
       return;
     }
@@ -259,13 +236,13 @@ export default function ReceptionistAddRoom() {
 
           setReload(!reload);
           setPage(0);
-          setOpen(false); 
+          setOpen(false);
 
           // console.log(response);
         }
       })
       .catch((error) => {
-        setOpen(false); 
+        setOpen(false);
         if (error.response.data.message) {
           alert(error.response.data.message);
         }
@@ -297,8 +274,7 @@ export default function ReceptionistAddRoom() {
   //switch room
 
   function handleSwitch(row) {
-
-    setOpen(true)
+    setOpen(true);
     const isActiveRoomUrl =
       Config.baseUrl + Config.apiEndPoints.isActiveRoomEndPoint;
 
@@ -311,12 +287,11 @@ export default function ReceptionistAddRoom() {
     axios
       .post(isActiveRoomUrl, payload)
       .then((response) => {
-
-        setOpen(false)
+        setOpen(false);
         if (response.data.message) {
           alert(response.data.message);
 
-          // setActive(newActiveStatus);
+          setActive(newActiveStatus);
 
           setRoomDetails((prevRoomDetails) => ({
             ...prevRoomDetails,
@@ -333,8 +308,7 @@ export default function ReceptionistAddRoom() {
         // console.log(response)
       })
       .catch((error) => {
-
-        setOpen(false)
+        setOpen(false);
         console.log(error, "error");
       });
   }
@@ -345,7 +319,14 @@ export default function ReceptionistAddRoom() {
     room_Id: roomDetails[key].id,
     room_isActive: roomDetails[key].isActive,
     room: roomDetails[key].roomName,
-    status: roomDetails[key].isAvailable === true ? "Available" : "Occupied",
+    // status: roomDetails[key].isAvailable === true && active === true ? "Available" : "Occupied",
+
+    status:
+      roomDetails[key].isActive === true
+        ? roomDetails[key].isAvailable === true
+          ? "Available"
+          : "Occupied"
+        : "NA",
     capacity: roomDetails[key].capacity,
     // info: 'info',
     actions: roomDetails[key].actions,
@@ -381,7 +362,12 @@ export default function ReceptionistAddRoom() {
   const customRowsAvailable = customRows.filter(
     (row) => row.status === "Available"
   );
-  const sortedCustomRows = [...customRowsOccupied, ...customRowsAvailable];
+
+
+  const customDeactivatedRoomsAvailable = customRows.filter(
+    (row) => row.status === "NA"
+  );
+  const sortedCustomRows = [...customRowsOccupied, ...customRowsAvailable,...customDeactivatedRoomsAvailable];
 
   function calculateSerialNumber(rowIndex) {
     return page * rowsPerPage + rowIndex + 1;
@@ -405,8 +391,7 @@ export default function ReceptionistAddRoom() {
 
   //fetchRoomDetails function
   function fetchRoomDetails() {
-
-    setOpen(true)
+    setOpen(true);
     const roomDetailsUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsEndPoint +
@@ -418,8 +403,7 @@ export default function ReceptionistAddRoom() {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       })
       .then((response) => {
-
-        setOpen(false)
+        setOpen(false);
         response.data.data
           ? setRoomDetails(response.data.data)
           : console.log("no rooms");
@@ -430,7 +414,7 @@ export default function ReceptionistAddRoom() {
         // console.log(response.data.data,"roomdetailsdata")
       })
       .catch((error) => {
-        setOpen(false)
+        setOpen(false);
         console.error("Error fetching data", error);
       });
   }
@@ -528,76 +512,82 @@ export default function ReceptionistAddRoom() {
 
                 <TableBody>
                   {sortedCustomRows.length === 0 ? (
-    <TableRow>
-     <TableCell colSpan={14} rowSpan={14} sx={{ textAlign: "center" }}>
-                            No data
-                          </TableCell>
-    </TableRow>
-  ) : (
-    sortedCustomRows
+                    <TableRow>
+                      <TableCell
+                        colSpan={14}
+                        rowSpan={14}
+                        sx={{ textAlign: "center" }}
+                      >
+                        No data
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    sortedCustomRows
 
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, rowIndex) => {
+                        return (
+                          // <TableRow
+                          //   hover
+                          //   role="checkbox"
+                          //   tabIndex={-1}
+                          //   key={rowIndex}
+                          // >
+                          //   {customColumns.map((column, index) => {
+                          //     const value = row[column.id];
+                            
+                          //     return (
+                          //       <>
+                          //         <TableCell
+                          //           key={index}
+                          //           align={column.align}
+                          //         >
+                          //           {column.id === "Sl No" ? (
+                          //             calculateSerialNumber(rowIndex)
+                          //           ) : column.id === "actions" ? (
+                          //             <div style={{ gap: "30px" }}>
+                          //               <EditIcon
+                          //                 style={{
+                          //                   fontSize: "20px",
+                          //                   color: "",
+                          //                   marginTop: "5px",
+                          //                   cursor: "pointer",
+                          //                   color: "blue",
+                          //                 }}
+                          //                 onClick={() => handleEditRoom(row)}
+                          //               />
 
+                          //               <Switch
+                          //                 sx={{ fontSize: "10px" }}
+                          //                 {...label}
+                          //                 // defaultChecked={active}
 
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, rowIndex) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={rowIndex}
-                        >
-                          {customColumns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <>
-                                <TableCell key={column.id} align={column.align}>
-                                  {column.id === "Sl No" ? (
-                                    calculateSerialNumber(rowIndex)
-                                  ) : column.id === "actions" ? (
-                                    <div style={{ gap: "30px" }}>
-                                      <EditIcon
-                                        style={{
-                                          fontSize: "20px",
-                                          color: "",
-                                          marginTop: "5px",
-                                          cursor: "pointer",
-                                          color: "blue",
-                                        }}
-                                        onClick={() => handleEditRoom(row)}
-                                      />
-       
-
-                                      <Switch
-                                        sx={{ fontSize: "10px" }}
-                                        {...label}
-                                        // defaultChecked={active}
-
-                                        defaultChecked={row.room_isActive}
-                                        onClick={() => handleSwitch(row)}
-                                      />
-                                    </div>
-                                  ) : (
-                                    row[column.id]
-                                  )}
-                                </TableCell>
-                              </>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    
-                    })
-                    )}
-
-  
+                          //                 defaultChecked={row.room_isActive}
+                          //                 onClick={() => handleSwitch(row)}
+                          //               />
+                          //             </div>
+                          //           ) : (
+                          //             row[column.id]
+                          //           )}
+                          //         </TableCell>
+                          //       </>
+                          //     );
+                          //   })}
+                          // </TableRow>
+                          <CustomRows row={row} rowIndex={rowIndex} customColumns={customColumns} label={label} handleEditRoom={handleEditRoom} calculateSerialNumber={calculateSerialNumber} handleSwitch={handleSwitch} />
+                        );
+                      })
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
           </Paper>
 
           <TablePagination
-          sx={{backgroundColor:"#82889F"}}
+            sx={{ backgroundColor: "#82889F" }}
             rowsPerPageOptions={[10, 15, 20, 25]}
             component="div"
             count={customRows.length}
@@ -608,11 +598,9 @@ export default function ReceptionistAddRoom() {
           />
 
           <Dialog open={openAddRoomDialog} onClose={handleCloseAddRoomDialog}>
-            <DialogTitle sx={{textAlign:"center"}}>Room Info</DialogTitle>
+            <DialogTitle sx={{ textAlign: "center" }}>Room Info</DialogTitle>
             <DialogContent>
               <div style={{ display: "flex", flexDirection: "column" }}>
-
-               
                 <TextField
                   label="Room Name"
                   required
@@ -630,7 +618,7 @@ export default function ReceptionistAddRoom() {
                   value={capacity}
                   onChange={handleCapacityChange}
                   // fullWidth
-                placeholder="Max Limit:100"
+                  placeholder="Max Limit:100"
                   variant="outlined"
                   margin="normal"
                 />
@@ -684,16 +672,16 @@ export default function ReceptionistAddRoom() {
       </Grid>
 
       <div>
-      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
-      <Backdrop
-        // style={{ zIndex: 1000}} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
-        open={open}
-        onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+        {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+        <Backdrop
+          // style={{ zIndex: 1000}}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
     </Box>
   );
 }

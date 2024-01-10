@@ -345,6 +345,70 @@ export default function Meetings() {
       });
   }
 
+
+
+
+
+
+
+
+  const testExcel = async() => {
+
+    const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
+
+
+
+    const exportUrl = Config.baseUrl + Config.apiEndPoints.exportEndPoint;
+ 
+    const payload = {
+      page: 0,
+      size: 1000,
+      phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+      fromDate: startDate,
+      toDate: endDate,
+
+      companyId: selectedCompanyId,
+      user: {
+        id: adminId,
+
+        // id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+      },
+
+      room: {
+        // id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+        id: selectedRoom.length === 0 ? null : selectedRoom,
+      },
+
+      status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+      // date:'2023-10-18T11:00:00'
+    };
+  let url = exportUrl
+  try{
+    const response = await axios.post(url, payload, { responseType: 'arraybuffer',});
+  
+    const byteArray = new Uint8Array(response.data);
+  
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+    const link = document.createElement('a');
+  
+    link.href = URL.createObjectURL(blob);
+    link.download = 'meeting_details.xlsx'; 
+  
+    document.body.appendChild(link);
+  
+    link.click();
+  
+    document.body.removeChild(link);
+  
+    console.log('Download initiated successfully');
+  }
+  catch(error){
+    console.error('error coming', error)
+  }
+  }
+
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -1049,7 +1113,7 @@ export default function Meetings() {
                     >
                       <Button
                         variant="contained"
-                        onClick={excelExport}
+                        onClick={testExcel}
                         sx={{
                           marginLeft: "",
                           width: "200px",
@@ -1172,9 +1236,9 @@ export default function Meetings() {
                                 (
                                   <div
                                     style={{
-                                      // display: "flex",
-                                      // flexDirection: "row",
-                                      // alignItems: "center",
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      alignItems: "center",
                                       // border:"1px solid black"
                                     }}
                                   >
@@ -1189,7 +1253,7 @@ export default function Meetings() {
                                         style={{
                                           width: "40px",
                                           height: "40px",
-                                          marginLeft: "70px",
+                                          // marginLeft: "70px",
                                           cursor: "pointer",
                                         }}
                                       />

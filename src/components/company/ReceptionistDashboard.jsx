@@ -24,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
+import Autocomplete from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import InfoIcon from "@mui/icons-material/Info";
@@ -340,7 +341,7 @@ export default function Dashboard() {
       .then((response) => {
         const data = response.data.data;
         setRooms(data);
-        setReload(false)
+        setReload(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -413,8 +414,6 @@ export default function Dashboard() {
           alert("Meeting cancelled succesfully");
           setIsCancelled(true);
           handleCloseModal();
-       
-
         }
         if (response.data.message === "Success") {
           alert("Meeting added succesfully");
@@ -422,9 +421,8 @@ export default function Dashboard() {
           setIsCancelled(true);
           handleCloseModal();
           setReload(true);
-        } 
+        }
         setOpen(false);
-       
       })
       .catch((error) => {
         // if (error.response.data.message === "You cannot update a meeting now") {
@@ -451,7 +449,40 @@ export default function Dashboard() {
     document.body.removeChild(link);
   }
 
-  function excelExport() {
+  // function excelExport() {
+  //   const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint;
+
+  //   const payload = {
+  //     page: 0,
+  //     phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
+  //     fromDate: startDate,
+  //     toDate: endDate,
+
+  //     companyId: selectedCompanyId,
+  //     user: {
+  //       id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+  //     },
+
+  //     room: {
+  //       id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+  //     },
+
+  //     status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
+  //   };
+
+  //   axios
+  //     .post(exportUrl, payload, {})
+  //     .then((response) => {
+  //       const url = response.data.data;
+
+  //       downloadFile(url);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }
+
+  const testExcel = async () => {
     const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint;
 
     const payload = {
@@ -459,6 +490,7 @@ export default function Dashboard() {
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       fromDate: startDate,
       toDate: endDate,
+      size: null,
 
       companyId: selectedCompanyId,
       user: {
@@ -472,17 +504,34 @@ export default function Dashboard() {
       status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
     };
 
-    axios
-      .post(exportUrl, payload, {})
-      .then((response) => {
-        const url = response.data.data;
-
-        downloadFile(url);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+    let url = exportUrl;
+    try {
+      const response = await axios.post(url, payload, {
+        responseType: "arraybuffer",
       });
-  }
+
+      const byteArray = new Uint8Array(response.data);
+
+      const blob = new Blob([byteArray], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const link = document.createElement("a");
+
+      link.href = URL.createObjectURL(blob);
+      link.download = "visitor_details.xlsx";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      console.log("Download initiated successfully");
+    } catch (error) {
+      console.error("error coming", error);
+    }
+  };
 
   //pagination
   const handleChangePage = (event, newPage) => {
@@ -508,7 +557,7 @@ export default function Dashboard() {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
-      companyId: selectedCompanyId,
+      companyId: null,
       fromDate: startDate,
       toDate: endDate,
       status: selectedStatusOptions !== "" ? selectedStatusOptions : null,
@@ -543,7 +592,7 @@ export default function Dashboard() {
           const meetingId = meeting.id;
         });
 
-        setReload(false)
+        setReload(false);
 
         setMeetingsLength(responseDataLength);
 
@@ -750,12 +799,9 @@ export default function Dashboard() {
     fetchHostOptions();
   }, []);
 
-
-  useEffect(()=>{
-    getRoomsOption()
-
-  },[reload])
-
+  useEffect(() => {
+    getRoomsOption();
+  }, [reload]);
 
   // useEffect(() => {
   //     if (location.state && location.state.filter) {
@@ -805,7 +851,6 @@ export default function Dashboard() {
     //   setSelectedValue(value);
     // }
     setSelectedValue(value);
-
   };
 
   const handleCloseDialog = (value) => {
@@ -952,6 +997,24 @@ export default function Dashboard() {
                     title="Visitors Meetings"
                     subtitle="Get all the visitors meeting list"
                   />
+
+                  {!isADMIN ? (
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      //   value={selectedSiteName}
+                      //   onChange={handleAutocompleteChange}
+                      //   options={autocompleteOptions}
+                      //   getOptionLabel={(option) => option.label}
+
+                      sx={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Company" />
+                      )}
+                    />
+                  ) : (
+                    ""
+                  )}
 
                   {isADMIN ? (
                     <Box
@@ -1232,7 +1295,7 @@ export default function Dashboard() {
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Button
                       variant="contained"
-                      onClick={excelExport}
+                      onClick={testExcel}
                       sx={{
                         marginLeft: "",
                         width: "200px",
@@ -1393,7 +1456,7 @@ export default function Dashboard() {
                                       style={{
                                         width: "40px",
                                         height: "40px",
-                                        marginLeft: "70px",
+                                        // marginLeft: "70px",
                                         cursor: "pointer",
                                       }}
                                     />
@@ -1426,7 +1489,7 @@ export default function Dashboard() {
                                 getFullName(visitor.user)
                               )} */}
 
-{getFullName(visitor.user)}
+                              {getFullName(visitor.user)}
                             </TableCell>
 
                             <TableCell align="center">
@@ -2052,7 +2115,6 @@ export default function Dashboard() {
 
                   <ListItemText
                     primary={`Remarks: ${
-                      
                       selectedValue.remarks !== ""
                         ? selectedValue.remarks
                         : "NA"
@@ -2063,7 +2125,6 @@ export default function Dashboard() {
                 <ListItem button onClick={() => handleCloseDialog("")}>
                   <ListItemText
                     primary={`Context: ${
-                    
                       selectedValue.context !== ""
                         ? selectedValue.context
                         : "NA"
