@@ -133,7 +133,7 @@ const Config = Object.freeze({
     statusAdminEndPoint:"vis/meetstatusadmin",
     hostEndPoint:"api/user/alluser",
     roomDetailsRecepEndPoint:"api/room/all",
-    addMeetingEndPoint:"api/meeting/update/meeting",
+    addMeetingRecepEndPoint:"api/meeting/update/meeting",
     exportRecepEndPoint:"api/meeting/exportdata",
     getVisitorRecepEndPoint:"api/meeting/paginate",
     passApiEndPoint:"api/meeting/downloadPass",

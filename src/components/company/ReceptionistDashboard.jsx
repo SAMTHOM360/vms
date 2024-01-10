@@ -401,7 +401,7 @@ export default function Dashboard() {
     }
 
     const addMeetingUrl =
-      Config.baseUrl + Config.apiEndPoints.addMeetingEndPoint;
+      Config.baseUrl + Config.apiEndPoints.addMeetingRecepEndPoint;
 
     axios
       .post(addMeetingUrl, meetingData, {
