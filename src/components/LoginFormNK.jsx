@@ -339,6 +339,15 @@ function LoginForm() {
         const adminId = response.data.id;
         const limit = response.data.limit;
         const buildingId = response.data.buildingId
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        if(loggedUserRole === "ADMIN" || loggedUserRole ==="SUPERADMIN"){
+          await fetchData(headers);
+        }
+  
+        // await fetchData(headers);
 
         setUserRoleAndAuth(loggedUserRole);
 
@@ -395,7 +404,23 @@ function LoginForm() {
       }
     }
     setBtnLoading(false);
-  };
+  }; 
+
+  async function fetchData(headers) {
+    let url = Config.baseUrl + Config.apiEndPoints.loginFormNKFetchData;
+
+    try{
+      const response = await axios.get(`${url}`, { headers });
+
+      if(response.status === 200){
+        const currEmpLength = response.data.data.countUser;
+        sessionStorage.setItem("currEmpLength", currEmpLength);
+      }
+    }  catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  
 
   const appStyle = {
     backgroundImage: `url(${image1})`,

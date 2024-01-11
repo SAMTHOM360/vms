@@ -1,6 +1,6 @@
 const Config = Object.freeze({
-  baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
-  // baseUrl: "http://192.168.12.58:8080/", //SMRUTI
+  // baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
+  baseUrl: "http://192.168.12.58:8080/", //SMRUTI
   // baseUrl:"http://192.168.12.51:8085/vms/" ,//Hosted (no idea)
   // baseUrl: "https://vms.nyggs.com/backend/",
 
@@ -17,7 +17,7 @@ const Config = Object.freeze({
     appointMeetFormGetVisitorByPhone:"vis/getVisitorByPhone",
     appointMeetFormSubmitForm:"api/meeting/add/byuser",
     appointMeetFormGetAllCity:"api/cityByName",
-    // appointMeetFormGetAllCity:"api/cityByName",
+    appointMeetFormGetVisitorCompanyName:"vis/company/name",
     // appointMeetFormGetAllCity:"api/cityByName",
     // appointMeetFormGetAllCity:"api/cityByName",
 
@@ -58,6 +58,7 @@ const Config = Object.freeze({
     loginFormNKSubmit: "token",
     loginFormNKGetOtp: "api/user/getotp",
     loginFormNKSaveForgot: "api/user/forgot",
+    loginFormNKFetchData: "api/user/getall",
 
 
 

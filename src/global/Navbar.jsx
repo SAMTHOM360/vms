@@ -25,11 +25,11 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SyncLockIcon from "@mui/icons-material/SyncLock";
 import MailIcon from "@mui/icons-material/Mail";
@@ -45,7 +45,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import Config from "../Config/Config";
-import nyggsLogo from '../assets/nyggsLogo.png'
+import nyggsLogo from "../assets/nyggsLogo.png";
 
 const AppBar = styled(
   MuiAppBar,
@@ -101,8 +101,8 @@ export default function Navbar({ toggleSidebar }) {
 
   const AuthToken = sessionStorage.getItem("token");
 
-  let urlAxiosInstance = Config.baseUrl + Config.apiEndPoints.navbarAxiosInstance
-
+  let urlAxiosInstance =
+    Config.baseUrl + Config.apiEndPoints.navbarAxiosInstance;
 
   const axiosInstance = axios.create({
     // baseURL: BASE_URL,
@@ -117,8 +117,6 @@ export default function Navbar({ toggleSidebar }) {
     Authorization: `Bearer ${AuthToken}`,
   };
 
-
-    
   const companyName = sessionStorage.getItem("companyName");
 
   const [formData, setFormData] = useState({
@@ -160,38 +158,45 @@ export default function Navbar({ toggleSidebar }) {
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPassword2, setShowPassword2] = useState(false);
-    const [showPassword3, setShowPassword3] = useState(false);
-    const [statusDotstatus, setStatusDotStatus] = useState();
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword3, setShowPassword3] = useState(false);
+  const [statusDotstatus, setStatusDotStatus] = useState();
 
   const adminId = sessionStorage.getItem("adminId");
   const loggedUserName = sessionStorage.getItem("loggedUserName");
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
   const loggedUserUsername = sessionStorage.getItem("loggedUserUsername");
+  const buildingId = sessionStorage.getItem("buildingId");
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { logout, autoStatusChange, setAutoStatusChange, bellItemChanged, setBellItemChanged, activeListItem, isOpenforGridTable } = useAuth();
+  const {
+    logout,
+    autoStatusChange,
+    setAutoStatusChange,
+    bellItemChanged,
+    setBellItemChanged,
+    activeListItem,
+    isOpenforGridTable,
+    selectedCompanyIdForNotification,
+  } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
-  const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false)
+  const [isRECEPTIONIST, setIsRECEPTIONIST] = useState(false);
 
   const [bellAnchorEl, setBellAnchorEl] = useState(null);
   const [bellMenu, setBellMenu] = useState(false);
   const [bellMenuItem, setBellMenuItem] = useState([]);
   const [isBellVisible, setIsBellVisible] = useState(false);
   const [bellBadgeCount, setBellBadgeCount] = useState();
-  const [ isHamburgerAllowed, setIsHamburgerAllowed] = useState(true)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false)
+  const [isHamburgerAllowed, setIsHamburgerAllowed] = useState(true);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false);
   const [avatarLink, setAvatarLink] = useState("");
   const [isAvatarLinkPresent, setIsAvatarLinkPresent] = useState(false);
-
-  
 
   useEffect(() => {
     if (loggedUserRole === "SUPERADMIN") {
@@ -200,10 +205,10 @@ export default function Navbar({ toggleSidebar }) {
       setIsSUPERADMIN(false);
     }
 
-    if(loggedUserRole === "RECEPTIONIST"){
-      setIsRECEPTIONIST(true)
+    if (loggedUserRole === "RECEPTIONIST") {
+      setIsRECEPTIONIST(true);
     } else {
-      setIsRECEPTIONIST(false)
+      setIsRECEPTIONIST(false);
     }
     // if (activeListItem === "/receptionistcompanyscreen") {
     //   setIsHamburgerAllowed(false)
@@ -213,13 +218,12 @@ export default function Navbar({ toggleSidebar }) {
   }, [loggedUserRole]);
 
   useEffect(() => {
-      if (activeListItem === "/receptionistcompanyscreen") {
-    setIsHamburgerAllowed(false)
-  } else {
-    setIsHamburgerAllowed(true)
-  }
-  },[activeListItem])
-
+    if (activeListItem === "/receptionistcompanyscreen") {
+      setIsHamburgerAllowed(false);
+    } else {
+      setIsHamburgerAllowed(true);
+    }
+  }, [activeListItem]);
 
   // console.log('isHamburgerAllowed', activeListItem)
   // console.log('isHamburgerAllowed', isHamburgerAllowed)
@@ -230,14 +234,17 @@ export default function Navbar({ toggleSidebar }) {
 
   useEffect(() => {
     fetchNotification();
-  }, [isRECEPTIONIST])
+  }, [isRECEPTIONIST]);
+
+  useEffect(() => {
+    fetchNotification();
+  }, [selectedCompanyIdForNotification]);
 
   useEffect(() => {
     fetchNotification();
     // console.log('isHamburgerAllowed', isHamburgerAllowed)
     // console.log('hambuger is changing', )
-  }, [isHamburgerAllowed])
-
+  }, [isHamburgerAllowed]);
 
   const isValidLink = (url) => {
     try {
@@ -249,7 +256,6 @@ export default function Navbar({ toggleSidebar }) {
   };
 
   useEffect(() => {
-
     if (isValidLink(avatarLink)) {
       setIsAvatarLinkPresent(true);
     } else {
@@ -260,7 +266,6 @@ export default function Navbar({ toggleSidebar }) {
   // console.log('avatarLink', avatarLink)
 
   // console.log('isAvatarLinkPresent', isAvatarLinkPresent)
-
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -285,7 +290,7 @@ export default function Navbar({ toggleSidebar }) {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
     setIsMenuOpen(true);
-    setIsProfileMenuOpen(true)
+    setIsProfileMenuOpen(true);
   };
 
   const calculateTimeAgo = (createdAt) => {
@@ -315,8 +320,33 @@ export default function Navbar({ toggleSidebar }) {
   async function fetchNotification() {
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
+
+    // let receptNoti = null
+    let receptNoti = "";
+    // let commonNoti = null
+    let commonNoti = "";
+
+    if (loggedUserRole === "RECEPTIONIST") {
+      if (!selectedCompanyIdForNotification) {
+        receptNoti = buildingId;
+        // commonNoti = null
+        commonNoti = "";
+      }
+
+      if (selectedCompanyIdForNotification) {
+        // receptNoti = null
+        receptNoti = "";
+        commonNoti = selectedCompanyIdForNotification;
+      }
+    }
+
+    if (loggedUserRole !== "RECEPTIONIST") {
+      // receptNoti = null
+      receptNoti = "";
+      commonNoti = companyId2;
+    }
     // console.log('fetchNotification is getting called by interval')
-    let url = Config.baseUrl + Config.apiEndPoints.navbarPendingRequest
+    let url = Config.baseUrl + Config.apiEndPoints.navbarPendingRequest;
     try {
       // const response = await axiosInstance.get(
       //   `${BASE_URL}/notification/pending-request`,
@@ -324,115 +354,120 @@ export default function Navbar({ toggleSidebar }) {
       // );
 
       const response = await axiosInstance.get(
-        `${url}?companyId=${companyId2}`,
+        `${url}?companyId=${commonNoti}&buildingId=${receptNoti}`,
         { headers }
       );
 
       const bellAPiData = response.data.data;
 
-
-      let bellmenuItemm
+      let bellmenuItemm;
 
       // debugger
 
-      // console.log("bell api data", bellAPiData.length);
+      // console.log("bell api data", bellAPiData);
       if (!bellAPiData || bellAPiData.length === 0) {
         // return null;
-        let unseenCount = bellAPiData.filter((item) => !item.seen).length;        
-          bellmenuItemm = (
-            <>
-            <List 
-             sx={{
-              width: "23em",
-            }}
+        let unseenCount = bellAPiData.filter((item) => !item.seen).length;
+        bellmenuItemm = (
+          <>
+            <List
+              sx={{
+                width: "23em",
+              }}
             >
               <ListItem
-              sx={{
-                display: "flex",
-                justifyContent:'center',
-                width: "100%",
-                paddingX: 1,
-              }}
-              >
-                <Typography sx={{color:'#313541DE'}}>No new notifications...</Typography>
-              </ListItem>
-            </List>
-          {/* <Typography sx={{color:'black'}}>No new notifications...</Typography> */}
-          </>
-          )
-
-          if (unseenCount === 0) {
-            setIsBellVisible(false);
-          }
-          setBellBadgeCount(unseenCount);
-          setBellMenuItem(bellmenuItemm);
-        
-      } else {
-
-      let unseenCount = bellAPiData.filter((item) => !item.seen).length;
-
-
-      // console.log('bellAPiData', bellAPiData)
-
-     
-
-
-       bellmenuItemm = (
-        <List
-          sx={{
-            width: "23em",
-          }}
-        >
-          {bellAPiData.map((dataItem, index) => {
-            const bellApiVisiorData = dataItem.meeting.visitor;
-            const bellApiUserData = dataItem.meeting.user;
-
-            return (
-              <Box
-                key={index}
                 sx={{
+                  display: "flex",
+                  justifyContent: "center",
                   width: "100%",
-                  // bgcolor: "cyan",
-                  padding: 0,
-                  userSelect: 'none',
+                  paddingX: 1,
                 }}
               >
-                <ListItem
+                <Typography sx={{ color: "#313541DE" }}>
+                  No new notifications...
+                </Typography>
+              </ListItem>
+            </List>
+            {/* <Typography sx={{color:'black'}}>No new notifications...</Typography> */}
+          </>
+        );
+
+        if (unseenCount === 0) {
+          setIsBellVisible(false);
+        }
+        setBellBadgeCount(unseenCount);
+        setBellMenuItem(bellmenuItemm);
+      } else {
+        let unseenCount = bellAPiData.filter((item) => !item.seen).length;
+
+        // console.log('bellAPiData', bellAPiData)
+
+        
+
+        bellmenuItemm = (
+          <List
+            sx={{
+              width: "23em",
+            }}
+          >
+            {bellAPiData.map((dataItem, index) => {
+              const bellApiVisiorData = dataItem.meeting.visitor;
+              const bellApiUserData = dataItem.meeting.user;
+
+              let allNotiCompany = dataItem?.meeting?.company || null
+              let allNotiCompanyName = allNotiCompany?.name || "NA"
+
+        // console.log('allNotiCompanyName', allNotiCompanyName)
+
+              return (
+                <Box
+                  key={index}
                   sx={{
-                    display: "flex",
                     width: "100%",
-                    paddingX: 1,
-                    justifyContent: "space-between",
-                    bgcolor: dataItem.seen ? "#DDDDDD" : "#FFFFFF",
-                    "&:hover": {
-                      bgcolor: dataItem.seen ? "#DDDDDD" : "#E9E9E9",
-                    },
+                    // bgcolor: "cyan",
+                    padding: 0,
+                    userSelect: "none",
                   }}
                 >
-                  <Avatar sx={{}}>
-                    <img
-                      src={bellApiVisiorData.imageUrl}
-                      alt="No DP"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </Avatar>
-                  <Box
+                  <ListItem
                     sx={{
-                      width: "70%",
-                      // bgcolor: "orange",
+                      display: "flex",
+                      width: "100%",
+                      paddingX: 1,
+                      justifyContent: "space-between",
+                      bgcolor: dataItem.seen ? "#DDDDDD" : "#FFFFFF",
+                      "&:hover": {
+                        bgcolor: dataItem.seen ? "#DDDDDD" : "#E9E9E9",
+                      },
+                      minHeight:'5.5em',
+                      maxHeight:'5.5em',
                     }}
                   >
-                    <Typography
+                    <Avatar sx={{}}>
+                      <img
+                        src={bellApiVisiorData.imageUrl}
+                        alt="No DP"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Avatar>
+                    <Box
                       sx={{
-                        fontSize: "14px",
-                        color: "#3A3E45DE",
+                        width: "70%",
+                        // bgcolor: "orange",
                       }}
                     >
-                      {/* <Typography
+                      <Typography
+                      component="span"
+                        sx={{
+                          fontSize: "14px",
+                          color: "#3A3E45DE",
+                        }}
+                      >
+                        {/* <Typography
                         component="span"
                         sx={{
                           fontSize: "14px",
@@ -457,32 +492,38 @@ export default function Navbar({ toggleSidebar }) {
                       </Typography>)
                        }
                       . */}
-                      {dataItem.text}
+                        {dataItem.text || "NA"}
+                      </Typography>
+                      <Typography component="span">    </Typography>
+                      {loggedUserRole === "RECEPTIONIST" ? (
+                        selectedCompanyIdForNotification ? null : (
+                          <Typography component="span" sx={{fontSize: "15px",color: "#494949",}}>({allNotiCompanyName})</Typography>
+                        )
+                      ) : null}
+                    </Box>
+                    <Typography
+                      sx={{
+                        fontSize: "12px",
+                        color: "#959697",
+                      }}
+                    >
+                      {/* {calculateTimeAgo(dataItem.createdAt)} */}
+                      {calculateTimeAgo(dataItem.updatedAt)}
                     </Typography>
-                  </Box>
-                  <Typography
-                    sx={{
-                      fontSize: "12px",
-                      color: "#959697",
-                    }}
-                  >
-                    {/* {calculateTimeAgo(dataItem.createdAt)} */}
-                    {calculateTimeAgo(dataItem.updatedAt)}
-                  </Typography>
-                </ListItem>
-                <Divider sx={{bgcolor:'#6c6c6c9b'}} />
-              </Box>
-            );
-          })}
-        </List>
-      );
+                  </ListItem>
+                  <Divider sx={{ bgcolor: "#6c6c6c9b" }} />
+                </Box>
+              );
+            })}
+          </List>
+        );
 
-      if (unseenCount !== 0) {
-        setIsBellVisible(true);
+        if (unseenCount !== 0) {
+          setIsBellVisible(true);
+        }
+        setBellBadgeCount(unseenCount);
+        setBellMenuItem(bellmenuItemm);
       }
-      setBellBadgeCount(unseenCount);
-      setBellMenuItem(bellmenuItemm);
-    }
     } catch (error) {
       console.error("unable to fecth notification apidata: ", error);
     }
@@ -501,21 +542,44 @@ export default function Navbar({ toggleSidebar }) {
       const intervalFetchNotification = setInterval(() => {
         fetchNotification();
       }, 7000);
-  
+
       return () => clearInterval(intervalFetchNotification);
     }
   }, [loggedUserRole]);
-  
 
   useEffect(() => {
-    fetchNotification()
-  },[bellItemChanged])
+    fetchNotification();
+  }, [bellItemChanged]);
 
   const handleMarkRead = async () => {
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
+
+    let receptNoti = "";
+    // let commonNoti = null
+    let commonNoti = "";
+
+    if (loggedUserRole === "RECEPTIONIST") {
+      if (!selectedCompanyIdForNotification) {
+        receptNoti = buildingId;
+        // commonNoti = null
+        commonNoti = "";
+      }
+
+      if (selectedCompanyIdForNotification) {
+        // receptNoti = null
+        receptNoti = "";
+        commonNoti = selectedCompanyIdForNotification;
+      }
+    }
+
+    if (loggedUserRole !== "RECEPTIONIST") {
+      // receptNoti = null
+      receptNoti = "";
+      commonNoti = companyId2;
+    }
     // e.preventDefault();
-    let url = Config.baseUrl + Config.apiEndPoints.navbarMarkSeen
+    let url = Config.baseUrl + Config.apiEndPoints.navbarMarkSeen;
     try {
       // const response = await axiosInstance.post(
       //   `${BASE_URL}/notification/mark-seen`,
@@ -523,20 +587,20 @@ export default function Navbar({ toggleSidebar }) {
       // );
 
       const response = await axiosInstance.post(
-        `${url}?companyId=${companyId2}`,
+        `${url}?companyId=${commonNoti}&&buildingId=${receptNoti}`,
         { headers }
       );
       // console.log("MARK READ RESPONSE", response);
       // handleCloseBellMenu();
-      fetchNotification()
+      fetchNotification();
     } catch (error) {
       console.error("Unable to mark read: ", error);
     }
   };
-// console.log('why should')
+  // console.log('why should')
   async function fetchData() {
     // console.log('i got hitt')
-    let url = Config.baseUrl + Config.apiEndPoints.navbarFetchGetById
+    let url = Config.baseUrl + Config.apiEndPoints.navbarFetchGetById;
     try {
       // const response = await axios.get(`${BASE_URL}/user/getbyid/${adminId}`);
       const response = await axios.get(`${url}/${adminId}`);
@@ -546,7 +610,7 @@ export default function Navbar({ toggleSidebar }) {
 
         const formatCreatedOn = apiData.createdOn.split(" ")[0] || "";
         // setFormattedCreatedOn(formatCreatedOn);
-        setAvatarLink(apiData.image ? apiData.image : "")
+        setAvatarLink(apiData.image ? apiData.image : "");
         setStatusDotStatus(apiData.isPresent);
         setAutoStatusChange(apiData.isPresent);
 
@@ -592,7 +656,6 @@ export default function Navbar({ toggleSidebar }) {
 
   // console.log('formData', formData)
 
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -600,14 +663,14 @@ export default function Navbar({ toggleSidebar }) {
   const handleOpenBellMenu = (event) => {
     setBellAnchorEl(event.currentTarget);
     setBellMenu(true);
-    setIsNotificationPopupOpen(true)
+    setIsNotificationPopupOpen(true);
   };
 
   const handleCloseBellMenu = () => {
     setBellAnchorEl(null);
     setBellMenu(false);
-    setIsNotificationPopupOpen(false)
-    handleMarkRead()
+    setIsNotificationPopupOpen(false);
+    handleMarkRead();
 
     // Other logic as needed
   };
@@ -629,7 +692,7 @@ export default function Navbar({ toggleSidebar }) {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setIsMenuOpen(false);
-    setIsProfileMenuOpen(false)
+    setIsProfileMenuOpen(false);
     // handleMobileMenuClose();
   };
 
@@ -647,7 +710,7 @@ export default function Navbar({ toggleSidebar }) {
       oldpassword: "",
       newPassword: "",
       confirmPassword: "",
-    })
+    });
   };
 
   const handleProfileOpen = () => {
@@ -655,10 +718,10 @@ export default function Navbar({ toggleSidebar }) {
     handleMenuClose();
   };
 
-  const handleChangeCompanyScreen =() => {
+  const handleChangeCompanyScreen = () => {
     navigate("/receptionistcompanyscreen");
     handleMenuClose();
-  }
+  };
 
   const handleSavePasswordChange = async (e) => {
     // toast.dismiss()
@@ -669,27 +732,29 @@ export default function Navbar({ toggleSidebar }) {
       newPassword: changedItem.newPassword,
     };
 
-    const hasEmptyField = Object.values(changedItem).some(value => value.length === 0);
+    const hasEmptyField = Object.values(changedItem).some(
+      (value) => value.length === 0
+    );
 
     if (hasEmptyField) {
       toast.warn("Please fill in all fields.", {
-        toastId:"navbar-warn1"
+        toastId: "navbar-warn1",
       });
       return;
     }
 
     if (changedItem.newPassword.length < 4) {
       toast.warn("New Password mustn't be less than 4 !!", {
-        toastId:"navbar-warn2"
+        toastId: "navbar-warn2",
       });
       return;
     }
 
-    let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword
+    let url = Config.baseUrl + Config.apiEndPoints.navbarChangePassword;
 
     if (changedItem.newPassword != changedItem.confirmPassword) {
       toast.warn("Confirm Password mismatched !", {
-        toastId:"navbar-warn3"
+        toastId: "navbar-warn3",
       });
       return;
     }
@@ -702,16 +767,12 @@ export default function Navbar({ toggleSidebar }) {
       //     headers,
       //   }
       // );
-      const response = await axios.post(
-        `${url}`,
-        changePayload,
-        {
-          headers,
-        }
-      );
+      const response = await axios.post(`${url}`, changePayload, {
+        headers,
+      });
       if (response.status === 200) {
         toast.success("Password has been successfully changed.", {
-          toastId:"navbar-succ1"
+          toastId: "navbar-succ1",
         });
         handleChangePasswordDialogClose();
         logout();
@@ -722,11 +783,11 @@ export default function Navbar({ toggleSidebar }) {
 
       if (error.response.status === 400) {
         toast.warn("Old " + JSON.parse(cleanedMessage) + ".", {
-          toastId:"navbar-warn5"
+          toastId: "navbar-warn5",
         });
       } else {
         toast.error("Something went Wrong !", {
-          toastId:"navbar-err3"
+          toastId: "navbar-err3",
         });
       }
 
@@ -743,7 +804,7 @@ export default function Navbar({ toggleSidebar }) {
 
     if (confirmLogout) {
       toast.success("Successfully logged out.", {
-        toastId:"navbar-succ3"
+        toastId: "navbar-succ3",
       });
 
       logout();
@@ -760,8 +821,8 @@ export default function Navbar({ toggleSidebar }) {
         // overflow: "visible",
         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
         mt: "3.2em",
-        zIndex: theme => theme.zIndex.modal + 4,
-        paddingTop:0,
+        zIndex: (theme) => theme.zIndex.modal + 4,
+        paddingTop: 0,
         // bgcolor:'red'
         // mr: "7em",
       }}
@@ -779,58 +840,53 @@ export default function Navbar({ toggleSidebar }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-  
-
-<Box
-            sx={{
-              // display:'flex',
-              display: {xs: 'flex', sm:'flex', md:'none'},
-              flexDirection:'column',
-              justifyContent:'center',
-              alignItems:'center',
-              mb:'0.5em',
-              bgcolor:'#1B2541',
-              userSelect:'none',
-              color:'white',
-              mt:-1, 
-              py:1,
-              maxWidth:'13.6em',
-              minHeight:'4em',
-              background:'#99AAC6',
-              backgroundImage:`linear-gradient(to left bottom, #051937, #091d3a, #0e203d, #122441, #162844, #22334f, #2e3e5a, #3a4a65, #51617c, #687894, #8091ad, #99aac6);`,
-              // position:'sticky !important',
-              // top:0,
-              // zIndex: (theme) => theme.zIndex.modal + 4
-            }}
-          >
-            <Typography
-              component={"span"}
-              sx={{
-                // fontSize: { xs: "17px", sm: "20px" },
-                fontSize:'19px',
-                fontWeight:'600',
-                color:'#E6E6E6',
-                wordBreak:'break-word',
-                textAlign:'center',
-                px:0.5
-                
-              }}
-            >
-              {formData.firstName} {formData.lastName}
-
-              {/* ejfeifhnienfien eodinoefoefoinem */}
-            </Typography>
-            <Typography
-              component={"span"}
-              sx={{
-                fontSize:'13px',
-                color:'#E8E7E7',
-              }}
-            >
-              ({loggedUserRole})
-            </Typography>
-          </Box>
-
+      <Box
+        sx={{
+          // display:'flex',
+          display: { xs: "flex", sm: "flex", md: "none" },
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: "0.5em",
+          bgcolor: "#1B2541",
+          userSelect: "none",
+          color: "white",
+          mt: -1,
+          py: 1,
+          maxWidth: "13.6em",
+          minHeight: "4em",
+          background: "#99AAC6",
+          backgroundImage: `linear-gradient(to left bottom, #051937, #091d3a, #0e203d, #122441, #162844, #22334f, #2e3e5a, #3a4a65, #51617c, #687894, #8091ad, #99aac6);`,
+          // position:'sticky !important',
+          // top:0,
+          // zIndex: (theme) => theme.zIndex.modal + 4
+        }}
+      >
+        <Typography
+          component={"span"}
+          sx={{
+            // fontSize: { xs: "17px", sm: "20px" },
+            fontSize: "19px",
+            fontWeight: "600",
+            color: "#E6E6E6",
+            wordBreak: "break-word",
+            textAlign: "center",
+            px: 0.5,
+          }}
+        >
+          {formData.firstName} {formData.lastName}
+          {/* ejfeifhnienfien eodinoefoefoinem */}
+        </Typography>
+        <Typography
+          component={"span"}
+          sx={{
+            fontSize: "13px",
+            color: "#E8E7E7",
+          }}
+        >
+          ({loggedUserRole})
+        </Typography>
+      </Box>
 
       {isSUPERADMIN
         ? null
@@ -839,7 +895,7 @@ export default function Navbar({ toggleSidebar }) {
               key="profileMenuItem"
               onClick={handleProfileOpen}
               sx={{
-                minHeight:'unset',
+                minHeight: "unset",
                 height: "2em",
                 fontSize: "15px",
               }}
@@ -853,47 +909,60 @@ export default function Navbar({ toggleSidebar }) {
               >
                 <PersonIcon />
               </IconButton>
-              <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Profile</Typography>
+              <Typography
+                sx={{
+                  paddingLeft: "1.2em",
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Profile
+              </Typography>
             </MenuItem>,
             <hr key="profileMenuDivider" />,
           ]}
 
-
-{isRECEPTIONIST
+      {isRECEPTIONIST
         ? [
-          <MenuItem
-            key="receptComScreenItem"
-            onClick={handleChangeCompanyScreen}
-            sx={{
-              minHeight:'unset',
-              height: "2em",
-              fontSize: "15px",
-            }}
-          >
-            <IconButton
-              size="small"
-              aria-label="account of current user"
-              aria-controls="primary-search-account-menu"
-              aria-haspopup="true"
-              color="inherit"
+            <MenuItem
+              key="receptComScreenItem"
+              onClick={handleChangeCompanyScreen}
               sx={{
-                transform: 'scaleX(-1)' 
+                minHeight: "unset",
+                height: "2em",
+                fontSize: "15px",
               }}
             >
-              <ExitToAppIcon />
-            </IconButton>
-            <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Change Company</Typography>
-          </MenuItem>,
-          <hr key="receptComScreenDivider" />
-                    ]
-        : 
-        null
-        }
+              <IconButton
+                size="small"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                color="inherit"
+                sx={{
+                  transform: "scaleX(-1)",
+                }}
+              >
+                <ExitToAppIcon />
+              </IconButton>
+              <Typography
+                sx={{
+                  paddingLeft: "1.2em",
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Change Company
+              </Typography>
+            </MenuItem>,
+            <hr key="receptComScreenDivider" />,
+          ]
+        : null}
 
       <MenuItem
         onClick={handleChangePasswordDialogOpen}
         sx={{
-          minHeight:'unset',
+          minHeight: "unset",
           height: "2em",
           fontSize: "15px",
         }}
@@ -907,15 +976,17 @@ export default function Navbar({ toggleSidebar }) {
         >
           <SyncLockIcon />
         </IconButton>
-        <Typography 
-        sx={{ paddingLeft: "1.2em", width:'100%', textAlign:'center' }}
-        >Change Password</Typography>
+        <Typography
+          sx={{ paddingLeft: "1.2em", width: "100%", textAlign: "center" }}
+        >
+          Change Password
+        </Typography>
       </MenuItem>
       <hr />
       <MenuItem
         onClick={handleLogout}
         sx={{
-          minHeight:'unset',
+          minHeight: "unset",
           height: "2em",
           fontSize: "15px",
         }}
@@ -929,7 +1000,11 @@ export default function Navbar({ toggleSidebar }) {
           <LogoutIcon />
         </IconButton>
 
-        <Typography sx={{ paddingLeft:'1.2em' ,width:'100%', textAlign:'center' }}>Logout</Typography>
+        <Typography
+          sx={{ paddingLeft: "1.2em", width: "100%", textAlign: "center" }}
+        >
+          Logout
+        </Typography>
       </MenuItem>
     </Menu>
   );
@@ -1007,35 +1082,30 @@ export default function Navbar({ toggleSidebar }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Loader isLoading={loading} />
-      <AppBar position="fixed" elevation={4} sx={{ background: "#141b2d", }}>
+      <AppBar position="fixed" elevation={4} sx={{ background: "#141b2d" }}>
         <Toolbar>
-          <Box sx={{
-            display:'flex',
-            flexDirection:'row',
-            alignItems:'center',
-          }}>
-
-            {isHamburgerAllowed 
-            ?
-            <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2, color: "#ffffff" }}
-            onClick={toggleSidebar}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
           >
-            {isOpenforGridTable ? <ArrowBackIosNewIcon/> : <MenuIcon />}
-            {/* <MenuIcon /> */}
-          </IconButton>
+            {isHamburgerAllowed ? (
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                sx={{ mr: 2, color: "#ffffff" }}
+                onClick={toggleSidebar}
+              >
+                {isOpenforGridTable ? <ArrowBackIosNewIcon /> : <MenuIcon />}
+                {/* <MenuIcon /> */}
+              </IconButton>
+            ) : null}
 
-          :
-
-          null
-          }
-
-       
-          {/* <IconButton
+            {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -1046,58 +1116,65 @@ export default function Navbar({ toggleSidebar }) {
             <MenuIcon />
           </IconButton> */}
 
-          {isSUPERADMIN ? 
-          // null
+            {isSUPERADMIN ? (
+              // null
 
-          <img src={nyggsLogo} alt="Nyggs Logo" style={{ maxWidth: "100px", maxHeight: "50px", pointerEvents:'none', }} />
+              <img
+                src={nyggsLogo}
+                alt="Nyggs Logo"
+                style={{
+                  maxWidth: "100px",
+                  maxHeight: "50px",
+                  pointerEvents: "none",
+                }}
+              />
+            ) : (
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{
+                  display: { xs: "block", sm: "flex" },
+                  alignItems: "center",
+                  color: "#ffffff",
+                  fontSize: { xs: "17px", sm: "20px" },
+                  userSelect: "none",
+                }}
+              >
+                <Typography
+                  component={"span"}
+                  sx={{
+                    fontSize: { xs: "17px", sm: "20px" },
+                  }}
+                >
+                  {companyName}
+                </Typography>{" "}
+                <Typography
+                  component={"span"}
+                  sx={{
+                    fontSize: { xs: "20px", sm: "23px" },
+                    marginLeft: "0.4em",
+                    marginRight: "0.4em",
+                    fontWeight: "500",
+                  }}
+                >
+                  {" "}
+                  |{" "}
+                </Typography>{" "}
+                <Typography
+                  component={"span"}
+                  sx={{
+                    fontSize: { xs: "16px", sm: "19px" },
+                    // marginTop: "0.2em",
+                    // marginRight: "0.1em",
+                  }}
+                >
+                  {formData.dept.name}
+                </Typography>
+              </Typography>
+            )}
 
-          :
-          <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{
-            display: { xs: "block", sm: "flex" },
-            alignItems: "center",
-            color: "#ffffff",
-            fontSize: { xs: "17px", sm: "20px" },
-            userSelect:'none'
-          }}
-        >
-          <Typography
-            component={"span"}
-            sx={{
-              fontSize: { xs: "17px", sm: "20px" },
-            }}
-          >
-            {companyName}
-          </Typography>{" "}
-          <Typography
-            component={"span"}
-            sx={{
-              fontSize: { xs: "20px", sm: "23px" },
-              marginLeft: "0.4em",
-              marginRight: "0.4em",
-              fontWeight: "500",
-            }}
-          >
-            {" "}
-            |{" "}
-          </Typography>{" "}
-          <Typography
-            component={"span"}
-            sx={{
-              fontSize: { xs: "16px", sm: "19px" },
-              // marginTop: "0.2em",
-              // marginRight: "0.1em",
-            }}
-          >
-            {formData.dept.name}
-          </Typography>
-        </Typography>
-        }
-
-          {/* <Typography
+            {/* <Typography
             variant="h6"
             noWrap
             component="div"
@@ -1140,122 +1217,128 @@ export default function Navbar({ toggleSidebar }) {
               {formData.dept.name}
             </Typography>
           </Typography> */}
-
           </Box>
 
-
-          <Box sx={{ flexGrow: 1,
-             bgcolor:'cyan',
+          <Box
+            sx={{
+              flexGrow: 1,
+              bgcolor: "cyan",
               // minWidth:'12em',
-              minWidth:{lg:'12em', md:'10em', sm:'7em', xs:'3em'}
-               }} />
+              minWidth: { lg: "12em", md: "10em", sm: "7em", xs: "3em" },
+            }}
+          />
 
-          <Box sx={{
-            display:'flex',
-            flexDirection:'row',
-            alignItems:'center',
-            // bgcolor:'red',
-          }}>
-
-         
-          <Typography
+          <Box
             sx={{
-              display: {xs: 'none', sm: "none", md: "flex" },
+              display: "flex",
+              flexDirection: "row",
               alignItems: "center",
-              color: "#ffffff",
-              fontSize: { xs: "17px", sm: "20px" },
-              userSelect:'none'
+              // bgcolor:'red',
             }}
           >
             <Typography
-              component={"span"}
               sx={{
-                fontSize: { xs: "17px", sm: "20px" },
-              }}
-            >
-              {formData.firstName} {formData.lastName}
-            </Typography>{" "}
-            <Typography
-              component={"span"}
-              sx={{
-                fontSize: { xs: "20px", sm: "23px" },
-                marginLeft: "0.4em",
-                marginRight: "0.4em",
-                fontWeight: "500",
-              }}
-            >
-              {" "}
-              |{" "}
-            </Typography>{" "}
-            <Typography
-              component={"span"}
-              sx={{
-                fontSize: { xs: "16px", sm: "19px" },
-                // marginTop: {xs: '', sm:'0.2em'},
-                marginRight: "0.1em",
-              }}
-            >
-              {loggedUserRole}
-            </Typography>
-          </Typography>
-
-          {isSUPERADMIN ? null :
-                    <IconButton
-                    size="large"
-                    // aria-label="show 17 new notifications"
-                    color="inherit"
-                    onClick={ isNotificationPopupOpen ? handleCloseBellMenu : handleOpenBellMenu}
-                    sx={{
-                      // ml: "0.5em",
-                    }}
-                  >
-                    <Badge badgeContent={bellBadgeCount} color="error">
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
-          }
-
-
-          <Popover
-            open={bellMenu}
-            anchorEl={bellAnchorEl}
-            onClose={handleCloseBellMenu}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            sx={{
-              mt:"0.6em",
-              zIndex: theme => theme.zIndex.modal + 3
-            }}
-          >
-            <Box
-              sx={{
-                minWidth: "100%",
-                height: "2.5em",
-                display: "flex",
-                paddingX: "0.5em",
-                paddingY:0,
-                justifyContent: "space-between",
+                display: { xs: "none", sm: "none", md: "flex" },
                 alignItems: "center",
-                borderBottom:'1px solid #3135415b',
-                // bgcolor:'orange',
+                color: "#ffffff",
+                fontSize: { xs: "17px", sm: "20px" },
+                userSelect: "none",
               }}
             >
               <Typography
+                component={"span"}
                 sx={{
-                  fontSize: "17px",
-                  fontWeight: 900,
-                  color: "#313541DE",
+                  fontSize: { xs: "17px", sm: "20px" },
                 }}
               >
-                Notifications
+                {formData.firstName} {formData.lastName}
+              </Typography>{" "}
+              <Typography
+                component={"span"}
+                sx={{
+                  fontSize: { xs: "20px", sm: "23px" },
+                  marginLeft: "0.4em",
+                  marginRight: "0.4em",
+                  fontWeight: "500",
+                }}
+              >
+                {" "}
+                |{" "}
+              </Typography>{" "}
+              <Typography
+                component={"span"}
+                sx={{
+                  fontSize: { xs: "16px", sm: "19px" },
+                  // marginTop: {xs: '', sm:'0.2em'},
+                  marginRight: "0.1em",
+                }}
+              >
+                {loggedUserRole}
               </Typography>
-              {/* <Tooltip title="Mark as all read" arrow>
+            </Typography>
+
+            {isSUPERADMIN ? null : (
+              <IconButton
+                size="large"
+                // aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={
+                  isNotificationPopupOpen
+                    ? handleCloseBellMenu
+                    : handleOpenBellMenu
+                }
+                sx={
+                  {
+                    // ml: "0.5em",
+                  }
+                }
+              >
+                <Badge badgeContent={bellBadgeCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            )}
+
+            <Popover
+              open={bellMenu}
+              anchorEl={bellAnchorEl}
+              onClose={handleCloseBellMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              sx={{
+                mt: "0.6em",
+                zIndex: (theme) => theme.zIndex.modal + 3,
+              }}
+            >
+              <Box
+                sx={{
+                  minWidth: "100%",
+                  height: "2.5em",
+                  display: "flex",
+                  paddingX: "0.5em",
+                  paddingY: 0,
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  borderBottom: "1px solid #3135415b",
+                  // bgcolor:'orange',
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "17px",
+                    fontWeight: 900,
+                    color: "#313541DE",
+                  }}
+                >
+                  Notifications
+                </Typography>
+                {/* <Tooltip title="Mark as all read" arrow>
                 <IconButton
                   size="small"
                   onClick={handleMarkRead}
@@ -1267,78 +1350,79 @@ export default function Navbar({ toggleSidebar }) {
                   <CheckCircleOutlineIcon />
                 </IconButton>
               </Tooltip> */}
-            </Box>
+              </Box>
+              <Box
+                sx={{
+                  minWidth: "100%",
+                  minHeight: "50px",
+                  maxHeight: "300px",
+                  overflowY: "auto",
+                  // padding:0,
+                  // bgcolor:'cyan'
+                }}
+              >
+                {bellMenuItem}
+              </Box>
+            </Popover>
+
             <Box
               sx={{
-                minWidth: "100%",
-                minHeight:'50px',
-                maxHeight: "300px",
-                overflowY: "auto",
-                // padding:0,
-                // bgcolor:'cyan'
+                display: {
+                  xs: "flex",
+                  md: "flex",
+                  color: "#ffffff",
+                  position: "relative",
+                  // bgcolor:'orange',
+                  height: "100%",
+                },
               }}
             >
-              {bellMenuItem}
-            </Box>
-          </Popover>
-
-          <Box
-            sx={{
-              display: {
-                xs: "flex",
-                md: "flex",
-                color: "#ffffff",
-                position: "relative",
-                // bgcolor:'orange',
-                height:"100%",
-              },
-            }}
-          >
-            {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+              {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
             </IconButton> */}
 
-            {isSUPERADMIN ? null : (
-              <div
-                // onClick={handleStatusUpdate}
-                style={{
-                  position: "absolute",
-                  top: "2.2em",
-                  left: "0.8em",
-                  zIndex: 1,
-                  width: "13px",
-                  height: "13px",
-                  backgroundColor: statusDot,
-                  borderRadius: "50%",
-                  border: "2px solid #fff",
-                }}
-              />
-            )}
+              {isSUPERADMIN ? null : (
+                <div
+                  // onClick={handleStatusUpdate}
+                  style={{
+                    position: "absolute",
+                    top: "2.2em",
+                    left: "0.8em",
+                    zIndex: 1,
+                    width: "13px",
+                    height: "13px",
+                    backgroundColor: statusDot,
+                    borderRadius: "50%",
+                    border: "2px solid #fff",
+                  }}
+                />
+              )}
 
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              // aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={isProfileMenuOpen? handleMenuClose : handleProfileMenuOpen}
-              color="inherit"
-              // sx={{
-              //   display: 'flex',
-              //   alignItems: 'center',
-              // }}
-            >
-              {isAvatarLinkPresent ? 
-              <Avatar alt="NA" src={formData.image} />
-              :
-              <AccountCircle sx={{ fontSize: "40px" }} />
-              }
-
-            </IconButton>
-          </Box>
-          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                // aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={
+                  isProfileMenuOpen ? handleMenuClose : handleProfileMenuOpen
+                }
+                color="inherit"
+                // sx={{
+                //   display: 'flex',
+                //   alignItems: 'center',
+                // }}
+              >
+                {isAvatarLinkPresent ? (
+                  <Avatar alt="NA" src={formData.image} />
+                ) : (
+                  <AccountCircle sx={{ fontSize: "40px" }} />
+                )}
+              </IconButton>
+            </Box>
+            {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -1351,7 +1435,7 @@ export default function Navbar({ toggleSidebar }) {
               <AccountCircle sx={{ fontSize: "40px" }} />
             </IconButton>
           </Box> */}
-           </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       {/* {renderMobileMenu} */}
@@ -1380,13 +1464,13 @@ export default function Navbar({ toggleSidebar }) {
                 value={changedItem.oldpassword}
                 onChange={(e) => {
                   let newValue = e.target.value;
-              
-                  newValue = newValue.replace(/\s/g, '');
-              
+
+                  newValue = newValue.replace(/\s/g, "");
+
                   if (newValue.length > 16) {
                     newValue = newValue.slice(0, 16);
                   }
-              
+
                   setChangedItem({
                     ...changedItem,
                     oldpassword: newValue,
@@ -1417,13 +1501,13 @@ export default function Navbar({ toggleSidebar }) {
                 value={changedItem.newPassword}
                 onChange={(e) => {
                   let newValue = e.target.value;
-              
-                  newValue = newValue.replace(/\s/g, '');
-              
+
+                  newValue = newValue.replace(/\s/g, "");
+
                   if (newValue.length > 16) {
                     newValue = newValue.slice(0, 16);
                   }
-              
+
                   setChangedItem({
                     ...changedItem,
                     newPassword: newValue,
@@ -1432,7 +1516,10 @@ export default function Navbar({ toggleSidebar }) {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility2} edge="end">
+                      <IconButton
+                        onClick={togglePasswordVisibility2}
+                        edge="end"
+                      >
                         {showPassword2 ? (
                           <VisibilityOffIcon />
                         ) : (
@@ -1454,13 +1541,13 @@ export default function Navbar({ toggleSidebar }) {
                 value={changedItem.confirmPassword}
                 onChange={(e) => {
                   let newValue = e.target.value;
-              
-                  newValue = newValue.replace(/\s/g, '');
-              
+
+                  newValue = newValue.replace(/\s/g, "");
+
                   if (newValue.length > 16) {
                     newValue = newValue.slice(0, 16);
                   }
-              
+
                   setChangedItem({
                     ...changedItem,
                     confirmPassword: newValue,
@@ -1469,7 +1556,10 @@ export default function Navbar({ toggleSidebar }) {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility3} edge="end">
+                      <IconButton
+                        onClick={togglePasswordVisibility3}
+                        edge="end"
+                      >
                         {showPassword3 ? (
                           <VisibilityOffIcon />
                         ) : (

@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
   // const [ isntComSelection, setIsntComSelection ] = useState(true)
   const [ isOpenforGridTable, setIsOpenForGridTable] = useState()
+  const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
 
   // console.log("Parent call", autoStatusChange)
 
@@ -41,7 +42,22 @@ export const AuthProvider = ({ children }) => {
         setIsLimitReached(false);
       }
     }
-  }, [addLimit, currEmpLength]);
+  }, [addLimit, currEmpLength, authenticated]);
+
+  useEffect(() => {
+    setAddLimit(sessionStorage.getItem('limit'))
+    setCurrEmpLength(sessionStorage.getItem('currEmpLength'))
+  },[authenticated])
+
+  // useEffect(() => {
+  //   if (addLimit !== null) {
+  //     if (parseInt(currEmpLength, 10) >= parseInt(addLimit, 10)) {
+  //       setIsLimitReached(true);
+  //     } else {
+  //       setIsLimitReached(false);
+  //     }
+  //   }
+  // }, [addLimit, currEmpLength, authenticated]);
 
   
   
@@ -109,7 +125,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable,setIsOpenForGridTable }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable, selectedCompanyIdForNotification, setSelectedCompanyIdForNotification }}>
       {children}
     </AuthContext.Provider>
   );

@@ -629,6 +629,7 @@ const RolesAndDepartments = () => {
                   >
                     {rows.length > 0 ? (
                       <DataGrid
+                      disableRowSelectionOnClick
                         rows={rows ?? []}
                         columns={columns}
                         components={{ Toolbar: GridToolbar }}
@@ -733,6 +734,7 @@ const RolesAndDepartments = () => {
                   >
                     {rows2.length > 0 ? (
                       <DataGrid
+                      disableRowSelectionOnClick
                         rows={rows2 ?? []}
                         columns={columns2}
                         components={{ Toolbar: GridToolbar }}

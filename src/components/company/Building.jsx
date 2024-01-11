@@ -869,6 +869,7 @@ const Building = () => {
               >
                 {rows2.length > 0 ? (
                   <DataGrid
+                  disableRowSelectionOnClick
                     rows={rows2 ?? []}
                     columns={columns2}
                     components={{ Toolbar: GridToolbar }}

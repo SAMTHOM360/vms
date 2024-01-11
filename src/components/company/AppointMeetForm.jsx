@@ -54,8 +54,10 @@ const MeetingDetails = () => {
 
 
   const [users, setUsers] = useState([]);
+  const [visitorCompanyLists, setVisitorCompanyLists] = useState([])
+  const [visitorCompanyInputValue, setVisitorCompanyInputValue] = useState("")
   const [cleared, setCleared] = useState(false);
-
+  const [isVisitorDataPresent, setIsVisitorDataPresent] = useState(false)
 
   const initialFormData = {
     name: "",
@@ -77,6 +79,10 @@ const MeetingDetails = () => {
     meetingStartDateTime: null,
     // meetingStartDateTime:dayjs(new Date().setHours(9, 0, 0, 0)),
     context: "",
+    company: {
+      id: null,
+      name:"",
+    }
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
@@ -133,6 +139,52 @@ const MeetingDetails = () => {
   //   fetchUsers();
   // }, [adminId]);
 
+
+  // const fetchVisitorsCompanies = async () => {
+  //   let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormFetchUsers
+  //   try {
+  //     // const response = await axios.get(`${userUrl}?companyId=${companyId}`);
+  //     const response = await axios.get(`${url}?companyId=${companyId}`);
+  //     if (response.status === 200 && response.data.data) {
+  //       const visitorCompanies = response.data.data.map((user) => ({
+  //         id: user.id,
+  //         name: user.name,
+  //       }));
+
+  //       setVisitorCompanyLists(visitorCompanies);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching users", error);
+  //   }
+  // };
+
+
+  const fetchVisitorsCompanies = async (enteredComValue) => {
+    let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormGetVisitorCompanyName
+    // let url = "http://192.168.12.58:8080/vis/company/name"
+    try {
+      // const response = await axios.get(`${userUrl}?companyId=${companyId}`);
+      const response = await axios.get(`${url}?companyName=${enteredComValue}`);
+      if (response.status === 200 && response.data.data) {
+        const visitorCompanies = response.data.data.map((user) => ({
+          id: user.id,
+          name: user.name,
+        }));
+
+        setVisitorCompanyLists(visitorCompanies);
+      }
+    } catch (error) {
+      console.error("Error fetching users", error);
+    }
+  };
+
+  // console.log('visitorCompanyLists', visitorCompanyLists)
+
+  // useEffect(() => {
+  //   fetchVisitorsCompanies()
+  // },[])
+
+
   const handlePhoneNumberChange = async (event) => {
     // toast.dismiss()
     const phone = event.target.value;
@@ -153,21 +205,31 @@ const MeetingDetails = () => {
           // console.log('phone response', response.data.data)
   
           if (response.status === 200 && response.data.data) {
-            const newStateId = response.data.data.state.id;
-            const newCityId = response.data.data.city.id;
+
+            let phoneNumberApiData = response.data.data
+            const newStateId = phoneNumberApiData.state.id;
+            const newCityId = phoneNumberApiData.city.id;
   
             setFormData({
               ...formData,
               phoneNumber: phone,
-              name: response.data.data.name || "",
-              companyName: response.data.data.companyName || "",
+              name: phoneNumberApiData.name || "",
+              companyName: phoneNumberApiData.companyName || "",
               city: {
                 id: newCityId || "",
-                name: response.data.data.city.name || "",
+                name: phoneNumberApiData.city.name || "",
               },
               stateId: newStateId,
-              email: response.data.data.email ?  response.data.data.email || '' : ''
+              email: phoneNumberApiData.email ?  phoneNumberApiData.email || '' : '',
+              company:{
+                id: phoneNumberApiData.visitorCompanyDto?.id || null,
+                name: phoneNumberApiData.visitorCompanyDto?.name || '',
+              }
             });
+
+            setVisitorCompanyInputValue(phoneNumberApiData.visitorCompanyDto?.name || '')
+            setIsVisitorDataPresent(true)
+
             setLoading(false)
           }
         } catch (error) {
@@ -202,6 +264,7 @@ const MeetingDetails = () => {
                 username: formData.user.username || "",
               },
             });
+            setVisitorCompanyInputValue('')
             }
      
      
@@ -219,11 +282,14 @@ const MeetingDetails = () => {
             },
           });
           }
+          setIsVisitorDataPresent(false)
         }
         setLoading(false)
       }
     }
   };
+
+  // console.log('isVisitorDataPresent', isVisitorDataPresent)
   
   const [meetingContextOptions, setMeetingContextOptions] = useState([]);
 
@@ -344,12 +410,17 @@ const MeetingDetails = () => {
       state: {
         id: formData.stateId || "",
       },
-      companyName: formData.companyName,
+      // companyName: formData.companyName,
       remarks: formData.remarks,
       meetingStartDateTime: formattedDateTimePicker1,
       context: formData.context,
       email: formData.email,
+      visitorCompany: {
+        id:formData.company.id,
+        name:formData.company.name,
+      },
     };
+    // console.log('updatedFormData',updatedFormData)
     let url = Config.baseUrl + Config.apiEndPoints.appointMeetFormSubmitForm
 
     try {
@@ -469,6 +540,8 @@ const MeetingDetails = () => {
 };
 
   // console.log('form data', formData)
+
+  // console.log('visitor comany input value',visitorCompanyInputValue)
 
   const handleDateChange = (date) => {
     const adjustedDate = date ? date.add(1, "day") : null;
@@ -613,6 +686,7 @@ const MeetingDetails = () => {
                     label="Visitor's Name"
                     variant="outlined"
                     name="name"
+                    disabled={isVisitorDataPresent}
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.name}
                     inputProps={{
@@ -648,6 +722,7 @@ const MeetingDetails = () => {
                     label="Visitor's Email"
                     type="email"
                     name="email"
+                    disabled={isVisitorDataPresent}
                     sx={{ width: "100%", mt: "10px" }}
                     value={formData.email}
                     onChange={handleChange}
@@ -731,6 +806,7 @@ const MeetingDetails = () => {
                 <Grid item xs={12} sm={6} md={4} lg={4}>
   <Autocomplete
     disablePortal
+    disabled={isVisitorDataPresent}
     id="combo-box-demo"
     sx={{ width: "100%", mt: "10px" }}
     options={cities}
@@ -791,7 +867,7 @@ const MeetingDetails = () => {
 
 
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                  <TextField
+                  {/* <TextField
                     id="outlined-basic"
                     label="Visitor's Company Name"
                     variant="outlined"
@@ -808,7 +884,138 @@ const MeetingDetails = () => {
                       });
                     }}
                     required
-                  />
+                  /> */}
+
+{/* <Autocomplete
+      freeSolo
+      options={visitorCompanyLists}
+      getOptionLabel={(option) => option.name || ""}
+      value={visitorCompanyLists.find((company) => company.id === formData.company.id) || null}
+      inputValue={visitorCompanyInputValue}
+      onInputChange={(event, newInputValue) => {
+        setVisitorCompanyInputValue(newInputValue);
+      }}
+      onChange={(event, newValue) => {
+        setFormData({
+          ...formData,
+          company: {
+            id: newValue ? newValue.id : null,
+            name: newValue ? newValue.name : visitorCompanyInputValue,
+          },
+        });
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Visitor Company"
+          name="companyName"
+          required
+        />
+      )}
+    /> */}
+
+
+{/* <Autocomplete
+  freeSolo
+  options={visitorCompanyLists}
+  getOptionLabel={(option) => option.name || ""}
+  value={visitorCompanyLists.find((company) => company.id === formData.company.id) || null}
+  inputValue={visitorCompanyInputValue}
+  onInputChange={(event, newInputValue) => {
+    setVisitorCompanyInputValue(newInputValue);
+
+    // Handle case when the user types something not in the options
+    if (!visitorCompanyLists.some((company) => company.name === newInputValue)) {
+      setFormData((prevData) => ({
+        ...prevData,
+        company: {
+          id: null,
+          name: newInputValue,
+        },
+      }));
+    }
+  }}
+  onChange={(event, newValue) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      company: {
+        id: newValue ? newValue.id : null,
+        name: newValue ? newValue.name : null,
+      },
+    }));
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Visitor Company"
+      name="companyName"
+      required
+    />
+  )}
+/> */}
+
+
+<Autocomplete
+sx={{ width: "100%", mt: "10px" }}
+  freeSolo
+  disabled={isVisitorDataPresent}
+  options={visitorCompanyLists}
+  getOptionLabel={(option) => option.name || ""}
+  value={visitorCompanyLists.find((company) => company.id === formData.company.id) || null}
+  inputValue={visitorCompanyInputValue}
+  onInputChange={(event, newInputValue) => {
+    // Replace consecutive spaces with a single space
+    const sanitizedInputValue = newInputValue.replace(/\s+/g, ' ');
+    
+    const truncatedInputValue = sanitizedInputValue.slice(0, 120);
+    
+    // debugger
+    // setVisitorCompanyInputValue(sanitizedInputValue);
+    setVisitorCompanyInputValue(truncatedInputValue);
+
+    // fetchVisitorsCompanies(truncatedInputValue)
+
+    // let sanitizedTrimmedInputValue = sanitizedInputValue.trim()
+    let sanitizedTrimmedInputValue = truncatedInputValue.trim()
+
+    // let capsuled = `(${sanitizedTrimmedInputValue})`
+
+    // console.log('sanitizedTrimmedInputValue', sanitizedTrimmedInputValue )
+
+    fetchVisitorsCompanies(sanitizedTrimmedInputValue)
+
+    // Handle case when the user types something not in the options
+    if (!visitorCompanyLists.some((company) => company.name.trim() === sanitizedTrimmedInputValue.trim())) {
+      setFormData((prevData) => ({
+        ...prevData,
+        company: {
+          id: null,
+          name: sanitizedTrimmedInputValue,
+        },
+      }));
+    }
+  }}
+  onChange={(event, newValue) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      company: {
+        id: newValue ? newValue.id : null,
+        name: newValue ? newValue.name : null,
+      },
+    }));
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Visitor Company"
+      name="companyName"
+      required
+    />
+  )}
+/>
+
+
+
                 </Grid>
 
                 {/* host name */}

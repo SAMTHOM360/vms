@@ -458,6 +458,8 @@ const Employee = () => {
       setLoading(true);
       const response = await axios.get(`${url}`, { headers });
 
+      // console.log('resoponso', response.data.data)
+
       const apiDataArray = response.data.data.allUser;
       const currEmpLength = response.data.data.countUser;
 
@@ -466,7 +468,7 @@ const Employee = () => {
         setExcelUrl(excelURL);
       }
 
-      // console.log("api data users",apiDataArray)
+      // console.log("api data users",apiDataArray[2])
 
       sessionStorage.setItem("currEmpLength", currEmpLength);
 
@@ -778,7 +780,7 @@ const Employee = () => {
           // flex: 1,
           align: "center",
           headerAlign: "center",
-          width: 200,
+          width: 300,
         },
       ]
       let superadminSegmentTwo = [
@@ -798,6 +800,16 @@ const Employee = () => {
               </div>
             );
           },
+
+          // renderCell: (params) => {
+          //   const apiDataItem = params.row;
+          //   // console.log('apiDataItem', apiDataItem)
+          //   return (
+          //     <div>
+          //       <span style={{ fontSize: '16px' }}>{apiDataItem.firstName}</span> <span style={{ fontSize: '16px' }}>{apiDataItem.lastName}</span> <span style={{ fontSize: '13px' }}>({apiDataItem.empCode ? apiDataItem.empCode : 'N/A'})</span>
+          //     </div>
+          //   );
+          // },
         }
       ]
 
@@ -889,15 +901,15 @@ const Employee = () => {
             : ""
           : "",
 
-        // building: `${apiDataItem.company
-        // ? apiDataItem.company.building
-        //   ? apiDataItem.company.building.name || ""
-        //   : ""
-        // : ""} (${apiDataItem.company
-        //   ? apiDataItem.company.building
-        //     ? apiDataItem.company.building.buildingId || ""
-        //     : ""
-        //   : ""})`,
+        building: `${apiDataItem.company
+        ? apiDataItem.company.building
+          ? apiDataItem.company.building.name || ""
+          : ""
+        : ""} (${apiDataItem.company
+          ? apiDataItem.company.building
+            ? apiDataItem.company.building.buildingId || ""
+            : ""
+          : ""})`,
         buildingName: apiDataItem.company
           ? apiDataItem.company.building
             ? apiDataItem.company.building.name || ""
@@ -1229,6 +1241,42 @@ const handleExportExcelAllData = () => {
 //   }
 // };
 
+// byteArray Downloader STARTS
+
+// const testExcel = async() => {
+//   const payload = {
+//     page: 0,
+//     size: 100,
+// }
+
+// let url = "http://192.168.12.58:8080/com/exportcompanydata"
+// try{
+//   const response = await axios.post(url, payload, { responseType: 'arraybuffer', headers });
+
+//   const byteArray = new Uint8Array(response.data);
+
+//   const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+//   const link = document.createElement('a');
+
+//   link.href = URL.createObjectURL(blob);
+//   link.download = 'yourFileName.xlsx'; // Set your desired file name here
+
+//   document.body.appendChild(link);
+
+//   link.click();
+
+//   document.body.removeChild(link);
+
+//   console.log('Download initiated successfully');
+// }
+// catch(error){
+//   console.error('error coming', error)
+// }
+// }
+
+
+// byteArray Downloader ENDS
 
   return (
     <>
@@ -1405,6 +1453,7 @@ const handleExportExcelAllData = () => {
                                   </Button>
                                 </Box>
                   <DataGrid
+                  disableRowSelectionOnClick
                     sx={{mt:'0.7em', }}
                     rows={rows ?? []}
                     columns={columns}

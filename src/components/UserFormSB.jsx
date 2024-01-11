@@ -336,15 +336,21 @@ function UserForm({ authenticated, closeDialog }) {
         // Display toast notifications for failed API calls
         if (!error.response || error.response.status !== 200) {
           if (!response1) {
-            toast.warn("Unable to load States");
+            toast.error("Unable to load States", {
+              toastId: "userform-err11"
+            });
           }
 
           if (!response2) {
-            toast.warn("Unable to load Roles");
+            toast.error("Unable to load Roles", {
+              toastId: "userform-err12"
+            });
           }
 
           if (!response3) {
-            toast.warn("Unable to load Companies");
+            toast.error("Unable to load Companies", {
+              toastId: "userform-err13"
+            });
           }
         }
       } finally {
@@ -683,6 +689,13 @@ function UserForm({ authenticated, closeDialog }) {
     if (formData.phone.length !== 10) {
       toast.warn("Phone Number must be of 10 digits !!!", {
         toastId: "userfrom-warn11",
+      });
+      return;
+    }
+
+    if (formData.pincode.length !== 6) {
+      toast.warn("Pincode must be of 6 digits !!!", {
+        toastId: "userfrom-warn21",
       });
       return;
     }
@@ -1128,7 +1141,6 @@ function UserForm({ authenticated, closeDialog }) {
                             city: { id: "" },
                           }));
 
-                          // Rest of your code
 
                           fetchCities(newValue ? newValue.id : "");
                         }}
