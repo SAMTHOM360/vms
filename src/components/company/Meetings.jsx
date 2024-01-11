@@ -65,10 +65,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 
 //loader
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-
-
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -95,9 +93,8 @@ export default function Meetings() {
 
   // sessionStorage.setItem('activeListItem', '/meetings')
 
-
-     //loader
-     const [openLoader, setOpenLoader] = useState(false);  
+  //loader
+  const [openLoader, setOpenLoader] = useState(false);
   useEffect(() => {
     setActiveListItem("/meetings");
   }, [setActiveListItem]);
@@ -345,21 +342,11 @@ export default function Meetings() {
       });
   }
 
-
-
-
-
-
-
-
-  const testExcel = async() => {
-
+  const testExcel = async () => {
     const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
 
-
-
     const exportUrl = Config.baseUrl + Config.apiEndPoints.exportEndPoint;
- 
+
     const payload = {
       page: 0,
       size: 1000,
@@ -382,32 +369,34 @@ export default function Meetings() {
       status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
       // date:'2023-10-18T11:00:00'
     };
-  let url = exportUrl
-  try{
-    const response = await axios.post(url, payload, { responseType: 'arraybuffer',});
-  
-    const byteArray = new Uint8Array(response.data);
-  
-    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
-    const link = document.createElement('a');
-  
-    link.href = URL.createObjectURL(blob);
-    link.download = 'meeting_details.xlsx'; 
-  
-    document.body.appendChild(link);
-  
-    link.click();
-  
-    document.body.removeChild(link);
-  
-    console.log('Download initiated successfully');
-  }
-  catch(error){
-    console.error('error coming', error)
-  }
-  }
+    let url = exportUrl;
+    try {
+      const response = await axios.post(url, payload, {
+        responseType: "arraybuffer",
+      });
 
+      const byteArray = new Uint8Array(response.data);
+
+      const blob = new Blob([byteArray], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const link = document.createElement("a");
+
+      link.href = URL.createObjectURL(blob);
+      link.download = "meeting_details.xlsx";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      console.log("Download initiated successfully");
+    } catch (error) {
+      console.error("error coming", error);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -424,10 +413,9 @@ export default function Meetings() {
 
   // now previous
   function fetchData() {
-
     const companyId = sessionStorage.getItem("companyId");
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
- setOpenLoader(true)
+    setOpenLoader(true);
     const payload = {
       page: page,
       size: rowsPerPage,
@@ -439,7 +427,6 @@ export default function Meetings() {
       user: {
         id: adminId,
       },
-      
 
       room: {
         id: selectedRoom.length === 0 ? null : selectedRoom,
@@ -458,8 +445,7 @@ export default function Meetings() {
       .post(getVisitorUrl, payload)
 
       .then((response) => {
-
-        setOpenLoader(false)
+        setOpenLoader(false);
         const responseData = response.data.data.meetings;
         // console.log(" meet all payload", responseData);
 
@@ -476,14 +462,14 @@ export default function Meetings() {
         setApprovedMeetings(approvedCount);
       })
       .catch((error) => {
-        setOpenLoader(false)
+        setOpenLoader(false);
         console.error("Error fetching data:", error);
       });
   }
 
   const handleAddMeeting = (value, status1) => {
     // console.log("check icon clicked")
-    setOpenLoader(true)
+    setOpenLoader(true);
     const meetingData = {
       id: value.id,
       status: status1,
@@ -510,7 +496,7 @@ export default function Meetings() {
       .then((response) => {
         // handleCloseModal();
         // setSelectedRoom('');
-        setOpenLoader(false)
+        setOpenLoader(false);
         setStatus("");
 
         if (response.data.data.status === "CANCELLED") {
@@ -522,7 +508,7 @@ export default function Meetings() {
         fetchData();
       })
       .catch((error) => {
-        setOpenLoader(false)
+        setOpenLoader(false);
         console.error("Error adding meeting:", error);
       });
     // }
@@ -791,9 +777,6 @@ export default function Meetings() {
     setOpenDialog(false);
     setSelectedValue(value);
   };
-
-
-  
 
   return (
     <>
@@ -1190,35 +1173,62 @@ export default function Meetings() {
                           sx={{
                             // border: "1px solid black",
                             // bgcolor: "#2b345386",
-                            color:'white',
-                            
+                            color: "white",
                           }}
                         >
-                          <TableCell align="center" sx={{color:'white'}}>Sl No</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Sl No
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Visitor Photo</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Full Name</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Visitor Photo
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Full Name
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Email</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Phone No.</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Email
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Phone No.
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Company Name</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Company Name
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Start Time</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>End Time</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Duration</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Start Time
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            End Time
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Duration
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Status</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Permission</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Remarks</TableCell>
-                          <TableCell align="center" sx={{color:'white'}}>Room</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Status
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Permission
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Remarks
+                          </TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Room
+                          </TableCell>
 
-                          <TableCell align="center" sx={{color:'white'}}>Actions</TableCell>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            Actions
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody sx={{}}>
                         {filteredCompanies.length > 0 ? (
-                          filteredCompanies .map((visitor, index) => (
+                          filteredCompanies.map((visitor, index) => (
                             <TableRow key={index}>
                               {/* <TableCell>{visitor.id}</TableCell>
                                                         <TableCell>{visitor.visitor.id}</TableCell> */}
@@ -1232,8 +1242,7 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.imageUrl !== null ? 
-                                (
+                                {visitor.visitor.imageUrl !== null ? (
                                   <div
                                     style={{
                                       display: "flex",
@@ -1500,19 +1509,16 @@ export default function Meetings() {
                               </TableCell>
                             </TableRow>
                           ))
-
-                        ):(
+                        ) : (
                           <TableRow>
-                          <TableCell colSpan={14} sx={{ textAlign: "center" }}>
-                            No data
-                          </TableCell>
-                        </TableRow>
-
-                        )
-                        
-                        }
-                        
-                        
+                            <TableCell
+                              colSpan={14}
+                              sx={{ textAlign: "center" }}
+                            >
+                              No data
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                     {/* <TablePagination
@@ -1646,33 +1652,29 @@ export default function Meetings() {
                       sx={{ color: "blue", fontSize: "20px" }}
                     /> */}
 
-<ListItemText
-                    primary={`Remarks: ${
-                      
-                      selectedValue.remarks !== ""
-                        ? selectedValue.remarks
-                        : "NA"
-                    }`}
-                    sx={{ color: "blue", fontSize: "20px" }}
-                  />
+                    <ListItemText
+                      primary={`Remarks: ${
+                        selectedValue.remarks !== ""
+                          ? selectedValue.remarks
+                          : "NA"
+                      }`}
+                      sx={{ color: "blue", fontSize: "20px" }}
+                    />
                   </ListItem>
                   {/* <ListItem
                     button
                     onClick={() => handleCloseDialog("username@gmail.com")}
                   > */}
 
-<ListItem button onClick={() => handleCloseDialog("")}>
-                  <ListItemText
-                    primary={`Context: ${
-                    
-                      selectedValue.context !== ""
-                        ? selectedValue.context
-                        : "NA"
-                    }`}
-                    sx={{ color: "blue", fontSize: "20px" }}
-                  />
-
-
+                  <ListItem button onClick={() => handleCloseDialog("")}>
+                    <ListItemText
+                      primary={`Context: ${
+                        selectedValue.context !== ""
+                          ? selectedValue.context
+                          : "NA"
+                      }`}
+                      sx={{ color: "blue", fontSize: "20px" }}
+                    />
 
                     {/* <ListItemText
                   primary={`Permission: ${
@@ -1691,16 +1693,16 @@ export default function Meetings() {
         </Grid>
 
         <div>
-      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
-      <Backdrop
-        // style={{ zIndex: 1 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
-        open={openLoader}
-        // onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+          {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+          <Backdrop
+            // style={{ zIndex: 1 }}
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+            open={openLoader}
+            // onClick={handleClose}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </div>
       </Box>
     </>
   );

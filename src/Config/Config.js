@@ -1,6 +1,6 @@
 const Config = Object.freeze({
-  // baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
-  baseUrl: "http://192.168.12.58:8080/", //SMRUTI
+  baseUrl: "http://192.168.12.54:8080/", //BISWAJIT
+  // baseUrl: "http://192.168.12.58:8080/", //SMRUTI
   // baseUrl:"http://192.168.12.51:8085/vms/" ,//Hosted (no idea)
   // baseUrl: "https://vms.nyggs.com/backend/",
 
@@ -131,8 +131,10 @@ const Config = Object.freeze({
     //ReceptionistDashboard.jsx
     statusRecepEndPoint:"vis/meetstatus",
     statusAdminEndPoint:"vis/meetstatusadmin",
-    hostEndPoint:"api/user/alluser",
-    roomDetailsRecepEndPoint:"api/room/all",
+    // hostEndPoint:"api/user/alluser",
+    hostEndPoint:"api/user/alluserbuildingId",
+    // roomDetailsRecepEndPoint:"api/room/all",
+    roomDetailsRecepEndPoint:"api/room/allbuilding",
     addMeetingRecepEndPoint:"api/meeting/update/meeting",
     exportRecepEndPoint:"api/meeting/exportdata",
     getVisitorRecepEndPoint:"api/meeting/paginate",

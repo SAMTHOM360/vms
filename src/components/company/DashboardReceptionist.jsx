@@ -29,8 +29,14 @@ import ProgressBar from "./ProgressBar";
 import ReceptionistDashboard from "./ReceptionistDashboard";
 import BasicTable from "./BasicTable";
 import Loader from "../Loader";
+
 import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
+
+
+//loader
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -41,7 +47,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Dashboard() {
-  const { setActiveListItem } = useAuth();
+  const { setActiveListItem,
+    // setSelectedCompanyIdForNotification,
+   } = useAuth();
 
   // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
 
@@ -56,6 +64,14 @@ export default function Dashboard() {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+
+
+    //loader
+    const [open, setOpen] = React.useState(false);
+    const handleClose = () => {
+      setOpen(false);
+    };
 
   const [visitors, setVisitors] = useState([]);
 
@@ -81,12 +97,101 @@ export default function Dashboard() {
   // const companyId = sessionStorage.getItem('companyId');
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
 
+
+const buildingId = sessionStorage.getItem("buildingId")
+
+  //companydropdown
+
+
+
+  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+
+
+  const company = JSON.parse(storedCompany);
+  const idCompany = storedCompany?company.id : "";
+  const nameCompany = storedCompany?company.name:"";
+
+
+  const buildingUrl =
+    Config.baseUrl +
+    Config.apiEndPoints.buildingEndPoint +
+    "?buildingId=" +
+    buildingId;
+
+  const [companyName, setCompanyName] = useState([]);
+  // const [selectedCompanyName, setSelectedCompanyName] = useState(
+  //   sessionStorage.getItem("CompanyIdSelected") 
+  //     ? {
+  //         id: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id,
+  //         name: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).name  
+  //       } 
+  //     : {
+  //         id: null,
+  //         name: ""
+  //       }
+  // );
+
+
+  const[selectedCompanyName,setSelectedCompanyName] = useState(storedCompany ? {id:idCompany,name:nameCompany} : {id:null,name:""})
+
+  function fetchCompanies() {
+    axios
+      .get(buildingUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        setCompanyName(response.data.data);
+
+        // console.log(response.data.data)
+      })
+      .catch((error) => {
+        console.log("Error fetching data", error);
+      });
+  }
+  console.log(companyName, "companyName");
+
+
+  function handleCompanyChange(event, newValue) {
+
+
+    if(!newValue) {
+      // Clear selected company from sessionStorage
+      sessionStorage.removeItem('CompanyIdSelected');
+      setSelectedCompanyName({id:null,name:""})
+      return;
+    }
+
+
+   
+    setSelectedCompanyName(newValue);
+
+    sessionStorage.setItem('CompanyIdSelected', JSON.stringify(newValue));
+  
+    // additional logic with event and newValue
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //dashboard redirection
 
   const [fromDate, setFromDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   function fetchData() {
+
+    setOpen(true)
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.RecepDashboardEndPoint;
 
@@ -98,10 +203,11 @@ export default function Dashboard() {
 
     const payload = {
       page: 0,
-      size: 1000,
+      size: null,
       // phoneNumber: '',
       // searchQuery: '',
-      companyId: selectedCompanyId,
+      companyId: selectedCompanyName && selectedCompanyName.id ? selectedCompanyName.id:null,
+      buildingId: buildingId,
       fromDate: eightDaysAgoFormatted,
       toDate: today,
       // status:status,
@@ -109,9 +215,13 @@ export default function Dashboard() {
     };
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
 
+    //setSelectedCompanyIdForNotification(payload.companyId)
+
     axios
       .post(getVisitorUrl, payload)
       .then((response) => {
+
+        setOpen(false)
         setAllData(response.data.data);
         const responseData = response.data.data.meetings;
 
@@ -130,13 +240,24 @@ export default function Dashboard() {
         setTotalMeetingData(response.data.data.totalMeetingPerWeek);
       })
       .catch((error) => {
+
+        setOpen(false)
         console.error("Error fetching data:", error);
       });
   }
 
   useEffect(() => {
     fetchData();
+    fetchCompanies();
   }, []);
+
+
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedCompanyName]);
+
+
 
   const navigate = useNavigate();
   const routeChange = (filteredVisitors) => {
@@ -145,7 +266,15 @@ export default function Dashboard() {
 
     // navigate(path);
 
+
+    let filter={}
+
+
     if (filteredVisitors) {
+
+
+      filter.status = filteredVisitors; 
+      filter.companyId = selectedCompanyName.id;
       // sessionStorage.setItem("filters", filteredVisitors)
       // sessionStorage.setItem("today",today)
       navigate(path, { state: { filter: filteredVisitors } });
@@ -157,6 +286,15 @@ export default function Dashboard() {
 
     navigate(path1, { state: { filter: "" } });
   };
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -198,19 +336,27 @@ export default function Dashboard() {
                           subtitle="Welcome to dashboard"
                         />
 
-                        <Autocomplete
-                          disablePortal
-                          id="combo-box-demo"
-                          //   value={selectedSiteName}
-                          //   onChange={handleAutocompleteChange}
-                          //   options={autocompleteOptions}
-                          //   getOptionLabel={(option) => option.label}
+<Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      //   value={selectedSiteName}
+                      //   onChange={handleAutocompleteChange}
+                      value={selectedCompanyName}
 
-                          sx={{ width: 300 }}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Select Company" />
-                          )}
-                        />
+
+                      onChange={(event, newValue) => handleCompanyChange(event, newValue)}
+                      // onChange={(event, newValue) =>
+                      //   setSelectedCompanyName(newValue)
+                      // }
+
+                     
+                      options={companyName}
+                      getOptionLabel={(option) => option.name}
+                      sx={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Company" />
+                      )}
+                    />
                       </Box>
                     </Grid>
                   </Grid>
@@ -569,6 +715,19 @@ export default function Dashboard() {
             </div>
           </Grid>
         </Grid>
+
+
+        <div>
+        {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+        <Backdrop
+          // style={{ zIndex: 1000}}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       </Box>
     </>
   );

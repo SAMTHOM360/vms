@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Header from "../Header";
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
+import { Typography,Autocomplete } from "@mui/material";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -86,6 +86,74 @@ export default function ReceptionistAddRoom() {
   const [selectedRoomId, setSelectedRoomId] = useState("");
 
   const [roomUpdated, setRoomUpdated] = useState(false);
+
+  const buildingId = sessionStorage.getItem("buildingId")
+
+  //companydropdown
+
+  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+
+
+  const company = JSON.parse(storedCompany);
+  const idCompany = storedCompany?company.id : "";
+  const nameCompany = storedCompany?company.name:"";
+
+
+  const buildingUrl =
+    Config.baseUrl +
+    Config.apiEndPoints.buildingEndPoint +
+    "?buildingId=" +
+    buildingId;
+
+  const [companyName, setCompanyName] = useState([]);
+  const[selectedCompanyName,setSelectedCompanyName] = useState(storedCompany ? {id:idCompany,name:nameCompany} : {id:null,name:""})
+
+  function fetchCompanies() {
+    axios
+      .get(buildingUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        setCompanyName(response.data.data);
+
+        // console.log(response.data.data)
+      })
+      .catch((error) => {
+        console.log("Error fetching data", error);
+      });
+  }
+  console.log(companyName, "companyName");
+
+
+
+
+  function handleCompanyChange(event, newValue) {
+
+
+    if(!newValue) {
+      sessionStorage.removeItem('CompanyIdSelected');
+      setSelectedCompanyName({id:null,name:""})
+      return;
+    }
+
+
+   
+    setSelectedCompanyName(newValue);
+
+    sessionStorage.setItem('CompanyIdSelected', JSON.stringify(newValue));
+  
+    // additional logic with event and newValue
+  }
+
+
+
+
+
+
+
+
+
+
 
   // Function to handle opening the Add Room modal
   const handleOpenAddRoomDialog = () => {
@@ -389,14 +457,19 @@ export default function ReceptionistAddRoom() {
     setSelectedValue(value);
   };
 
+
+
+
+
+
   //fetchRoomDetails function
   function fetchRoomDetails() {
     setOpen(true);
     const roomDetailsUrl =
       Config.baseUrl +
-      Config.apiEndPoints.roomDetailsEndPoint +
+      Config.apiEndPoints.roomDetailsRecepEndPoint +
       "?id=" +
-      selectedCompanyId;
+      idCompany+"&buildingId="+buildingId;
 
     axios
       .get(roomDetailsUrl, {
@@ -421,8 +494,26 @@ export default function ReceptionistAddRoom() {
 
   useEffect(() => {
     fetchRoomDetails();
+    
   }, [reload]);
 
+  useEffect(() => {
+
+ 
+    fetchRoomDetails();
+    
+  }, [selectedCompanyName]);
+
+
+
+
+
+  useEffect(() => {
+
+    fetchCompanies();
+    // fetchRoomDetails();
+    
+  }, []);
   console.log(rowsPerPage, "rowsPerPage");
 
   return (
@@ -443,6 +534,21 @@ export default function ReceptionistAddRoom() {
             <Header title="Rooms" subtitle="Add Rooms" />
 
             {/* <Link to="/companyreg"> */}
+            <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      //   value={selectedSiteName}
+                      //   onChange={handleAutocompleteChange}
+                      value={selectedCompanyName}
+                      onChange={(event, newValue) => handleCompanyChange(event, newValue)}
+                      options={companyName}
+                      getOptionLabel={(option) => option.name}
+                      sx={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Company" />
+                      )}
+                    />
+
 
             <Button
               onClick={handleOpenAddRoomDialog}

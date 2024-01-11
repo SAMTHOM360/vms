@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
@@ -32,10 +32,35 @@ import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 import Config from '../../Config/Config';
 
+
+//loader
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
+
+
+
+
 export default function BasicTable() {
 
   // const companyId = sessionStorage.getItem('companyId');
   const selectedCompanyId = sessionStorage.getItem('selectedCompanyId');
+
+const buildingId =sessionStorage.getItem("buildingId")
+  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+
+
+  const company = JSON.parse(storedCompany);
+  const idCompany = storedCompany?company.id : "";
+  const nameCompany = storedCompany?company.name:"";
+
+
+
+     //loader
+     const [open, setOpen] = React.useState(false);
+     const handleClose = () => {
+       setOpen(false);
+     };
 
 
   const [page, setPage] = useState(0);
@@ -70,9 +95,8 @@ export default function BasicTable() {
 
   // const roomDetailsUrl = `http://192.168.12.54:8080/api/room/getroomfordashboard/?companyId=${selectedCompanyId}`
 
-const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointdashboard + "?companyId=" + selectedCompanyId
-
-
+const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointdashboard + "?companyId=" + idCompany + "&buildingId=" +
+buildingId;
 
 
   //dialog
@@ -196,11 +220,15 @@ const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointd
   //fetchRoomDetails function
   function fetchRoomDetails() {
 
+    setOpen(true)
+
     axios
       .get(roomDetailsUrl, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       })
       .then(response => {
+
+        setOpen(false)
 
         response.data.data?setRoomDetails(response.data.data) : console.log("no rooms");
 
@@ -208,6 +236,7 @@ const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointd
 
       })
       .catch((error) => {
+        setOpen(false)
         console.error("Error fetching data", error);
       })
 
@@ -220,6 +249,12 @@ const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointd
 
   }, [])
 
+  useEffect(() => {
+
+    fetchRoomDetails();
+
+  }, [storedCompany])
+
 
 
   return (
@@ -228,7 +263,7 @@ const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointd
         <TableContainer sx={{ height: 450, overflow: "auto" }}>
           <Table stickyHeader aria-label="sticky table">
 
-            <TableHead>
+            <TableHead >
 
               <TableRow>
                 {customColumns.map((column) => (
@@ -332,6 +367,19 @@ const roomDetailsUrl = Config.baseUrl + Config.apiEndPoints.roomDetailsEndPointd
               }
             
             </Dialog>
+
+
+            <div>
+        {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+        <Backdrop
+          // style={{ zIndex: 1000}}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
 
           {/* )}
 

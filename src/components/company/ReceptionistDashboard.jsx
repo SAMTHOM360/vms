@@ -116,6 +116,7 @@ export default function Dashboard() {
     setActiveListItem("/receptionistdashboard");
   }, [setActiveListItem]);
 
+  const buildingId = sessionStorage.getItem("buildingId");
   //pagination and filter
 
   const [page, setPage] = useState(0);
@@ -151,6 +152,85 @@ export default function Dashboard() {
   const [phoneNumberFilter, setPhoneNumberFilter] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  //companydropdown
+
+
+
+  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+
+
+  const company = JSON.parse(storedCompany);
+  const idCompany = storedCompany?company.id : "";
+  const nameCompany = storedCompany?company.name:"";
+
+
+  const buildingUrl =
+    Config.baseUrl +
+    Config.apiEndPoints.buildingEndPoint +
+    "?buildingId=" +
+    buildingId;
+
+  const [companyName, setCompanyName] = useState([]);
+  // const [selectedCompanyName, setSelectedCompanyName] = useState(
+  //   sessionStorage.getItem("CompanyIdSelected") 
+  //     ? {
+  //         id: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id,
+  //         name: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).name  
+  //       } 
+  //     : {
+  //         id: null,
+  //         name: ""
+  //       }
+  // );
+
+
+  const[selectedCompanyName,setSelectedCompanyName] = useState(storedCompany ? {id:idCompany,name:nameCompany} : {id:null,name:""})
+
+
+  function fetchCompanies() {
+    axios
+      .get(buildingUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        setCompanyName(response.data.data);
+
+        // console.log(response.data.data)
+      })
+      .catch((error) => {
+        console.log("Error fetching data", error);
+      });
+  }
+  console.log(companyName, "companyName");
+
+
+
+  function handleCompanyChange(event, newValue) {
+
+    if(!newValue) {
+      // Clear selected company from sessionStorage
+      sessionStorage.removeItem('CompanyIdSelected');
+      setSelectedCompanyName({id:null,name:""})
+      return;
+    }
+  
+
+
+  
+    setSelectedCompanyName(newValue);
+
+    sessionStorage.setItem('CompanyIdSelected', JSON.stringify(newValue));
+  
+    // additional logic with event and newValue
+  }
+
+
+
+
+
+
+
 
   //calender
 
@@ -263,14 +343,17 @@ export default function Dashboard() {
     setSelectedHostOptions(event.target.value);
   };
 
+
+  const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected")
+
   function fetchHostOptions() {
     // const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
 
-    const hostUrl =
-      Config.baseUrl +
-      Config.apiEndPoints.hostEndPoint +
-      "?companyId=" +
-      selectedCompanyId;
+    const hostUrl = 
+    Config.baseUrl + 
+    Config.apiEndPoints.hostEndPoint +
+    "?buildingId=" + buildingId +  
+    "&companyId=" + idCompany;
 
     axios
       .get(hostUrl)
@@ -331,8 +414,8 @@ export default function Dashboard() {
     const roomUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsRecepEndPoint +
-      "?id=" +
-      selectedCompanyId;
+      "?id=" + idCompany + "&buildingId="+ buildingId
+      ;
 
     axios
       .get(roomUrl, {
@@ -353,6 +436,8 @@ export default function Dashboard() {
     setOpenLoader(true);
     const meetingData = {
       id: item.id,
+
+
       status:
         item.user.isPermission === true &&
         item.room === null &&
@@ -557,7 +642,8 @@ export default function Dashboard() {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
-      companyId: null,
+      companyId: selectedCompanyName && selectedCompanyName.id ? selectedCompanyName.id:null,
+      buildingId: buildingId,
       fromDate: startDate,
       toDate: endDate,
       status: selectedStatusOptions !== "" ? selectedStatusOptions : null,
@@ -790,6 +876,7 @@ export default function Dashboard() {
     startDate,
     phoneNumberFilter,
     endDate,
+    selectedCompanyName
   ]);
 
   useEffect(() => {
@@ -797,7 +884,18 @@ export default function Dashboard() {
     fetchStatusOptions();
     fetchStatusOptions1();
     fetchHostOptions();
+    fetchCompanies();
   }, []);
+
+
+
+  useEffect(() => {
+    getRoomsOption();
+    fetchStatusOptions();
+    fetchStatusOptions1();
+    fetchHostOptions();
+    fetchCompanies();
+  }, [selectedCompanyName]);
 
   useEffect(() => {
     getRoomsOption();
@@ -959,6 +1057,7 @@ export default function Dashboard() {
     };
   };
 
+  console.log(selectedCompanyName, "blah");
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
       <Grid container spacing={2} style={{}}>
@@ -1004,9 +1103,14 @@ export default function Dashboard() {
                       id="combo-box-demo"
                       //   value={selectedSiteName}
                       //   onChange={handleAutocompleteChange}
-                      //   options={autocompleteOptions}
-                      //   getOptionLabel={(option) => option.label}
+                      value={selectedCompanyName}
+                      // onChange={(event, newValue) =>
+                      //   setSelectedCompanyName(newValue)
+                      // }
 
+                      onChange={(event, newValue) => handleCompanyChange(event, newValue)}
+                      options={companyName}
+                      getOptionLabel={(option) => option.name}
                       sx={{ width: 300 }}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Company" />
@@ -1581,7 +1685,7 @@ export default function Dashboard() {
 
                             {isADMIN ? null : (
                               <TableCell align="center">
-                                {visitor.status === "APPROVED" ? (
+                                {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
                                     <DownloadIcon
                                       style={{ cursor: "pointer" }}
@@ -1593,12 +1697,23 @@ export default function Dashboard() {
                                         )
                                       }
                                     />
-                                  ) : (
+                                  )
+                                  
+                                  
+                                  : (
                                     <EditIcon
                                       onClick={() => handleOpenModal(visitor)}
                                       sx={{ cursor: "pointer" }}
                                     />
                                   )
+                                ) 
+                                 */}
+
+                                {visitor.status === "APPROVED" ? (
+                                  <EditIcon
+                                    onClick={() => handleOpenModal(visitor)}
+                                    sx={{ cursor: "pointer" }}
+                                  />
                                 ) : visitor.status === "INPROCESS" &&
                                   visitor.room ? (
                                   <DownloadIcon
@@ -1897,6 +2012,7 @@ export default function Dashboard() {
                       id="room-select-textfield"
                       select
                       label="Choose Room"
+                      // defaultValue={item.room.roomName}
                       value={selectedRoom}
                       onChange={handleChange1}
                       disabled={
