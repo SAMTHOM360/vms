@@ -43,7 +43,7 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  const { setActiveListItem } = useAuth();
+  const { setActiveListItem, setSelectedCompanyIdForNotification } = useAuth();
 
   useEffect(() => {
     setActiveListItem("/receptionistaddroom");
@@ -122,7 +122,7 @@ export default function ReceptionistAddRoom() {
         console.log("Error fetching data", error);
       });
   }
-  console.log(companyName, "companyName");
+  // console.log(companyName, "companyName");
 
 
 
@@ -465,6 +465,31 @@ export default function ReceptionistAddRoom() {
   //fetchRoomDetails function
   function fetchRoomDetails() {
     setOpen(true);
+
+
+
+
+    const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
+    let storedCompanyForVisitorId;
+    
+    if (storedCompanyForVisitor) {
+      try {
+        const parsedCompany = JSON.parse(storedCompanyForVisitor);
+        storedCompanyForVisitorId = parsedCompany.id || null;
+      } catch (error) {
+        storedCompanyForVisitorId = null;
+      }
+    } else {
+      storedCompanyForVisitorId = null;
+    }
+
+    
+        setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
+
+
+
+
+
     const roomDetailsUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsRecepEndPoint +
@@ -514,7 +539,7 @@ export default function ReceptionistAddRoom() {
     // fetchRoomDetails();
     
   }, []);
-  console.log(rowsPerPage, "rowsPerPage");
+  // console.log(rowsPerPage, "rowsPerPage");
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -534,6 +559,7 @@ export default function ReceptionistAddRoom() {
             <Header title="Rooms" subtitle="Add Rooms" />
 
             {/* <Link to="/companyreg"> */}
+            <Box sx={{display:'flex', flexDirection:'row', gap:2, alignItems:'center'}}>
             <Autocomplete
                       disablePortal
                       id="combo-box-demo"
@@ -554,7 +580,7 @@ export default function ReceptionistAddRoom() {
               onClick={handleOpenAddRoomDialog}
               variant="contained"
               color="primary"
-              style={{ margin: "1.2em", height: "3em" }}
+              style={{ height: "3em", width:'113px' }}
             >
               {" "}
               Add Room
@@ -562,6 +588,8 @@ export default function ReceptionistAddRoom() {
 
             {/* </Link> */}
           </Box>
+            </Box>
+
         </Grid>
         <Grid item xs={12} md={12} lg={12}>
           {/* <Paper

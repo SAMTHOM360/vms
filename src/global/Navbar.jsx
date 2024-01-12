@@ -317,6 +317,8 @@ export default function Navbar({ toggleSidebar }) {
     }
   };
 
+
+
   async function fetchNotification() {
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
@@ -327,6 +329,7 @@ export default function Navbar({ toggleSidebar }) {
     let commonNoti = "";
 
     if (loggedUserRole === "RECEPTIONIST") {
+      console.log('')
       if (!selectedCompanyIdForNotification) {
         receptNoti = buildingId;
         // commonNoti = null
