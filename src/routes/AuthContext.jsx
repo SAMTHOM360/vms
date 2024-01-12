@@ -20,12 +20,9 @@ export const AuthProvider = ({ children }) => {
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
   // const [ isntComSelection, setIsntComSelection ] = useState(true)
   const [ isOpenforGridTable, setIsOpenForGridTable] = useState()
-  // const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
+  const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
 
-  const [selectedCompanyIdForNotification, setSelectedCompanyIdForNotification] = useState(sessionStorage.getItem("CompanyIdSelected") ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null : null);
-
-
-  console.log("Parent call", selectedCompanyIdForNotification)
+  // console.log("Parent call", autoStatusChange)
 
 
   // useEffect(() => {

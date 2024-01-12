@@ -109,7 +109,7 @@ const columns = [
 const rowsPerPage = 10;
 
 export default function Dashboard() {
-  const { setActiveListItem, setSelectedCompanyIdForNotification } = useAuth();
+  const { setActiveListItem } = useAuth();
   const navigate = useNavigate();
   // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
   useEffect(() => {
@@ -657,27 +657,6 @@ export default function Dashboard() {
         id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
       },
     };
-
-
-
-    const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
-    let storedCompanyForVisitorId;
-    
-    if (storedCompanyForVisitor) {
-      try {
-        const parsedCompany = JSON.parse(storedCompanyForVisitor);
-        storedCompanyForVisitorId = parsedCompany.id || null;
-      } catch (error) {
-        storedCompanyForVisitorId = null;
-      }
-    } else {
-      storedCompanyForVisitorId = null;
-    }
-
-    console.log('storedCompanyForVisitorId jhvfhsvf', storedCompanyForVisitorId)
-    
-        setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
-
 
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint;
