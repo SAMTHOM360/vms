@@ -315,8 +315,11 @@ const MeetingDetails = () => {
 
     const trimmedName = formData.name ? formData.name.trim() : null;
     const trimmedEmail = formData.email ? formData.email.trim() : null;
-    const trimmedCompanyName = formData.companyName ? formData.companyName.trim() : null;
+    // const trimmedCompanyName = formData.companyName ? formData.companyName.trim() : null;
+    const trimmedCompanyName = formData.company ? formData.company.name ? formData.company.name.trim() : null : null;
     const trimmedRemarks = formData.remarks ? formData.remarks.trim() : null;
+
+    console.log('trimmedCompanyName', trimmedCompanyName)
 
     if (!trimmedName) {
       toast.warn("Name is required !!!", {
@@ -332,14 +335,15 @@ const MeetingDetails = () => {
       return;
     }
 
-    if(formData.companyName) {
+    // if(formData.company.name) {
       if (!trimmedCompanyName) {
-        toast.warn("Company Name can\'t be empty (if required) !!!", {
+        toast.warn("Company Name can\'t be empty !!!", {
           toastId:"appmeet-warn3"
         });
         return;
       }
-    }
+    // }
+
     
     if(formData.remarks) {
       if (!trimmedRemarks) {
@@ -417,7 +421,8 @@ const MeetingDetails = () => {
       email: formData.email,
       visitorCompany: {
         id:formData.company.id,
-        name:formData.company.name,
+        // name:formData.company.name,
+        name:trimmedCompanyName,
       },
     };
     // console.log('updatedFormData',updatedFormData)
