@@ -212,7 +212,7 @@ export default function Dashboard() {
       setIsReceptionist(false);
     }
   }, [loggedUserRole]);
-  console.log("is admin true", isADMIN)
+  // console.log("is admin true", isADMIN)
 
   function fetchCompanies() {
     axios
@@ -596,8 +596,7 @@ export default function Dashboard() {
   const testExcel = async () => {
     const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint;
 
-    console.log('companyId', companyId)
-    console.log('selectedCompanyName', selectedCompanyName.id)
+ 
 
     const payload = {
       page: 0,
@@ -668,8 +667,7 @@ export default function Dashboard() {
 
   function fetchData() {
     setOpenLoader(true);
-    console.log('companyId', isADMIN)
-    console.log('selectedCompanyName', selectedCompanyName.id)
+
     // setSelectedStatusOptions(location?.state?.filter)
     // setStartDate(formattedDate)
     // setEndDate(formattedDate)
@@ -1080,13 +1078,11 @@ export default function Dashboard() {
   }
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
-    // debugger
-
-    // console.log(reload,"reload")
+  
     setReload(!reload)
 
 
-    // Construct the pass URL similar to the download functionality
+   
     const passApiEndpoint =
       Config.baseUrl +
       Config.apiEndPoints.passApiEndPoint +
@@ -1105,7 +1101,7 @@ export default function Dashboard() {
 
 
   };
-  console.log(reload,"reload")
+
 
 
   return (
