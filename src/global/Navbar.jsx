@@ -236,9 +236,9 @@ export default function Navbar({ toggleSidebar }) {
     fetchNotification();
   }, [isRECEPTIONIST]);
 
-  // useEffect(() => {
-  //   fetchNotification();
-  // }, [selectedCompanyIdForNotification]);
+  useEffect(() => {
+    fetchNotification();
+  }, [selectedCompanyIdForNotification]);
 
   useEffect(() => {
     fetchNotification();
@@ -318,8 +318,9 @@ export default function Navbar({ toggleSidebar }) {
   };
 
 
-
+//  console.log('OUTSIDE', selectedCompanyIdForNotification)
   async function fetchNotification() {
+    // console.log('INSIDE', selectedCompanyIdForNotification)
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
 
@@ -331,7 +332,7 @@ export default function Navbar({ toggleSidebar }) {
     let commonNoti = "";
 
     if (loggedUserRole === "RECEPTIONIST") {
-      console.log('')
+      // console.log('')
       if (!selectedCompanyIdForNotification) {
         // console.log('noti hit 2')
 
@@ -556,7 +557,8 @@ export default function Navbar({ toggleSidebar }) {
 
       return () => clearInterval(intervalFetchNotification);
     }
-  }, [loggedUserRole]);
+  }, [loggedUserRole, selectedCompanyIdForNotification]);
+
 
   useEffect(() => {
     fetchNotification();

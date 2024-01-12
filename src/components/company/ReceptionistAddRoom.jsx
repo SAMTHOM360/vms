@@ -43,7 +43,10 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  const { setActiveListItem, setSelectedCompanyIdForNotification } = useAuth();
+  const { setActiveListItem,
+    //  setSelectedCompanyIdForNotification,
+    setIsCompanySelectionChanged,
+     } = useAuth();
 
   useEffect(() => {
     setActiveListItem("/receptionistaddroom");
@@ -131,6 +134,8 @@ export default function ReceptionistAddRoom() {
 
 
   function handleCompanyChange(event, newValue) {
+
+    setIsCompanySelectionChanged((prev) => !prev)
 
     if(!newValue) {
       sessionStorage.removeItem('CompanyIdSelected');

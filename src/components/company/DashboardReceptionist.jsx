@@ -49,6 +49,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Dashboard() {
   const { setActiveListItem,
     // setSelectedCompanyIdForNotification,
+    setIsCompanySelectionChanged
    } = useAuth();
 
   // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
@@ -148,10 +149,11 @@ const buildingId = sessionStorage.getItem("buildingId")
         console.log("Error fetching data", error);
       });
   }
-  console.log(companyName, "companyName");
+  // console.log(companyName, "companyName");
 
 
   function handleCompanyChange(event, newValue) {
+    setIsCompanySelectionChanged((prev) => !prev)
 
 
     if(!newValue) {
@@ -200,7 +202,7 @@ const buildingId = sessionStorage.getItem("buildingId")
     const eightDaysAgo = new Date();
     eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
     const eightDaysAgoFormatted = eightDaysAgo.toISOString().split("T")[0];
-console.log('i got hit !!!')
+// console.log('i got hit !!!')
     const payload = {
       page: 0,
       size: null,
