@@ -940,16 +940,16 @@ export default function Dashboard() {
     isADMIN
   ]);
 
-  useEffect(() => {
-    // getRoomsOption();
-    fetchStatusOptions();
-    fetchStatusOptions1();
-    fetchHostOptions();
-    fetchCompanies();
-  }, []);
+  // useEffect(() => {
+  //   // getRoomsOption();
+  //   // fetchStatusOptions();
+  //   // fetchStatusOptions1();
+  //   // fetchHostOptions();
+  //   // fetchCompanies();
+  // }, []);
 
   useEffect(() => {
-    getRoomsOption();
+    // getRoomsOption();
     fetchStatusOptions();
     fetchStatusOptions1();
     fetchHostOptions();
@@ -958,7 +958,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getRoomsOption();
-  }, [reload]);
+  }, [reload, selectedCompanyName]);
 
   // useEffect(() => {
   //     if (location.state && location.state.filter) {
@@ -1080,6 +1080,12 @@ export default function Dashboard() {
   }
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
+    // debugger
+
+    // console.log(reload,"reload")
+    setReload(!reload)
+
+
     // Construct the pass URL similar to the download functionality
     const passApiEndpoint =
       Config.baseUrl +
@@ -1087,14 +1093,19 @@ export default function Dashboard() {
       "?meetingId=" +
       meetingId;
 
-    // Open the pass in a new window or tab
+
     const printWindow = window.open(passApiEndpoint, "_blank");
 
-    // When the window/tab is fully loaded, trigger the print dialog
+ 
     printWindow.onload = () => {
       printWindow.print();
     };
+
+   
+
+
   };
+  console.log(reload,"reload")
 
 
   return (
@@ -1816,13 +1827,14 @@ export default function Dashboard() {
                                 !isADMIN ? (
                                   <Button
                                     variant="outlined"
-                                    onClick={() =>
+                                    onClick={() =>{
                                       handlePrintPass(
                                         visitor.id,
                                         visitor.visitor.name,
                                         visitor.visitor.phoneNumber
                                       )
-                                    }
+                                      // setReload(true)
+                                    }}
                                   >
                                     Print
                                   </Button>
