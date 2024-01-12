@@ -189,6 +189,31 @@ export default function Dashboard() {
       : { id: null, name: "" }
   );
 
+  const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
+
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+
+  const [selectedFilter, setSelectedFilter] = useState("companyMeets");
+
+  const [isADMIN, setIsADMIN] = useState(false);
+
+  const [isReceptionist, setIsReceptionist] = useState(false);
+
+  useEffect(() => {
+    if (loggedUserRole === "ADMIN") {
+      setIsADMIN(true);
+    } else {
+      setIsADMIN(false);
+    }
+
+    if (loggedUserRole === "RECEPTIONIST") {
+      setIsReceptionist(true);
+    } else {
+      setIsReceptionist(false);
+    }
+  }, [loggedUserRole]);
+  console.log("is admin true", isADMIN)
+
   function fetchCompanies() {
     axios
       .get(buildingUrl, {
@@ -397,9 +422,6 @@ export default function Dashboard() {
     setSelectedRoom(event.target.value);
   };
 
-  const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  // console.log(selectedCompanyId, "hello")
-
   function getRoomsOption() {
     const roomUrl =
       Config.baseUrl +
@@ -574,6 +596,9 @@ export default function Dashboard() {
   const testExcel = async () => {
     const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint;
 
+    console.log('companyId', companyId)
+    console.log('selectedCompanyName', selectedCompanyName.id)
+
     const payload = {
       page: 0,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
@@ -643,6 +668,8 @@ export default function Dashboard() {
 
   function fetchData() {
     setOpenLoader(true);
+    console.log('companyId', isADMIN)
+    console.log('selectedCompanyName', selectedCompanyName.id)
     // setSelectedStatusOptions(location?.state?.filter)
     // setStartDate(formattedDate)
     // setEndDate(formattedDate)
@@ -910,6 +937,7 @@ export default function Dashboard() {
     phoneNumberFilter,
     endDate,
     selectedCompanyName,
+    isADMIN
   ]);
 
   useEffect(() => {
@@ -989,27 +1017,7 @@ export default function Dashboard() {
 
   // console.log(location, "location");
 
-  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
-  const [selectedFilter, setSelectedFilter] = useState("companyMeets");
-
-  const [isADMIN, setIsADMIN] = useState(false);
-
-  const [isReceptionist, setIsReceptionist] = useState(false);
-
-  useEffect(() => {
-    if (loggedUserRole === "ADMIN") {
-      setIsADMIN(true);
-    } else {
-      setIsADMIN(false);
-    }
-
-    if (loggedUserRole === "RECEPTIONIST") {
-      setIsReceptionist(true);
-    } else {
-      setIsReceptionist(false);
-    }
-  }, [loggedUserRole]);
 
   const meetOptions = [
     { label: "Personal Meets", value: "personalMeets" },
