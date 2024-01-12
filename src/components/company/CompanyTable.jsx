@@ -192,7 +192,7 @@ const CompanyTable = () => {
 
   const handleSwitchToggle = (companyId, isActive) => {
     setOpen(true);
-    console.log(isActive, "isActive");
+    // console.log(isActive, "isActive");
 
     const activeDeactiveUrl =
       Config.baseUrl + Config.apiEndPoints.activeDeactiveEndPoint;

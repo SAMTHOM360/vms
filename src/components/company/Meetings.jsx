@@ -307,7 +307,7 @@ export default function Meetings() {
 
     const payload = {
       page: 0,
-      size: 1000,
+      size: null,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       fromDate: startDate,
       toDate: endDate,
@@ -349,12 +349,13 @@ export default function Meetings() {
 
     const payload = {
       page: 0,
-      size: 1000,
+      size: null,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       fromDate: startDate,
       toDate: endDate,
 
-      companyId: selectedCompanyId,
+      companyId: companyId,
+      buildingId:buildingId,
       user: {
         id: adminId,
 
@@ -405,6 +406,7 @@ export default function Meetings() {
   // const { id } = useParams();
 
   const adminId = sessionStorage.getItem("adminId");
+  const buildingId=sessionStorage.getItem("buildingId");
   // console.log(adminId, "adminId");
 
   //phonefilter
@@ -412,8 +414,11 @@ export default function Meetings() {
   const [meetings, setMeetings] = useState(0);
 
   // now previous
+
+
+  const companyId = sessionStorage.getItem("companyId");
   function fetchData() {
-    const companyId = sessionStorage.getItem("companyId");
+   
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
     setOpenLoader(true);
     const payload = {
@@ -421,6 +426,7 @@ export default function Meetings() {
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       companyId: companyId,
+      buildingId:buildingId,
       fromDate: startDate,
       toDate: endDate,
       status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,

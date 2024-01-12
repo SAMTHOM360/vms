@@ -202,7 +202,7 @@ export default function Dashboard() {
         console.log("Error fetching data", error);
       });
   }
-  console.log(companyName, "companyName");
+  // console.log(companyName, "companyName");
 
   function handleCompanyChange(event, newValue) {
     if (!newValue) {
@@ -578,8 +578,11 @@ export default function Dashboard() {
       fromDate: startDate,
       toDate: endDate,
       size: null,
-
-      companyId: selectedCompanyId,
+      companyId:isADMIN ? companyId :(
+        selectedCompanyName && selectedCompanyName.id
+          ? selectedCompanyName.id
+          : null),
+      buildingId: buildingId,
       user: {
         id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
       },
@@ -634,6 +637,8 @@ export default function Dashboard() {
 
   const [adminData, setAdminData] = useState([]);
 
+  const companyId = sessionStorage.getItem("companyId")
+
   function fetchData() {
     setOpenLoader(true);
     // setSelectedStatusOptions(location?.state?.filter)
@@ -644,10 +649,10 @@ export default function Dashboard() {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
-      companyId:
+      companyId:isADMIN ? companyId :(
         selectedCompanyName && selectedCompanyName.id
           ? selectedCompanyName.id
-          : null,
+          : null),
       buildingId: buildingId,
       fromDate: startDate,
       toDate: endDate,
@@ -712,7 +717,7 @@ export default function Dashboard() {
         setMeetings(response.data.data.totalElements);
 
         setVisitors(responseData);
-        console.log(visitors, "visitorsdata");
+        // console.log(visitors, "visitorsdata");
 
         setTotalVisitors(response.data.data.totalElements);
 
@@ -980,7 +985,7 @@ export default function Dashboard() {
     setSelectedValue(value);
   };
 
-  console.log(location, "location");
+  // console.log(location, "location");
 
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
@@ -1038,7 +1043,7 @@ export default function Dashboard() {
 
   function CheckOut(phoneNumber) {
     const number = phoneNumber;
-    console.log(number, "numberr");
+    // console.log(number, "numberr");
 
     const checkOutUrl =
       Config.baseUrl +
@@ -1081,7 +1086,7 @@ export default function Dashboard() {
     };
   };
 
-  console.log(selectedCompanyName, "blah");
+
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
       <Grid container spacing={2} style={{}}>

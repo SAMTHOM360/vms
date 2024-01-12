@@ -107,7 +107,7 @@ buildingId;
 
     setOpenDialog(true);
     setSelectedValue(value)
-    console.log(value,"ssss")
+   
 
 
   };
@@ -230,7 +230,11 @@ buildingId;
 
         setOpen(false)
 
-        response.data.data?setRoomDetails(response.data.data) : console.log("no rooms");
+        if( response.data.data){
+          setRoomDetails(response.data.data)
+        }
+
+        // response.data.data?setRoomDetails(response.data.data) : console.log("no rooms");
 
         // console.log(response.data.data,"roomdetailsdata")
 

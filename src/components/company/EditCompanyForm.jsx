@@ -139,7 +139,7 @@ export default function EditCompanyForm() {
         setSelectedBuildingId(company.building);
         setImageUrl(company.image)
         // console.log(company.logo,"logo")
-        console.log(company.building.buildingId, "buildingId")
+        // console.log(company.building.buildingId, "buildingId")
       })
       .catch((error) => {
         console.log(error);
@@ -332,7 +332,7 @@ const [open, setOpen] = React.useState(false);
    
 
     e.preventDefault();
-    console.log(companyData, "companydata")
+    // console.log(companyData, "companydata")
 
     const newErrors = {};
 
@@ -549,7 +549,7 @@ const [open, setOpen] = React.useState(false);
 
   // };
   const handleBuildingChange = (event, newValue) => {
-    console.log(newValue, "newval")
+    // console.log(newValue, "newval")
 
     if (newValue) {
       setSelectedBuildingId(newValue.id);

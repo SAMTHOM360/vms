@@ -350,7 +350,7 @@ export default function CompanyReg() {
     // }
  
     const fileSizeInMB = logoFile.size / (1024 * 1024);
-    console.log(fileSizeInMB,"filesizemb")
+    // console.log(fileSizeInMB,"filesizemb")
     const minSizeInMB = 0.001;
     const maxSizeInMB = 5; 
 

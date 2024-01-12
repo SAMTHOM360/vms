@@ -43,7 +43,9 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  const { setActiveListItem, setSelectedCompanyIdForNotification } = useAuth();
+  const { setActiveListItem,
+    //  setSelectedCompanyIdForNotification
+     } = useAuth();
 
   useEffect(() => {
     setActiveListItem("/receptionistaddroom");
@@ -390,8 +392,8 @@ export default function ReceptionistAddRoom() {
     room_Id: roomDetails[key].id,
     room_isActive: roomDetails[key].isActive,
     room: roomDetails[key].roomName,
-    companyName:roomDetails[key].company.name,
-    companyId:roomDetails[key].company.id,
+    companyName: roomDetails[key]?.company?.name,
+    companyId:roomDetails[key]?.company?.id,
     // status: roomDetails[key].isAvailable === true && active === true ? "Available" : "Occupied",
 
     status:
@@ -415,6 +417,8 @@ export default function ReceptionistAddRoom() {
     // { id: 'info', label: 'Info', minWidth: 170 },
     { id: "actions", label: "Actions", minWidth: 170 },
   ];
+
+  console.log(roomDetails,"fff")
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -508,12 +512,21 @@ export default function ReceptionistAddRoom() {
       })
       .then((response) => {
         setOpen(false);
-        response.data.data
-          ? setRoomDetails(response.data.data)
-          : console.log("no rooms");
-        response.data.data.isActive
-          ? setActive(response.data.data.isActive)
-          : console.log("status");
+        // response.data.data
+        //   ? setRoomDetails(response.data.data)
+        //   : console.log("no rooms");
+        // response.data.data.isActive
+        //   ? setActive(response.data.data.isActive)
+        //   : console.log("status");
+
+
+
+          if(response.data.data){
+            setRoomDetails(response.data.data)
+          }
+          if( response.data.data.isActive){
+            setActive(response.data.data.isActive)
+          }
 
         // console.log(response.data.data,"roomdetailsdata")
       })
@@ -546,7 +559,7 @@ export default function ReceptionistAddRoom() {
     
   }, []);
   // console.log(rowsPerPage, "rowsPerPage");
-  console.log(roomName,"roomname")
+  // console.log(roomName,"roomname")
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
