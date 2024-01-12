@@ -1195,7 +1195,7 @@ export default function Meetings() {
                           </TableCell>
 
                           <TableCell align="center" sx={{ color: "white" }}>
-                            Company Name
+                          Visitor Company 
                           </TableCell>
 
                           <TableCell align="center" sx={{ color: "white" }}>
@@ -1285,7 +1285,7 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.companyName}
+                              {visitor.visitor.visitorCompanyDto ? visitor.visitorCompanyDto.name : "NA"}
                               </TableCell>
 
                               <TableCell align="center">

@@ -65,6 +65,9 @@ export default function ReceptionistAddRoom() {
 
   const [reload, setReload] = useState(false);
 
+
+  const [rowCompanyId,setRowCompanyId] = useState("");
+
   //loader
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
@@ -215,7 +218,7 @@ export default function ReceptionistAddRoom() {
       roomName: roomName,
       capacity: capacity,
       company: {
-        id: selectedCompanyId,
+        id: rowCompanyId
       },
     };
 
@@ -264,6 +267,7 @@ export default function ReceptionistAddRoom() {
     setOpenAddRoomDialog(true);
     setSelectedRoomId(row.room_Id);
     setEditMode(true);
+    setRowCompanyId(row.companyId)
   };
 
 
@@ -278,7 +282,7 @@ export default function ReceptionistAddRoom() {
       roomName: roomName,
       capacity: capacity,
       company: {
-        id: selectedCompanyId,
+        id: rowCompanyId,
       },
     };
 
@@ -386,6 +390,8 @@ export default function ReceptionistAddRoom() {
     room_Id: roomDetails[key].id,
     room_isActive: roomDetails[key].isActive,
     room: roomDetails[key].roomName,
+    companyName:roomDetails[key].company.name,
+    companyId:roomDetails[key].company.id,
     // status: roomDetails[key].isAvailable === true && active === true ? "Available" : "Occupied",
 
     status:
@@ -403,6 +409,7 @@ export default function ReceptionistAddRoom() {
   const customColumns = [
     { id: "Sl No", label: "Sl No", minWidth: 170 },
     { id: "room", label: "Room Name", minWidth: 170 },
+    { id: "companyName", label: "Company", minWidth: 170 },
     { id: "status", label: "Status", minWidth: 100 },
     { id: "capacity", label: "Capacity", minWidth: 170 },
     // { id: 'info', label: 'Info', minWidth: 170 },
@@ -468,22 +475,22 @@ export default function ReceptionistAddRoom() {
 
 
 
-    const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
-    let storedCompanyForVisitorId;
+    // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
+    // let storedCompanyForVisitorId;
     
-    if (storedCompanyForVisitor) {
-      try {
-        const parsedCompany = JSON.parse(storedCompanyForVisitor);
-        storedCompanyForVisitorId = parsedCompany.id || null;
-      } catch (error) {
-        storedCompanyForVisitorId = null;
-      }
-    } else {
-      storedCompanyForVisitorId = null;
-    }
+    // if (storedCompanyForVisitor) {
+    //   try {
+    //     const parsedCompany = JSON.parse(storedCompanyForVisitor);
+    //     storedCompanyForVisitorId = parsedCompany.id || null;
+    //   } catch (error) {
+    //     storedCompanyForVisitorId = null;
+    //   }
+    // } else {
+    //   storedCompanyForVisitorId = null;
+    // }
 
     
-        setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
+    //     setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
 
 
 
@@ -525,7 +532,7 @@ export default function ReceptionistAddRoom() {
 
  
     fetchRoomDetails();
-    
+    setPage(0);
   }, [selectedCompanyName]);
 
 
@@ -539,6 +546,7 @@ export default function ReceptionistAddRoom() {
     
   }, []);
   // console.log(rowsPerPage, "rowsPerPage");
+  console.log(roomName,"roomname")
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -663,53 +671,7 @@ export default function ReceptionistAddRoom() {
                       )
                       .map((row, rowIndex) => {
                         return (
-                          // <TableRow
-                          //   hover
-                          //   role="checkbox"
-                          //   tabIndex={-1}
-                          //   key={rowIndex}
-                          // >
-                          //   {customColumns.map((column, index) => {
-                          //     const value = row[column.id];
-                            
-                          //     return (
-                          //       <>
-                          //         <TableCell
-                          //           key={index}
-                          //           align={column.align}
-                          //         >
-                          //           {column.id === "Sl No" ? (
-                          //             calculateSerialNumber(rowIndex)
-                          //           ) : column.id === "actions" ? (
-                          //             <div style={{ gap: "30px" }}>
-                          //               <EditIcon
-                          //                 style={{
-                          //                   fontSize: "20px",
-                          //                   color: "",
-                          //                   marginTop: "5px",
-                          //                   cursor: "pointer",
-                          //                   color: "blue",
-                          //                 }}
-                          //                 onClick={() => handleEditRoom(row)}
-                          //               />
-
-                          //               <Switch
-                          //                 sx={{ fontSize: "10px" }}
-                          //                 {...label}
-                          //                 // defaultChecked={active}
-
-                          //                 defaultChecked={row.room_isActive}
-                          //                 onClick={() => handleSwitch(row)}
-                          //               />
-                          //             </div>
-                          //           ) : (
-                          //             row[column.id]
-                          //           )}
-                          //         </TableCell>
-                          //       </>
-                          //     );
-                          //   })}
-                          // </TableRow>
+                    
                           <CustomRows row={row} rowIndex={rowIndex} customColumns={customColumns} label={label} handleEditRoom={handleEditRoom} calculateSerialNumber={calculateSerialNumber} handleSwitch={handleSwitch} />
                         );
                       })
@@ -731,7 +693,7 @@ export default function ReceptionistAddRoom() {
           />
 
           <Dialog open={openAddRoomDialog} onClose={handleCloseAddRoomDialog}>
-            <DialogTitle sx={{ textAlign: "center" }}>Room Info</DialogTitle>
+            <DialogTitle sx={{ textAlign: "center",color:"black" }}>Room Info</DialogTitle>
             <DialogContent>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <TextField

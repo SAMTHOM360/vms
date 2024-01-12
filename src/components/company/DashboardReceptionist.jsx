@@ -48,7 +48,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Dashboard() {
   const { setActiveListItem,
-    setSelectedCompanyIdForNotification,
+    // setSelectedCompanyIdForNotification,
    } = useAuth();
 
   // sessionStorage.setItem('activeListItem', '/dashboardreceptionist')
@@ -215,21 +215,21 @@ console.log('i got hit !!!')
     };
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/paginateDashBoard`
 
-    const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
-let storedCompanyForVisitorId;
+//     const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
+// let storedCompanyForVisitorId;
 
-if (storedCompanyForVisitor) {
-  try {
-    const parsedCompany = JSON.parse(storedCompanyForVisitor);
-    storedCompanyForVisitorId = parsedCompany.id || null;
-  } catch (error) {
-    storedCompanyForVisitorId = null;
-  }
-} else {
-  storedCompanyForVisitorId = null;
-}
+// if (storedCompanyForVisitor) {
+//   try {
+//     const parsedCompany = JSON.parse(storedCompanyForVisitor);
+//     storedCompanyForVisitorId = parsedCompany.id || null;
+//   } catch (error) {
+//     storedCompanyForVisitorId = null;
+//   }
+// } else {
+//   storedCompanyForVisitorId = null;
+// }
 
-    setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
+//     setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
 
     axios
       .post(getVisitorUrl, payload)

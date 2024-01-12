@@ -109,7 +109,9 @@ const columns = [
 const rowsPerPage = 10;
 
 export default function Dashboard() {
-  const { setActiveListItem, setSelectedCompanyIdForNotification } = useAuth();
+  const { setActiveListItem, 
+    // setSelectedCompanyIdForNotification
+   } = useAuth();
   const navigate = useNavigate();
   // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
   useEffect(() => {
@@ -155,15 +157,11 @@ export default function Dashboard() {
 
   //companydropdown
 
-
-
   const storedCompany = sessionStorage.getItem("CompanyIdSelected");
 
-
   const company = JSON.parse(storedCompany);
-  const idCompany = storedCompany?company.id : "";
-  const nameCompany = storedCompany?company.name:"";
-
+  const idCompany = storedCompany ? company.id : "";
+  const nameCompany = storedCompany ? company.name : "";
 
   const buildingUrl =
     Config.baseUrl +
@@ -173,20 +171,22 @@ export default function Dashboard() {
 
   const [companyName, setCompanyName] = useState([]);
   // const [selectedCompanyName, setSelectedCompanyName] = useState(
-  //   sessionStorage.getItem("CompanyIdSelected") 
+  //   sessionStorage.getItem("CompanyIdSelected")
   //     ? {
   //         id: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id,
-  //         name: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).name  
-  //       } 
+  //         name: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).name
+  //       }
   //     : {
   //         id: null,
   //         name: ""
   //       }
   // );
 
-
-  const[selectedCompanyName,setSelectedCompanyName] = useState(storedCompany ? {id:idCompany,name:nameCompany} : {id:null,name:""})
-
+  const [selectedCompanyName, setSelectedCompanyName] = useState(
+    storedCompany
+      ? { id: idCompany, name: nameCompany }
+      : { id: null, name: "" }
+  );
 
   function fetchCompanies() {
     axios
@@ -204,33 +204,20 @@ export default function Dashboard() {
   }
   console.log(companyName, "companyName");
 
-
-
   function handleCompanyChange(event, newValue) {
-
-    if(!newValue) {
+    if (!newValue) {
       // Clear selected company from sessionStorage
-      sessionStorage.removeItem('CompanyIdSelected');
-      setSelectedCompanyName({id:null,name:""})
+      sessionStorage.removeItem("CompanyIdSelected");
+      setSelectedCompanyName({ id: null, name: "" });
       return;
     }
-  
 
-
-  
     setSelectedCompanyName(newValue);
 
-    sessionStorage.setItem('CompanyIdSelected', JSON.stringify(newValue));
-  
+    sessionStorage.setItem("CompanyIdSelected", JSON.stringify(newValue));
+
     // additional logic with event and newValue
   }
-
-
-
-
-
-
-
 
   //calender
 
@@ -343,17 +330,18 @@ export default function Dashboard() {
     setSelectedHostOptions(event.target.value);
   };
 
-
-  const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected")
+  const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected");
 
   function fetchHostOptions() {
     // const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
 
-    const hostUrl = 
-    Config.baseUrl + 
-    Config.apiEndPoints.hostEndPoint +
-    "?buildingId=" + buildingId +  
-    "&companyId=" + idCompany;
+    const hostUrl =
+      Config.baseUrl +
+      Config.apiEndPoints.hostEndPoint +
+      "?buildingId=" +
+      buildingId +
+      "&companyId=" +
+      idCompany;
 
     axios
       .get(hostUrl)
@@ -414,9 +402,10 @@ export default function Dashboard() {
     const roomUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsRecepEndPoint +
-      "?id=" + idCompany + "&buildingId="+ buildingId
-      ;
-
+      "?id=" +
+      idCompany +
+      "&buildingId=" +
+      buildingId;
     axios
       .get(roomUrl, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
@@ -436,7 +425,6 @@ export default function Dashboard() {
     setOpenLoader(true);
     const meetingData = {
       id: item.id,
-
 
       status:
         item.user.isPermission === true &&
@@ -495,17 +483,31 @@ export default function Dashboard() {
       })
       .then((response) => {
         setOpenLoader(false);
-        if (response.data.message === "Meeting is cancelled") {
-          alert("Meeting cancelled succesfully");
-          setIsCancelled(true);
-          handleCloseModal();
-        }
-        if (response.data.message === "Success") {
-          alert("Meeting added succesfully");
+        // if (response.data.status === 200) {
+        //   alert(response.data.message);
+        //   setIsCancelled(true);
+        //   handleCloseModal();
+        // }
+        // if (response.data.message === 200) {
+        //   alert(response.data.message);
+        //   setRoomAdded(true);
+        //   setIsCancelled(true);
+        //   handleCloseModal();
+        //   setReload(true);
+        // }
+        if (response.data.status === 200 || response.data.status ===201) {
+          alert(response.data.message);
           setRoomAdded(true);
           setIsCancelled(true);
           handleCloseModal();
           setReload(true);
+        }
+
+
+
+        if(response.data.status !== 200){
+          alert(response.data.message)
+          return
         }
         setOpen(false);
       })
@@ -642,7 +644,10 @@ export default function Dashboard() {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
-      companyId: selectedCompanyName && selectedCompanyName.id ? selectedCompanyName.id:null,
+      companyId:
+        selectedCompanyName && selectedCompanyName.id
+          ? selectedCompanyName.id
+          : null,
       buildingId: buildingId,
       fromDate: startDate,
       toDate: endDate,
@@ -658,26 +663,26 @@ export default function Dashboard() {
       },
     };
 
+    // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
+    // let storedCompanyForVisitorId;
 
+    // if (storedCompanyForVisitor) {
+    //   try {
+    //     const parsedCompany = JSON.parse(storedCompanyForVisitor);
+    //     storedCompanyForVisitorId = parsedCompany.id || null;
+    //   } catch (error) {
+    //     storedCompanyForVisitorId = null;
+    //   }
+    // } else {
+    //   storedCompanyForVisitorId = null;
+    // }
 
-    const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
-    let storedCompanyForVisitorId;
-    
-    if (storedCompanyForVisitor) {
-      try {
-        const parsedCompany = JSON.parse(storedCompanyForVisitor);
-        storedCompanyForVisitorId = parsedCompany.id || null;
-      } catch (error) {
-        storedCompanyForVisitorId = null;
-      }
-    } else {
-      storedCompanyForVisitorId = null;
-    }
+    // console.log(
+    //   "storedCompanyForVisitorId jhvfhsvf",
+    //   storedCompanyForVisitorId
+    // );
 
-    console.log('storedCompanyForVisitorId jhvfhsvf', storedCompanyForVisitorId)
-    
-        setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
-
+    // setSelectedCompanyIdForNotification(storedCompanyForVisitorId);
 
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint;
@@ -897,7 +902,7 @@ export default function Dashboard() {
     startDate,
     phoneNumberFilter,
     endDate,
-    selectedCompanyName
+    selectedCompanyName,
   ]);
 
   useEffect(() => {
@@ -907,8 +912,6 @@ export default function Dashboard() {
     fetchHostOptions();
     fetchCompanies();
   }, []);
-
-
 
   useEffect(() => {
     getRoomsOption();
@@ -1129,7 +1132,9 @@ export default function Dashboard() {
                       //   setSelectedCompanyName(newValue)
                       // }
 
-                      onChange={(event, newValue) => handleCompanyChange(event, newValue)}
+                      onChange={(event, newValue) =>
+                        handleCompanyChange(event, newValue)
+                      }
                       options={companyName}
                       getOptionLabel={(option) => option.name}
                       sx={{ width: 300 }}
@@ -1499,7 +1504,7 @@ export default function Dashboard() {
                           Phone No.
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
-                          Company Name
+                        Visitor Company
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
                           Host Name
@@ -1601,7 +1606,9 @@ export default function Dashboard() {
                             </TableCell>
 
                             <TableCell align="center">
-                              {visitor.visitor.companyName}
+                              {visitor.visitor.visitorCompanyDto
+                                ? visitor.visitorCompanyDto.name
+                                : "NA"}
                             </TableCell>
 
                             <TableCell align="center">
