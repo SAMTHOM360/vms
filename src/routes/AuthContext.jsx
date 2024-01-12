@@ -166,6 +166,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('companyId')
     sessionStorage.removeItem('buildingId')
     sessionStorage.removeItem('selectedCompanyId')
+    sessionStorage.removeItem('CompanyIdSelected')
 
   };
 

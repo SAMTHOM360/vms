@@ -143,7 +143,7 @@ const CompanyTable = lazy(() => import('./components/company/CompanyTable'));
 const EditCompanyForm = lazy(() => import('./components/company/EditCompanyForm'));
 const Meetings = lazy(() => import('./components/company/Meetings'));
 const ReceptionistDashboard = lazy(() => import('./components/company/ReceptionistDashboard'));
-const ReceptionistCompanyScreen = lazy(() => import('./components/company/ReceptionistCompanyScreen'));
+// const ReceptionistCompanyScreen = lazy(() => import('./components/company/ReceptionistCompanyScreen'));
 const DashboardReceptionist = lazy(() => import('./components/company/DashboardReceptionist'));
 const AppointMeetForm = lazy(() => import('./components/company/AppointMeetForm'));
 const EmpDashboard = lazy(() => import('./components/EmpDashboard'));
@@ -169,7 +169,7 @@ function App() {
   // const shouldShowSidebar = !["/", "/dynamicidcard/:id", "/lost"].includes(currentPath);
 
   const isExcludedRouteForNavBar = !['/', '/lost','/toast'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
-  const isExcludedRouteForSidebar = !['/', '/lost','/receptionistcompanyscreen','/toast'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
+  const isExcludedRouteForSidebar = !['/', '/lost','/toast'].some(route => location.pathname === route) && !location.pathname.includes("/dynamicidcard/");
 
    const toggleSidebar = () => {
     setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
@@ -246,7 +246,7 @@ function App() {
 
   <Route path="/dashboardreceptionist" element={<PrivateRoute element={<DashboardReceptionist/>} allowedRoles={['RECEPTIONIST']} />} />
 
-  <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} />
+  {/* <Route path="/receptionistcompanyscreen" element={<PrivateRoute element={<ReceptionistCompanyScreen/>} allowedRoles={['RECEPTIONIST']} />} /> */}
 
   {/* receptionist add room */}
 

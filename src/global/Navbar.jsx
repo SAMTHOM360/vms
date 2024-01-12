@@ -957,7 +957,7 @@ export default function Navbar({ toggleSidebar }) {
             <hr key="profileMenuDivider" />,
           ]}
 
-      {isRECEPTIONIST
+      {/* {isRECEPTIONIST
         ? [
             <MenuItem
               key="receptComScreenItem"
@@ -992,7 +992,7 @@ export default function Navbar({ toggleSidebar }) {
             </MenuItem>,
             <hr key="receptComScreenDivider" />,
           ]
-        : null}
+        : null} */}
 
       <MenuItem
         onClick={handleChangePasswordDialogOpen}

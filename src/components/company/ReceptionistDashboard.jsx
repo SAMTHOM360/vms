@@ -1579,6 +1579,7 @@ export default function Dashboard() {
                                   style={{
                                     display: "flex",
                                     flexDirection: "row",
+                                    justifyContent:'center',
                                     alignItems: "center",
                                   }}
                                 >

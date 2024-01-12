@@ -1253,6 +1253,7 @@ export default function Meetings() {
                                     style={{
                                       display: "flex",
                                       flexDirection: "row",
+                                      justifyContent:'center',
                                       alignItems: "center",
                                       // border:"1px solid black"
                                     }}
