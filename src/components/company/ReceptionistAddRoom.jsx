@@ -97,9 +97,11 @@ export default function ReceptionistAddRoom() {
 
   //companydropdown
 
+  const [showAddRoom,setShowAddRoom] = useState(false)
+
   const storedCompany = sessionStorage.getItem("CompanyIdSelected");
 
-
+  
   const company = JSON.parse(storedCompany);
   const idCompany = storedCompany?company.id : "";
   const nameCompany = storedCompany?company.name:"";
@@ -129,6 +131,11 @@ export default function ReceptionistAddRoom() {
       });
   }
   // console.log(companyName, "companyName");
+
+
+// showAddRoom
+
+
 
 
 
@@ -223,7 +230,7 @@ export default function ReceptionistAddRoom() {
       roomName: roomName,
       capacity: capacity,
       company: {
-        id: rowCompanyId
+        id: idCompany 
       },
     };
 
@@ -480,7 +487,12 @@ export default function ReceptionistAddRoom() {
     setOpen(true);
 
 
-
+    if(storedCompany){
+      setShowAddRoom(true)
+     }
+     else{
+      setShowAddRoom(false)
+     }
 
     // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
     // let storedCompanyForVisitorId;
@@ -599,7 +611,7 @@ export default function ReceptionistAddRoom() {
                     />
 
 
-            <Button
+            {/* <Button
               onClick={handleOpenAddRoomDialog}
               variant="contained"
               color="primary"
@@ -607,7 +619,18 @@ export default function ReceptionistAddRoom() {
             >
               {" "}
               Add Room
-            </Button>
+            </Button> */}
+
+{showAddRoom && (
+    <Button
+      onClick={handleOpenAddRoomDialog}
+      variant="contained"
+      color="primary"
+      style={{ height: '3em', width: '113px' }}
+    >
+      Add Room
+    </Button>
+  )}
 
             {/* </Link> */}
           </Box>
