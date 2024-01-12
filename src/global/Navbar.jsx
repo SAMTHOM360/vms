@@ -319,7 +319,6 @@ export default function Navbar({ toggleSidebar }) {
 
 
 
-  // console.log('selectedCompanyIdForNotification outside function', selectedCompanyIdForNotification)
   async function fetchNotification() {
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
@@ -332,7 +331,7 @@ export default function Navbar({ toggleSidebar }) {
     let commonNoti = "";
 
     if (loggedUserRole === "RECEPTIONIST") {
-      // console.log('noti hit 1')
+      console.log('')
       if (!selectedCompanyIdForNotification) {
         // console.log('noti hit 2')
 
