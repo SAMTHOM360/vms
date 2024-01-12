@@ -236,9 +236,9 @@ export default function Navbar({ toggleSidebar }) {
     fetchNotification();
   }, [isRECEPTIONIST]);
 
-  useEffect(() => {
-    fetchNotification();
-  }, [selectedCompanyIdForNotification]);
+  // useEffect(() => {
+  //   fetchNotification();
+  // }, [selectedCompanyIdForNotification]);
 
   useEffect(() => {
     fetchNotification();
@@ -317,9 +317,14 @@ export default function Navbar({ toggleSidebar }) {
     }
   };
 
+
+
+  // console.log('selectedCompanyIdForNotification outside function', selectedCompanyIdForNotification)
   async function fetchNotification() {
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
+
+    // console.log('selectedCompanyIdForNotification inside function', selectedCompanyIdForNotification)
 
     // let receptNoti = null
     let receptNoti = "";
@@ -327,13 +332,18 @@ export default function Navbar({ toggleSidebar }) {
     let commonNoti = "";
 
     if (loggedUserRole === "RECEPTIONIST") {
+      // console.log('noti hit 1')
       if (!selectedCompanyIdForNotification) {
+        // console.log('noti hit 2')
+
         receptNoti = buildingId;
         // commonNoti = null
         commonNoti = "";
       }
 
       if (selectedCompanyIdForNotification) {
+        // console.log('noti hit 3')
+
         // receptNoti = null
         receptNoti = "";
         commonNoti = selectedCompanyIdForNotification;
@@ -341,6 +351,8 @@ export default function Navbar({ toggleSidebar }) {
     }
 
     if (loggedUserRole !== "RECEPTIONIST") {
+      // console.log('noti hit 4')
+
       // receptNoti = null
       receptNoti = "";
       commonNoti = companyId2;

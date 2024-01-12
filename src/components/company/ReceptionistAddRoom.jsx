@@ -43,7 +43,9 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  const { setActiveListItem } = useAuth();
+  const { setActiveListItem, 
+    // setSelectedCompanyIdForNotification, setTest1
+   } = useAuth();
 
   useEffect(() => {
     setActiveListItem("/receptionistaddroom");
@@ -128,7 +130,6 @@ export default function ReceptionistAddRoom() {
 
 
   function handleCompanyChange(event, newValue) {
-
 
     if(!newValue) {
       sessionStorage.removeItem('CompanyIdSelected');
@@ -465,6 +466,29 @@ export default function ReceptionistAddRoom() {
   //fetchRoomDetails function
   function fetchRoomDetails() {
     setOpen(true);
+
+
+
+
+    // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
+    // let storedCompanyForVisitorId;
+    
+    // if (storedCompanyForVisitor) {
+    //   try {
+    //     const parsedCompany = JSON.parse(storedCompanyForVisitor);
+    //     storedCompanyForVisitorId = parsedCompany.id || null;
+    //   } catch (error) {
+    //     storedCompanyForVisitorId = null;
+    //   }
+    // } else {
+    //   storedCompanyForVisitorId = null;
+    // }
+
+
+
+
+
+
     const roomDetailsUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsRecepEndPoint +

@@ -71,7 +71,7 @@ const Profile = () => {
     "Content-Type": "multipart/form-data",
   };
 
-  const { setAutoStatusChange, setActiveListItem } = useAuth();
+  const { setAutoStatusChange, setActiveListItem, setTest1 } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isPresent, setIsPresent] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
@@ -129,6 +129,13 @@ const Profile = () => {
   useEffect(() => {
     setActiveListItem("/profile");
   }, [setActiveListItem]);
+
+  console.log('holaa')
+
+
+  setInterval(() => {
+    setTest1((prev) => prev + 1)
+  }, 4000);
 
   useEffect(() => {
     fetchData();

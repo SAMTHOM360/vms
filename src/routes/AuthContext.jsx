@@ -20,9 +20,32 @@ export const AuthProvider = ({ children }) => {
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
   // const [ isntComSelection, setIsntComSelection ] = useState(true)
   const [ isOpenforGridTable, setIsOpenForGridTable] = useState()
+  const [ test1, setTest1] = useState(1)
   const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
 
-  // console.log("Parent call", autoStatusChange)
+  // const [selectedCompanyIdForNotification, setSelectedCompanyIdForNotification] = useState(sessionStorage.getItem("CompanyIdSelected") ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null : null);
+
+
+  const [companyIdFromSession, setCompanyIdFromSession] = useState(
+    sessionStorage.getItem("CompanyIdSelected")
+      ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+      : null
+  );
+
+  // console.log('test1', test1)
+
+
+  // console.log("Parent call    abc", selectedCompanyIdForNotification)
+
+
+  // setInterval(() => {
+  //   // console.log("Parent call    xyzz", selectedCompanyIdForNotification)
+  //   console.log('test1', test1)
+  // }, 4000);
+
+  useEffect(() => {
+    console.log( 'test1', companyIdFromSession)
+  },[companyIdFromSession])
 
 
   // useEffect(() => {
@@ -98,6 +121,33 @@ export const AuthProvider = ({ children }) => {
     setAuthenticated(true);
   };
 
+  // useEffect(() => {
+  //   setSelectedCompanyIdForNotification((sessionStorage.getItem("CompanyIdSelected") ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null : null))
+  // },[sessionStorage.getItem("CompanyIdSelected")])
+
+  // useEffect(() => {
+  //   setSelectedCompanyIdForNotification(prevCompanyId => {
+  //     console.log("Prev Company ID:", prevCompanyId);
+  //     const newCompanyId = sessionStorage.getItem("CompanyIdSelected")
+  //       ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+  //       : null;
+  //     console.log("New Company ID:", newCompanyId);
+  //     return newCompanyId;
+  //   });
+  // }, [sessionStorage.getItem("CompanyIdSelected")]);
+
+  useEffect(() => {
+    setCompanyIdFromSession(
+      sessionStorage.getItem("CompanyIdSelected")
+        ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+        : null
+    );
+  }, [sessionStorage.getItem("CompanyIdSelected")]);
+
+  // useEffect(() => {
+  //   setSelectedCompanyIdForNotification(companyIdFromSession);
+  // }, [companyIdFromSession]);
+
   const logout = () => {
     setUserRole('');
     Cookies.remove('userRole');
@@ -125,7 +175,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable, selectedCompanyIdForNotification, setSelectedCompanyIdForNotification }}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable, selectedCompanyIdForNotification, setSelectedCompanyIdForNotification, test1, setTest1 }}>
       {children}
     </AuthContext.Provider>
   );
