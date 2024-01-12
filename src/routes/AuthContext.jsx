@@ -20,12 +20,36 @@ export const AuthProvider = ({ children }) => {
   const [ bellItemChanged, setBellItemChanged ] = useState(false)
   // const [ isntComSelection, setIsntComSelection ] = useState(true)
   const [ isOpenforGridTable, setIsOpenForGridTable] = useState()
-  // const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
+  const [ selectedCompanyIdForNotification ,setSelectedCompanyIdForNotification] = useState(null)
 
-  const [selectedCompanyIdForNotification, setSelectedCompanyIdForNotification] = useState(sessionStorage.getItem("CompanyIdSelected") ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null : null);
+  const [isCompanySelectionChanged, setIsCompanySelectionChanged] = useState(false)
+
+  // const [selectedCompanyIdForNotification, setSelectedCompanyIdForNotification] = useState(sessionStorage.getItem("CompanyIdSelected") ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null : null);
 
 
-  console.log("Parent call", selectedCompanyIdForNotification)
+  const [companyIdFromSession, setCompanyIdFromSession] = useState(
+    sessionStorage.getItem("CompanyIdSelected")
+      ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+      : null
+  );
+
+  useEffect(() => {
+    setCompanyIdFromSession(
+      sessionStorage.getItem("CompanyIdSelected")
+        ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+        : null
+    );
+  }, [sessionStorage.getItem("CompanyIdSelected"),isCompanySelectionChanged]);
+
+
+  // console.log('companyIdFromSession', companyIdFromSession)
+
+  useEffect(() => {
+    setSelectedCompanyIdForNotification(companyIdFromSession);
+  }, [companyIdFromSession]);
+
+
+  // console.log("Parent call", selectedCompanyIdForNotification)
 
 
   // useEffect(() => {
@@ -146,7 +170,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable, selectedCompanyIdForNotification, setSelectedCompanyIdForNotification,}}>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, userRole, setUserRoleAndAuth, logout, isLimitReached, isNavBar, setIsNavBar, isSideBar, setIsSideBar, autoStatusChange, setAutoStatusChange, activeListItem, setActiveListItem, isSideBarPinned, setIsSideBarPinned, bellItemChanged, setBellItemChanged, isHoverOpen, setIsHoverOpen, isOpenforGridTable, setIsOpenForGridTable, selectedCompanyIdForNotification, setSelectedCompanyIdForNotification, isCompanySelectionChanged, setIsCompanySelectionChanged}}>
       {children}
     </AuthContext.Provider>
   );

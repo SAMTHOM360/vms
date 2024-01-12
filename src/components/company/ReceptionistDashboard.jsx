@@ -110,7 +110,8 @@ const rowsPerPage = 10;
 
 export default function Dashboard() {
   const { setActiveListItem, 
-    // setSelectedCompanyIdForNotification
+    // setSelectedCompanyIdForNotification,
+    setIsCompanySelectionChanged,
    } = useAuth();
   const navigate = useNavigate();
   // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
@@ -205,6 +206,7 @@ export default function Dashboard() {
   // console.log(companyName, "companyName");
 
   function handleCompanyChange(event, newValue) {
+    setIsCompanySelectionChanged((prev) => !prev)
     if (!newValue) {
       // Clear selected company from sessionStorage
       sessionStorage.removeItem("CompanyIdSelected");

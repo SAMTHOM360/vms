@@ -182,6 +182,7 @@ export default function Navbar({ toggleSidebar }) {
     activeListItem,
     isOpenforGridTable,
     selectedCompanyIdForNotification,
+    isCompanySelectionChanged
   } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
@@ -197,6 +198,19 @@ export default function Navbar({ toggleSidebar }) {
   const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false);
   const [avatarLink, setAvatarLink] = useState("");
   const [isAvatarLinkPresent, setIsAvatarLinkPresent] = useState(false);
+  const [isChangedcompanyIdInSession, setIsChangedcompanyIdInSession] = useState(
+    sessionStorage.getItem("CompanyIdSelected")
+      ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+      : null
+  );
+
+  useEffect(() => {
+    setIsChangedcompanyIdInSession(
+      sessionStorage.getItem("CompanyIdSelected")
+        ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+        : null
+    )
+  },[isCompanySelectionChanged])
 
   useEffect(() => {
     if (loggedUserRole === "SUPERADMIN") {
@@ -236,9 +250,9 @@ export default function Navbar({ toggleSidebar }) {
     fetchNotification();
   }, [isRECEPTIONIST]);
 
-  // useEffect(() => {
-  //   fetchNotification();
-  // }, [selectedCompanyIdForNotification]);
+  useEffect(() => {
+    fetchNotification();
+  }, [selectedCompanyIdForNotification]);
 
   useEffect(() => {
     fetchNotification();
@@ -318,8 +332,9 @@ export default function Navbar({ toggleSidebar }) {
   };
 
 
-
+//  console.log('OUTSIDE', selectedCompanyIdForNotification)
   async function fetchNotification() {
+    // console.log('INSIDE', selectedCompanyIdForNotification)
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
     let companyId2 = parseInt(companyIdStr2, 10);
 
@@ -331,7 +346,7 @@ export default function Navbar({ toggleSidebar }) {
     let commonNoti = "";
 
     if (loggedUserRole === "RECEPTIONIST") {
-      console.log('')
+      // console.log('')
       if (!selectedCompanyIdForNotification) {
         // console.log('noti hit 2')
 
@@ -507,7 +522,7 @@ export default function Navbar({ toggleSidebar }) {
                       </Typography>
                       <Typography component="span">    </Typography>
                       {loggedUserRole === "RECEPTIONIST" ? (
-                        selectedCompanyIdForNotification ? null : (
+                        isChangedcompanyIdInSession ? null : (
                           <Typography component="span" sx={{fontSize: "15px",color: "#494949",}}>({allNotiCompanyName})</Typography>
                         )
                       ) : null}
@@ -556,7 +571,8 @@ export default function Navbar({ toggleSidebar }) {
 
       return () => clearInterval(intervalFetchNotification);
     }
-  }, [loggedUserRole]);
+  }, [loggedUserRole, selectedCompanyIdForNotification]);
+
 
   useEffect(() => {
     fetchNotification();
@@ -727,11 +743,19 @@ export default function Navbar({ toggleSidebar }) {
   const handleProfileOpen = () => {
     navigate("/profile");
     handleMenuClose();
+    if(isNotificationPopupOpen){
+
+      handleCloseBellMenu()
+    }
   };
 
   const handleChangeCompanyScreen = () => {
     navigate("/receptionistcompanyscreen");
     handleMenuClose();
+    if(isNotificationPopupOpen){
+
+      handleCloseBellMenu()
+    }
   };
 
   const handleSavePasswordChange = async (e) => {
