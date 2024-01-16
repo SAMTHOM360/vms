@@ -1349,6 +1349,7 @@ export default function Dashboard() {
                           MenuProps: {
                             style: {
                               maxHeight: "400px",
+                              maxWidth:"400px"
                             },
                           },
                         }}
@@ -1402,6 +1403,7 @@ export default function Dashboard() {
                           MenuProps: {
                             style: {
                               maxHeight: "400px",
+                              maxWidth:"400px"
                             },
                           },
                         }}
