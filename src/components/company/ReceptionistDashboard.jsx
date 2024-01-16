@@ -1536,6 +1536,10 @@ export default function Dashboard() {
                         <TableCell sx={{ color: "white" }} align="center">
                           Full Name
                         </TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                          Visitor Email
+                        </TableCell>
+
 
                         <TableCell sx={{ color: "white" }} align="center">
                           Phone No.
@@ -1644,6 +1648,10 @@ export default function Dashboard() {
 
                             <TableCell align="center">
                               {visitor.visitor.name}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {visitor.visitor.email}
                             </TableCell>
 
                             <TableCell align="center">
