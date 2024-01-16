@@ -26,6 +26,7 @@ import { useAuth } from "../../routes/AuthContext";
 import Config from "../../Config/Config";
 import InfoIcon from "@mui/icons-material/Info";
 import * as XLSX from "xlsx";
+import ClearIcon from '@mui/icons-material/Clear';
 
 //loader
 import Backdrop from "@mui/material/Backdrop";
@@ -311,6 +312,11 @@ const CompanyTable = () => {
   //   XLSX.writeFile(wb, "all_companies.xlsx");
   // };
 
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    // Fetch data or perform any other action when the search field is cleared
+    fetchAllData();
+  };
 
 
 
@@ -323,10 +329,10 @@ const CompanyTable = () => {
         companyName: selectedCompanyNames,
         buildingId: selectedBuildingIds,
       };
-  
-  let url = "http://192.168.12.58:8080/com/exportcompanydata"
+      const exportUrl = Config.baseUrl + Config.apiEndPoints.excelEndPoint;
+
   try{
-    const response = await axios.post(url, payload, { responseType: 'arraybuffer',});
+    const response = await axios.post(exportUrl, payload, { responseType: 'arraybuffer',});
   
     const byteArray = new Uint8Array(response.data);
   
@@ -356,6 +362,8 @@ const CompanyTable = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  
 
   return (
     <>
@@ -420,6 +428,7 @@ const CompanyTable = () => {
                           id="outlined-basic"
                           label="Company Name"
                           variant="outlined"
+                          type="search"
                           value={selectedCompanyNames}
                           // onChange={ (e)handleCompanyNameChange}
 
@@ -430,6 +439,9 @@ const CompanyTable = () => {
                           }}
                           // onChange={(e)=>companyChange(e)}
                           onKeyPress={handleCompanyNameChange}
+
+
+                          
                         />
 
                         {/* <div style={{ display: "flex", justifyContent: "yellow" }}> */}
@@ -782,6 +794,7 @@ const CompanyTable = () => {
           <Backdrop
             // style={{ zIndex: 1 }}
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+            
             open={open}
             // onClick={handleClose}
           >

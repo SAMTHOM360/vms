@@ -33,7 +33,10 @@ import { Tooltip } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
+import TimelineIcon from "@mui/icons-material/Timeline";
 
+// import TrailModal from "./TrailModal";
+// import Timeline from "@mui/lab/Timeline";
 import { useParams } from "react-router-dom";
 //modal
 
@@ -109,17 +112,29 @@ const columns = [
 const rowsPerPage = 10;
 
 export default function Dashboard() {
-  const { setActiveListItem, 
+  const {
+    setActiveListItem,
     // setSelectedCompanyIdForNotification,
     setIsCompanySelectionChanged,
-   } = useAuth();
+  } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
-  useEffect(() => {
-    setActiveListItem("/receptionistdashboard");
-  }, [setActiveListItem]);
 
-  const buildingId = sessionStorage.getItem("buildingId");
+    //session storage
+    const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
+    const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+    const adminId = sessionStorage.getItem("adminId");
+    const buildingId = sessionStorage.getItem("buildingId");
+    const companyId = sessionStorage.getItem("companyId");
+    const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected");
+    //companydropdown
+  
+    const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+    const company = JSON.parse(storedCompany);
+    const idCompany = storedCompany ? company.id : "";
+    const nameCompany = storedCompany ? company.name : "";
+
   //pagination and filter
 
   const [page, setPage] = useState(0);
@@ -135,6 +150,71 @@ export default function Dashboard() {
   const [meetings, setMeetings] = useState(0);
   const [meetingsLength, setMeetingsLength] = useState(0);
   const [meetingsPerPage, setMeetingsPerPage] = useState([]);
+  const [totalVisitors, setTotalVisitors] = useState(0);
+  const [pendingVisitors, setPendingVisitors] = useState(0);
+  const [approvedVisitors, setApprovedVisitors] = useState(0);
+  const [item, setItem] = useState("");
+
+  const [phoneNumberFilter, setPhoneNumberFilter] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [companyName, setCompanyName] = useState([]);
+  const [selectedCompanyName, setSelectedCompanyName] = useState(
+    storedCompany
+      ? { id: idCompany, name: nameCompany }
+      : { id: null, name: "" }
+  );
+
+
+
+  const [selectedFilter, setSelectedFilter] = useState("companyMeets");
+
+  const [isADMIN, setIsADMIN] = useState();
+
+  const [isReceptionist, setIsReceptionist] = useState(false);
+
+  const[loggedInId,setLoggedInId] = useState()
+
+
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [selectedStatusOptions, setSelectedStatusOptions] = useState(
+    location.state ? location.state.filter : ""
+  );
+
+
+  //status modal
+  const [statusModal, setStatusModal] = useState([]);
+  const [selectedStatusModal, setSelectedStatusModal] = useState([]);
+
+
+  //host
+
+  const [hostOptions, setHostOptions] = useState([]);
+  const [selectedHostOptions, setSelectedHostOptions] = useState("");
+  const [roomAdded, setRoomAdded] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
+
+
+  //select
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [filterSelectedRoom, setFilterSelectedRoom] = useState("");
+  const [reload, setReload] = useState(false);
+  const [selectedRoomOptions, setSelectedRoomOptions] = useState("");
+
+  const [adminData, setAdminData] = useState([]);
+
+  const [filterStatus, setFilterStatus] = useState("");
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [disable, setDisable] = useState(false);
+
+  //dialog
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+
+
 
   const today = new Date();
   const year = today.getFullYear();
@@ -142,27 +222,10 @@ export default function Dashboard() {
   const day = String(today.getDate()).padStart(2, "0");
 
   const formattedDate = `${year}-${month}-${day}`;
-
-  // const rowsPerPage = 10;//now
-  const [totalVisitors, setTotalVisitors] = useState(0);
-  const [pendingVisitors, setPendingVisitors] = useState(0);
-  const [approvedVisitors, setApprovedVisitors] = useState(0);
-
   const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
 
-  const [item, setItem] = useState("");
 
-  const [phoneNumberFilter, setPhoneNumberFilter] = useState("");
 
-  const [searchQuery, setSearchQuery] = useState("");
-
-  //companydropdown
-
-  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
-
-  const company = JSON.parse(storedCompany);
-  const idCompany = storedCompany ? company.id : "";
-  const nameCompany = storedCompany ? company.name : "";
 
   const buildingUrl =
     Config.baseUrl +
@@ -170,49 +233,11 @@ export default function Dashboard() {
     "?buildingId=" +
     buildingId;
 
-  const [companyName, setCompanyName] = useState([]);
-  // const [selectedCompanyName, setSelectedCompanyName] = useState(
-  //   sessionStorage.getItem("CompanyIdSelected")
-  //     ? {
-  //         id: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id,
-  //         name: JSON.parse(sessionStorage.getItem("CompanyIdSelected")).name
-  //       }
-  //     : {
-  //         id: null,
-  //         name: ""
-  //       }
-  // );
+  
 
-  const [selectedCompanyName, setSelectedCompanyName] = useState(
-    storedCompany
-      ? { id: idCompany, name: nameCompany }
-      : { id: null, name: "" }
-  );
 
-  const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
 
-  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
-  const [selectedFilter, setSelectedFilter] = useState("companyMeets");
-
-  const [isADMIN, setIsADMIN] = useState(false);
-
-  const [isReceptionist, setIsReceptionist] = useState(false);
-
-  useEffect(() => {
-    if (loggedUserRole === "ADMIN") {
-      setIsADMIN(true);
-    } else {
-      setIsADMIN(false);
-    }
-
-    if (loggedUserRole === "RECEPTIONIST") {
-      setIsReceptionist(true);
-    } else {
-      setIsReceptionist(false);
-    }
-  }, [loggedUserRole]);
-  // console.log("is admin true", isADMIN)
 
   function fetchCompanies() {
     axios
@@ -222,7 +247,7 @@ export default function Dashboard() {
       .then((response) => {
         setCompanyName(response.data.data);
 
-        // console.log(response.data.data)
+     
       })
       .catch((error) => {
         console.log("Error fetching data", error);
@@ -231,7 +256,7 @@ export default function Dashboard() {
   // console.log(companyName, "companyName");
 
   function handleCompanyChange(event, newValue) {
-    setIsCompanySelectionChanged((prev) => !prev)
+    setIsCompanySelectionChanged((prev) => !prev);
     if (!newValue) {
       // Clear selected company from sessionStorage
       sessionStorage.removeItem("CompanyIdSelected");
@@ -243,17 +268,23 @@ export default function Dashboard() {
 
     sessionStorage.setItem("CompanyIdSelected", JSON.stringify(newValue));
 
-    // additional logic with event and newValue
+    
   }
+
+  //trail
+
+  // const [isTrailModalOpen, setIsTrailModalOpen] = useState(false);
+
+  // const handleTrailIconClick = () => {
+  //   console.log("Trail icon clicked");
+  //   setIsTrailModalOpen(true);
+  // };
 
   //calender
 
-  const location = useLocation();
+ 
 
-  const [startDate, setStartDate] = useState(
-    location.state ? formattedDate : null
-  );
-  const [endDate, setEndDate] = useState(location.state ? formattedDate : null);
+
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -296,20 +327,13 @@ export default function Dashboard() {
   };
 
   //status
-  const [statusOptions, setStatusOptions] = useState([]);
-  const [selectedStatusOptions, setSelectedStatusOptions] = useState(
-    location.state ? location.state.filter : ""
-  );
+
 
   const handleChangeStatus = (event) => {
     setPage(0);
 
     setSelectedStatusOptions(event.target.value);
   };
-
-  //status modal
-  const [statusModal, setStatusModal] = useState([]);
-  const [selectedStatusModal, setSelectedStatusModal] = useState([]);
 
   const handleChangeStatusModal = (event) => {
     setSelectedStatusModal(event.target.value);
@@ -346,10 +370,6 @@ export default function Dashboard() {
       });
   }
 
-  //host
-
-  const [hostOptions, setHostOptions] = useState([]);
-  const [selectedHostOptions, setSelectedHostOptions] = useState("");
 
   const handleChangeHost = (event) => {
     setPage(0);
@@ -357,21 +377,24 @@ export default function Dashboard() {
     setSelectedHostOptions(event.target.value);
   };
 
-  const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected");
+
+
+
+
+ 
 
   function fetchHostOptions() {
-    // const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
 
-    const hostUrl =
-      Config.baseUrl +
-      Config.apiEndPoints.hostEndPoint +
-      "?buildingId=" +
-      buildingId +
-      "&companyId=" +
-      idCompany;
+   
 
+
+
+      const hostUrl = `${Config.baseUrl}${Config.apiEndPoints.hostEndPoint}?buildingId=${buildingId}&companyId=${idCompany}`;
+   
     axios
-      .get(hostUrl)
+      .get(hostUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
       .then((response) => {
         const data = response.data.data;
         // console.log(data, "hostnames")
@@ -383,8 +406,49 @@ export default function Dashboard() {
       });
   }
 
-  const [roomAdded, setRoomAdded] = useState(false);
-  const [isCancelled, setIsCancelled] = useState(false);
+  // function fetchHostOptions() {
+  //   // const hostUrl = `http://192.168.12.54:8080/api/user/alluser?companyId=${selectedCompanyId}`;
+
+  //   // const hostUrl =
+  //   //   Config.baseUrl +
+  //   //   Config.apiEndPoints.hostEndPoint +
+  //   //   "?buildingId=" +
+  //   //   buildingId +
+  //   //   "&companyId=" +
+  //   //   (isADMIN ? companyId : idCompany);
+  //   const value = isADMIN ? companyId : idCompany;
+
+  //   console.log("selectedCompanyId:", typeof companyId );
+
+
+  //     const hostUrl = Config.baseUrl + Config.apiEndPoints.hostEndPoint;
+
+
+  //     const payload={
+
+  //       companyId: isADMIN
+  //       ? companyId
+  //       : selectedCompanyName && selectedCompanyName.id
+  //       ? selectedCompanyName.id
+  //       : null,
+  //       buildingId:buildingId
+  //     }
+
+  //   axios
+  //     .post(hostUrl,payload)
+  //     .then((response) => {
+  //       const data = response.data.data;
+  //       // console.log(data, "hostnames")
+
+  //       setHostOptions(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }
+
+
+
 
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
@@ -406,12 +470,6 @@ export default function Dashboard() {
     setSelectedStatusModal("");
   };
 
-  //select
-  const [rooms, setRooms] = useState([]);
-  const [selectedRoom, setSelectedRoom] = useState("");
-  const [filterSelectedRoom, setFilterSelectedRoom] = useState("");
-  const [reload, setReload] = useState(false);
-  const [selectedRoomOptions, setSelectedRoomOptions] = useState("");
 
   const handleChange2 = (event) => {
     setPage(0);
@@ -422,14 +480,14 @@ export default function Dashboard() {
     setSelectedRoom(event.target.value);
   };
 
+
   function getRoomsOption() {
+
     const roomUrl =
-      Config.baseUrl +
-      Config.apiEndPoints.roomDetailsRecepEndPoint +
-      "?id=" +
-      idCompany +
-      "&buildingId=" +
-      buildingId;
+     
+`${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`
+
+  
     axios
       .get(roomUrl, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
@@ -507,19 +565,8 @@ export default function Dashboard() {
       })
       .then((response) => {
         setOpenLoader(false);
-        // if (response.data.status === 200) {
-        //   alert(response.data.message);
-        //   setIsCancelled(true);
-        //   handleCloseModal();
-        // }
-        // if (response.data.message === 200) {
-        //   alert(response.data.message);
-        //   setRoomAdded(true);
-        //   setIsCancelled(true);
-        //   handleCloseModal();
-        //   setReload(true);
-        // }
-        if (response.data.status === 200 || response.data.status ===201) {
+     
+        if (response.data.status === 200 || response.data.status === 201) {
           alert(response.data.message);
           setRoomAdded(true);
           setIsCancelled(true);
@@ -527,21 +574,14 @@ export default function Dashboard() {
           setReload(true);
         }
 
-
-
-        if(response.data.status !== 200){
-          alert(response.data.message)
-          return
+        if (response.data.status !== 200) {
+          alert(response.data.message);
+          return;
         }
         setOpen(false);
       })
       .catch((error) => {
-        // if (error.response.data.message === "You cannot update a meeting now") {
-
-        //   alert(error.response.data.message);
-        // } else {
-        //   alert("An unexpected error occurred");
-        // }
+   
         setOpenLoader(false);
         if (error.response.data.message) {
           alert(error.response.data.message);
@@ -596,18 +636,17 @@ export default function Dashboard() {
   const testExcel = async () => {
     const exportUrl = Config.baseUrl + Config.apiEndPoints.exportRecepEndPoint;
 
- 
-
     const payload = {
       page: 0,
       phoneNumber: phoneNumberFilter.length === 0 ? null : phoneNumberFilter,
       fromDate: startDate,
       toDate: endDate,
       size: null,
-      companyId:isADMIN ? companyId :(
-        selectedCompanyName && selectedCompanyName.id
-          ? selectedCompanyName.id
-          : null),
+      companyId: isADMIN
+        ? companyId
+        : selectedCompanyName && selectedCompanyName.id
+        ? selectedCompanyName.id
+        : null,
       buildingId: buildingId,
       user: {
         id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
@@ -659,27 +698,23 @@ export default function Dashboard() {
     setPage(0);
   };
 
-  const adminId = sessionStorage.getItem("adminId");
+ 
 
-  const [adminData, setAdminData] = useState([]);
 
-  const companyId = sessionStorage.getItem("companyId")
 
   function fetchData() {
     setOpenLoader(true);
 
-    // setSelectedStatusOptions(location?.state?.filter)
-    // setStartDate(formattedDate)
-    // setEndDate(formattedDate)
 
     const payload = {
       page: page,
       size: rowsPerPage,
       phoneNumber: phoneNumberFilter ? phoneNumberFilter : null,
-      companyId:isADMIN ? companyId :(
-        selectedCompanyName && selectedCompanyName.id
-          ? selectedCompanyName.id
-          : null),
+      companyId: isADMIN
+        ? companyId
+        : selectedCompanyName && selectedCompanyName.id
+        ? selectedCompanyName.id
+        : null,
       buildingId: buildingId,
       fromDate: startDate,
       toDate: endDate,
@@ -695,26 +730,7 @@ export default function Dashboard() {
       },
     };
 
-    // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
-    // let storedCompanyForVisitorId;
 
-    // if (storedCompanyForVisitor) {
-    //   try {
-    //     const parsedCompany = JSON.parse(storedCompanyForVisitor);
-    //     storedCompanyForVisitorId = parsedCompany.id || null;
-    //   } catch (error) {
-    //     storedCompanyForVisitorId = null;
-    //   }
-    // } else {
-    //   storedCompanyForVisitorId = null;
-    // }
-
-    // console.log(
-    //   "storedCompanyForVisitorId jhvfhsvf",
-    //   storedCompanyForVisitorId
-    // );
-
-    // setSelectedCompanyIdForNotification(storedCompanyForVisitorId);
 
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint;
@@ -760,6 +776,13 @@ export default function Dashboard() {
   function getFullName(user) {
     return `${user.firstName} ${user.lastName} (${user.departmentDto.name})`;
   }
+
+
+//calender
+  const [startDate, setStartDate] = useState(
+    location.state ? formattedDate : null
+  );
+  const [endDate, setEndDate] = useState(location.state ? formattedDate : null);
 
   function formatMeetingDurationStartTime(meeting) {
     const endTimestamp = meeting.meetingStartDateTime;
@@ -893,110 +916,11 @@ export default function Dashboard() {
       });
   };
 
-  // const handlePhoneNumberSearch = (event) => {
-  //     if (event.key === 'Enter') {
-
-  //         setPhoneNumberFilter(e.target.value)
-
-  //         // fetchData(phoneNumberFilter);
-  //     }
-  // };
-
-  // useEffect(() => {
-  //     fetchData()
-  // }, [ selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
-
-  // useEffect(()=>{
-  //     if (location.state && location.state.filter) {
-  //         const today = new Date();
-  //         const year = today.getFullYear();
-  //         const month = String(today.getMonth() + 1).padStart(2, '0');
-  //         const day = String(today.getDate()).padStart(2, '0');
-
-  //         const formattedDate = `${year}-${month}-${day}`
-
-  //         setSelectedStatusOptions(location?.state?.filter)
-  //         setStartDate(formattedDate)
-  //         setEndDate(formattedDate)
-  //     }
-
-  // },[])
-
-  useEffect(() => {
-    fetchData();
-  }, [
-    page,
-    rowsPerPage,
-    reload,
-    selectedStatusOptions,
-    filterSelectedRoom,
-    selectedHostOptions,
-    startDate,
-    phoneNumberFilter,
-    endDate,
-    selectedCompanyName,
-    isADMIN
-  ]);
-
-  // useEffect(() => {
-  //   // getRoomsOption();
-  //   // fetchStatusOptions();
-  //   // fetchStatusOptions1();
-  //   // fetchHostOptions();
-  //   // fetchCompanies();
-  // }, []);
-
-  useEffect(() => {
-    // getRoomsOption();
-    fetchStatusOptions();
-    fetchStatusOptions1();
-    fetchHostOptions();
-    fetchCompanies();
-  }, [selectedCompanyName]);
-
-  useEffect(() => {
-    getRoomsOption();
-  }, [reload, selectedCompanyName]);
-
-  // useEffect(() => {
-  //     if (location.state && location.state.filter) {
-  //         const today = new Date();
-  //         const year = today.getFullYear();
-  //         const month = String(today.getMonth() + 1).padStart(2, '0');
-  //         const day = String(today.getDate()).padStart(2, '0');
-
-  //         const formattedDate = `${year}-${month}-${day}`
-
-  //         setSelectedStatusOptions(location?.state?.filter)
-  //         setStartDate(formattedDate)
-  //         setEndDate(formattedDate)
-  //     }
-  // }, [])
-
-  // useEffect(() => {
-
-  //     if (page === 0) {
-
-  //         fetchData();
-
-  //     } else {
-  //         setPage(0);
-  //     }
-
-  // }, [selectedStatusOptions, filterSelectedRoom, selectedHostOptions, startDate, endDate])
-
-  const [filterStatus, setFilterStatus] = useState("");
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
+ 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  //dialog
-
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
 
   const handleClickOpenDialog = (value) => {
     setOpenDialog(true);
@@ -1012,8 +936,6 @@ export default function Dashboard() {
     setOpenDialog(false);
     setSelectedValue(value);
   };
-
-  // console.log(location, "location");
 
 
 
@@ -1047,7 +969,7 @@ export default function Dashboard() {
     setSelectedRoom("");
   };
 
-  const [disable, setDisable] = useState(false);
+
 
   function CheckOut(phoneNumber) {
     const number = phoneNumber;
@@ -1078,30 +1000,94 @@ export default function Dashboard() {
   }
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
-  
-    setReload(!reload)
+    setReload(!reload);
 
-
-   
     const passApiEndpoint =
       Config.baseUrl +
       Config.apiEndPoints.passApiEndPoint +
       "?meetingId=" +
       meetingId;
 
-
     const printWindow = window.open(passApiEndpoint, "_blank");
 
- 
     printWindow.onload = () => {
       printWindow.print();
     };
-
-   
-
-
   };
 
+
+
+
+
+
+
+  //useeffect
+
+  useEffect(() => {
+    // debugger
+    if (loggedUserRole === "ADMIN") {
+      setIsADMIN(true);
+    } else {
+      setIsADMIN(false);
+    }
+
+    if (loggedUserRole === "RECEPTIONIST") {
+      setIsReceptionist(true);
+    } else {
+      setIsReceptionist(false);
+    }
+  }, [loggedUserRole]);
+
+  // console.log("is admin true", isADMIN)
+
+
+
+ 
+  // useEffect(()=>{
+ 
+  //   isADMIN ? setLoggedInId(companyId) : setLoggedInId(idCompany)
+
+  // },[isADMIN])
+
+  useEffect(() => {
+    setActiveListItem("/receptionistdashboard");
+  }, [setActiveListItem]);
+
+  useEffect(() => {
+    fetchData();
+  }, [
+    page,
+    rowsPerPage,
+    reload,
+    selectedStatusOptions,
+    filterSelectedRoom,
+    selectedHostOptions,
+    startDate,
+    phoneNumberFilter,
+    endDate,
+    selectedCompanyName,
+
+  ]);
+
+  // useEffect(() => {
+  //   // getRoomsOption();
+  //   fetchStatusOptions();
+  //   fetchStatusOptions1();
+  //   fetchHostOptions();
+  //   fetchCompanies();
+  // }, []);
+
+  useEffect(() => {
+    // getRoomsOption();
+    fetchStatusOptions();
+    fetchStatusOptions1();
+    fetchHostOptions();
+    fetchCompanies();
+  }, [selectedCompanyName]);
+
+  useEffect(() => {
+    getRoomsOption();
+  }, [reload, selectedCompanyName]);
 
 
   return (
@@ -1376,11 +1362,19 @@ export default function Dashboard() {
                               disabled={!options.isPresent}
                               style={{
                                 color: options.isPresent ? "black" : "grey",
+                                display: "flex",
+                                justifyContent: "space-between",
                               }}
                             >
-                              {options.name}
+                              <div>{options.name}</div>
+                              <div> ({options.companyName})</div>
                             </MenuItem>
                           ))}
+
+
+
+
+
                       </TextField>
                     </Grid>
 
@@ -1414,12 +1408,25 @@ export default function Dashboard() {
                         onChange={handleChange2}
                         style={{ top: "" }}
                       >
+
+                        {}
                         {Array.isArray(rooms) &&
                           rooms.map((room) => (
-                            <MenuItem key={room.id} value={room.id}>
-                              {room.roomName}
+                            <MenuItem
+                              key={room.id}
+                              value={room.id}
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <div>{room.roomName}</div>
+                              <div> ({room.company.name})</div>
+                           
                             </MenuItem>
                           ))}
+
+                        
                       </TextField>
                     </Grid>
 
@@ -1427,6 +1434,10 @@ export default function Dashboard() {
                       <TextField
                         type="date"
                         value={startDate}
+                        label="Meet Start Date"
+                        InputLabelProps={{
+                          shrink: "true",
+                        }}
                         sx={{ width: "100%" }}
                         onChange={handleStartDateChange}
                       ></TextField>
@@ -1435,8 +1446,12 @@ export default function Dashboard() {
                     <Grid item xs={4} md={4} lg={2}>
                       <TextField
                         type="date"
+                        label="Meet End Date"
                         value={endDate}
                         sx={{ width: "100%" }}
+                        InputLabelProps={{
+                          shrink: "true",
+                        }}
                         onChange={handleEndDateChange}
                       ></TextField>
                       {/* </Grid> */}
@@ -1526,10 +1541,13 @@ export default function Dashboard() {
                           Phone No.
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
-                        Visitor Company
+                          Visitor Company
                         </TableCell>
                         <TableCell sx={{ color: "white" }} align="center">
                           Host Name
+                        </TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                          Host Company
                         </TableCell>
 
                         <TableCell sx={{ color: "white" }} align="center">
@@ -1578,6 +1596,10 @@ export default function Dashboard() {
                             Visitor Checkout
                           </TableCell>
                         )}
+
+                        {/* <TableCell sx={{ color: "white" }} align="center">
+                          Trail
+                        </TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -1594,7 +1616,7 @@ export default function Dashboard() {
                                   style={{
                                     display: "flex",
                                     flexDirection: "row",
-                                    justifyContent:'center',
+                                    justifyContent: "center",
                                     alignItems: "center",
                                   }}
                                 >
@@ -1645,6 +1667,10 @@ export default function Dashboard() {
                               )} */}
 
                               {getFullName(visitor.user)}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {visitor.user.company.name}
                             </TableCell>
 
                             <TableCell align="center">
@@ -1823,12 +1849,12 @@ export default function Dashboard() {
                                 !isADMIN ? (
                                   <Button
                                     variant="outlined"
-                                    onClick={() =>{
+                                    onClick={() => {
                                       handlePrintPass(
                                         visitor.id,
                                         visitor.visitor.name,
                                         visitor.visitor.phoneNumber
-                                      )
+                                      );
                                       // setReload(true)
                                     }}
                                   >
@@ -1863,6 +1889,12 @@ export default function Dashboard() {
                                 )}
                               </TableCell>
                             )}
+
+                           {/* <TableCell align="center">
+                              <TimelineIcon
+                                onClick={() => handleTrailIconClick()}
+                              />
+                            </TableCell> */}
                           </TableRow>
                         ))
                       ) : (
@@ -1917,6 +1949,10 @@ export default function Dashboard() {
               </Item>
             </Grid>
           </Grid>
+{/* 
+          {isTrailModalOpen && (
+            <TrailModal onClose={() => setIsTrailModalOpen(false)} />
+          )} */}
 
           <StyledModal
             open={open}

@@ -371,7 +371,7 @@ export default function ReceptionistAddRoom() {
       .post(isActiveRoomUrl, payload)
       .then((response) => {
         setOpen(false);
-        if (response.data.message) {
+        if (response.data.statusCode === 200) {
           alert(response.data.message);
 
           setActive(newActiveStatus);
@@ -387,11 +387,20 @@ export default function ReceptionistAddRoom() {
           setReload(!reload);
           setPage(0);
         }
-
+    
+      
         // console.log(response)
       })
       .catch((error) => {
         setOpen(false);
+
+        if(error.response.data.statusCode === 400){
+          alert(error.response.data.message)
+        
+        }
+
+
+     
         console.log(error, "error");
       });
   }
