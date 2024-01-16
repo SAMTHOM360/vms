@@ -325,7 +325,7 @@ const CompanyTable = () => {
  
       const payload = {
         page: page,
-        size: rowsPerPage,
+        size: null,
         companyName: selectedCompanyNames,
         buildingId: selectedBuildingIds,
       };
