@@ -332,6 +332,14 @@ export default function CompanyReg() {
       return;
     }
 
+      // Check if file extension is JFIF
+  const isJFIF = logoFile.name.toLowerCase().endsWith(".jfif");
+  if (isJFIF) {
+    alert("Allowed file formats: .jpg, .jpeg, .png");
+    resetFileInput();
+    return;
+  }
+
  
     // if (logoFile.size > MAX_FILE_SIZE) {
     //     alert("Maximum file size exceeded (5MB)");
@@ -362,6 +370,11 @@ export default function CompanyReg() {
      
       return;
     }
+
+
+
+
+
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);
@@ -583,7 +596,7 @@ export default function CompanyReg() {
                           >
                             <input
                               type="file"
-                              accept="image/jpeg, image/jpg, image/png"
+                              accept="image/jpeg, image/jpg, image/png,image/jfif"
                               id="file-input"
                               onChange={handleLogoChange}
 

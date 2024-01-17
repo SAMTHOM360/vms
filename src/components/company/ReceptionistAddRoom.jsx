@@ -613,7 +613,7 @@ export default function ReceptionistAddRoom() {
                       onChange={(event, newValue) => handleCompanyChange(event, newValue)}
                       options={companyName}
                       getOptionLabel={(option) => option.name}
-                      sx={{ width: 300 }}
+                      sx={{ width: 300 ,marginTop:1}}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Company" />
                       )}

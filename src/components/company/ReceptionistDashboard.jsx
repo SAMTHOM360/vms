@@ -211,7 +211,13 @@ export default function Dashboard() {
   //filter Room
   const [filterRooms, setFilterRooms] = useState([]);
 
+
+
+
   function getFilterRooms() {
+
+   
+
     const filterRoomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsFilterRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`;
 
     axios
@@ -281,11 +287,36 @@ export default function Dashboard() {
 
   //calender
 
+
+  // const getCurrentDate = () => {
+  //   const today = new Date();
+  //   const year = today.getFullYear();
+  //   const month = String(today.getMonth() - 1).padStart(2, "0");
+  //   const day = String(today.getDate()).padStart(2, "0");
+  //   return `${year}-${month}-${day}`;
+  // };
+
+
+  
+
+
+
+
+
+
+
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
 
   const handleEndDateChange = (e) => {
+    const selectedEndDate = e.target.value;
+
+
+
+
+
+
     setEndDate(e.target.value);
   };
 
@@ -433,11 +464,19 @@ export default function Dashboard() {
 
   const [openLoader, setOpenLoader] = useState(false);
 
+ const [rowMeetingId,setRowMeetingId] = useState()
+
   const handleOpenModal = (value) => {
+   
+   
+    
+     setRowMeetingId(value.user.company.id)
     setItem(value);
     setOpen(true);
+
+  
   };
-  // console.log(item,"name")
+
 
   // Function to handle closing the modal
   const handleCloseModal = () => {
@@ -458,7 +497,9 @@ export default function Dashboard() {
   };
 
   function getRoomsOption() {
-    const roomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`;
+
+  
+    const roomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${rowMeetingId}&buildingId=${buildingId}`;
 
     axios
       .get(roomUrl, {
@@ -1045,8 +1086,19 @@ export default function Dashboard() {
 
   useEffect(() => {
     getFilterRooms();
-    getRoomsOption();
+    
   }, [reload, selectedCompanyName]);
+
+
+  useEffect(() => {
+    if (rowMeetingId) {
+      getRoomsOption();
+    }
+  }, [rowMeetingId]);
+
+
+
+ 
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -1103,7 +1155,7 @@ export default function Dashboard() {
                       }
                       options={companyName}
                       getOptionLabel={(option) => option.name}
-                      sx={{ width: 300 }}
+                      sx={{ width: 300 ,marginRight:1,marginTop:1}}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Company" />
                       )}
@@ -1404,6 +1456,7 @@ export default function Dashboard() {
                         InputProps={{
                           inputProps: {
                             style: { textTransform: "uppercase" },
+                             max: moment().format("YYYY-MM-DD"),
                           },
                           inputComponent: (props) => (
                             <input
@@ -1428,13 +1481,15 @@ export default function Dashboard() {
                         onChange={handleEndDateChange}
                         InputProps={{
                           inputProps: {
-                            style: { textTransform: "uppercase" },
+                            style: { textTransform: "uppercase", },
+                            min: moment(startDate).add(1, "day").format("YYYY-MM-DD"),
                           },
                           inputComponent: (props) => (
                             <input
                               {...props}
-                              value={startDate}
+                              value={endDate}
                               style={{ textTransform: "uppercase" }}
+                              
                             />
                           ),
                         }}
@@ -1567,11 +1622,11 @@ export default function Dashboard() {
                           Info
                         </TableCell>
 
-                        {isADMIN || !idCompany ? null : (
+                      
                           <TableCell sx={{ color: "white" }} align="center">
                             Actions
                           </TableCell>
-                        )}
+                      
 
                         {isADMIN ? null : (
                           <TableCell sx={{ color: "white" }} align="center">
@@ -1754,7 +1809,7 @@ export default function Dashboard() {
                               />
                             </TableCell>
 
-                            {isADMIN || !idCompany ? null : (
+                          
                               <TableCell align="center">
                                 {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
@@ -1819,7 +1874,7 @@ export default function Dashboard() {
                                   />
                                 )}
                               </TableCell>
-                            )}
+                           
 
                             {/* <TableCell align="center">
           <Button variant="outlined" onClick={() =>
@@ -1849,7 +1904,7 @@ export default function Dashboard() {
                                         visitor.visitor.name,
                                         visitor.visitor.phoneNumber
                                       );
-                                      // setReload(true)
+                                      
                                     }}
                                   >
                                     Print

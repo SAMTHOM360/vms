@@ -369,7 +369,7 @@ const buildingId = sessionStorage.getItem("buildingId")
                      
                       options={companyName}
                       getOptionLabel={(option) => option.name}
-                      sx={{ width: 300 }}
+                      sx={{ width: 300,marginTop:1 }}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Company" />
                       )}
