@@ -160,6 +160,7 @@ const Building = lazy(() => import ('./components/company/Building'))
 function App() {
   const { isSideBarPinned,isHoverOpen } = useAuth()
 
+
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   // const [sidebarOpen, setSidebarOpen] = useState(sessionStorage.getItem('isHoverOpen') === 'true' || true);

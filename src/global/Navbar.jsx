@@ -46,6 +46,8 @@ import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import Config from "../Config/Config";
 import nyggsLogo from "../assets/nyggsLogo.png";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 const AppBar = styled(
   MuiAppBar,
@@ -269,6 +271,12 @@ export default function Navbar({ toggleSidebar }) {
     }
   };
 
+  const isValidImage = (url) => {
+    const img = new Image();
+    img.src = url;
+    return img.complete && img.naturalWidth !== 0;
+  };
+
   useEffect(() => {
     if (isValidLink(avatarLink)) {
       setIsAvatarLinkPresent(true);
@@ -469,7 +477,7 @@ export default function Navbar({ toggleSidebar }) {
                       maxHeight:'5.5em',
                     }}
                   >
-                    <Avatar sx={{}}>
+                    {/* <Avatar sx={{}}>
                       <img
                         src={bellApiVisiorData.imageUrl}
                         alt="No DP"
@@ -479,7 +487,25 @@ export default function Navbar({ toggleSidebar }) {
                           objectFit: "cover",
                         }}
                       />
-                    </Avatar>
+                    </Avatar> */}
+                    {bellApiVisiorData.imageUrl && isValidImage(bellApiVisiorData.imageUrl) ? (
+  <Avatar sx={{}}>
+    <img
+      src={bellApiVisiorData.imageUrl}
+      alt="No DP"
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      }}
+    />
+  </Avatar>
+) : (
+  <Avatar sx={{}}>
+    {/* <AccountCircleIcon /> */}
+    <PermIdentityIcon />
+  </Avatar>
+)}
                     <Box
                       sx={{
                         width: "70%",

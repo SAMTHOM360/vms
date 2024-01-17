@@ -319,7 +319,7 @@ const MeetingDetails = () => {
     const trimmedCompanyName = formData.company ? formData.company.name ? formData.company.name.trim() : null : null;
     const trimmedRemarks = formData.remarks ? formData.remarks.trim() : null;
 
-    console.log('trimmedCompanyName', trimmedCompanyName)
+    // console.log('trimmedCompanyName', trimmedCompanyName)
 
     if (!trimmedName) {
       toast.warn("Name is required !!!", {
