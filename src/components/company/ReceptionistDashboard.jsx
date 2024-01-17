@@ -121,19 +121,19 @@ export default function Dashboard() {
   const location = useLocation();
   // sessionStorage.setItem('activeListItem', '/receptionistdashboard')
 
-    //session storage
-    const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-    const loggedUserRole = sessionStorage.getItem("loggedUserRole");
-    const adminId = sessionStorage.getItem("adminId");
-    const buildingId = sessionStorage.getItem("buildingId");
-    const companyId = sessionStorage.getItem("companyId");
-    const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected");
-    //companydropdown
-  
-    const storedCompany = sessionStorage.getItem("CompanyIdSelected");
-    const company = JSON.parse(storedCompany);
-    const idCompany = storedCompany ? company.id : "";
-    const nameCompany = storedCompany ? company.name : "";
+  //session storage
+  const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
+  const loggedUserRole = sessionStorage.getItem("loggedUserRole");
+  const adminId = sessionStorage.getItem("adminId");
+  const buildingId = sessionStorage.getItem("buildingId");
+  const companyId = sessionStorage.getItem("companyId");
+  const CompanyIdSelected = sessionStorage.getItem("CompanyIdSelected");
+  //companydropdown
+
+  const storedCompany = sessionStorage.getItem("CompanyIdSelected");
+  const company = JSON.parse(storedCompany);
+  const idCompany = storedCompany ? company.id : "";
+  const nameCompany = storedCompany ? company.name : "";
 
   //pagination and filter
 
@@ -166,27 +166,22 @@ export default function Dashboard() {
       : { id: null, name: "" }
   );
 
-
-
   const [selectedFilter, setSelectedFilter] = useState("companyMeets");
 
   const [isADMIN, setIsADMIN] = useState();
 
   const [isReceptionist, setIsReceptionist] = useState(false);
 
-  const[loggedInId,setLoggedInId] = useState()
-
+  const [loggedInId, setLoggedInId] = useState();
 
   const [statusOptions, setStatusOptions] = useState([]);
   const [selectedStatusOptions, setSelectedStatusOptions] = useState(
     location.state ? location.state.filter : ""
   );
 
-
   //status modal
   const [statusModal, setStatusModal] = useState([]);
   const [selectedStatusModal, setSelectedStatusModal] = useState([]);
-
 
   //host
 
@@ -194,7 +189,6 @@ export default function Dashboard() {
   const [selectedHostOptions, setSelectedHostOptions] = useState("");
   const [roomAdded, setRoomAdded] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
-
 
   //select
   const [rooms, setRooms] = useState([]);
@@ -214,34 +208,25 @@ export default function Dashboard() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
 
+  //filter Room
+  const [filterRooms, setFilterRooms] = useState([]);
 
+  function getFilterRooms() {
+    const filterRoomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsFilterRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`;
 
-//filter Room
-  const[filterRooms,setFilterRooms] = useState([])
-
-
- function getFilterRooms(){
-
-  const filterRoomUrl =
-     
-  `${Config.baseUrl}${Config.apiEndPoints.roomDetailsFilterRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`
-  
-    
-      axios
-        .get(filterRoomUrl, {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-        })
-        .then((response) => {
-          const data = response.data.data;
-          setFilterRooms(data);
-          setReload(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
- }
-
-
+    axios
+      .get(filterRoomUrl, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        setFilterRooms(data);
+        setReload(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
 
   const today = new Date();
   const year = today.getFullYear();
@@ -251,16 +236,12 @@ export default function Dashboard() {
   const formattedDate = `${year}-${month}-${day}`;
   const phoneNumberRegex = /^\+?[0-9]{1,3}(-|\s)?[0-9]{3,14}$/;
 
-
-
-
   const buildingUrl =
     Config.baseUrl +
     Config.apiEndPoints.buildingEndPoint +
     "?buildingId=" +
     buildingId;
 
-  
   function fetchCompanies() {
     axios
       .get(buildingUrl, {
@@ -268,8 +249,6 @@ export default function Dashboard() {
       })
       .then((response) => {
         setCompanyName(response.data.data);
-
-     
       })
       .catch((error) => {
         console.log("Error fetching data", error);
@@ -289,8 +268,6 @@ export default function Dashboard() {
     setSelectedCompanyName(newValue);
 
     sessionStorage.setItem("CompanyIdSelected", JSON.stringify(newValue));
-
-    
   }
 
   //trail
@@ -303,10 +280,6 @@ export default function Dashboard() {
   // };
 
   //calender
-
- 
-
-
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -350,7 +323,6 @@ export default function Dashboard() {
 
   //status
 
-
   const handleChangeStatus = (event) => {
     setPage(0);
 
@@ -392,27 +364,15 @@ export default function Dashboard() {
       });
   }
 
-
   const handleChangeHost = (event) => {
     setPage(0);
 
     setSelectedHostOptions(event.target.value);
   };
 
-
-
-
-
- 
-
   function fetchHostOptions() {
+    const hostUrl = `${Config.baseUrl}${Config.apiEndPoints.hostEndPoint}?buildingId=${buildingId}&companyId=${idCompany}`;
 
-   
-
-
-
-      const hostUrl = `${Config.baseUrl}${Config.apiEndPoints.hostEndPoint}?buildingId=${buildingId}&companyId=${idCompany}`;
-   
     axios
       .get(hostUrl, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
@@ -442,9 +402,7 @@ export default function Dashboard() {
 
   //   console.log("selectedCompanyId:", typeof companyId );
 
-
   //     const hostUrl = Config.baseUrl + Config.apiEndPoints.hostEndPoint;
-
 
   //     const payload={
 
@@ -469,9 +427,6 @@ export default function Dashboard() {
   //     });
   // }
 
-
-
-
   function calculateSerialNumber(page, rowsPerPage, index) {
     return page * rowsPerPage + index + 1;
   }
@@ -479,14 +434,10 @@ export default function Dashboard() {
   const [openLoader, setOpenLoader] = useState(false);
 
   const handleOpenModal = (value) => {
-  
     setItem(value);
     setOpen(true);
   };
   // console.log(item,"name")
-
-
- 
 
   // Function to handle closing the modal
   const handleCloseModal = () => {
@@ -497,7 +448,6 @@ export default function Dashboard() {
     setSelectedStatusModal("");
   };
 
-
   const handleChange2 = (event) => {
     setPage(0);
     setFilterSelectedRoom(event.target.value);
@@ -507,14 +457,9 @@ export default function Dashboard() {
     setSelectedRoom(event.target.value);
   };
 
-
   function getRoomsOption() {
+    const roomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`;
 
-    const roomUrl =
-     
-`${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`
-
-  
     axios
       .get(roomUrl, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
@@ -592,7 +537,7 @@ export default function Dashboard() {
       })
       .then((response) => {
         setOpenLoader(false);
-     
+
         if (response.data.status === 200 || response.data.status === 201) {
           alert(response.data.message);
           setRoomAdded(true);
@@ -608,7 +553,6 @@ export default function Dashboard() {
         setOpen(false);
       })
       .catch((error) => {
-   
         setOpenLoader(false);
         if (error.response.data.message) {
           alert(error.response.data.message);
@@ -725,13 +669,8 @@ export default function Dashboard() {
     setPage(0);
   };
 
- 
-
-
-
   function fetchData() {
     setOpenLoader(true);
-
 
     const payload = {
       page: page,
@@ -756,8 +695,6 @@ export default function Dashboard() {
         id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
       },
     };
-
-
 
     const getVisitorUrl =
       Config.baseUrl + Config.apiEndPoints.getVisitorRecepEndPoint;
@@ -804,8 +741,7 @@ export default function Dashboard() {
     return `${user.firstName} ${user.lastName} (${user.departmentDto.name})`;
   }
 
-
-//calender
+  //calender
   const [startDate, setStartDate] = useState(
     location.state ? formattedDate : null
   );
@@ -943,11 +879,9 @@ export default function Dashboard() {
       });
   };
 
- 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
 
   const handleClickOpenDialog = (value) => {
     setOpenDialog(true);
@@ -963,8 +897,6 @@ export default function Dashboard() {
     setOpenDialog(false);
     setSelectedValue(value);
   };
-
-
 
   const meetOptions = [
     { label: "Personal Meets", value: "personalMeets" },
@@ -996,8 +928,6 @@ export default function Dashboard() {
     setSelectedRoom("");
   };
 
-
-
   function CheckOut(phoneNumber) {
     const number = phoneNumber;
     // console.log(number, "numberr");
@@ -1026,13 +956,12 @@ export default function Dashboard() {
       });
   }
 
-
-  const[print,setPrint] = useState(false)
+  const [print, setPrint] = useState(false);
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
     setReload(!reload);
- 
-    fetchData()
+
+    fetchData();
     const passApiEndpoint =
       Config.baseUrl +
       Config.apiEndPoints.passApiEndPoint +
@@ -1044,21 +973,15 @@ export default function Dashboard() {
     // printWindow.onload = () => {
     //   printWindow.print();
 
-     
     // };
-
 
     if (printWindow) {
       // Check if printWindow is not null
       printWindow.onload = () => {
         printWindow.print();
-    
       };
-    } 
-
-  
+    }
   };
-
 
   //useeffect
 
@@ -1079,11 +1002,8 @@ export default function Dashboard() {
 
   // console.log("is admin true", isADMIN)
 
-
-
- 
   // useEffect(()=>{
- 
+
   //   isADMIN ? setLoggedInId(companyId) : setLoggedInId(idCompany)
 
   // },[isADMIN])
@@ -1098,7 +1018,7 @@ export default function Dashboard() {
     page,
     rowsPerPage,
     reload,
- 
+
     selectedStatusOptions,
     filterSelectedRoom,
     selectedHostOptions,
@@ -1106,8 +1026,6 @@ export default function Dashboard() {
     phoneNumberFilter,
     endDate,
     selectedCompanyName,
-   
-
   ]);
 
   // useEffect(() => {
@@ -1119,7 +1037,6 @@ export default function Dashboard() {
   // }, []);
 
   useEffect(() => {
-   
     fetchStatusOptions();
     fetchStatusOptions1();
     fetchHostOptions();
@@ -1130,7 +1047,6 @@ export default function Dashboard() {
     getFilterRooms();
     getRoomsOption();
   }, [reload, selectedCompanyName]);
-
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -1391,7 +1307,7 @@ export default function Dashboard() {
                           MenuProps: {
                             style: {
                               maxHeight: "400px",
-                              maxWidth:"400px"
+                              maxWidth: "400px",
                             },
                           },
                         }}
@@ -1410,14 +1326,16 @@ export default function Dashboard() {
                               }}
                             >
                               <div>{options.name}</div>
-                              <div> ({options.companyName})</div>
+
+                              {!idCompany &&
+                                !isADMIN &&
+                                options.companyName && (
+                                  <div>{options.companyName}</div>
+                                )}
+
+                              {/* {(!idCompany  &&  options.companyName )||(!isADMIN && options.companyName )  ? options.companyName: "" } */}
                             </MenuItem>
                           ))}
-
-
-
-
-
                       </TextField>
                     </Grid>
 
@@ -1445,14 +1363,13 @@ export default function Dashboard() {
                           MenuProps: {
                             style: {
                               maxHeight: "400px",
-                              maxWidth:"400px"
+                              maxWidth: "400px",
                             },
                           },
                         }}
                         onChange={handleChange2}
                         style={{ top: "" }}
                       >
-
                         {}
                         {Array.isArray(filterRooms) &&
                           filterRooms.map((room) => (
@@ -1465,12 +1382,12 @@ export default function Dashboard() {
                               }}
                             >
                               <div>{room.roomName}</div>
-                              <div> ({room.company.name})</div>
-                           
+
+                              {!idCompany && !isADMIN && room.company.name && (
+                                <div>{room.company.name}</div>
+                              )}
                             </MenuItem>
                           ))}
-
-                        
                       </TextField>
                     </Grid>
 
@@ -1484,6 +1401,18 @@ export default function Dashboard() {
                         }}
                         sx={{ width: "100%" }}
                         onChange={handleStartDateChange}
+                        InputProps={{
+                          inputProps: {
+                            style: { textTransform: "uppercase" },
+                          },
+                          inputComponent: (props) => (
+                            <input
+                              {...props}
+                              value={startDate}
+                              style={{ textTransform: "uppercase" }}
+                            />
+                          ),
+                        }}
                       ></TextField>
                     </Grid>
 
@@ -1497,10 +1426,19 @@ export default function Dashboard() {
                           shrink: "true",
                         }}
                         onChange={handleEndDateChange}
+                        InputProps={{
+                          inputProps: {
+                            style: { textTransform: "uppercase" },
+                          },
+                          inputComponent: (props) => (
+                            <input
+                              {...props}
+                              value={startDate}
+                              style={{ textTransform: "uppercase" }}
+                            />
+                          ),
+                        }}
                       ></TextField>
-                      {/* </Grid> */}
-
-                      {/* </Grid> */}
                     </Grid>
                   </Grid>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -1584,7 +1522,6 @@ export default function Dashboard() {
                           Visitor Email
                         </TableCell>
 
-
                         <TableCell sx={{ color: "white" }} align="center">
                           Phone No.
                         </TableCell>
@@ -1594,9 +1531,12 @@ export default function Dashboard() {
                         <TableCell sx={{ color: "white" }} align="center">
                           Host Name
                         </TableCell>
-                        <TableCell sx={{ color: "white" }} align="center">
-                          Host Company
-                        </TableCell>
+
+                        {isADMIN ? null : (
+                          <TableCell sx={{ color: "white" }} align="center">
+                            Host Company
+                          </TableCell>
+                        )}
 
                         <TableCell sx={{ color: "white" }} align="center">
                           Room
@@ -1627,7 +1567,7 @@ export default function Dashboard() {
                           Info
                         </TableCell>
 
-                        {isADMIN  || !idCompany? null : (
+                        {isADMIN || !idCompany ? null : (
                           <TableCell sx={{ color: "white" }} align="center">
                             Actions
                           </TableCell>
@@ -1721,9 +1661,11 @@ export default function Dashboard() {
                               {getFullName(visitor.user)}
                             </TableCell>
 
-                            <TableCell align="center">
-                              {visitor.user.company.name}
-                            </TableCell>
+                            {isADMIN ? null : (
+                              <TableCell align="center">
+                                {visitor.user.company.name}
+                              </TableCell>
+                            )}
 
                             <TableCell align="center">
                               {visitor.room === null
@@ -1812,7 +1754,7 @@ export default function Dashboard() {
                               />
                             </TableCell>
 
-                            {isADMIN  || !idCompany? null : (
+                            {isADMIN || !idCompany ? null : (
                               <TableCell align="center">
                                 {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
@@ -1837,9 +1779,6 @@ export default function Dashboard() {
                                   )
                                 ) 
                                  */}
-
-
-
 
                                 {visitor.status === "APPROVED" ? (
                                   <EditIcon
@@ -1945,7 +1884,7 @@ export default function Dashboard() {
                               </TableCell>
                             )}
 
-                           {/* <TableCell align="center">
+                            {/* <TableCell align="center">
                               <TimelineIcon
                                 onClick={() => handleTrailIconClick()}
                               />
@@ -2004,7 +1943,7 @@ export default function Dashboard() {
               </Item>
             </Grid>
           </Grid>
-{/* 
+          {/* 
           {isTrailModalOpen && (
             <TrailModal onClose={() => setIsTrailModalOpen(false)} />
           )} */}
