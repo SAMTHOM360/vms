@@ -526,7 +526,7 @@ export default function ReceptionistAddRoom() {
 
     const roomDetailsUrl =
       Config.baseUrl +
-      Config.apiEndPoints.roomDetailsRecepEndPoint +
+      Config.apiEndPoints.roomDetailsFilterRecepEndPoint +
       "?id=" +
       idCompany+"&buildingId="+buildingId;
 

@@ -135,6 +135,7 @@ const Config = Object.freeze({
     // hostEndPoint:"api/user/alluser",
     hostEndPoint:"api/user/alluserbuildingId",
     // roomDetailsRecepEndPoint:"api/room/all",
+    roomDetailsFilterRecepEndPoint:"api/room/allrooms",
     roomDetailsRecepEndPoint:"api/room/allbuilding",
     addMeetingRecepEndPoint:"api/meeting/update/meeting",
     exportRecepEndPoint:"api/meeting/exportdata",

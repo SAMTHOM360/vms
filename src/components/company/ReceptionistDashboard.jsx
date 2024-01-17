@@ -216,6 +216,33 @@ export default function Dashboard() {
 
 
 
+//filter Room
+  const[filterRooms,setFilterRooms] = useState([])
+
+
+ function getFilterRooms(){
+
+  const filterRoomUrl =
+     
+  `${Config.baseUrl}${Config.apiEndPoints.roomDetailsFilterRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`
+  
+    
+      axios
+        .get(filterRoomUrl, {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        })
+        .then((response) => {
+          const data = response.data.data;
+          setFilterRooms(data);
+          setReload(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+ }
+
+
+
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -234,11 +261,6 @@ export default function Dashboard() {
     buildingId;
 
   
-
-
-
-
-
   function fetchCompanies() {
     axios
       .get(buildingUrl, {
@@ -457,9 +479,14 @@ export default function Dashboard() {
   const [openLoader, setOpenLoader] = useState(false);
 
   const handleOpenModal = (value) => {
+  
     setItem(value);
     setOpen(true);
   };
+  // console.log(item,"name")
+
+
+ 
 
   // Function to handle closing the modal
   const handleCloseModal = () => {
@@ -999,9 +1026,13 @@ export default function Dashboard() {
       });
   }
 
+
+  const[print,setPrint] = useState(false)
+
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
     setReload(!reload);
-
+ 
+    fetchData()
     const passApiEndpoint =
       Config.baseUrl +
       Config.apiEndPoints.passApiEndPoint +
@@ -1010,15 +1041,23 @@ export default function Dashboard() {
 
     const printWindow = window.open(passApiEndpoint, "_blank");
 
-    printWindow.onload = () => {
-      printWindow.print();
-    };
+    // printWindow.onload = () => {
+    //   printWindow.print();
+
+     
+    // };
+
+
+    if (printWindow) {
+      // Check if printWindow is not null
+      printWindow.onload = () => {
+        printWindow.print();
+    
+      };
+    } 
+
+  
   };
-
-
-
-
-
 
 
   //useeffect
@@ -1059,6 +1098,7 @@ export default function Dashboard() {
     page,
     rowsPerPage,
     reload,
+ 
     selectedStatusOptions,
     filterSelectedRoom,
     selectedHostOptions,
@@ -1066,6 +1106,7 @@ export default function Dashboard() {
     phoneNumberFilter,
     endDate,
     selectedCompanyName,
+   
 
   ]);
 
@@ -1078,7 +1119,7 @@ export default function Dashboard() {
   // }, []);
 
   useEffect(() => {
-    // getRoomsOption();
+   
     fetchStatusOptions();
     fetchStatusOptions1();
     fetchHostOptions();
@@ -1086,6 +1127,7 @@ export default function Dashboard() {
   }, [selectedCompanyName]);
 
   useEffect(() => {
+    getFilterRooms();
     getRoomsOption();
   }, [reload, selectedCompanyName]);
 
@@ -1412,8 +1454,8 @@ export default function Dashboard() {
                       >
 
                         {}
-                        {Array.isArray(rooms) &&
-                          rooms.map((room) => (
+                        {Array.isArray(filterRooms) &&
+                          filterRooms.map((room) => (
                             <MenuItem
                               key={room.id}
                               value={room.id}
@@ -1585,7 +1627,7 @@ export default function Dashboard() {
                           Info
                         </TableCell>
 
-                        {isADMIN ? null : (
+                        {isADMIN  || !idCompany? null : (
                           <TableCell sx={{ color: "white" }} align="center">
                             Actions
                           </TableCell>
@@ -1770,7 +1812,7 @@ export default function Dashboard() {
                               />
                             </TableCell>
 
-                            {isADMIN ? null : (
+                            {isADMIN  || !idCompany? null : (
                               <TableCell align="center">
                                 {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
@@ -1795,6 +1837,9 @@ export default function Dashboard() {
                                   )
                                 ) 
                                  */}
+
+
+
 
                                 {visitor.status === "APPROVED" ? (
                                   <EditIcon
@@ -2160,6 +2205,7 @@ export default function Dashboard() {
                           }}
                         >
                           <div>{room.roomName}</div>
+                          {/* <div>{room.company.name}</div> */}
                           <div>Capacity: {room.capacity}</div>
                         </MenuItem>
                       ))}
@@ -2245,7 +2291,7 @@ export default function Dashboard() {
                               }}
                             >
                               <div>{room.roomName}</div>
-
+                              {/* <div>{room.company.name}</div> */}
                               <div>Capacity: {room.capacity}</div>
                             </MenuItem>
                           ))}
