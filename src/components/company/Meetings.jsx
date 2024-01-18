@@ -279,11 +279,17 @@ export default function Meetings() {
   const handleStartDateChange = (date) => {
     setStartDate(date);
     //  console.log(selectedStatusOptions,"acsd")
+    setEndDate(null);
   };
 
   const handleEndDateChange = (date) => {
     setEndDate(date);
     //  fetchData();
+  };
+
+
+  const shouldDisableEndDate = (date) => {
+    return startDate ? date.isBefore(startDate, "day") : true;
   };
 
   //export
@@ -418,6 +424,7 @@ export default function Meetings() {
 
   const companyId = sessionStorage.getItem("companyId");
   function fetchData() {
+    console.log(' i got hit ')
    
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
     setOpenLoader(true);
@@ -691,16 +698,58 @@ export default function Meetings() {
 
   //room
 
+  // useEffect(() => {
+  //   fetchData();
+  //   fetchStatusOptions();
+  //   getRoomsOption();
+  // }, [page, rowsPerPage]);
+
+  // useEffect(() => {
+  //   if (page === 0) {
+  //     fetchData();
+  //   } else {
+  //     setPage(0);
+  //   }
+  // }, [
+  //   selectedStatusOptions,
+  //   selectedRoom,
+  //   phoneNumberFilter,
+  //   startDate,
+  //   endDate,
+  //   searchQuery,
+  // ]);
+
+
+
+
+
   useEffect(() => {
-    fetchData();
+    // fetchData();
     fetchStatusOptions();
     getRoomsOption();
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    if (page === 0) {
+    // if (page === 0) {
       fetchData();
-    } else {
+    // } else {
+      // setPage(0);
+    // }
+  }, [
+    selectedStatusOptions,
+    selectedRoom,
+    phoneNumberFilter,
+    startDate,
+    endDate,
+    searchQuery,
+    rowsPerPage,
+    page
+  ]);
+
+
+
+  useEffect(() => {
+    if (page !== 0) {
       setPage(0);
     }
   }, [
@@ -711,6 +760,13 @@ export default function Meetings() {
     endDate,
     searchQuery,
   ]);
+  
+  
+
+
+
+
+
 
   const loggedUserRole = sessionStorage.getItem("loggedUserRole");
 
@@ -783,6 +839,8 @@ export default function Meetings() {
     setOpenDialog(false);
     setSelectedValue(value);
   };
+
+
 
   return (
     <>
@@ -1047,12 +1105,13 @@ export default function Meetings() {
                               label="Meet Start Date"
                               value={startDate}
                               onChange={handleStartDateChange}
-                              textField={(props) => <TextField {...props} />}
+                              textField={(props) =>  <TextField {...props}  />}
                               format="DD/MM/YYYY"
                               slotProps={{
                                 field: {
                                   clearable: true,
                                   onClear: () => setStartDate(true),
+                                  // readOnly: true
                                 },
                               }}
                             />
@@ -1077,6 +1136,7 @@ export default function Meetings() {
                               }}
                               label="Meet End Date"
                               value={endDate}
+                              shouldDisableDate={shouldDisableEndDate}
                               onChange={handleEndDateChange}
                               textField={(props) => <TextField {...props} />}
                               format="DD/MM/YYYY"
@@ -1084,6 +1144,7 @@ export default function Meetings() {
                                 field: {
                                   clearable: true,
                                   onClear: () => setEndDate(true),
+                                  readOnly: true
                                 },
                               }}
                             />
