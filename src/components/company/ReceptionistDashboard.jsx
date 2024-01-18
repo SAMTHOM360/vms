@@ -1337,8 +1337,10 @@ export default function Dashboard() {
                         id="outlined-select-currency"
                         select
                         label=" Host"
-                        sx={{ width: "100%" }}
-                        value={selectedHostOptions}
+                        sx={{ width: "100%", height: "55px" }} 
+
+                        autoComplete="off"
+                        value={selectedHostOptions}  
                         onChange={handleChangeHost}
                         InputProps={{
                           endAdornment: selectedHostOptions && (
@@ -1351,11 +1353,18 @@ export default function Dashboard() {
                               </IconButton>
                             </InputAdornment>
                           ),
+
+                          style: {
+                            textOverflow: "ellipsis", // Show ellipsis for overflow
+                            whiteSpace: "nowrap", // Don't wrap the text
+                            overflow: "hidden", // Hide overflow content
+                          },
                         }}
                         SelectProps={{
                           IconComponent: selectedHostOptions
                             ? "div"
                             : undefined,
+                         
                           MenuProps: {
                             style: {
                               maxHeight: "400px",
@@ -1385,7 +1394,7 @@ export default function Dashboard() {
                                   <div>{options.companyName}</div>
                                 )}
 
-                              {/* {(!idCompany  &&  options.companyName )||(!isADMIN && options.companyName )  ? options.companyName: "" } */}
+                          
                             </MenuItem>
                           ))}
                       </TextField>
@@ -1396,7 +1405,7 @@ export default function Dashboard() {
                         id="outlined-select-currency"
                         select
                         label="Room"
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%", height: "55px" }} 
                         value={filterSelectedRoom}
                         InputProps={{
                           endAdornment: filterSelectedRoom && (
@@ -1409,6 +1418,12 @@ export default function Dashboard() {
                               </IconButton>
                             </InputAdornment>
                           ),
+
+                          style: {
+                            textOverflow: "ellipsis", // Show ellipsis for overflow
+                            whiteSpace: "nowrap", // Don't wrap the text
+                            overflow: "hidden", // Hide overflow content
+                          },
                         }}
                         SelectProps={{
                           IconComponent: filterSelectedRoom ? "div" : undefined,
@@ -1475,24 +1490,34 @@ export default function Dashboard() {
                         label="Meet End Date"
                         value={endDate}
                         sx={{ width: "100%" }}
+                     
                         InputLabelProps={{
                           shrink: "true",
                         }}
+
+                   
+        
+                       
                         onChange={handleEndDateChange}
+
+                    
                         InputProps={{
                           inputProps: {
                             style: { textTransform: "uppercase", },
                             min: moment(startDate).add(1, "day").format("YYYY-MM-DD"),
+                            
                           },
                           inputComponent: (props) => (
                             <input
                               {...props}
                               value={endDate}
+                            
                               style={{ textTransform: "uppercase" }}
                               
                             />
                           ),
                         }}
+                        disabled={!startDate}
                       ></TextField>
                     </Grid>
                   </Grid>
@@ -1622,10 +1647,13 @@ export default function Dashboard() {
                           Info
                         </TableCell>
 
-                      
-                          <TableCell sx={{ color: "white" }} align="center">
-                            Actions
-                          </TableCell>
+                      {isADMIN ? null :(
+                        <TableCell sx={{ color: "white" }} align="center">
+                        Actions
+                      </TableCell>
+
+                      )}
+                          
                       
 
                         {isADMIN ? null : (
@@ -1809,8 +1837,8 @@ export default function Dashboard() {
                               />
                             </TableCell>
 
-                          
-                              <TableCell align="center">
+                          {isADMIN ? null :(
+                             <TableCell align="center">
                                 {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
                                     <DownloadIcon
@@ -1874,6 +1902,9 @@ export default function Dashboard() {
                                   />
                                 )}
                               </TableCell>
+
+                          )}
+                             
                            
 
                             {/* <TableCell align="center">
@@ -1948,7 +1979,7 @@ export default function Dashboard() {
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={17} sx={{ textAlign: "center" }}>
+                          <TableCell colSpan={19} sx={{ textAlign: "center" }}>
                             No data
                           </TableCell>
                         </TableRow>
