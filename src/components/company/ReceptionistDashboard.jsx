@@ -1002,6 +1002,7 @@ export default function Dashboard() {
   const [print, setPrint] = useState(false);
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
+ 
     setReload(!reload);
 
     fetchData();
@@ -1013,13 +1014,8 @@ export default function Dashboard() {
 
     const printWindow = window.open(passApiEndpoint, "_blank");
 
-    // printWindow.onload = () => {
-    //   printWindow.print();
-
-    // };
-
     if (printWindow) {
-      // Check if printWindow is not null
+     
       printWindow.onload = () => {
         printWindow.print();
       };
@@ -1029,7 +1025,7 @@ export default function Dashboard() {
   //useeffect
 
   useEffect(() => {
-    // debugger
+  
     if (loggedUserRole === "ADMIN") {
       setIsADMIN(true);
     } else {
