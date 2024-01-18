@@ -277,6 +277,14 @@ export default function EditCompanyForm() {
     //   return;
     // }
 
+         // Check if file extension is JFIF
+  const isJFIF = logoFile.name.toLowerCase().endsWith(".jfif");
+  if (isJFIF) {
+    alert("Allowed file formats: .jpg, .jpeg, .png");
+    resetFileInput();
+    return;
+  }
+
 
     const fileSizeInMB = logoFile.size / (1024 * 1024);
     const minSizeInMB = 0.001;
@@ -693,7 +701,7 @@ const [open, setOpen] = React.useState(false);
 
                         )}
                         <span className={`custom-file-upload${logoUpdated ? ' updated' : ''}`}>
-                          <input type="file" accept="image/jpeg, image/jpg, image/png" id="file-input" required onChange={handleLogoChange} />
+                          <input type="file" accept="image/jpeg, image/jpg, image/png,image/jfif" id="file-input" required onChange={handleLogoChange} />
                           Upload Company Logo
                         </span>
 
