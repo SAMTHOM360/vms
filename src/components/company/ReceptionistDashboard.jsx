@@ -464,7 +464,7 @@ export default function Dashboard() {
 
   const [openLoader, setOpenLoader] = useState(false);
 
- const [rowMeetingId,setRowMeetingId] = useState()
+ const [rowMeetingId,setRowMeetingId] = useState("")
 
   const handleOpenModal = (value) => {
    
@@ -485,6 +485,7 @@ export default function Dashboard() {
     setIsCancelled(false);
     setRoomAdded(false);
     setSelectedStatusModal("");
+    setRowMeetingId("")
   };
 
   const handleChange2 = (event) => {
@@ -583,6 +584,7 @@ export default function Dashboard() {
           alert(response.data.message);
           setRoomAdded(true);
           setIsCancelled(true);
+         
           handleCloseModal();
           setReload(true);
         }
