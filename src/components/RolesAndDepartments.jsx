@@ -449,7 +449,7 @@ const RolesAndDepartments = () => {
       const response = await axiosInstance.post(url, payload, { headers });
       // console.log('role submit response', response)
       if (response.status === "200") {
-        toast.success("Role added succesfully.", {
+        toast.success("Role added successfully.", {
           toastId:"depts-succ7"
         });
 

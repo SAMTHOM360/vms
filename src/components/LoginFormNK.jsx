@@ -536,7 +536,7 @@ function LoginForm() {
         updatePasswordPayload
       );
       if (response.status === 200) {
-        toast.success("Password updated succesfully.", {
+        toast.success("Password updated successfully.", {
           toastId:"log-succ7"
         });
         handleForgotPasswordClose();

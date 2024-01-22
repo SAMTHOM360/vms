@@ -179,7 +179,7 @@ const Employee = () => {
           });
           // console.log("deleted", response)
           if (response.status === 200) {
-            toast.success("User is succesfully deleted.", {
+            toast.success("User is successfully deleted.", {
               toastId:"emp-success1"
             });
             const updatedRows = rows.map((row) =>
