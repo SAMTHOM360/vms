@@ -717,11 +717,11 @@ return
         : null,
       buildingId: buildingId,
       user: {
-        id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+        id: selectedHostOptions.length === 0 ? null : selectedHostOptions.id
       },
 
       room: {
-        id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+        id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom.id,
       },
 
       status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
