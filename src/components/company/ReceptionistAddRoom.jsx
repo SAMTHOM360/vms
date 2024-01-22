@@ -313,7 +313,7 @@ export default function ReceptionistAddRoom() {
       .post(updateRoomUrl, payload)
       .then((response) => {
         if (response.status === 200) {
-          alert("Room updated succesfully");
+          alert("Room updated successfully");
 
           handleCloseAddRoomDialog();
 

@@ -514,9 +514,9 @@ export default function Meetings() {
         setStatus("");
 
         if (response.data.data.status === "CANCELLED") {
-          alert("Meeting cancelled succesfully");
+          alert("Meeting cancelled successfully");
         } else {
-          alert("Meeting added succesfully");
+          alert("Meeting added successfully");
         }
 
         fetchData();
