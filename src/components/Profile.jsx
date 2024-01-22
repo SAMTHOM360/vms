@@ -437,50 +437,119 @@ useEffect(() => {
     }
   };
 
+  // const handleFileUpload = async (event) => {
+  //   // console.log(' i got hit')
+  //   // toast.dismiss()
+  //   event.preventDefault();
+  //   let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
+  //   let file = event.target.files[0];
+
+  //   // console.log('file type ', file.type)
+
+  //   const fileSizeInMB = file.size / (1024 * 1024);
+  //   if (fileSizeInMB > 5) {
+  //       toast.warn("Image size shouldn't be larger than 5 MB !", {
+  //         // toastId:"profile-warn1"
+  //       });
+  //       return;
+  //   }
+
+  //   // const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+  //   // if (!allowedFileTypes.includes(file.type)) {
+  //   //     toast.warn("Invalid file type. Only .jpeg, .png, and .jpg files are allowed!", {
+  //   //         toastId: "profile-warn2"
+  //   //     });
+  //   //     return;
+  //   // }
+
+  //   const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+  //   if (!allowedFileTypes.includes(file.type) || file.type === "image/jpeg" && file.name.toLowerCase().endsWith(".jfif")) {
+  //       toast.warn("Invalid file type. Only .jpeg, .png, and .jpg files are allowed!", {
+  //           toastId: "profile-warn2"
+  //       });
+  //       return;
+  //   }
+
+  //   if (file) {
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+  //     try {
+  //       setUploadFromDeviceBtnLoading(true);
+  //       // const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
+  //       //   headers: ImgHeaders,
+  //       // });
+
+  //       const response = await axios.post(`${url}`, formData, {
+  //         headers: ImgHeaders,
+  //       });
+  //       const imgResponseApiData = response.data.data;
+  //       setTempImgLink(imgResponseApiData);
+
+  //       const fileInput = document.getElementById("fileInputProfilePic");
+  //       if (fileInput) {
+  //         fileInput.value = "";
+  //       }
+  //       setIsUpload(true);
+  //     } catch (error) {
+  //       toast.error("Something went wrong !", {
+  //         toastId:"profile-error4"
+  //       });
+  //       console.error("unable to send: ", error);
+  //     } finally {
+  //       setUploadFromDeviceBtnLoading(false);
+  //     }
+  //   }
+  // };
+
+
   const handleFileUpload = async (event) => {
-    // toast.dismiss()
     event.preventDefault();
     let url = Config.baseUrl + Config.apiEndPoints.profileConvertImg;
-    const file = event.target.files[0];
+    let fileInput = event.target;
+    let file = fileInput.files[0];
 
     const fileSizeInMB = file.size / (1024 * 1024);
     if (fileSizeInMB > 5) {
-        toast.warn("Image size shouldn't be larger than 5 MB !", {
-          toastId:"profile-warn1"
+        toast.warn("Image size shouldn't be larger than 5 MB!", {
+            toastId: "profile-warn1"
         });
+        fileInput.value = "";
         return;
     }
 
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
-      try {
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (!allowedFileTypes.includes(file.type) || (file.type === "image/jpeg" && file.name.toLowerCase().endsWith(".jfif"))) {
+        toast.warn("Invalid file type. Only .jpeg, .png, and .jpg files are allowed!", {
+            toastId: "profile-warn2"
+        });
+        fileInput.value = "";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
         setUploadFromDeviceBtnLoading(true);
-        // const response = await axios.post(`${IMG_RESPONSE_URL}`, formData, {
-        //   headers: ImgHeaders,
-        // });
 
         const response = await axios.post(`${url}`, formData, {
-          headers: ImgHeaders,
+            headers: ImgHeaders,
         });
         const imgResponseApiData = response.data.data;
         setTempImgLink(imgResponseApiData);
 
-        const fileInput = document.getElementById("fileInputProfilePic");
-        if (fileInput) {
-          fileInput.value = "";
-        }
+        fileInput.value = "";
+
         setIsUpload(true);
-      } catch (error) {
-        toast.error("Something went wrong !", {
-          toastId:"profile-error4"
+    } catch (error) {
+        toast.error("Something went wrong!", {
+            toastId: "profile-error4"
         });
-        console.error("unable to send: ", error);
-      } finally {
+        console.error("Unable to send: ", error);
+    } finally {
         setUploadFromDeviceBtnLoading(false);
-      }
     }
-  };
+};
+
 
   const handleSubmitImgUpload = async () => {
     // toast.dismiss()

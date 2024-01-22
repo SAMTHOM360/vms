@@ -424,7 +424,8 @@ export default function Meetings() {
 
   const companyId = sessionStorage.getItem("companyId");
   function fetchData() {
-    console.log(' i got hit ')
+    // console.log(' i got hit ')
+    // console.log('phoneNumberFilter', phoneNumberFilter)
    
     // const getVisitorUrl = `http://192.168.12.54:8080/api/meeting/vis?id=${adminId}`
     setOpenLoader(true);
@@ -730,8 +731,12 @@ export default function Meetings() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
+    // console.log('phoneNumberFilter', phoneNumberFilter)
     // if (page === 0) {
-      fetchData();
+      if(phoneNumberFilter.length === 0 || phoneNumberFilter.length === 10){
+        fetchData();
+      }
+      // fetchData();
     // } else {
       // setPage(0);
     // }
@@ -1111,7 +1116,7 @@ export default function Meetings() {
                                 field: {
                                   clearable: true,
                                   onClear: () => setStartDate(true),
-                                  // readOnly: true
+                                  readOnly: true
                                 },
                               }}
                             />

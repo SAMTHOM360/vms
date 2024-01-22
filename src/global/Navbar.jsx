@@ -250,17 +250,17 @@ export default function Navbar({ toggleSidebar }) {
 
   useEffect(() => {
     fetchNotification();
-  }, [isRECEPTIONIST]);
+  }, [isRECEPTIONIST, selectedCompanyIdForNotification, isHamburgerAllowed]);
 
-  useEffect(() => {
-    fetchNotification();
-  }, [selectedCompanyIdForNotification]);
+  // useEffect(() => {
+  //   fetchNotification();
+  // }, [selectedCompanyIdForNotification]);
 
-  useEffect(() => {
-    fetchNotification();
-    // console.log('isHamburgerAllowed', isHamburgerAllowed)
-    // console.log('hambuger is changing', )
-  }, [isHamburgerAllowed]);
+  // useEffect(() => {
+  //   fetchNotification();
+  //   // console.log('isHamburgerAllowed', isHamburgerAllowed)
+  //   // console.log('hambuger is changing', )
+  // }, [isHamburgerAllowed]);
 
   const isValidLink = (url) => {
     try {
