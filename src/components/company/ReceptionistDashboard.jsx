@@ -186,14 +186,14 @@ export default function Dashboard() {
   //host
 
   const [hostOptions, setHostOptions] = useState([]);
-  const [selectedHostOptions, setSelectedHostOptions] = useState("");
+  const [selectedHostOptions, setSelectedHostOptions] = useState({id:null,name:""});
   const [roomAdded, setRoomAdded] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
 
   //select
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState("");
-  const [filterSelectedRoom, setFilterSelectedRoom] = useState("");
+ 
   const [reload, setReload] = useState(false);
   const [selectedRoomOptions, setSelectedRoomOptions] = useState("");
 
@@ -210,14 +210,9 @@ export default function Dashboard() {
 
   //filter Room
   const [filterRooms, setFilterRooms] = useState([]);
-
-
-
+  const [filterSelectedRoom, setFilterSelectedRoom] = useState({id:null,name:""});
 
   function getFilterRooms() {
-
-   
-
     const filterRoomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsFilterRecepEndPoint}?id=${idCompany}&buildingId=${buildingId}`;
 
     axios
@@ -287,7 +282,6 @@ export default function Dashboard() {
 
   //calender
 
-
   // const getCurrentDate = () => {
   //   const today = new Date();
   //   const year = today.getFullYear();
@@ -296,40 +290,50 @@ export default function Dashboard() {
   //   return `${year}-${month}-${day}`;
   // };
 
-
-  
-
-
-
-
-
-
-
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
 
+  // const handleStartDateChange = (event) => {
+  //   const selectedDate = event.target.value;
+  //   // Validate if the selected date is within the allowed range
+  //   if (moment(selectedDate).isSameOrBefore(moment().format("YYYY-MM-DD"))) {
+  //     setStartDate(selectedDate);
+  //   } else {
+  //     // Handle invalid date (e.g., show a message to the user)
+  //   }
+  // };
+
+  // const handleEndDateChange = (e) => {
+  //   const selectedEndDate = e.target.value;
+
+  //   setEndDate(e.target.value);
+  // };
+
   const handleEndDateChange = (e) => {
     const selectedEndDate = e.target.value;
 
+    // Check if the selected end date is valid (e.g., greater than or equal to the start date)
+    if (!startDate || selectedEndDate >= startDate) {
+      setEndDate(selectedEndDate);
+    }
 
-
-
-
-
-    setEndDate(e.target.value);
+    setEndDateFieldDisabled(!startDate || selectedEndDate < startDate);
   };
+
+  // Add state for controlling the disabled state of the end date field
+  const [endDateFieldDisabled, setEndDateFieldDisabled] = useState(true);
 
   const handleClearSelection = () => {
     setSelectedStatusOptions("");
   };
 
   const handleClearHostSelection = () => {
-    setSelectedHostOptions("");
+    setSelectedHostOptions({id:null,name:""});
   };
 
   const handleClearRoomSelection = () => {
-    setFilterSelectedRoom("");
+    setFilterSelectedRoom({id:null,name:""});
   };
 
   const handleClearNumberSelection = () => {
@@ -339,9 +343,9 @@ export default function Dashboard() {
   //handleclearfilters
   const handleClearFilters = () => {
     setSelectedStatusOptions("");
-    setSelectedHostOptions("");
+    setSelectedHostOptions({id:null,name:""});
     setPhoneNumberFilter("");
-    setFilterSelectedRoom("");
+    setFilterSelectedRoom({id:null,name:""});
     setStartDate("");
     setEndDate("");
 
@@ -395,11 +399,31 @@ export default function Dashboard() {
       });
   }
 
-  const handleChangeHost = (event) => {
+  // const handleChangeHost = (event) => {
+  //   setPage(0);
+
+  //   setSelectedHostOptions(event.target.value);
+  // };
+
+  function handleChangeHost(event, newValue) {
+
+ 
+
     setPage(0);
 
-    setSelectedHostOptions(event.target.value);
-  };
+    if (!newValue) {
+      // Clear selected company from sessionStorage
+     
+      setSelectedHostOptions({ id: null, name: "" });
+      return;
+    }
+    setSelectedHostOptions((prev) => !prev);
+  
+
+    setSelectedHostOptions(newValue);
+
+    // sessionStorage.setItem("CompanyIdSelected", JSON.stringify(newValue));
+  }
 
   function fetchHostOptions() {
     const hostUrl = `${Config.baseUrl}${Config.apiEndPoints.hostEndPoint}?buildingId=${buildingId}&companyId=${idCompany}`;
@@ -464,19 +488,13 @@ export default function Dashboard() {
 
   const [openLoader, setOpenLoader] = useState(false);
 
- const [rowMeetingId,setRowMeetingId] = useState("")
+  const [rowMeetingId, setRowMeetingId] = useState("");
 
   const handleOpenModal = (value) => {
-   
-   
-    
-     setRowMeetingId(value.user.company.id)
+    setRowMeetingId(value.user.company.id);
     setItem(value);
     setOpen(true);
-
-  
   };
-
 
   // Function to handle closing the modal
   const handleCloseModal = () => {
@@ -485,21 +503,57 @@ export default function Dashboard() {
     setIsCancelled(false);
     setRoomAdded(false);
     setSelectedStatusModal("");
-    setRowMeetingId("")
+    setRowMeetingId("");
   };
 
-  const handleChange2 = (event) => {
+
+
+
+
+
+
+  const handleChange2 = (event,newValue) => {
+
+    
+
+   
     setPage(0);
-    setFilterSelectedRoom(event.target.value);
+
+    if(!newValue){
+setFilterSelectedRoom({id:null,name:""})
+return
+
+    }
+
+
+    setFilterSelectedRoom((prev) => !prev);
+
+    setFilterSelectedRoom(newValue);
+
+    // setFilterSelectedRoom({id:newValue.id,name:newValue.name});
   };
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleChange1 = (event) => {
     setSelectedRoom(event.target.value);
   };
 
   function getRoomsOption() {
-
-  
     const roomUrl = `${Config.baseUrl}${Config.apiEndPoints.roomDetailsRecepEndPoint}?id=${rowMeetingId}&buildingId=${buildingId}`;
 
     axios
@@ -584,7 +638,7 @@ export default function Dashboard() {
           alert(response.data.message);
           setRoomAdded(true);
           setIsCancelled(true);
-         
+
           handleCloseModal();
           setReload(true);
         }
@@ -713,6 +767,8 @@ export default function Dashboard() {
   };
 
   function fetchData() {
+
+  
     setOpenLoader(true);
 
     const payload = {
@@ -730,12 +786,12 @@ export default function Dashboard() {
       status: selectedStatusOptions !== "" ? selectedStatusOptions : null,
       // status: selectedStatusOptions.length === 0 ? null : selectedStatusOptions,
       user: {
-        id: selectedHostOptions.length === 0 ? null : selectedHostOptions,
+        id: selectedHostOptions.length === 0 ? null : selectedHostOptions.id,
       },
       //     noUser:isADMIN ? adminId : null,
 
       room: {
-        id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom,
+        id: filterSelectedRoom.length === 0 ? null : filterSelectedRoom.id,
       },
     };
 
@@ -913,7 +969,7 @@ export default function Dashboard() {
         // a.download = ;
         a.click();
         window.URL.revokeObjectURL(url);
-        alert("Pass downloaded succesfully");
+        alert("Pass downloaded successfully");
         handleCloseModal();
         setReload(true);
       })
@@ -1002,7 +1058,6 @@ export default function Dashboard() {
   const [print, setPrint] = useState(false);
 
   const handlePrintPass = (meetingId, visitorName, visitorPhoneNumber) => {
- 
     setReload(!reload);
 
     fetchData();
@@ -1015,7 +1070,6 @@ export default function Dashboard() {
     const printWindow = window.open(passApiEndpoint, "_blank");
 
     if (printWindow) {
-     
       printWindow.onload = () => {
         printWindow.print();
       };
@@ -1025,7 +1079,6 @@ export default function Dashboard() {
   //useeffect
 
   useEffect(() => {
-  
     if (loggedUserRole === "ADMIN") {
       setIsADMIN(true);
     } else {
@@ -1084,9 +1137,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getFilterRooms();
-    
   }, [reload, selectedCompanyName]);
-
 
   useEffect(() => {
     if (rowMeetingId) {
@@ -1096,7 +1147,6 @@ export default function Dashboard() {
 
 
 
- 
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
@@ -1141,19 +1191,16 @@ export default function Dashboard() {
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
-                      //   value={selectedSiteName}
-                      //   onChange={handleAutocompleteChange}
+                     
                       value={selectedCompanyName}
-                      // onChange={(event, newValue) =>
-                      //   setSelectedCompanyName(newValue)
-                      // }
+                    
 
                       onChange={(event, newValue) =>
                         handleCompanyChange(event, newValue)
                       }
                       options={companyName}
                       getOptionLabel={(option) => option.name}
-                      sx={{ width: 300 ,marginRight:1,marginTop:1}}
+                      sx={{ width: 300, marginRight: 1, marginTop: 1 }}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Company" />
                       )}
@@ -1228,7 +1275,7 @@ export default function Dashboard() {
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-
+                    // marginTop:15,
                     gap: "1em",
                     marginBottom: "10px",
                     // width: "100%",
@@ -1331,13 +1378,13 @@ export default function Dashboard() {
                     </Grid>
 
                     <Grid item xs={4} md={4} lg={2}>
-                      <TextField
+                      {/* <TextField
                         id="outlined-select-currency"
                         select
                         label=" Host"
                         sx={{ width: "100%", height: "55px" }} 
 
-                        autoComplete="off"
+                        autoComplete="on"
                         value={selectedHostOptions}  
                         onChange={handleChangeHost}
                         InputProps={{
@@ -1353,9 +1400,9 @@ export default function Dashboard() {
                           ),
 
                           style: {
-                            textOverflow: "ellipsis", // Show ellipsis for overflow
-                            whiteSpace: "nowrap", // Don't wrap the text
-                            overflow: "hidden", // Hide overflow content
+                            textOverflow: "ellipsis", 
+                            whiteSpace: "nowrap", 
+                            overflow: "hidden", 
                           },
                         }}
                         SelectProps={{
@@ -1389,21 +1436,162 @@ export default function Dashboard() {
                               {!idCompany &&
                                 !isADMIN &&
                                 options.companyName && (
-                                  <div>{options.companyName}</div>
+                                  <div>({options.companyName})</div>
                                 )}
 
                           
                             </MenuItem>
                           ))}
-                      </TextField>
+                      </TextField> */}
+
+                      {/* <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        value={selectedHostOptions}
+                        onChange={(event, newValue) =>
+                          handleChangeHost(event, newValue)
+                        }
+                        options={hostOptions}
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        sx={{
+                          width: "100%",
+                          height: "55px",
+                          marginRight: 1,
+                          // marginTop: 1,
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Select Host" />
+                        )}
+                        renderOption={(props, option, { inputValue }) => {
+                          const isPresent = option.isPresent;
+                          const showCompanyName =
+                            !idCompany && !isADMIN && option.companyName;
+
+                          return (
+                            <MenuItem {...props}
+                            
+                            disabled={!isPresent}>
+                              <div key={option.id}
+                                style={{
+                                  color: isPresent ? "black" : "grey",
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <div>{option.name}</div>
+                                {showCompanyName && (
+                                  <div>({option.companyName})</div>
+                                )}
+                              </div>
+                            </MenuItem>
+
+                            
+                          );
+                        }}
+
+
+
+                        
+                        SelectProps={{
+                          IconComponent: selectedHostOptions ? "div" : undefined,
+                          MenuProps: {
+                            style: {
+                              maxHeight: "400px",
+                              maxWidth: "400px",
+                            },
+                          },
+                        }}
+                        InputProps={{
+                          endAdornment: selectedHostOptions && (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={handleClearHostSelection}
+                                edge="end"
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+
+                          style: {
+                            textOverflow: "ellipsis", 
+                            whiteSpace: "nowrap", 
+                            overflow: "hidden", 
+                          },
+                        }}
+                      /> */}
+
+
+
+
+<Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  value={selectedHostOptions}
+  onChange={(event, newValue) => handleChangeHost(event, newValue)}
+  options={hostOptions}
+  getOptionLabel={(option) => option.name}
+  isOptionEqualToValue={(option, value) => option.id === value.id}
+  sx={{
+    width: "100%",
+    height: "55px",
+    marginRight: 1,
+    // marginTop: 1,
+  }}
+  renderInput={(params) => <TextField {...params} label="Select Host" />}
+  renderOption={(props, option, { inputValue }) => {
+    const isPresent = option.isPresent;
+    const showCompanyName = !idCompany && !isADMIN && option.companyName;
+
+    return (
+      <MenuItem {...props} key={option.id} disabled={!isPresent}>
+        <div
+          style={{
+            color: isPresent ? "black" : "grey",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>{option.name}</div>
+          {showCompanyName && <div>({option.companyName})</div>}
+        </div>
+      </MenuItem>
+    );
+  }}
+  SelectProps={{
+    IconComponent: selectedHostOptions ? "div" : undefined,
+    MenuProps: {
+      style: {
+        maxHeight: "400px",
+        maxWidth: "400px",
+      },
+    },
+  }}
+  InputProps={{
+    endAdornment: selectedHostOptions && (
+      <InputAdornment position="end">
+        <IconButton onClick={handleClearHostSelection} edge="end">
+          <ClearIcon />
+        </IconButton>
+      </InputAdornment>
+    ),
+    style: {
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+    },
+  }}
+/>
+
                     </Grid>
 
                     <Grid item xs={4} md={4} lg={2}>
-                      <TextField
+                      {/* <TextField
                         id="outlined-select-currency"
                         select
                         label="Room"
-                        sx={{ width: "100%", height: "55px" }} 
+                        sx={{ width: "100%", height: "55px" }}
                         value={filterSelectedRoom}
                         InputProps={{
                           endAdornment: filterSelectedRoom && (
@@ -1417,11 +1605,11 @@ export default function Dashboard() {
                             </InputAdornment>
                           ),
 
-                          style: {
-                            textOverflow: "ellipsis", // Show ellipsis for overflow
-                            whiteSpace: "nowrap", // Don't wrap the text
-                            overflow: "hidden", // Hide overflow content
-                          },
+                          // style: {
+                          //   textOverflow: "ellipsis",
+                          //   whiteSpace: "nowrap",
+                          //   overflow: "hidden",
+                          // },
                         }}
                         SelectProps={{
                           IconComponent: filterSelectedRoom ? "div" : undefined,
@@ -1449,11 +1637,74 @@ export default function Dashboard() {
                               <div>{room.roomName}</div>
 
                               {!idCompany && !isADMIN && room.company.name && (
-                                <div>{room.company.name}</div>
+                                <div>({room.company.name})</div>
                               )}
                             </MenuItem>
                           ))}
-                      </TextField>
+                      </TextField> */}
+
+
+<Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                     
+                        value={filterSelectedRoom}
+                        onChange={(event, newValue) =>
+                          handleChange2(event, newValue)
+                        }
+                        options={filterRooms}
+                      
+  getOptionLabel={(option) => option.roomName || ''}
+                       
+                        // getOptionLabel={(option) => (option && option.name) || 'Default Label'}
+
+                        sx={{
+                          width: "100%",
+                          height: "55px",
+                          marginRight: 1,
+                          // marginTop: 1,
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Select Room" />
+                        )}
+                        renderOption={(props, option, { inputValue }) => {
+                          const showRoomName = !idCompany && !isADMIN  && option.company && option.company.name;
+                  
+                          return (
+                            <MenuItem {...props}>
+                              <div style={{display:"flex",justifyContent:"space-between"}}>
+                              <div>{option.roomName}</div>
+                              {showRoomName && <div style={{ marginLeft: '8px' }}>({option.company.name})</div>}
+
+                              </div>
+                             
+                            </MenuItem>
+                          );
+                        }}
+                        InputProps={{
+                          endAdornment: filterSelectedRoom && (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={handleClearRoomSelection}
+                                edge="end"
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        SelectProps={{
+                          IconComponent: filterSelectedRoom ? "div" : undefined,
+                          MenuProps: {
+                            // style: {
+                            //   maxHeight: "400px",
+                            //   maxWidth: "500px",
+                            // },
+                            MenuProps
+                          },
+                        }}
+                    
+                      />
                     </Grid>
 
                     <Grid item xs={4} md={4} lg={2}>
@@ -1466,19 +1717,23 @@ export default function Dashboard() {
                         }}
                         sx={{ width: "100%" }}
                         onChange={handleStartDateChange}
-                        InputProps={{
-                          inputProps: {
-                            style: { textTransform: "uppercase" },
-                             max: moment().format("YYYY-MM-DD"),
-                          },
-                          inputComponent: (props) => (
-                            <input
-                              {...props}
-                              value={startDate}
-                              style={{ textTransform: "uppercase" }}
-                            />
-                          ),
+                        inputProps={{
+                          style: { textTransform: "uppercase" },
+                          max: moment().format("YYYY-MM-DD"),
                         }}
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textTransform: "uppercase" },
+                        //      max: moment().format("YYYY-MM-DD"),
+                        //   },
+                        //   inputComponent: (props) => (
+                        //     <input
+                        //       {...props}
+                        //       value={startDate}
+                        //       style={{ textTransform: "uppercase" }}
+                        //     />
+                        //   ),
+                        // }}
                       ></TextField>
                     </Grid>
 
@@ -1488,33 +1743,32 @@ export default function Dashboard() {
                         label="Meet End Date"
                         value={endDate}
                         sx={{ width: "100%" }}
-                     
                         InputLabelProps={{
                           shrink: "true",
                         }}
-
-                   
-        
-                       
                         onChange={handleEndDateChange}
-
-                    
-                        InputProps={{
-                          inputProps: {
-                            style: { textTransform: "uppercase", },
-                            min: moment(startDate).add(1, "day").format("YYYY-MM-DD"),
-                            
-                          },
-                          inputComponent: (props) => (
-                            <input
-                              {...props}
-                              value={endDate}
-                            
-                              style={{ textTransform: "uppercase" }}
-                              
-                            />
-                          ),
+                        inputProps={{
+                          style: { textTransform: "uppercase" },
+                          min: moment(startDate)
+                            .add(1, "day")
+                            .format("YYYY-MM-DD"),
                         }}
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textTransform: "uppercase", },
+                        //     min: moment(startDate).add(1, "day").format("YYYY-MM-DD"),
+
+                        //   },
+                        //   inputComponent: (props) => (
+                        //     <input
+                        //       {...props}
+                        //       value={endDate}
+
+                        //       style={{ textTransform: "uppercase" }}
+
+                        //     />
+                        //   ),
+                        // }}
                         disabled={!startDate}
                       ></TextField>
                     </Grid>
@@ -1645,14 +1899,11 @@ export default function Dashboard() {
                           Info
                         </TableCell>
 
-                      {isADMIN ? null :(
-                        <TableCell sx={{ color: "white" }} align="center">
-                        Actions
-                      </TableCell>
-
-                      )}
-                          
-                      
+                        {isADMIN ? null : (
+                          <TableCell sx={{ color: "white" }} align="center">
+                            Actions
+                          </TableCell>
+                        )}
 
                         {isADMIN ? null : (
                           <TableCell sx={{ color: "white" }} align="center">
@@ -1835,8 +2086,8 @@ export default function Dashboard() {
                               />
                             </TableCell>
 
-                          {isADMIN ? null :(
-                             <TableCell align="center">
+                            {isADMIN ? null : (
+                              <TableCell align="center">
                                 {/* {visitor.status === "APPROVED" ? (
                                   visitor.room ? (
                                     <DownloadIcon
@@ -1900,10 +2151,7 @@ export default function Dashboard() {
                                   />
                                 )}
                               </TableCell>
-
-                          )}
-                             
-                           
+                            )}
 
                             {/* <TableCell align="center">
           <Button variant="outlined" onClick={() =>
@@ -1933,7 +2181,6 @@ export default function Dashboard() {
                                         visitor.visitor.name,
                                         visitor.visitor.phoneNumber
                                       );
-                                      
                                     }}
                                   >
                                     Print
