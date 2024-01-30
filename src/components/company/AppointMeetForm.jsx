@@ -310,7 +310,7 @@ const MeetingDetails = () => {
 
 
   const handleSubmit = async (e) => {
-    // toast.dismiss()
+    toast.dismiss()
     e.preventDefault();
 
     const trimmedName = formData.name ? formData.name.trim() : null;
@@ -318,6 +318,9 @@ const MeetingDetails = () => {
     // const trimmedCompanyName = formData.companyName ? formData.companyName.trim() : null;
     const trimmedCompanyName = formData.company ? formData.company.name ? formData.company.name.trim() : null : null;
     const trimmedRemarks = formData.remarks ? formData.remarks.trim() : null;
+
+    const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
+
 
     // console.log('trimmedCompanyName', trimmedCompanyName)
 
@@ -328,12 +331,22 @@ const MeetingDetails = () => {
       return;
     }
   
-    if (!trimmedEmail) {
-      toast.warn("Email is required !!!", {
-        toastId:"appmeet-warn2"
+    // if (!trimmedEmail) {
+    //   toast.warn("Email is required !!!", {
+    //     toastId:"appmeet-warn2"
+    //   });
+    //   return;
+    // }
+
+
+        if (trimmedEmail && !emailFormat.test(trimmedEmail)) {
+        console.log('i got hit')
+      toast.warn("Invalid email address. Please enter a valid email address.", {
+        toastId:"appmeet-warn23"
       });
       return;
     }
+    
 
     // if(formData.company.name) {
       if (!trimmedCompanyName) {
@@ -734,7 +747,7 @@ const MeetingDetails = () => {
                     error={!!formData.emailError}
                     helperText={formData.emailError}
                     inputProps={{ maxLength: 126 }}
-                    required
+                    // required
                   />
                 </Grid>
 

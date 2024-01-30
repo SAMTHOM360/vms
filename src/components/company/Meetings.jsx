@@ -1351,7 +1351,7 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.email}
+                                {visitor?.visitor?.email || "NA"}
                               </TableCell>
                               <TableCell align="center">
                                 {visitor.visitor.phoneNumber}
