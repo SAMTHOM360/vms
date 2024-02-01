@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Header from "../Header";
 import Button from "@mui/material/Button";
-import { Typography,Autocomplete } from "@mui/material";
+import { Typography, Autocomplete } from "@mui/material";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -43,10 +43,11 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function ReceptionistAddRoom() {
   const selectedCompanyId = sessionStorage.getItem("selectedCompanyId");
-  const { setActiveListItem,
+  const {
+    setActiveListItem,
     //  setSelectedCompanyIdForNotification,
     setIsCompanySelectionChanged,
-     } = useAuth();
+  } = useAuth();
 
   useEffect(() => {
     setActiveListItem("/receptionistaddroom");
@@ -68,8 +69,7 @@ export default function ReceptionistAddRoom() {
 
   const [reload, setReload] = useState(false);
 
-
-  const [rowCompanyId,setRowCompanyId] = useState("");
+  const [rowCompanyId, setRowCompanyId] = useState("");
 
   //loader
   const [open, setOpen] = React.useState(false);
@@ -93,19 +93,17 @@ export default function ReceptionistAddRoom() {
 
   const [roomUpdated, setRoomUpdated] = useState(false);
 
-  const buildingId = sessionStorage.getItem("buildingId")
+  const buildingId = sessionStorage.getItem("buildingId");
 
   //companydropdown
 
-  const [showAddRoom,setShowAddRoom] = useState(false)
+  const [showAddRoom, setShowAddRoom] = useState(false);
 
   const storedCompany = sessionStorage.getItem("CompanyIdSelected");
 
-  
   const company = JSON.parse(storedCompany);
-  const idCompany = storedCompany?company.id : "";
-  const nameCompany = storedCompany?company.name:"";
-
+  const idCompany = storedCompany ? company.id : "";
+  const nameCompany = storedCompany ? company.name : "";
 
   const buildingUrl =
     Config.baseUrl +
@@ -114,7 +112,11 @@ export default function ReceptionistAddRoom() {
     buildingId;
 
   const [companyName, setCompanyName] = useState([]);
-  const[selectedCompanyName,setSelectedCompanyName] = useState(storedCompany ? {id:idCompany,name:nameCompany} : {id:null,name:""})
+  const [selectedCompanyName, setSelectedCompanyName] = useState(
+    storedCompany
+      ? { id: idCompany, name: nameCompany }
+      : { id: null, name: "" }
+  );
 
   function fetchCompanies() {
     axios
@@ -132,42 +134,23 @@ export default function ReceptionistAddRoom() {
   }
   // console.log(companyName, "companyName");
 
-
-// showAddRoom
-
-
-
-
-
+  // showAddRoom
 
   function handleCompanyChange(event, newValue) {
+    setIsCompanySelectionChanged((prev) => !prev);
 
-    setIsCompanySelectionChanged((prev) => !prev)
-
-    if(!newValue) {
-      sessionStorage.removeItem('CompanyIdSelected');
-      setSelectedCompanyName({id:null,name:""})
+    if (!newValue) {
+      sessionStorage.removeItem("CompanyIdSelected");
+      setSelectedCompanyName({ id: null, name: "" });
       return;
     }
 
-
-   
     setSelectedCompanyName(newValue);
 
-    sessionStorage.setItem('CompanyIdSelected', JSON.stringify(newValue));
-  
+    sessionStorage.setItem("CompanyIdSelected", JSON.stringify(newValue));
+
     // additional logic with event and newValue
   }
-
-
-
-
-
-
-
-
-
-
 
   // Function to handle opening the Add Room modal
   const handleOpenAddRoomDialog = () => {
@@ -230,7 +213,7 @@ export default function ReceptionistAddRoom() {
       roomName: roomName,
       capacity: capacity,
       company: {
-        id: idCompany 
+        id: idCompany,
       },
     };
 
@@ -279,10 +262,8 @@ export default function ReceptionistAddRoom() {
     setOpenAddRoomDialog(true);
     setSelectedRoomId(row.room_Id);
     setEditMode(true);
-    setRowCompanyId(row.companyId)
+    setRowCompanyId(row.companyId);
   };
-
-
 
   function handleUpdateRoom() {
     setOpen(true);
@@ -387,20 +368,16 @@ export default function ReceptionistAddRoom() {
           setReload(!reload);
           setPage(0);
         }
-    
-      
+
         // console.log(response)
       })
       .catch((error) => {
         setOpen(false);
 
-        if(error.response.data.statusCode === 400){
-          alert(error.response.data.message)
-        
+        if (error.response.data.statusCode === 400) {
+          alert(error.response.data.message);
         }
 
-
-     
         console.log(error, "error");
       });
   }
@@ -412,7 +389,7 @@ export default function ReceptionistAddRoom() {
     room_isActive: roomDetails[key].isActive,
     room: roomDetails[key].roomName,
     companyName: roomDetails[key]?.company?.name,
-    companyId:roomDetails[key]?.company?.id,
+    companyId: roomDetails[key]?.company?.id,
     // status: roomDetails[key].isAvailable === true && active === true ? "Available" : "Occupied",
 
     status:
@@ -437,7 +414,7 @@ export default function ReceptionistAddRoom() {
     { id: "actions", label: "Actions", minWidth: 170 },
   ];
 
-  console.log(roomDetails,"fff")
+  console.log(roomDetails, "fff");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -460,11 +437,14 @@ export default function ReceptionistAddRoom() {
     (row) => row.status === "Available"
   );
 
-
   const customDeactivatedRoomsAvailable = customRows.filter(
     (row) => row.status === "NA"
   );
-  const sortedCustomRows = [...customRowsOccupied, ...customRowsAvailable,...customDeactivatedRoomsAvailable];
+  const sortedCustomRows = [
+    ...customRowsOccupied,
+    ...customRowsAvailable,
+    ...customDeactivatedRoomsAvailable,
+  ];
 
   function calculateSerialNumber(rowIndex) {
     return page * rowsPerPage + rowIndex + 1;
@@ -486,26 +466,19 @@ export default function ReceptionistAddRoom() {
     setSelectedValue(value);
   };
 
-
-
-
-
-
   //fetchRoomDetails function
   function fetchRoomDetails() {
     setOpen(true);
 
-
-    if(storedCompany){
-      setShowAddRoom(true)
-     }
-     else{
-      setShowAddRoom(false)
-     }
+    if (storedCompany) {
+      setShowAddRoom(true);
+    } else {
+      setShowAddRoom(false);
+    }
 
     // const storedCompanyForVisitor = sessionStorage.getItem("CompanyIdSelected");
     // let storedCompanyForVisitorId;
-    
+
     // if (storedCompanyForVisitor) {
     //   try {
     //     const parsedCompany = JSON.parse(storedCompanyForVisitor);
@@ -517,18 +490,15 @@ export default function ReceptionistAddRoom() {
     //   storedCompanyForVisitorId = null;
     // }
 
-    
     //     setSelectedCompanyIdForNotification(storedCompanyForVisitorId)
-
-
-
-
 
     const roomDetailsUrl =
       Config.baseUrl +
       Config.apiEndPoints.roomDetailsFilterRecepEndPoint +
       "?id=" +
-      idCompany+"&buildingId="+buildingId;
+      idCompany +
+      "&buildingId=" +
+      buildingId;
 
     axios
       .get(roomDetailsUrl, {
@@ -543,14 +513,12 @@ export default function ReceptionistAddRoom() {
         //   ? setActive(response.data.data.isActive)
         //   : console.log("status");
 
-
-
-          if(response.data.data){
-            setRoomDetails(response.data.data)
-          }
-          if( response.data.data.isActive){
-            setActive(response.data.data.isActive)
-          }
+        if (response.data.data) {
+          setRoomDetails(response.data.data);
+        }
+        if (response.data.data.isActive) {
+          setActive(response.data.data.isActive);
+        }
 
         // console.log(response.data.data,"roomdetailsdata")
       })
@@ -562,25 +530,16 @@ export default function ReceptionistAddRoom() {
 
   useEffect(() => {
     fetchRoomDetails();
-    
   }, [reload]);
 
   useEffect(() => {
-
- 
     fetchRoomDetails();
     setPage(0);
   }, [selectedCompanyName]);
 
-
-
-
-
   useEffect(() => {
-
     fetchCompanies();
     // fetchRoomDetails();
-    
   }, []);
   // console.log(rowsPerPage, "rowsPerPage");
   // console.log(roomName,"roomname")
@@ -603,24 +562,32 @@ export default function ReceptionistAddRoom() {
             <Header title="Rooms" subtitle="Add Rooms" />
 
             {/* <Link to="/companyreg"> */}
-            <Box sx={{display:'flex', flexDirection:'row', gap:2, alignItems:'center'}}>
-            <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      //   value={selectedSiteName}
-                      //   onChange={handleAutocompleteChange}
-                      value={selectedCompanyName}
-                      onChange={(event, newValue) => handleCompanyChange(event, newValue)}
-                      options={companyName}
-                      getOptionLabel={(option) => option.name}
-                      sx={{ width: 300 ,marginTop:1}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Select Company" />
-                      )}
-                    />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 2,
+                alignItems: "center",
+              }}
+            >
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                //   value={selectedSiteName}
+                //   onChange={handleAutocompleteChange}
+                value={selectedCompanyName}
+                onChange={(event, newValue) =>
+                  handleCompanyChange(event, newValue)
+                }
+                options={companyName}
+                getOptionLabel={(option) => option.name}
+                sx={{ width: 300, marginTop: 1 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Select Company" />
+                )}
+              />
 
-
-            {/* <Button
+              {/* <Button
               onClick={handleOpenAddRoomDialog}
               variant="contained"
               color="primary"
@@ -630,21 +597,20 @@ export default function ReceptionistAddRoom() {
               Add Room
             </Button> */}
 
-{showAddRoom && (
-    <Button
-      onClick={handleOpenAddRoomDialog}
-      variant="contained"
-      color="primary"
-      style={{ height: '3em', width: '113px' }}
-    >
-      Add Room
-    </Button>
-  )}
+              {showAddRoom && (
+                <Button
+                  onClick={handleOpenAddRoomDialog}
+                  variant="contained"
+                  color="primary"
+                  style={{ height: "3em", width: "113px" }}
+                >
+                  Add Room
+                </Button>
+              )}
 
-            {/* </Link> */}
-          </Box>
+              {/* </Link> */}
             </Box>
-
+          </Box>
         </Grid>
         <Grid item xs={12} md={12} lg={12}>
           {/* <Paper
@@ -719,8 +685,15 @@ export default function ReceptionistAddRoom() {
                       )
                       .map((row, rowIndex) => {
                         return (
-                    
-                          <CustomRows row={row} rowIndex={rowIndex} customColumns={customColumns} label={label} handleEditRoom={handleEditRoom} calculateSerialNumber={calculateSerialNumber} handleSwitch={handleSwitch} />
+                          <CustomRows
+                            row={row}
+                            rowIndex={rowIndex}
+                            customColumns={customColumns}
+                            label={label}
+                            handleEditRoom={handleEditRoom}
+                            calculateSerialNumber={calculateSerialNumber}
+                            handleSwitch={handleSwitch}
+                          />
                         );
                       })
                   )}
@@ -741,7 +714,9 @@ export default function ReceptionistAddRoom() {
           />
 
           <Dialog open={openAddRoomDialog} onClose={handleCloseAddRoomDialog}>
-            <DialogTitle sx={{ textAlign: "center",color:"black" }}>Room Info</DialogTitle>
+            <DialogTitle sx={{ textAlign: "center", color: "black" }}>
+              Room Info
+            </DialogTitle>
             <DialogContent>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <TextField

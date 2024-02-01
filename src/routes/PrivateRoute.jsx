@@ -19,13 +19,10 @@
 
 // export default PrivateRoute;
 
-
-
 import React from "react";
 import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 import NotFound from "../components/NotFound";
-
 
 const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
   const { authenticated, userRole, logout } = useAuth();
@@ -37,22 +34,17 @@ const PrivateRoute = ({ element, allowedRoles, ...rest }) => {
   if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <NotFound />;
 
-
     // alert("Unauthorisez Access !!!")
     // logout()
-
-
 
     //NOT IN USE STARTS
 
     // return <Navigate to="lost" />;
 
     //NOT IN USE ENDS
-
-
   }
 
   return element;
 };
 
-export default PrivateRoute
+export default PrivateRoute;

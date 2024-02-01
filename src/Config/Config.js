@@ -5,45 +5,37 @@ const Config = Object.freeze({
   // baseUrl:"http://192.168.12.51:8085/vms/" ,//Hosted (Dhruti Sir)
   baseUrl: "https://vms.nyggs.com/backend/",
 
-  
-    ownerSiteLink: "https://www.rapidsofttechnologies.com/",
+  ownerSiteLink: "https://www.rapidsofttechnologies.com/",
 
   apiEndPoints: {
     //    buildingEndPoint:"com/getByBuildingId",
 
-
     //AppointMeetForm.jsx
-    appointMeetFormFetchUsers:"api/user/alluser",
-    appointMeetFormContextOptions:"vis/meetCon",
-    appointMeetFormGetVisitorByPhone:"vis/getVisitorByPhone",
-    appointMeetFormSubmitForm:"api/meeting/add/byuser",
-    appointMeetFormGetAllCity:"api/cityByName",
-    appointMeetFormGetVisitorCompanyName:"vis/company/name",
+    appointMeetFormFetchUsers: "api/user/alluser",
+    appointMeetFormContextOptions: "vis/meetCon",
+    appointMeetFormGetVisitorByPhone: "vis/getVisitorByPhone",
+    appointMeetFormSubmitForm: "api/meeting/add/byuser",
+    appointMeetFormGetAllCity: "api/cityByName",
+    appointMeetFormGetVisitorCompanyName: "vis/company/name",
     // appointMeetFormGetAllCity:"api/cityByName",
     // appointMeetFormGetAllCity:"api/cityByName",
-
 
     //DynamicIdCard.jsx
     dynamicIdCardMeetDetails: "api/meeting/meeting-details",
-
 
     //MeetTimeLine.jsx
     meetingTimeLineFetchData: "api/meeting/getbyid",
     meetingTimeLineMeetUpdate: "api/meeting/update/meeting",
 
-
     //VisitorMeetTimeLine.jsx
     visitorTimeLineFetchData: "api/meeting/getbyid",
-
 
     //BulkUserForm.jsx
     bulkUserFormSaveUpload: "api/user/excel/upload",
 
-
     //EmpDashBoard.jsx
     empDashboardFetchDashboard: "api/meeting/userdashboard",
     empDashboardFetchTimeline: "api/meeting/meetingfordashboard",
-
 
     //EmployeeSB.jsx
     employeeSBAxiosInstance: "api/user",
@@ -54,14 +46,11 @@ const Config = Object.freeze({
     employeeSBGetAllRole: "api/role/getall",
     employeeSBGetAllDept: "api/department/companyId",
 
-
     //LoginFormNK.jsx
     loginFormNKSubmit: "token",
     loginFormNKGetOtp: "api/user/getotp",
     loginFormNKSaveForgot: "api/user/forgot",
     loginFormNKFetchData: "api/user/getall",
-
-
 
     //Profile.jsx
     profileAxiosInstance: "api/user",
@@ -69,7 +58,6 @@ const Config = Object.freeze({
     profilePresent: "api/user/present",
     profileAddUser: "api/user/adduser",
     profileConvertImg: "vis/upload",
-
 
     //RolesAndDepartments.jsx
     rolesAndDeptsAxiosInstance: "api/user",
@@ -79,106 +67,83 @@ const Config = Object.freeze({
     rolesAndDeptsUpdateDept: "api/department/update",
     rolesAndDeptsCreateRole: "api/add",
 
-
-
     //BasicTable.jsx
 
     roomDetailsEndPointdashboard: "api/room/getroomfordashboard/",
     // companyTable.jsx
 
     fetchCompanyEndPoint: "com/paginated",
-    activeDeactiveEndPoint:"com/active",
-    editEndPoint:"com/update/",
-    excelEndPoint:"com/exportcompanydata",
-    
-    
-    
+    activeDeactiveEndPoint: "com/active",
+    editEndPoint: "com/update/",
+    excelEndPoint: "com/exportcompanydata",
 
     // companyReg.jsx
     addCompanyEndPoint: "com/add",
     statesEndPoint: "sc/states",
-    cityEndPoint:"sc/all", 
-    getBuildingEndPoint:"api/building/getAll",
-
+    cityEndPoint: "sc/all",
+    getBuildingEndPoint: "api/building/getAll",
 
     //DashboardReceptionist.jsx
-    RecepDashboardEndPoint:"api/meeting/paginateDashBoard",
-
+    RecepDashboardEndPoint: "api/meeting/paginateDashBoard",
 
     //EditCompanyForm.jsx
-    editCompanyEndPoint:"com/get/",
-
-
+    editCompanyEndPoint: "com/get/",
 
     //Meetings.jsx
-    getRoomEndPoint:"api/room/all",
-    statusEndPoint:"vis/meetstatus",
-    exportEndPoint:"api/meeting/exportdata",
-    getVisitorEndPoint:"api/meeting/paginate",
-    addMeetingEndPoint:"api/meeting/update/meeting",
-
-
+    getRoomEndPoint: "api/room/all",
+    statusEndPoint: "vis/meetstatus",
+    exportEndPoint: "api/meeting/exportdata",
+    getVisitorEndPoint: "api/meeting/paginate",
+    addMeetingEndPoint: "api/meeting/update/meeting",
 
     //ReceptionistAddRoom.jsx
-    addRoomEndPoint:"api/room/save",
-    updateRoomEndPoint:"api/room/update",
-    isActiveRoomEndPoint:"api/room/isActive",
-    roomDetailsEndPoint:"api/room/all",
-
+    addRoomEndPoint: "api/room/save",
+    updateRoomEndPoint: "api/room/update",
+    isActiveRoomEndPoint: "api/room/isActive",
+    roomDetailsEndPoint: "api/room/all",
 
     //ReceptionistCompanyScreen.jsx
-    buildingEndPoint:"com/getByBuildingId",
-
+    buildingEndPoint: "com/getByBuildingId",
 
     //ReceptionistDashboard.jsx
-    statusRecepEndPoint:"vis/meetstatus",
-    statusAdminEndPoint:"vis/meetstatusadmin",
+    statusRecepEndPoint: "vis/meetstatus",
+    statusAdminEndPoint: "vis/meetstatusadmin",
     // hostEndPoint:"api/user/alluser",
-    hostEndPoint:"api/user/alluserbuildingId",
+    hostEndPoint: "api/user/alluserbuildingId",
     // roomDetailsRecepEndPoint:"api/room/all",
-    roomDetailsFilterRecepEndPoint:"api/room/allrooms",
-    roomDetailsRecepEndPoint:"api/room/allbuilding",
-    addMeetingRecepEndPoint:"api/meeting/update/meeting",
-    exportRecepEndPoint:"api/meeting/exportdata",
-    getVisitorRecepEndPoint:"api/meeting/paginate",
-    passApiEndPoint:"api/meeting/downloadPass",
-    checkOutEndPoint:"api/meeting/checkout-by-receptionist",
-
-
-
-
-
-
+    roomDetailsFilterRecepEndPoint: "api/room/allrooms",
+    roomDetailsRecepEndPoint: "api/room/allbuilding",
+    addMeetingRecepEndPoint: "api/meeting/update/meeting",
+    exportRecepEndPoint: "api/meeting/exportdata",
+    getVisitorRecepEndPoint: "api/meeting/paginate",
+    passApiEndPoint: "api/meeting/downloadPass",
+    checkOutEndPoint: "api/meeting/checkout-by-receptionist",
 
     //UserFormSB.jsx
-    userformSBAxiosInstance:"api/user",
-    userformSBAddUser:"api/user/adduser",
-    userformSBGetAllState:"api/state/all",
-    userformSBGetAllCity:"api/city",
-    userformSBGetAllRole:"api/role/getall",
-    userformSBGetAllDept:"api/department/companyId",
-    userformSBGetCompanyAll:"com/all",
-
+    userformSBAxiosInstance: "api/user",
+    userformSBAddUser: "api/user/adduser",
+    userformSBGetAllState: "api/state/all",
+    userformSBGetAllCity: "api/city",
+    userformSBGetAllRole: "api/role/getall",
+    userformSBGetAllDept: "api/department/companyId",
+    userformSBGetCompanyAll: "com/all",
 
     //Navbar.jsx
-    navbarAxiosInstance:"api",
-    navbarPendingRequest:"api/notification/pending-request",
-    navbarMarkSeen:"api/notification/mark-seen",
-    navbarFetchGetById:"api/user/getbyid",
-    navbarChangePassword:"api/user/change",
+    navbarAxiosInstance: "api",
+    navbarPendingRequest: "api/notification/pending-request",
+    navbarMarkSeen: "api/notification/mark-seen",
+    navbarFetchGetById: "api/user/getbyid",
+    navbarChangePassword: "api/user/change",
     // navbar:"api",
-
 
     //Building.jsx
     buildingAxiosInstance: "api/user",
-    buildingGetByBuildingId:"api/building/get",
-    buildingGetAll:"api/building/getAll",
-    buildingGetAllState:"api/state/all",
-    buildingGetAllCity:"api/city",
-    buildingSubmitBuilding:"api/building/save",
-    buildingUpdateBuilding:"api/building/update",
-
-
+    buildingGetByBuildingId: "api/building/get",
+    buildingGetAll: "api/building/getAll",
+    buildingGetAllState: "api/state/all",
+    buildingGetAllCity: "api/city",
+    buildingSubmitBuilding: "api/building/save",
+    buildingUpdateBuilding: "api/building/update",
   },
 });
 
