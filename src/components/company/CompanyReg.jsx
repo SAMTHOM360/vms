@@ -436,6 +436,9 @@ export default function CompanyReg() {
     }
   };
 
+
+  console.log(buildingOptions,"buildingOptions")
+
   return (
     <>
       <Box sx={{ display: "flex", flexGrow: 1, p: 3 ,}}>

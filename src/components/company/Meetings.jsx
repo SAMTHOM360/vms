@@ -1314,7 +1314,7 @@ export default function Meetings() {
                               </TableCell>
 
                               <TableCell align="center">
-                                {visitor.visitor.imageUrl !== null ? (
+                                {(visitor.visitor.imageUrl !== null && visitor.visitor.imageUrl !== "") ? (
                                   <div
                                     style={{
                                       display: "flex",

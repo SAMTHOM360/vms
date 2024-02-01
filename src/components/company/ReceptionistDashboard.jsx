@@ -294,26 +294,12 @@ export default function Dashboard() {
     setStartDate(e.target.value);
   };
 
-  // const handleStartDateChange = (event) => {
-  //   const selectedDate = event.target.value;
-  //   // Validate if the selected date is within the allowed range
-  //   if (moment(selectedDate).isSameOrBefore(moment().format("YYYY-MM-DD"))) {
-  //     setStartDate(selectedDate);
-  //   } else {
-  //     // Handle invalid date (e.g., show a message to the user)
-  //   }
-  // };
 
-  // const handleEndDateChange = (e) => {
-  //   const selectedEndDate = e.target.value;
-
-  //   setEndDate(e.target.value);
-  // };
 
   const handleEndDateChange = (e) => {
     const selectedEndDate = e.target.value;
 
-    // Check if the selected end date is valid (e.g., greater than or equal to the start date)
+   
     if (!startDate || selectedEndDate >= startDate) {
       setEndDate(selectedEndDate);
     }
@@ -321,8 +307,11 @@ export default function Dashboard() {
     setEndDateFieldDisabled(!startDate || selectedEndDate < startDate);
   };
 
-  // Add state for controlling the disabled state of the end date field
+ 
   const [endDateFieldDisabled, setEndDateFieldDisabled] = useState(true);
+
+
+
 
   const handleClearSelection = () => {
     setSelectedStatusOptions("");
@@ -1720,6 +1709,7 @@ return
                         inputProps={{
                           style: { textTransform: "uppercase" },
                           max: moment().format("YYYY-MM-DD"),
+                     
                         }}
                         // InputProps={{
                         //   inputProps: {
@@ -1752,23 +1742,9 @@ return
                           min: moment(startDate)
                             .add(1, "day")
                             .format("YYYY-MM-DD"),
+                            max: '9999-12-31'
                         }}
-                        // InputProps={{
-                        //   inputProps: {
-                        //     style: { textTransform: "uppercase", },
-                        //     min: moment(startDate).add(1, "day").format("YYYY-MM-DD"),
 
-                        //   },
-                        //   inputComponent: (props) => (
-                        //     <input
-                        //       {...props}
-                        //       value={endDate}
-
-                        //       style={{ textTransform: "uppercase" }}
-
-                        //     />
-                        //   ),
-                        // }}
                         disabled={!startDate}
                       ></TextField>
                     </Grid>
@@ -1931,7 +1907,7 @@ return
                             </TableCell>
 
                             <TableCell align="center">
-                              {visitor.visitor.imageUrl !== null ? (
+                              {(visitor.visitor.imageUrl !== null  && visitor.visitor.imageUrl !== "")? (
                                 <div
                                   style={{
                                     display: "flex",
