@@ -46,8 +46,8 @@ import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import Config from "../Config/Config";
 import nyggsLogo from "../assets/nyggsLogo.png";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 
 const AppBar = styled(
   MuiAppBar,
@@ -184,7 +184,7 @@ export default function Navbar({ toggleSidebar }) {
     activeListItem,
     isOpenforGridTable,
     selectedCompanyIdForNotification,
-    isCompanySelectionChanged
+    isCompanySelectionChanged,
   } = useAuth();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [isSUPERADMIN, setIsSUPERADMIN] = useState(false);
@@ -200,19 +200,20 @@ export default function Navbar({ toggleSidebar }) {
   const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false);
   const [avatarLink, setAvatarLink] = useState("");
   const [isAvatarLinkPresent, setIsAvatarLinkPresent] = useState(false);
-  const [isChangedcompanyIdInSession, setIsChangedcompanyIdInSession] = useState(
-    sessionStorage.getItem("CompanyIdSelected")
-      ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
-      : null
-  );
+  const [isChangedcompanyIdInSession, setIsChangedcompanyIdInSession] =
+    useState(
+      sessionStorage.getItem("CompanyIdSelected")
+        ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
+        : null
+    );
 
   useEffect(() => {
     setIsChangedcompanyIdInSession(
       sessionStorage.getItem("CompanyIdSelected")
         ? JSON.parse(sessionStorage.getItem("CompanyIdSelected")).id || null
         : null
-    )
-  },[isCompanySelectionChanged])
+    );
+  }, [isCompanySelectionChanged]);
 
   useEffect(() => {
     if (loggedUserRole === "SUPERADMIN") {
@@ -339,8 +340,7 @@ export default function Navbar({ toggleSidebar }) {
     }
   };
 
-
-//  console.log('OUTSIDE', selectedCompanyIdForNotification)
+  //  console.log('OUTSIDE', selectedCompanyIdForNotification)
   async function fetchNotification() {
     // console.log('INSIDE', selectedCompanyIdForNotification)
     let companyIdStr2 = sessionStorage.getItem("selectedCompanyId");
@@ -436,8 +436,6 @@ export default function Navbar({ toggleSidebar }) {
 
         // console.log('bellAPiData', bellAPiData)
 
-        
-
         bellmenuItemm = (
           <List
             sx={{
@@ -448,10 +446,10 @@ export default function Navbar({ toggleSidebar }) {
               const bellApiVisiorData = dataItem.meeting.visitor;
               const bellApiUserData = dataItem.meeting.user;
 
-              let allNotiCompany = dataItem?.meeting?.company || null
-              let allNotiCompanyName = allNotiCompany?.name || "NA"
+              let allNotiCompany = dataItem?.meeting?.company || null;
+              let allNotiCompanyName = allNotiCompany?.name || "NA";
 
-        // console.log('allNotiCompanyName', allNotiCompanyName)
+              // console.log('allNotiCompanyName', allNotiCompanyName)
 
               return (
                 <Box
@@ -473,8 +471,8 @@ export default function Navbar({ toggleSidebar }) {
                       "&:hover": {
                         bgcolor: dataItem.seen ? "#DDDDDD" : "#E9E9E9",
                       },
-                      minHeight:'5.5em',
-                      maxHeight:'5.5em',
+                      minHeight: "5.5em",
+                      maxHeight: "5.5em",
                     }}
                   >
                     {/* <Avatar sx={{}}>
@@ -488,24 +486,25 @@ export default function Navbar({ toggleSidebar }) {
                         }}
                       />
                     </Avatar> */}
-                    {bellApiVisiorData.imageUrl && isValidImage(bellApiVisiorData.imageUrl) ? (
-  <Avatar sx={{}}>
-    <img
-      src={bellApiVisiorData.imageUrl}
-      alt="No DP"
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-      }}
-    />
-  </Avatar>
-) : (
-  <Avatar sx={{}}>
-    {/* <AccountCircleIcon /> */}
-    <PermIdentityIcon />
-  </Avatar>
-)}
+                    {bellApiVisiorData.imageUrl &&
+                    isValidImage(bellApiVisiorData.imageUrl) ? (
+                      <Avatar sx={{}}>
+                        <img
+                          src={bellApiVisiorData.imageUrl}
+                          alt="No DP"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </Avatar>
+                    ) : (
+                      <Avatar sx={{}}>
+                        {/* <AccountCircleIcon /> */}
+                        <PermIdentityIcon />
+                      </Avatar>
+                    )}
                     <Box
                       sx={{
                         width: "70%",
@@ -513,7 +512,7 @@ export default function Navbar({ toggleSidebar }) {
                       }}
                     >
                       <Typography
-                      component="span"
+                        component="span"
                         sx={{
                           fontSize: "14px",
                           color: "#3A3E45DE",
@@ -546,10 +545,15 @@ export default function Navbar({ toggleSidebar }) {
                       . */}
                         {dataItem.text || "NA"}
                       </Typography>
-                      <Typography component="span">    </Typography>
+                      <Typography component="span"> </Typography>
                       {loggedUserRole === "RECEPTIONIST" ? (
                         isChangedcompanyIdInSession ? null : (
-                          <Typography component="span" sx={{fontSize: "15px",color: "#494949",}}>({allNotiCompanyName})</Typography>
+                          <Typography
+                            component="span"
+                            sx={{ fontSize: "15px", color: "#494949" }}
+                          >
+                            ({allNotiCompanyName})
+                          </Typography>
                         )
                       ) : null}
                     </Box>
@@ -598,7 +602,6 @@ export default function Navbar({ toggleSidebar }) {
       return () => clearInterval(intervalFetchNotification);
     }
   }, [loggedUserRole, selectedCompanyIdForNotification]);
-
 
   useEffect(() => {
     fetchNotification();
@@ -769,18 +772,16 @@ export default function Navbar({ toggleSidebar }) {
   const handleProfileOpen = () => {
     navigate("/profile");
     handleMenuClose();
-    if(isNotificationPopupOpen){
-
-      handleCloseBellMenu()
+    if (isNotificationPopupOpen) {
+      handleCloseBellMenu();
     }
   };
 
   const handleChangeCompanyScreen = () => {
     navigate("/receptionistcompanyscreen");
     handleMenuClose();
-    if(isNotificationPopupOpen){
-
-      handleCloseBellMenu()
+    if (isNotificationPopupOpen) {
+      handleCloseBellMenu();
     }
   };
 
