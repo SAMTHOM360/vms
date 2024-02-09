@@ -439,7 +439,7 @@ export default function Navbar({ toggleSidebar }) {
         bellmenuItemm = (
           <List
             sx={{
-              width: "23em",
+              width: "30em",
             }}
           >
             {bellAPiData.map((dataItem, index) => {
@@ -471,8 +471,9 @@ export default function Navbar({ toggleSidebar }) {
                       "&:hover": {
                         bgcolor: dataItem.seen ? "#DDDDDD" : "#E9E9E9",
                       },
-                      minHeight: "5.5em",
-                      maxHeight: "5.5em",
+                      minHeight: "6em",
+                      maxHeight: "6em",
+                      overflow: "hidden",
                     }}
                   >
                     {/* <Avatar sx={{}}>
@@ -509,12 +510,13 @@ export default function Navbar({ toggleSidebar }) {
                       sx={{
                         width: "70%",
                         // bgcolor: "orange",
+                        overflow: "hidden",
                       }}
                     >
                       <Typography
                         component="span"
                         sx={{
-                          fontSize: "14px",
+                          fontSize: "13.5px",
                           color: "#3A3E45DE",
                         }}
                       >
@@ -550,7 +552,10 @@ export default function Navbar({ toggleSidebar }) {
                         isChangedcompanyIdInSession ? null : (
                           <Typography
                             component="span"
-                            sx={{ fontSize: "15px", color: "#494949" }}
+                            sx={{
+                              fontSize: "13.5px",
+                              color: "#494949",
+                            }}
                           >
                             ({allNotiCompanyName})
                           </Typography>
