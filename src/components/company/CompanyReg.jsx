@@ -21,10 +21,9 @@ import Sidebar from "../../global/Sidebar";
 import Loader from "../Loader";
 import Autocomplete from "@mui/material/Autocomplete";
 
-
 //loader
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Config from "../../Config/Config";
 
@@ -74,16 +73,13 @@ export default function CompanyReg() {
 
   const [logoUpdated, setLogoUpdated] = useState(false);
 
-//loader
+  //loader
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleSubmit = async (e) => {
-
-
-   
     const companyUrl = Config.baseUrl + Config.apiEndPoints.addCompanyEndPoint;
 
     e.preventDefault();
@@ -153,8 +149,7 @@ export default function CompanyReg() {
     setErrors(newErrors); // Update errors state
 
     if (Object.keys(newErrors).length === 0) {
-      setOpen(true); 
-     
+      setOpen(true);
 
       try {
         const formData = new FormData();
@@ -183,11 +178,8 @@ export default function CompanyReg() {
         });
 
         if (res.status === 200) {
-
-          setOpen(false); 
+          setOpen(false);
           alert("Form submitted successfully");
-
-         
 
           setValues({
             name: "",
@@ -209,8 +201,7 @@ export default function CompanyReg() {
           alert(res.data.message);
         }
       } catch (error) {
-
-        setOpen(false); 
+        setOpen(false);
         if (error.response && error.response.status === 409) {
           alert(error.response.data.message);
         } else {
@@ -315,32 +306,29 @@ export default function CompanyReg() {
   // };
 
   const handleLogoChange = (event) => {
-
-    setOpen(false)
+    setOpen(false);
     const allowedExtensions = ["image/jpeg", "image/jpg", "image/png"];
     const logoFile = event.target.files[0];
 
     if (!logoFile) {
-     
       return;
     }
 
     // Check if file format is allowed
     if (!allowedExtensions.includes(logoFile.type)) {
       alert("Allowed file formats: .jpg, .jpeg, .png");
-      resetFileInput(); 
+      resetFileInput();
       return;
     }
 
-      // Check if file extension is JFIF
-  const isJFIF = logoFile.name.toLowerCase().endsWith(".jfif");
-  if (isJFIF) {
-    alert("Allowed file formats: .jpg, .jpeg, .png");
-    resetFileInput();
-    return;
-  }
+    // Check if file extension is JFIF
+    const isJFIF = logoFile.name.toLowerCase().endsWith(".jfif");
+    if (isJFIF) {
+      alert("Allowed file formats: .jpg, .jpeg, .png");
+      resetFileInput();
+      return;
+    }
 
- 
     // if (logoFile.size > MAX_FILE_SIZE) {
     //     alert("Maximum file size exceeded (5MB)");
     //     // setErrors({ ...errors, logo: "Maximum file size exceeded (5MB)" });
@@ -356,25 +344,18 @@ export default function CompanyReg() {
     //   alert(`File size should be between ${minSize}MB and ${maxSize}MB`);
     //   return;
     // }
- 
+
     const fileSizeInMB = logoFile.size / (1024 * 1024);
     // console.log(fileSizeInMB,"filesizemb")
     const minSizeInMB = 0.001;
-    const maxSizeInMB = 5; 
+    const maxSizeInMB = 5;
 
     if (fileSizeInMB < minSizeInMB || fileSizeInMB > maxSizeInMB) {
-
-     
       alert(`File size should be between 1KB and 5MB`);
-      resetFileInput(); 
-     
+      resetFileInput();
+
       return;
     }
-
-
-
-
-
 
     setValues({ ...values, logo: logoFile });
     setLogoUpdated(true);
@@ -387,12 +368,10 @@ export default function CompanyReg() {
     reader.readAsDataURL(logoFile);
   };
 
-
-
   const resetFileInput = () => {
     // Resetting the file input by keying it out of the DOM and back in
-    const fileInput = document.getElementById('file-input');
-    fileInput.value = ''; // Resetting the value
+    const fileInput = document.getElementById("file-input");
+    fileInput.value = ""; // Resetting the value
   };
 
   //building options
@@ -436,16 +415,15 @@ export default function CompanyReg() {
     }
   };
 
-
-  console.log(buildingOptions,"buildingOptions")
+  console.log(buildingOptions, "buildingOptions");
 
   return (
     <>
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3 ,}}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <div className="img" >
-              <form onSubmit={(e) => handleSubmit(e)} >
+            <div className="img">
+              <form onSubmit={(e) => handleSubmit(e)}>
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -506,7 +484,10 @@ export default function CompanyReg() {
                       onChange={(e) => {
                         // const inputValue = e.target.value;
 
-                        const inputValue = e.target.value.replace(/\s{2,}/g, ' ');  // Replace multiple spaces with a single space and trim leading/trailing spaces
+                        const inputValue = e.target.value.replace(
+                          /\s{2,}/g,
+                          " "
+                        ); // Replace multiple spaces with a single space and trim leading/trailing spaces
                         if (inputValue.length <= 40 || inputValue === "") {
                           setValues({ ...values, name: inputValue });
                           setErrors({ ...errors, name: "" }); // Clear any previous error message
@@ -526,12 +507,10 @@ export default function CompanyReg() {
                       //   }
                       // }}
 
-
-
                       onBlur={() => {
                         let trimmedValue = values.name.trim(); // Trim leading/trailing spaces
                         setValues({ ...values, name: trimmedValue });
-                        
+
                         if (!trimmedValue) {
                           setErrors({
                             ...errors,
@@ -541,16 +520,11 @@ export default function CompanyReg() {
                           setErrors({ ...errors, name: "" });
                         }
                       }}
-
-
-
                       // onKeyDown={(e) => {
                       //   if (e.key === " " && e.target.value.slice(-1) === " ") {
                       //     e.preventDefault(); // Prevent multiple spaces
                       //   }
                       // }}
-
-
 
                       error={Boolean(errors.name)}
                       helperText={errors.name}
@@ -602,15 +576,6 @@ export default function CompanyReg() {
                               accept="image/jpeg, image/jpg, image/png,image/jfif"
                               id="file-input"
                               onChange={handleLogoChange}
-
-                              // onBlur={(e) => {
-                              //     const file = e.target.files[0];
-                              //     if (!file) {
-                              //         setErrors({ ...errors, logo: "Company Logo is required", image:true });
-                              //     } else {
-                              //         setErrors({ ...errors, logo: "", image:false });
-                              //     }
-                              // }}
                             />
                             Upload Company Logo
                           </span>
@@ -622,8 +587,6 @@ export default function CompanyReg() {
                         sx={{ fontSize: "15px" }}
                       >
                         Allowed file formats: .jpg, .jpeg, .png
-                        
-
                       </Typography>
                       <Typography
                         variant="caption"
@@ -632,8 +595,6 @@ export default function CompanyReg() {
                       >
                         Logo size (1Kb - 5Mb)
                       </Typography>
-
-
 
                       {errors.logo && (
                         <Typography
@@ -684,29 +645,28 @@ export default function CompanyReg() {
                     //   }
                     // }}
 
+                    onChange={(e) => {
+                      // Replace multiple spaces with a single space
+                      const formattedAddress = e.target.value.replace(
+                        /\s\s+/g,
+                        " "
+                      );
+                      setValues({ ...values, address: formattedAddress });
 
-                      onChange={(e) => {
-    // Replace multiple spaces with a single space
-    const formattedAddress = e.target.value.replace(/\s\s+/g, ' ');
-    setValues({ ...values, address: formattedAddress });
-
-    // Validate input on typing
-    if (!formattedAddress.trim()) {
-      setErrors({
-        ...errors,
-        address: "Address is required",
-      });
-    } else {
-      setErrors({ ...errors, address: "" });
-    }
-  }}
-
-
-
+                      // Validate input on typing
+                      if (!formattedAddress.trim()) {
+                        setErrors({
+                          ...errors,
+                          address: "Address is required",
+                        });
+                      } else {
+                        setErrors({ ...errors, address: "" });
+                      }
+                    }}
                     onBlur={() => {
                       let trimmedValue = values.address.trim(); // Trim leading/trailing spaces
                       setValues({ ...values, address: trimmedValue });
-                      
+
                       if (!trimmedValue) {
                         setErrors({
                           ...errors,
@@ -1005,8 +965,6 @@ export default function CompanyReg() {
                         setValues({ ...values, email: e.target.value })
                       }
                       onBlur={() => {
-
-
                         let trimmedValue = values.email.trim(); // Trim leading/trailing spaces
                         setValues({ ...values, email: trimmedValue });
                         if (!values.email.trim()) {
@@ -1020,7 +978,6 @@ export default function CompanyReg() {
                           setErrors({ ...errors, email: "" });
                         }
                       }}
-
                       error={Boolean(errors.email)}
                       helperText={errors.email}
                     />
@@ -1306,23 +1263,19 @@ export default function CompanyReg() {
                     //   }
                     // }}
 
-
                     //code
                     // onChange={(e) => {
                     //   setValues({ ...values, industry: e.target.value });
                     //   setErrors({ ...errors, industry: "" }); // Clear any previous error message
                     // }}
 
-
                     inputProps={{
-                     
                       maxLength: 100,
                     }}
-                  
                     onChange={(e) => {
                       let value = e.target.value
                         // .replace( "")
-                        .replace(/\s{2,}/g, ' ')
+                        .replace(/\s{2,}/g, " ")
                         .slice(0, 100);
                       setValues({ ...values, industry: value });
                     }}
@@ -1335,11 +1288,10 @@ export default function CompanyReg() {
                     //   }
                     // }}
 
-
                     onBlur={() => {
                       let trimmedValue = values.industry.trim(); // Trim leading/trailing spaces
                       setValues({ ...values, industry: trimmedValue });
-                      
+
                       if (!trimmedValue) {
                         setErrors({
                           ...errors,
@@ -1374,20 +1326,13 @@ export default function CompanyReg() {
                     placeholder="About"
                     type="text"
                     value={values.aboutUs}
-                    onChange={(e) =>{
+                    onChange={(e) => {
                       let value = e.target.value
-                      // .replace( "")
-                      .replace(/\s{2,}/g, ' ')
+                        // .replace( "")
+                        .replace(/\s{2,}/g, " ");
 
-                    
-
-                    setValues({ ...values, aboutUs: value })
-
-                    }
-                    
-                    }
-
-            
+                      setValues({ ...values, aboutUs: value });
+                    }}
                     // onBlur={() => {
                     //   if (!values.aboutUs.trim()) {
                     //     setErrors({ ...errors, aboutUs: "About is required" });
@@ -1396,18 +1341,14 @@ export default function CompanyReg() {
                     //   }
                     // }}
 
-
-
-
-
                     onBlur={() => {
                       let trimmedValue = values.aboutUs.trim(); // Trim leading/trailing spaces
                       setValues({ ...values, aboutUs: trimmedValue });
-                      
+
                       if (!trimmedValue) {
                         setErrors({
                           ...errors,
-                        aboutUs: "aboutUs is required",
+                          aboutUs: "aboutUs is required",
                         });
                       } else {
                         setErrors({ ...errors, name: "" });
@@ -1449,18 +1390,17 @@ export default function CompanyReg() {
           </Grid>
         </Grid>
 
-
         <div>
-      {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
-      <Backdrop
-        // style={{ zIndex: 1 }} 
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1}}
-        open={open}
-        onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+          {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
+          <Backdrop
+            // style={{ zIndex: 1 }}
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+            open={open}
+            onClick={handleClose}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </div>
       </Box>
     </>
   );

@@ -23,9 +23,9 @@
 
   .custom-file-upload.updated {
     background-color: lightblue;
-    /* Add any other styles as needed */
+   
 }
 .custom-file-upload.notupdated {
   background-color:yellow;
-  /* Add any other styles as needed */
+
 }
