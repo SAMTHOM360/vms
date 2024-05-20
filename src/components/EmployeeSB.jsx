@@ -19,7 +19,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from "@mui/icons-material/Download";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,7 +35,7 @@ import { useAuth } from "../routes/AuthContext";
 import Config from "../Config/Config";
 
 // import * as XLSX from "xlsx";
-import * as XLSX from "sheetjs-style"
+import * as XLSX from "sheetjs-style";
 
 const Employee = () => {
   const {
@@ -85,22 +85,22 @@ const Employee = () => {
   const [AddUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editedItem, setEditedItem] = useState({
-    id:"",
-    firstName:"",
-    lastName:"",
-    email:"",
-    phone:"",
+    id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
     dept: {
-      id:"",
-      name:"",
+      id: "",
+      name: "",
     },
-    role:"",
-    roleName:"",
-    isPermission:false,
-    empCode:"",
-    company:{
-      id:null, 
-    }
+    role: "",
+    roleName: "",
+    isPermission: false,
+    empCode: "",
+    company: {
+      id: null,
+    },
   });
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
@@ -116,7 +116,7 @@ const Employee = () => {
   const [excelUrl, setExcelUrl] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [exportExcelData, setExportExcelData] = useState([])
+  const [exportExcelData, setExportExcelData] = useState([]);
 
   let formattedHead;
 
@@ -149,7 +149,6 @@ const Employee = () => {
     handleIsSUPERADMINAllowed();
   }, [loggedUserRole]);
 
-
   const openDialog = () => {
     setDialogOpen(true);
   };
@@ -163,7 +162,7 @@ const Employee = () => {
     let url = Config.baseUrl + Config.apiEndPoints.employeeSbBDelete;
     if (id == adminId) {
       toast.error("You cannot delete yourself !!!", {
-        toastId:"profile-error1"
+        toastId: "profile-error1",
       });
       return;
     } else {
@@ -180,7 +179,7 @@ const Employee = () => {
           // console.log("deleted", response)
           if (response.status === 200) {
             toast.success("User is successfully deleted.", {
-              toastId:"emp-success1"
+              toastId: "emp-success1",
             });
             const updatedRows = rows.map((row) =>
               row.id === id ? { ...row, isActive: true } : row
@@ -206,9 +205,13 @@ const Employee = () => {
 
       if (response.status === 200) {
         const apiData = response.data.data.data;
-        let selectedUserCompanyId = apiData.company ? apiData.company.id ? apiData.company.id : null : null
+        let selectedUserCompanyId = apiData.company
+          ? apiData.company.id
+            ? apiData.company.id
+            : null
+          : null;
 
-        await fetchDepts({selectedCompanyId: selectedUserCompanyId })
+        await fetchDepts({ selectedCompanyId: selectedUserCompanyId });
 
         // console.log('handle edit api data', apiData)
         // const departmentIdFromApi = apiData.departmentDto ? apiData.departmentDto.id || "" : "";
@@ -234,9 +237,13 @@ const Employee = () => {
           roleName: apiData.role ? apiData.role.name || "" : "",
           isPermission: apiData.isPermission || false,
           empCode: apiData.empCode || "",
-          company:{
-            id: apiData.company ? apiData.company.id ? apiData.company.id : null : null, 
-          }
+          company: {
+            id: apiData.company
+              ? apiData.company.id
+                ? apiData.company.id
+                : null
+              : null,
+          },
         });
 
         setOpenEditDialog(true);
@@ -255,7 +262,9 @@ const Employee = () => {
   useEffect(() => {
     // Check the validity of the department ID here
     const departmentIdFromApi = editedItem.dept ? editedItem.dept.id || "" : "";
-    const isValidDepartmentId = depts.some(dept => dept.id === departmentIdFromApi);
+    const isValidDepartmentId = depts.some(
+      (dept) => dept.id === departmentIdFromApi
+    );
 
     // console.log('departmentIdFromApi', departmentIdFromApi);
     // console.log('isValidDepartmentId', isValidDepartmentId);
@@ -296,44 +305,47 @@ const Employee = () => {
     e.preventDefault();
     // toast.dismiss();
 
-    const trimmedFirstName = editedItem.firstName ? editedItem.firstName.trim() : null;
-    const trimmedLastName = editedItem.lastName ? editedItem.lastName.trim() : null;
+    const trimmedFirstName = editedItem.firstName
+      ? editedItem.firstName.trim()
+      : null;
+    const trimmedLastName = editedItem.lastName
+      ? editedItem.lastName.trim()
+      : null;
     const trimmedEmail = editedItem.email ? editedItem.email.trim() : null;
     // const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  // working somehow
     const emailFormat = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // working efficiently
 
-
     if (!emailFormat.test(trimmedEmail)) {
       toast.warn("Invalid email address. Please enter a valid email address.", {
-        toastId:"edit-emp-email"
+        toastId: "edit-emp-email",
       });
       return;
     }
 
     if (!trimmedFirstName) {
       toast.warn("First Name is required !!!", {
-        toastId:"edit-emp-firstName"
+        toastId: "edit-emp-firstName",
       });
       return;
     }
-  
+
     if (!trimmedLastName) {
       toast.warn("Last Name is required !!!", {
-        toastId:"edit-emp-lastname"
+        toastId: "edit-emp-lastname",
       });
       return;
     }
-  
+
     if (!trimmedEmail) {
       toast.warn("Email is required !!!", {
-        toastId:"edit-emp-emptyEmail"
+        toastId: "edit-emp-emptyEmail",
       });
       return;
     }
 
     if (editedItem.phone.length !== 10) {
       toast.warn("Phone Number must be of 10 digits !!!", {
-        toastId:"edit-emp-phone-warn11"
+        toastId: "edit-emp-phone-warn11",
       });
       return;
     }
@@ -370,7 +382,7 @@ const Employee = () => {
 
     if (missingFields.length > 0) {
       toast.warn("All fields are required!", {
-        toastId:"edit-emp-missFields"
+        toastId: "edit-emp-missFields",
       });
       return;
     }
@@ -384,7 +396,7 @@ const Employee = () => {
       });
       if (response.status === 200) {
         toast.success("Selected user is successfully updated.", {
-          toastId:"edit-emp-submitSuccess"
+          toastId: "edit-emp-submitSuccess",
         });
         let url2 = Config.baseUrl + Config.apiEndPoints.employeeSBUserGetById;
 
@@ -423,11 +435,15 @@ const Employee = () => {
         // console.log("got error", error.response)
 
         // console.log(" holaaa",  error.response.data)
-        if (error.response && error.response.data && error.response.data.message) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           errMessage = error.response.data.message;
           const cleanedMessage = JSON.stringify(errMessage);
-          toast.error(JSON.parse(cleanedMessage)+' !!!', {
-            toastId:"userfrom-error5"
+          toast.error(JSON.parse(cleanedMessage) + " !!!", {
+            toastId: "userfrom-error5",
           });
         }
       } else if (error.response.status === 401) {
@@ -436,11 +452,11 @@ const Employee = () => {
         //     JSON.stringify(error.response.data.message)
         // );
         toast.error("Something went wrong !", {
-          toastId:"edit-emp-editerror2"
+          toastId: "edit-emp-editerror2",
         });
       } else {
         toast.error("Something went wrong !", {
-          toastId:"edit-emp-editerror3"
+          toastId: "edit-emp-editerror3",
         });
         console.error("Error saving changes:", error);
       }
@@ -487,7 +503,7 @@ const Employee = () => {
         return;
       }
 
-      setExportExcelData(apiDataArray)
+      setExportExcelData(apiDataArray);
 
       // const commonColumns = [
       //   {
@@ -617,18 +633,7 @@ const Employee = () => {
       //   },
       // ];
 
-
-
-      let gridColumns = []
-
-
-
-
-
-
-
-
-
+      let gridColumns = [];
 
       let firstSegment = [
         {
@@ -684,7 +689,13 @@ const Employee = () => {
             // console.log('apiDataItem', apiDataItem)
             return (
               <div>
-                <span style={{ fontSize: '16px' }}>{apiDataItem.firstName}</span> <span style={{ fontSize: '16px' }}>{apiDataItem.lastName}</span> <span style={{ fontSize: '13px' }}>({apiDataItem.empCode ? apiDataItem.empCode : 'N/A'})</span>
+                <span style={{ fontSize: "16px" }}>
+                  {apiDataItem.firstName}
+                </span>{" "}
+                <span style={{ fontSize: "16px" }}>{apiDataItem.lastName}</span>{" "}
+                <span style={{ fontSize: "13px" }}>
+                  ({apiDataItem.empCode ? apiDataItem.empCode : "N/A"})
+                </span>
               </div>
             );
           },
@@ -706,8 +717,7 @@ const Employee = () => {
           headerAlign: "center",
           width: 330,
         },
-      ]
-
+      ];
 
       let secondSegment = [
         {
@@ -726,7 +736,7 @@ const Employee = () => {
           headerAlign: "center",
           width: 180,
         },
-      ]
+      ];
 
       let thirdSegment = [
         {
@@ -755,7 +765,7 @@ const Employee = () => {
           headerAlign: "center",
           width: 200,
         },
-      ]
+      ];
 
       // let isPermissionColumn = [];
       // let companyColumn = [];
@@ -764,14 +774,14 @@ const Employee = () => {
         {
           field: "isPermission",
           headerName: "Receptionist Meet Permissions",
-              // headerName: 'Receptionist&nbsp;Meet&nbsp;Permissions',
+          // headerName: 'Receptionist&nbsp;Meet&nbsp;Permissions',
 
           // flex: 1,
           align: "center",
           headerAlign: "center",
           width: 270,
-        }
-      ]
+        },
+      ];
 
       let superadminSegmentOne = [
         {
@@ -782,7 +792,7 @@ const Employee = () => {
           headerAlign: "center",
           width: 300,
         },
-      ]
+      ];
       let superadminSegmentTwo = [
         {
           field: "building",
@@ -796,7 +806,12 @@ const Employee = () => {
             // console.log('apiDataItem', apiDataItem)
             return (
               <div>
-                <span style={{ fontSize: '15px' }}>{apiDataItem.buildingName}</span> <span style={{ fontSize: '13px' }}>({apiDataItem.buildingId ? apiDataItem.buildingId : 'N/A'})</span>
+                <span style={{ fontSize: "15px" }}>
+                  {apiDataItem.buildingName}
+                </span>{" "}
+                <span style={{ fontSize: "13px" }}>
+                  ({apiDataItem.buildingId ? apiDataItem.buildingId : "N/A"})
+                </span>
               </div>
             );
           },
@@ -810,10 +825,8 @@ const Employee = () => {
           //     </div>
           //   );
           // },
-        }
-      ]
-
-
+        },
+      ];
 
       // if (loggedUserRole === "ADMIN") {
       //   isPermissionColumn.push({
@@ -847,23 +860,23 @@ const Employee = () => {
       //   );
       // }
 
-      if(loggedUserRole === "ADMIN") {
+      if (loggedUserRole === "ADMIN") {
         gridColumns = [
           ...firstSegment,
           ...secondSegment,
           ...thirdSegment,
           ...adminSegmentOne,
-        ]
+        ];
       }
 
-      if(loggedUserRole === "SUPERADMIN") {
+      if (loggedUserRole === "SUPERADMIN") {
         gridColumns = [
           ...firstSegment,
           ...superadminSegmentOne,
           ...secondSegment,
           ...superadminSegmentTwo,
           ...thirdSegment,
-        ]
+        ];
       }
 
       // const gridColumns = [
@@ -879,7 +892,9 @@ const Employee = () => {
         serialNo: index + 1,
         firstName: apiDataItem.firstName,
         lastName: apiDataItem.lastName,
-        name: `${apiDataItem.firstName} ${apiDataItem.lastName} (${apiDataItem.empCode ? apiDataItem.empCode : "N/A"})`,
+        name: `${apiDataItem.firstName} ${apiDataItem.lastName} (${
+          apiDataItem.empCode ? apiDataItem.empCode : "N/A"
+        })`,
         phone: apiDataItem.phone,
         email: apiDataItem.email,
         // govtId:apiDataItem.govtId,
@@ -889,7 +904,7 @@ const Employee = () => {
           ? apiDataItem.govtId.length === 12
             ? `${apiDataItem.govtId} (Aadhar)`
             : `${apiDataItem.govtId} (PAN)`
-          : 'N/A',
+          : "N/A",
         company: apiDataItem.company ? apiDataItem.company.name : "",
         dept: apiDataItem.departmentDto ? apiDataItem.departmentDto.name : "",
         role: apiDataItem.role ? apiDataItem.role.name : "",
@@ -901,15 +916,19 @@ const Employee = () => {
             : ""
           : "",
 
-        building: `${apiDataItem.company
-        ? apiDataItem.company.building
-          ? apiDataItem.company.building.name || ""
-          : ""
-        : ""} (${apiDataItem.company
-          ? apiDataItem.company.building
-            ? apiDataItem.company.building.buildingId || ""
+        building: `${
+          apiDataItem.company
+            ? apiDataItem.company.building
+              ? apiDataItem.company.building.name || ""
+              : ""
             : ""
-          : ""})`,
+        } (${
+          apiDataItem.company
+            ? apiDataItem.company.building
+              ? apiDataItem.company.building.buildingId || ""
+              : ""
+            : ""
+        })`,
         buildingName: apiDataItem.company
           ? apiDataItem.company.building
             ? apiDataItem.company.building.name || ""
@@ -922,7 +941,7 @@ const Employee = () => {
       setDivText("");
     } catch (error) {
       toast.error("Something went wrong !", {
-        toastId:"emp-error6"
+        toastId: "emp-error6",
       });
       console.error("Error fetching data:", error);
     } finally {
@@ -1033,250 +1052,287 @@ const Employee = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-
-
-
   const XLSX_HEADER_STYLE = {
-    font: { bold: true, size: 24, color: { rgb: '000000' } },
-    fill: { fgColor: { rgb: '9A9A9A' } },
+    font: { bold: true, size: 24, color: { rgb: "000000" } },
+    fill: { fgColor: { rgb: "9A9A9A" } },
   };
 
-function fitToColumn(arrayOfObjects) {
-  if (!Array.isArray(arrayOfObjects) || arrayOfObjects.length === 0) {
-    return [];
-  }
-
-  const keys = Object.keys(arrayOfObjects[0]);
-
-  const columnWidths = keys.map((key) => ({
-    wch: key.toString().length,
-  }));
-
-  keys.forEach((key, index) => {
-    columnWidths[index].wch = Math.max(
-      columnWidths[index].wch,
-      key.toString().length
-    );
-  });
-
-  arrayOfObjects.forEach((obj) => {
-    keys.forEach((key, index) => {
-      const cellValue = obj[key] ? obj[key].toString() : '';
-      columnWidths[index].wch = Math.max(
-        columnWidths[index].wch,
-        cellValue.length
-      );
-    });
-  });
-
-  columnWidths.forEach((column) => {
-    column.wch += 5;
-  });
-
-  return columnWidths;
-}
-
-
-
-
-
-const handleExportExcelAllData = () => {
-
-
-  
-  if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
-
-    // console.log('cxcel data inside print', exportExcelData)
-    let headers = []
-    let data ;
-    if (loggedUserRole === "SUPERADMIN") {
-
-      headers = ["Sl.no", "Name", "Phone", "Email", "Company", "Department", "Role", "Building", "Government ID", "State", "City",];
-
-      data = exportExcelData?.map((dataItem, index) => ({
-        "Sl.no": index + 1,
-        "Name":  `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode ? dataItem.empCode : "N/A"})`,
-        "Phone": dataItem.phone,
-        "Email": dataItem.email,
-        "Company": dataItem.company ? dataItem.company.name ? dataItem.company.name : "" : "",
-        "Department": dataItem.departmentDto ? dataItem.departmentDto.name ? dataItem.departmentDto.name : "" : "",
-        "Role":  dataItem.role ? dataItem.role.name ? dataItem.role.name : "" : "",
-        "Building": `${ dataItem.company
-          ? dataItem.company.building
-            ? dataItem.company.building.name ? dataItem.company.building.name : "" || ""
-            : ""
-          : ""} (${dataItem.company
-            ? dataItem.company.building
-              ? dataItem.company.building.buildingId || ""
-              : ""
-            : ""})`,
-        "Government ID": dataItem.govtId
-        ? dataItem.govtId.length === 12
-          ? `${dataItem.govtId} (Aadhar)`
-          : `${dataItem.govtId} (PAN)`
-        : 'N/A',
-        "State": dataItem.state ? dataItem.state.name ? dataItem.state.name : "" : "",
-        "City": dataItem.city ? dataItem.city.name ? dataItem.city.name : "" : "",
-      }));
+  function fitToColumn(arrayOfObjects) {
+    if (!Array.isArray(arrayOfObjects) || arrayOfObjects.length === 0) {
+      return [];
     }
 
-    if(loggedUserRole === "ADMIN") {
-      headers = ["Sl.no", "Name", "Phone", "Email", "Department", "Role", "Government ID", "State", "City", "Receptionist Meet Permissions"];
+    const keys = Object.keys(arrayOfObjects[0]);
 
-
-    data = exportExcelData?.map((dataItem, index) => ({
-      "Sl.no": index + 1,
-      "Name":  `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode ? dataItem.empCode : "N/A"})`,
-      "Phone": dataItem.phone,
-      "Email": dataItem.email,
-      "Department": dataItem.departmentDto ? dataItem.departmentDto.name : "",
-      "Role":  dataItem.role ? dataItem.role.name : "",
-      "Government ID": dataItem.govtId
-      ? dataItem.govtId.length === 12
-        ? `${dataItem.govtId} (Aadhar)`
-        : `${dataItem.govtId} (PAN)`
-      : 'N/A',
-      "State": dataItem.state.name ? dataItem.state.name : "",
-      "City": dataItem.city.name ? dataItem.city.name : "",
-      "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
+    const columnWidths = keys.map((key) => ({
+      wch: key.toString().length,
     }));
 
-  }
-
-    const ws = XLSX.utils.json_to_sheet(data, {
-      header: headers, 
+    keys.forEach((key, index) => {
+      columnWidths[index].wch = Math.max(
+        columnWidths[index].wch,
+        key.toString().length
+      );
     });
 
-    headers.forEach((key, index) => {
-      const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
-      if (headerCell) {
-        headerCell.s = XLSX_HEADER_STYLE;
+    arrayOfObjects.forEach((obj) => {
+      keys.forEach((key, index) => {
+        const cellValue = obj[key] ? obj[key].toString() : "";
+        columnWidths[index].wch = Math.max(
+          columnWidths[index].wch,
+          cellValue.length
+        );
+      });
+    });
+
+    columnWidths.forEach((column) => {
+      column.wch += 5;
+    });
+
+    return columnWidths;
+  }
+
+  const handleExportExcelAllData = () => {
+    if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
+      // console.log('cxcel data inside print', exportExcelData)
+      let headers = [];
+      let data;
+      if (loggedUserRole === "SUPERADMIN") {
+        headers = [
+          "Sl.no",
+          "Name",
+          "Phone",
+          "Email",
+          "Company",
+          "Department",
+          "Role",
+          "Building",
+          "Government ID",
+          "State",
+          "City",
+        ];
+
+        data = exportExcelData?.map((dataItem, index) => ({
+          "Sl.no": index + 1,
+          Name: `${dataItem.firstName} ${dataItem.lastName} (${
+            dataItem.empCode ? dataItem.empCode : "N/A"
+          })`,
+          Phone: dataItem.phone,
+          Email: dataItem.email,
+          Company: dataItem.company
+            ? dataItem.company.name
+              ? dataItem.company.name
+              : ""
+            : "",
+          Department: dataItem.departmentDto
+            ? dataItem.departmentDto.name
+              ? dataItem.departmentDto.name
+              : ""
+            : "",
+          Role: dataItem.role
+            ? dataItem.role.name
+              ? dataItem.role.name
+              : ""
+            : "",
+          Building: `${
+            dataItem.company
+              ? dataItem.company.building
+                ? dataItem.company.building.name
+                  ? dataItem.company.building.name
+                  : "" || ""
+                : ""
+              : ""
+          } (${
+            dataItem.company
+              ? dataItem.company.building
+                ? dataItem.company.building.buildingId || ""
+                : ""
+              : ""
+          })`,
+          "Government ID": dataItem.govtId
+            ? dataItem.govtId.length === 12
+              ? `${dataItem.govtId} (Aadhar)`
+              : `${dataItem.govtId} (PAN)`
+            : "N/A",
+          State: dataItem.state
+            ? dataItem.state.name
+              ? dataItem.state.name
+              : ""
+            : "",
+          City: dataItem.city
+            ? dataItem.city.name
+              ? dataItem.city.name
+              : ""
+            : "",
+        }));
       }
-    });
 
-    ws['!cols'] = fitToColumn(data);
+      if (loggedUserRole === "ADMIN") {
+        headers = [
+          "Sl.no",
+          "Name",
+          "Phone",
+          "Email",
+          "Department",
+          "Role",
+          "Government ID",
+          "State",
+          "City",
+          "Receptionist Meet Permissions",
+        ];
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-    XLSX.writeFile(wb, 'User_List_All_Data.xlsx');
-  } else {
-    // console.error('Invalid data format for export.');
-    alert('Invalid data format for export.');
-  }
-};
+        data = exportExcelData?.map((dataItem, index) => ({
+          "Sl.no": index + 1,
+          Name: `${dataItem.firstName} ${dataItem.lastName} (${
+            dataItem.empCode ? dataItem.empCode : "N/A"
+          })`,
+          Phone: dataItem.phone,
+          Email: dataItem.email,
+          Department: dataItem.departmentDto ? dataItem.departmentDto.name : "",
+          Role: dataItem.role ? dataItem.role.name : "",
+          "Government ID": dataItem.govtId
+            ? dataItem.govtId.length === 12
+              ? `${dataItem.govtId} (Aadhar)`
+              : `${dataItem.govtId} (PAN)`
+            : "N/A",
+          State: dataItem.state.name ? dataItem.state.name : "",
+          City: dataItem.city.name ? dataItem.city.name : "",
+          "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
+        }));
+      }
 
+      const ws = XLSX.utils.json_to_sheet(data, {
+        header: headers,
+      });
 
-// console.log('excel data outside print', exportExcelData[2]);
+      headers.forEach((key, index) => {
+        const headerCell = ws[XLSX.utils.encode_col(index) + "1"];
+        if (headerCell) {
+          headerCell.s = XLSX_HEADER_STYLE;
+        }
+      });
 
-// const handleExportExcelAllData = () => {
-//   if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
-// //  let maal = exportExcelData.data
-//     console.log('excel data inside print', exportExcelData[0]);
-    
-//     let headers = [];
-//     let data = [];
+      ws["!cols"] = fitToColumn(data);
 
-//     if (loggedUserRole === "SUPERADMIN") {
-//       console.log('i got hit')
-//       headers = ["Sl.no", "Name", "Phone", "Email", "Company", "Department", "Role", "Building", "Government ID", "State", "City"];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
+      XLSX.writeFile(wb, "User_List_All_Data.xlsx");
+    } else {
+      // console.error('Invalid data format for export.');
+      alert("Invalid data format for export.");
+    }
+  };
 
-//       data = exportExcelData?.map((dataItem, index) => ({
-//         "Sl.no": index + 1,
-//         "Email": dataItem.email || "",
-//         // "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
-//         // "Phone": dataItem.phone || "",
-//         // "Email": dataItem.email || "",
-//         // "Company": dataItem.company?.name || "",
-//         // "Department": dataItem.departmentDto?.name || "",
-//         // "Role": dataItem.role?.name || "",
-//         // "Building": `${dataItem.company?.building?.name || ""} (${dataItem.company?.building?.buildingId || ""})`,
-//         // "Government ID": dataItem.govtId
-//         //   ? dataItem.govtId.length === 12
-//         //     ? `${dataItem.govtId} (Aadhar)`
-//         //     : `${dataItem.govtId} (PAN)`
-//         //   : 'N/A',
-//         // "State": dataItem.state?.name || "",
-//         // "City": dataItem.city?.name || "",
-//       }));
-//     }
+  // console.log('excel data outside print', exportExcelData[2]);
 
-//     if (loggedUserRole === "ADMIN") {
-//       headers = ["Sl.no", "Name", "Phone", "Email", "Department", "Role", "Government ID", "State", "City", "Receptionist Meet Permissions"];
+  // const handleExportExcelAllData = () => {
+  //   if (Array.isArray(exportExcelData) && exportExcelData.length > 0) {
+  // //  let maal = exportExcelData.data
+  //     console.log('excel data inside print', exportExcelData[0]);
 
-//       data = exportExcelData?.map((dataItem, index) => ({
-//         "Sl.no": index + 1,
-//         "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
-//         "Phone": dataItem.phone || "",
-//         "Email": dataItem.email || "",
-//         "Department": dataItem.departmentDto?.name || "",
-//         "Role": dataItem.role?.name || "",
-//         "Government ID": dataItem.govtId
-//           ? dataItem.govtId.length === 12
-//             ? `${dataItem.govtId} (Aadhar)`
-//             : `${dataItem.govtId} (PAN)`
-//           : 'N/A',
-//         "State": dataItem.state?.name || "",
-//         "City": dataItem.city?.name || "",
-//         "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
-//       }));
-//     }
+  //     let headers = [];
+  //     let data = [];
 
-//     const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+  //     if (loggedUserRole === "SUPERADMIN") {
+  //       console.log('i got hit')
+  //       headers = ["Sl.no", "Name", "Phone", "Email", "Company", "Department", "Role", "Building", "Government ID", "State", "City"];
 
-//     headers.forEach((key, index) => {
-//       const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
-//       if (headerCell) {
-//         headerCell.s = XLSX_HEADER_STYLE;
-//       }
-//     });
+  //       data = exportExcelData?.map((dataItem, index) => ({
+  //         "Sl.no": index + 1,
+  //         "Email": dataItem.email || "",
+  //         // "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
+  //         // "Phone": dataItem.phone || "",
+  //         // "Email": dataItem.email || "",
+  //         // "Company": dataItem.company?.name || "",
+  //         // "Department": dataItem.departmentDto?.name || "",
+  //         // "Role": dataItem.role?.name || "",
+  //         // "Building": `${dataItem.company?.building?.name || ""} (${dataItem.company?.building?.buildingId || ""})`,
+  //         // "Government ID": dataItem.govtId
+  //         //   ? dataItem.govtId.length === 12
+  //         //     ? `${dataItem.govtId} (Aadhar)`
+  //         //     : `${dataItem.govtId} (PAN)`
+  //         //   : 'N/A',
+  //         // "State": dataItem.state?.name || "",
+  //         // "City": dataItem.city?.name || "",
+  //       }));
+  //     }
 
-//     ws['!cols'] = fitToColumn(data);
+  //     if (loggedUserRole === "ADMIN") {
+  //       headers = ["Sl.no", "Name", "Phone", "Email", "Department", "Role", "Government ID", "State", "City", "Receptionist Meet Permissions"];
 
-//     const wb = XLSX.utils.book_new();
-//     XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-//     XLSX.writeFile(wb, 'User_List_All_Data.xlsx');
-//   } else {
-//     // console.error('Invalid data format for export.');
-//     alert('Invalid data format for export.');
-//   }
-// };
+  //       data = exportExcelData?.map((dataItem, index) => ({
+  //         "Sl.no": index + 1,
+  //         "Name": `${dataItem.firstName} ${dataItem.lastName} (${dataItem.empCode || "N/A"})`,
+  //         "Phone": dataItem.phone || "",
+  //         "Email": dataItem.email || "",
+  //         "Department": dataItem.departmentDto?.name || "",
+  //         "Role": dataItem.role?.name || "",
+  //         "Government ID": dataItem.govtId
+  //           ? dataItem.govtId.length === 12
+  //             ? `${dataItem.govtId} (Aadhar)`
+  //             : `${dataItem.govtId} (PAN)`
+  //           : 'N/A',
+  //         "State": dataItem.state?.name || "",
+  //         "City": dataItem.city?.name || "",
+  //         "Receptionist Meet Permissions": dataItem.isPermission ? "YES" : "NO",
+  //       }));
+  //     }
 
-// byteArray Downloader STARTS
+  //     const ws = XLSX.utils.json_to_sheet(data, { header: headers });
 
-// const testExcel = async() => {
-//   const payload = {
-//     page: 0,
-//     size: 100,
-// }
+  //     headers.forEach((key, index) => {
+  //       const headerCell = ws[XLSX.utils.encode_col(index) + '1'];
+  //       if (headerCell) {
+  //         headerCell.s = XLSX_HEADER_STYLE;
+  //       }
+  //     });
 
-// let url = "http://192.168.12.58:8080/com/exportcompanydata"
-// try{
-//   const response = await axios.post(url, payload, { responseType: 'arraybuffer', headers });
+  //     ws['!cols'] = fitToColumn(data);
 
-//   const byteArray = new Uint8Array(response.data);
+  //     const wb = XLSX.utils.book_new();
+  //     XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+  //     XLSX.writeFile(wb, 'User_List_All_Data.xlsx');
+  //   } else {
+  //     // console.error('Invalid data format for export.');
+  //     alert('Invalid data format for export.');
+  //   }
+  // };
 
-//   const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  // byteArray Downloader STARTS
 
-//   const link = document.createElement('a');
+  // const testExcel = async() => {
+  //   const payload = {
+  //     page: 0,
+  //     size: 100,
+  // }
 
-//   link.href = URL.createObjectURL(blob);
-//   link.download = 'yourFileName.xlsx'; // Set your desired file name here
+  // let url = "http://192.168.12.58:8080/com/exportcompanydata"
+  // try{
+  //   const response = await axios.post(url, payload, { responseType: 'arraybuffer', headers });
 
-//   document.body.appendChild(link);
+  //   const byteArray = new Uint8Array(response.data);
 
-//   link.click();
+  //   const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-//   document.body.removeChild(link);
+  //   const link = document.createElement('a');
 
-//   console.log('Download initiated successfully');
-// }
-// catch(error){
-//   console.error('error coming', error)
-// }
-// }
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = 'yourFileName.xlsx'; // Set your desired file name here
 
+  //   document.body.appendChild(link);
 
-// byteArray Downloader ENDS
+  //   link.click();
+
+  //   document.body.removeChild(link);
+
+  //   console.log('Download initiated successfully');
+  // }
+  // catch(error){
+  //   console.error('error coming', error)
+  // }
+  // }
+
+  // byteArray Downloader ENDS
 
   return (
     <>
@@ -1403,7 +1459,7 @@ const handleExportExcelAllData = () => {
                   "& .MuiDataGrid-footerContainer": {
                     borderTop: "none",
                     backgroundColor: "#2b345386",
-                    borderRadius:'0 0 5px 5px',
+                    borderRadius: "0 0 5px 5px",
                   },
                   // "& .MuiCheckbox-root": {
                   //     color: `${colors.greenAccent[200]} !important`,
@@ -1414,89 +1470,87 @@ const handleExportExcelAllData = () => {
                   mb: "1.5em",
                   // maxWidth: "105em",
                   // maxWidth: "95%",
-                  width:'100%',
+                  width: "100%",
                   borderRadius: "5px",
                   // bgcolor:'cyan',
                   // overflowX:'auto'
                 }}
               >
-
-
                 {rows.length > 0 ? (
                   <>
-                                  <Box
-                                  sx={{
-                                    minWidth: "100%",
-                                    // bgcolor: "orange",
-                                    display:'flex',
-                                    justifyContent:'end',
-                                    mt:'0.5em',
-                                    position:'relative',
-                                  }}
-                                >
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      position:'absolute',
-                                      // left:'4.5em',
-                                      minHeight:'unset',
-                                      width: "13em",
-                                      height:'40px',
-                                      gap:1,
-                                      zIndex:1,
-                                      // float:'right'
-                                    }}
-                                    // onClick={handleDownloadExcel}
-                                    onClick={handleExportExcelAllData}
-                                  >
-                                   <DownloadIcon/> Export Excel
-                                  </Button>
-                                </Box>
-                  <DataGrid
-                  disableRowSelectionOnClick
-                    sx={{mt:'0.7em', }}
-                    rows={rows ?? []}
-                    columns={columns}
-                    components={{ Toolbar: GridToolbar }}
-                    // components={{
-                    //   Toolbar: GridToolbar,
-                    //   Header: (props) => {
-                    //     const { className, ...other } = props;
-                    //     return (
-                    //       <div className={className}>
-                    //         {columns.map((column) => (
-                    //           <div
-                    //             key={column.field}
-                    //             style={{
-                    //               display: column.hidePrint ? 'none' : 'flex',
-                    //               alignItems: 'center',
-                    //             }}
-                    //           >
-                    //             {column.headerName}
-                    //           </div>
-                    //         ))}
-                    //       </div>
-                    //     );
-                    //   },
-                    //   // ... (other components if needed)
-                    // }}
-                    pageSizeOptions={[5, 10, 25, 50, 100]}
-                    slotProps={{
-                      toolbar: {
-                        printOptions:{
-                          // pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
-                          hideFooter: true,
-                          hideToolbar: true,
-                        }
-                      }
-                    }}
-                    // initialState={{
-                    //   pinnedColumns: {
-                    //     left: ['actions'],
-                    //     // right: ['actions', 'title', 'director', '...'],
-                    //   },
-                    // }}
-                  />
+                    <Box
+                      sx={{
+                        minWidth: "100%",
+                        // bgcolor: "orange",
+                        display: "flex",
+                        justifyContent: "end",
+                        mt: "0.5em",
+                        position: "relative",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{
+                          position: "absolute",
+                          // left:'4.5em',
+                          minHeight: "unset",
+                          width: "13em",
+                          height: "40px",
+                          gap: 1,
+                          zIndex: 1,
+                          // float:'right'
+                        }}
+                        // onClick={handleDownloadExcel}
+                        onClick={handleExportExcelAllData}
+                      >
+                        <DownloadIcon /> Export Excel
+                      </Button>
+                    </Box>
+                    <DataGrid
+                      disableRowSelectionOnClick
+                      sx={{ mt: "0.7em" }}
+                      rows={rows ?? []}
+                      columns={columns}
+                      components={{ Toolbar: GridToolbar }}
+                      // components={{
+                      //   Toolbar: GridToolbar,
+                      //   Header: (props) => {
+                      //     const { className, ...other } = props;
+                      //     return (
+                      //       <div className={className}>
+                      //         {columns.map((column) => (
+                      //           <div
+                      //             key={column.field}
+                      //             style={{
+                      //               display: column.hidePrint ? 'none' : 'flex',
+                      //               alignItems: 'center',
+                      //             }}
+                      //           >
+                      //             {column.headerName}
+                      //           </div>
+                      //         ))}
+                      //       </div>
+                      //     );
+                      //   },
+                      //   // ... (other components if needed)
+                      // }}
+                      pageSizeOptions={[5, 10, 25, 50, 100]}
+                      slotProps={{
+                        toolbar: {
+                          printOptions: {
+                            // pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+                            hideFooter: true,
+                            hideToolbar: true,
+                          },
+                        },
+                      }}
+                      // initialState={{
+                      //   pinnedColumns: {
+                      //     left: ['actions'],
+                      //     // right: ['actions', 'title', 'director', '...'],
+                      //   },
+                      // }}
+                    />
                   </>
                 ) : (
                   <div
@@ -1571,22 +1625,22 @@ const handleExportExcelAllData = () => {
                       maxLength: 26,
                       onInput: (event) => {
                         let value = event.target.value;
-                  
+
                         // Remove characters other than lowercase, uppercase, and spaces
-                        value = value.replace(/[^a-zA-Z\s]/g, '');
-                  
+                        value = value.replace(/[^a-zA-Z\s]/g, "");
+
                         // Replace consecutive spaces with a single space
-                        value = value.replace(/\s{2,}/g, ' ');
-                  
+                        value = value.replace(/\s{2,}/g, " ");
+
                         // Ensure the length does not exceed maxLength
                         if (value.length > 26) {
                           value = value.slice(0, 26);
                         }
-                  
+
                         setEditedItem({
                           ...editedItem,
                           firstName: value,
-                        })
+                        });
                       },
                     }}
                     // onChange={(e) =>
@@ -1607,22 +1661,22 @@ const handleExportExcelAllData = () => {
                       maxLength: 26,
                       onInput: (event) => {
                         let value = event.target.value;
-                  
+
                         // Remove characters other than lowercase, uppercase, and spaces
-                        value = value.replace(/[^a-zA-Z\s]/g, '');
-                  
+                        value = value.replace(/[^a-zA-Z\s]/g, "");
+
                         // Replace consecutive spaces with a single space
-                        value = value.replace(/\s{2,}/g, ' ');
-                  
+                        value = value.replace(/\s{2,}/g, " ");
+
                         // Ensure the length does not exceed maxLength
                         if (value.length > 26) {
                           value = value.slice(0, 26);
                         }
-                  
+
                         setEditedItem({
                           ...editedItem,
                           lastName: value,
-                        })
+                        });
                       },
                     }}
                     // onChange={(e) =>
